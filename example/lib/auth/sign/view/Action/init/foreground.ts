@@ -1,4 +1,4 @@
-import { newAuthenticatePassword } from "../../../password/authenticate/x_Action/Authenticate/init/foreground"
+import { newAuthenticatePasswordEntryPoint } from "../../../password/authenticate/Action/init/foreground"
 import { newCheckAuthInfoEntryPoint } from "../../../kernel/authInfo/check/Action/init"
 
 import { toSignEntryPoint } from "../impl"
@@ -20,7 +20,7 @@ export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
         initSignAction(newSignViewLocationDetecter(currentLocation), {
             renew: () => newCheckAuthInfoEntryPoint(webStorage, currentLocation),
 
-            password_authenticate: () => newAuthenticatePassword(webStorage, currentLocation),
+            password_authenticate: () => newAuthenticatePasswordEntryPoint(webStorage, currentLocation),
 
             password_reset_requestToken: () => newRequestPasswordResetToken(),
             password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(currentLocation),

@@ -1,4 +1,4 @@
-import { initMockAuthenticatePasswordResource } from "../../password/authenticate/x_Action/Authenticate/mock"
+import { initMockAuthenticatePasswordResource } from "../../password/authenticate/Action/mock"
 import { initMockRequestPasswordResetTokenResource } from "../../password/reset/requestToken/x_Action/RequestToken/mock"
 import { initMockResetPasswordResource } from "../../password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/x_Action/CheckStatus/mock"

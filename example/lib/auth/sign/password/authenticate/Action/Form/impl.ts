@@ -1,13 +1,13 @@
-import { initInputLoginIDAction } from "../../../../../common/fields/loginID/input/Action/Core/impl"
-import { initInputPasswordAction } from "../../../../../common/fields/password/input/Action/Core/impl"
-import { initValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
+import { initInputLoginIDAction } from "../../../../common/fields/loginID/input/Action/Core/impl"
+import { initInputPasswordAction } from "../../../../common/fields/password/input/Action/Core/impl"
+import { initValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
 
-import { AuthenticatePasswordFieldsEnum, FormAction } from "./action"
+import { AuthenticatePasswordFieldsEnum, AuthenticatePasswordFormAction } from "./action"
 
-import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
-import { AuthenticateFields } from "../../../data"
+import { ConvertBoardResult } from "../../../../../../z_vendor/getto-application/board/kernel/data"
+import { AuthenticatePasswordFields } from "../../data"
 
-export function initFormAction(): FormAction {
+export function initAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
     const loginID = initInputLoginIDAction()
     const password = initInputPasswordAction()
 
@@ -34,10 +34,10 @@ export function initFormAction(): FormAction {
         },
     }
 
-    function converter(): ConvertBoardResult<AuthenticateFields> {
+    function converter(): ConvertBoardResult<AuthenticatePasswordFields> {
         const result = {
             loginID: loginID.validate.get(),
-            password: password.validate.get()
+            password: password.validate.get(),
         }
         if (!result.loginID.valid || !result.password.valid) {
             return { valid: false }

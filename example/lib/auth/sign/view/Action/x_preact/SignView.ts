@@ -6,7 +6,7 @@ import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/com
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 import { CheckAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/CheckAuthInfo"
-import { AuthenticatePassword } from "../../../password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
+import { AuthenticatePassword } from "../../../password/authenticate/Action/x_preact/Authenticate"
 import { RequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
 import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
 import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_preact/Reset"

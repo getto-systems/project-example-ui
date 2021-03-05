@@ -1,32 +1,32 @@
 import { h } from "preact"
 
-import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
 
-import { AuthenticatePasswordProps, View } from "./Authenticate"
+import { AuthenticatePasswordComponent } from "./Authenticate"
 
 import { initMockAuthenticatePasswordResource } from "../mock"
 
-import { CoreState } from "../Core/action"
-import { ValidateBoardActionState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { ValidateBoardStateEnum } from "../../../../../../../z_vendor/getto-application/board/validateBoard/data"
+import { AuthenticatePasswordCoreState } from "../Core/action"
+import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ValidateBoardStateEnum } from "../../../../../../z_vendor/getto-application/board/validateBoard/data"
 
-const authenticateOptions = {
-    initial: true,
-    try: true,
-    delayed: true,
-    "validation-error": true,
-    "bad-request": true,
-    invalid: true,
-    "server-error": true,
-    "bad-response": true,
-    "infra-error": true,
-} as const
+enum AuthenticateEnum {
+    "initial",
+    "try",
+    "delayed",
+    "validation-error",
+    "bad-request",
+    "invalid",
+    "server-error",
+    "bad-response",
+    "infra-error",
+}
 
 export default {
     title: "library/Auth/Sign/Password/Authenticate",
     argTypes: {
         authenticate: {
-            control: { type: "select", options: Object.keys(authenticateOptions) },
+            control: { type: "select", options: enumKeys(AuthenticateEnum) },
         },
         form: {
             control: { type: "select", options: enumKeys(ValidateBoardStateEnum) },
@@ -35,17 +35,17 @@ export default {
 }
 
 export type Props = Readonly<{
-    authenticate: keyof typeof authenticateOptions
+    authenticate: keyof typeof AuthenticateEnum
     form: ValidateBoardActionState
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <AuthenticatePasswordProps>{
+    return h(AuthenticatePasswordComponent, {
         ...initMockAuthenticatePasswordResource(),
         state: { core: state(), form: props.form },
     })
 
-    function state(): CoreState {
+    function state(): AuthenticatePasswordCoreState {
         switch (props.authenticate) {
             case "initial":
                 return { type: "initial-login" }

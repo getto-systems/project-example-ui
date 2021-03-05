@@ -1,40 +1,45 @@
 import {
-    ClockPubSub,
-    ClockSubscriber,
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
-
-import { AuthenticateRemotePod, AuthenticateResult } from "../../infra"
-import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
-
-import { AuthenticatePasswordAction } from "./action"
-
-import { CoreState } from "./Core/action"
-
-import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
-import { AuthenticateFields } from "../../data"
-import {
-    LastAuthRepositoryPod,
-    LastAuthRepositoryValue,
-    RenewAuthInfoRemotePod,
-} from "../../../../kernel/authInfo/kernel/infra"
-import { authenticateEventHasDone } from "../../impl"
-import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
-import { initFormAction } from "./Form/impl"
-import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
-import { toAction, toEntryPoint } from "./impl"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../../../kernel/authInfo/kernel/convert"
-import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { startContinuousRenewEventHasDone } from "../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
+} from "../../../../../z_vendor/getto-application/action/testHelper"
+
+import {
+    ClockPubSub,
+    initStaticClock,
+    staticClockPubSub,
+} from "../../../../../z_vendor/getto-application/infra/clock/simulate"
+import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../common/secure/getScriptPath/impl/testHelper"
+
+import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
+
+import { toAuthenticatePasswordEntryPoint } from "./impl"
+import {
+    initAuthenticatePasswordCoreAction,
+    initAuthenticatePasswordCoreMaterial,
+} from "./Core/impl"
+import { initAuthenticatePasswordFormAction } from "./Form/impl"
+
+import { authenticatePasswordEventHasDone } from "../impl/core"
+import { startContinuousRenewEventHasDone } from "../../../kernel/authInfo/common/startContinuousRenew/impl/core"
+
+import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
+import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../infra"
+import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
+import {
+    LastAuthRepositoryPod,
+    RenewAuthInfoRemotePod,
+} from "../../../kernel/authInfo/kernel/infra"
+
+import { AuthenticatePasswordEntryPoint } from "./entryPoint"
+
+import { AuthenticatePasswordCoreState } from "./Core/action"
+
+import { AuthenticatePasswordFields } from "../data"
 
 // テスト開始時刻
 const START_AT = new Date("2020-01-01 10:00:00")
@@ -49,7 +54,8 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("AuthenticatePassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, resource } = standardPasswordLoginResource()
+        const { clock, entryPoint } = standard_elements()
+        const resource = entryPoint.resource.authenticate
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -88,9 +94,10 @@ describe("AuthenticatePassword", () => {
         resource.core.subscriber.subscribe(runner(done))
     })
 
-    test("submit valid login-id and password; with delayed", (done) => {
+    test("submit valid login-id and password; take long time", (done) => {
         // wait for delayed timeout
-        const { clock, resource } = waitPasswordLoginResource()
+        const { clock, entryPoint } = takeLongTime_elements()
+        const resource = entryPoint.resource.authenticate
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -131,8 +138,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("submit without fields", (done) => {
-        const { repository, resource } = standardPasswordLoginResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource.authenticate
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -145,10 +152,6 @@ describe("AuthenticatePassword", () => {
                     expect(stack).toEqual([
                         { type: "failed-to-login", err: { type: "validation-error" } },
                     ])
-                    expect(lastAuth.get()).toEqual({
-                        success: true,
-                        found: false,
-                    })
                 },
             },
         ])
@@ -157,7 +160,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("clear", () => {
-        const { resource } = standardPasswordLoginResource()
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource.authenticate
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
@@ -168,7 +172,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("load error", (done) => {
-        const { resource } = standardPasswordLoginResource()
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource.authenticate
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -190,8 +195,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("terminate", (done) => {
-        const { resource } = standardPasswordLoginResource()
-        const entryPoint = toEntryPoint(resource)
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource.authenticate
 
         const runner = initSyncActionTestRunner([
             {
@@ -217,124 +222,102 @@ describe("AuthenticatePassword", () => {
     })
 })
 
-function standardPasswordLoginResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function standard_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
+    const entryPoint = newEntryPoint(
+        standard_authenticate(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
-function waitPasswordLoginResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function takeLongTime_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = waitSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestPasswordLoginResource(currentURL, repository, simulator, clock)
+    const entryPoint = newEntryPoint(
+        takeLongTime_authenticate(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
 
-type PasswordLoginTestRepository = Readonly<{
-    authz: AuthzRepositoryPod
-    lastAuth: LastAuthRepositoryPod
-}>
-type PasswordLoginTestRemoteAccess = Readonly<{
-    authenticate: AuthenticateRemotePod
-    renew: RenewAuthInfoRemotePod
-}>
-
-function newTestPasswordLoginResource(
-    currentURL: URL,
-    repository: PasswordLoginTestRepository,
-    remote: PasswordLoginTestRemoteAccess,
+function newEntryPoint(
+    authenticate: AuthenticatePasswordRemotePod,
+    renew: RenewAuthInfoRemotePod,
     clock: Clock,
-): AuthenticatePasswordAction {
-    const config = standardConfig()
-    const action = toAction({
-        core: initCoreAction(
-            initCoreMaterial(
+): AuthenticatePasswordEntryPoint {
+    const currentURL = new URL("https://example.com/index.html")
+
+    const lastAuth = standard_lastAuth()
+    const authz = standard_authz()
+
+    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
+
+    const entryPoint = toAuthenticatePasswordEntryPoint({
+        core: initAuthenticatePasswordCoreAction(
+            initAuthenticatePasswordCoreMaterial(
                 {
                     startContinuousRenew: {
-                        ...repository,
-                        ...remote,
-                        config: config.continuousRenew,
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            interval: { interval_millisecond: 128 },
+                            lastAuthExpire: { expire_millisecond: 500 },
+                        },
                         clock,
                     },
                     getSecureScriptPath: {
-                        config: config.location,
+                        config: {
+                            secureServerURL: "https://secure.example.com",
+                        },
                     },
                     authenticate: {
-                        ...remote,
-                        config: config.login,
+                        authenticate,
+                        config: {
+                            delay: { delay_millisecond: 32 },
+                        },
                         clock,
                     },
                 },
-                initGetScriptPathLocationDetecter(currentURL),
+                getScriptPathDetecter,
             ),
         ),
 
-        form: initFormAction(),
+        form: initAuthenticatePasswordFormAction(),
     })
 
-    action.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
-    action.form.password.board.input.storeLinker.link(standardBoardValueStore())
+    entryPoint.resource.authenticate.form.loginID.board.input.storeLinker.link(
+        standardBoardValueStore(),
+    )
+    entryPoint.resource.authenticate.form.password.board.input.storeLinker.link(
+        standardBoardValueStore(),
+    )
 
-    return action
+    return entryPoint
 }
 
-function standardURL(): URL {
-    return new URL("https://example.com/index.html")
+function standard_lastAuth(): LastAuthRepositoryPod {
+    return wrapRepository(initMemoryDB())
 }
-function standardConfig() {
-    return {
-        location: {
-            secureServerURL: "https://secure.example.com",
-        },
-        login: {
-            delay: { delay_millisecond: 1 },
-        },
-        continuousRenew: {
-            interval: { interval_millisecond: 64 },
-            lastAuthExpire: { expire_millisecond: 1 },
-        },
-    }
-}
-function standardRepository(): PasswordLoginTestRepository {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
+function standard_authz(): AuthzRepositoryPod {
+    const authz = initMemoryDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-
-    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
-
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
-    }
-}
-function standardSimulator(clock: ClockPubSub): PasswordLoginTestRemoteAccess {
-    return {
-        authenticate: initRemoteSimulator(simulateLogin, {
-            wait_millisecond: 0,
-        }),
-        renew: renewRemoteAccess(clock),
-    }
-}
-function waitSimulator(clock: ClockPubSub): PasswordLoginTestRemoteAccess {
-    return {
-        authenticate: initRemoteSimulator(simulateLogin, {
-            wait_millisecond: 3,
-        }),
-        renew: renewRemoteAccess(clock),
-    }
+    return wrapRepository(authz)
 }
 
-function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
+function standard_authenticate(): AuthenticatePasswordRemotePod {
+    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 0 })
+}
+function takeLongTime_authenticate(): AuthenticatePasswordRemotePod {
+    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 64 })
+}
+function simulateAuthenticate(_fields: AuthenticatePasswordFields): AuthenticatePasswordResult {
     return {
         success: true,
         value: {
@@ -348,7 +331,8 @@ function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
         },
     }
 }
-function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
+
+function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
     return initRemoteSimulator(
         () => {
@@ -379,11 +363,7 @@ function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
     )
 }
 
-function standardClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(START_AT, subscriber)
-}
-
-function actionHasDone(state: CoreState): boolean {
+function actionHasDone(state: AuthenticatePasswordCoreState): boolean {
     switch (state.type) {
         case "initial-login":
         case "try-to-load":
@@ -400,6 +380,6 @@ function actionHasDone(state: CoreState): boolean {
             return startContinuousRenewEventHasDone(state)
 
         default:
-            return authenticateEventHasDone(state)
+            return authenticatePasswordEventHasDone(state)
     }
 }

@@ -1,17 +1,20 @@
-import { newCoreForegroundMaterial } from "../common"
+import { newAuthenticatePasswordCoreForegroundMaterial } from "../common"
 
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authInfo/common/startContinuousRenew/impl/init"
-import { newGetSecureScriptPathInfra } from "../../../../../../common/secure/getScriptPath/impl/init"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl/init"
+import { newGetSecureScriptPathInfra } from "../../../../../common/secure/getScriptPath/impl/init"
 
-import { toAction, toEntryPoint } from "../../impl"
+import { toAuthenticatePasswordEntryPoint } from "../../impl"
 
-import { CoreForegroundInfra, initCoreAction } from "../../Core/impl"
-import { initFormAction } from "../../Form/impl"
+import {
+    AuthenticatePasswordCoreForegroundInfra,
+    initAuthenticatePasswordCoreAction,
+} from "../../Core/impl"
+import { initAuthenticatePasswordFormAction } from "../../Form/impl"
 
 import {
     WorkerProxy,
     WorkerAbstractProxy,
-} from "../../../../../../../../z_vendor/getto-application/action/worker/foreground"
+} from "../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     AuthenticatePasswordProxyMaterial,
@@ -19,9 +22,8 @@ import {
     AuthenticatePasswordProxyResponse,
 } from "./message"
 
-import { AuthenticatePasswordEntryPoint } from "../../action"
-import { CoreAction } from "../../Core/action"
-import { FormAction } from "../../Form/action"
+import { AuthenticatePasswordEntryPoint } from "../../entryPoint"
+import { AuthenticatePasswordCoreAction } from "../../Core/action"
 
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
@@ -46,9 +48,12 @@ class Proxy
     }
 
     entryPoint(webStorage: Storage, currentLocation: Location): AuthenticatePasswordEntryPoint {
-        const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
-        return newEntryPoint(
-            initCoreAction({
+        const foreground = newAuthenticatePasswordCoreForegroundMaterial(
+            webStorage,
+            currentLocation,
+        )
+        return initAuthenticatePasswordEntryPoint(
+            initAuthenticatePasswordCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
                 ...foreground,
             }),
@@ -63,19 +68,19 @@ class Proxy
     }
 }
 
-export function newCoreForegroundInfra(webStorage: Storage): CoreForegroundInfra {
+export function newAuthenticatePasswordCoreForegroundInfra(
+    webStorage: Storage,
+): AuthenticatePasswordCoreForegroundInfra {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }
 
-export function newEntryPoint(core: CoreAction): AuthenticatePasswordEntryPoint {
-    return toEntryPoint(toAction({ core, form: newFormAction() }))
-}
-
-function newFormAction(): FormAction {
-    return initFormAction()
+export function initAuthenticatePasswordEntryPoint(
+    core: AuthenticatePasswordCoreAction,
+): AuthenticatePasswordEntryPoint {
+    return toAuthenticatePasswordEntryPoint({ core, form: initAuthenticatePasswordFormAction() })
 }
 
 interface Post<M> {

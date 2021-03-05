@@ -1,4 +1,4 @@
-import { newAuthenticatePasswordHandler } from "../../../../password/authenticate/x_Action/Authenticate/init/worker/background"
+import { newAuthenticatePasswordHandler } from "../../../../password/authenticate/Action/init/worker/background"
 import { newRequestPasswordResetTokenHandler } from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/background"
 import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/background"
 import { newResetPasswordHandler } from "../../../../password/reset/reset/x_Action/Reset/init/worker/background"
@@ -6,7 +6,7 @@ import { newResetPasswordHandler } from "../../../../password/reset/reset/x_Acti
 import { WorkerHandler } from "../../../../../../z_vendor/getto-application/action/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { AuthenticatePasswordProxyMessage } from "../../../../password/authenticate/x_Action/Authenticate/init/worker/message"
+import { AuthenticatePasswordProxyMessage } from "../../../../password/authenticate/Action/init/worker/message"
 import { RequestPasswordResetTokenProxyMessage } from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/message"
 import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
 import { ResetPasswordProxyMessage } from "../../../../password/reset/reset/x_Action/Reset/init/worker/message"
