@@ -6,7 +6,7 @@ import { toSignEntryPoint } from "../impl"
 import { SignEntryPoint } from "../entryPoint"
 import { newRequestResetTokenEntryPoint } from "../../../password/reset/requestToken/Action/init/foreground"
 import { newResetPassword } from "../../../password/reset/reset/x_Action/Reset/init/foreground"
-import { newCheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/init/foreground"
+import { newCheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/Action/init/foreground"
 import { newSignViewLocationDetecter } from "../../impl/init"
 import { initSignAction } from "../Core/impl"
 

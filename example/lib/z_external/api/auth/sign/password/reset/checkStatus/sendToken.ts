@@ -13,7 +13,7 @@ type RemoteError =
 interface SendToken {
     (): Promise<RawSendTokenResult>
 }
-export function newApiSendToken(apiServerURL: string): SendToken {
+export function newApi_SendResetToken(apiServerURL: string): SendToken {
     return async (): Promise<RawSendTokenResult> => {
         const response = await fetch(apiServerURL, {
             method: "POST",

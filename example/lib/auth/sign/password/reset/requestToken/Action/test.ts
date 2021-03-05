@@ -16,7 +16,7 @@ import { resetSessionIDRemoteConverter } from "../../kernel/convert"
 
 import { RequestResetTokenRemotePod, RequestResetTokenResult } from "../infra"
 
-import { RequestResetTokenEntryPoint } from "./action"
+import { RequestResetTokenEntryPoint } from "./entryPoint"
 import { RequestResetTokenCoreState } from "./Core/action"
 
 const VALID_LOGIN = { loginID: "login-id" } as const

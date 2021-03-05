@@ -21,7 +21,7 @@ import {
     RequestResetTokenEntryPoint,
     RequestResetTokenResource,
     RequestResetTokenResourceState,
-} from "../action"
+} from "../entryPoint"
 
 import { RequestResetTokenError } from "../../data"
 import { InputLoginID } from "../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"

@@ -8,7 +8,7 @@ import { ApplicationError } from "../../../../../x_preact/common/System/Applicat
 import { CheckAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../../password/authenticate/Action/x_preact/Authenticate"
 import { RequestResetToken } from "../../../password/reset/requestToken/Action/x_preact/RequestResetToken"
-import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
+import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/Action/x_preact/CheckResetTokenSendingStatus"
 import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_preact/Reset"
 
 import { SignEntryPoint, SignResource, SignResourceState } from "../entryPoint"

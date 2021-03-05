@@ -3,11 +3,13 @@ import { parseErrorMessage } from "../../../common"
 import { ParseErrorResult } from "../../../data"
 
 type SendSessionID = string
-type RemoteResult = ApiResult<SendingTokenStatus, RemoteError>
-type SendingTokenStatus =
+type RemoteResult = ApiResult<SendingTokenResult, RemoteError>
+type SendingTokenResult =
     | Readonly<{ done: false; status: Readonly<{ sending: boolean }> }>
-    | Readonly<{ done: true; send: false; err: string }>
+    | Readonly<{ done: true; send: false; err: SendingTokenError }>
     | Readonly<{ done: true; send: true }>
+
+type SendingTokenError = "failed-to-connect-message-service"
 
 type RemoteError =
     | Readonly<{ type: "bad-request" }>
@@ -19,7 +21,7 @@ type RemoteError =
 interface GetSendingStatus {
     (sessionID: SendSessionID): Promise<RemoteResult>
 }
-export function newApiGetSendingStatus(apiServerURL: string): GetSendingStatus {
+export function newApi_GetResetTokenSendingStatus(apiServerURL: string): GetSendingStatus {
     return async (_sessionID: SendSessionID): Promise<RemoteResult> => {
         const response = await fetch(apiServerURL, {
             method: "POST",

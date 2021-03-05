@@ -1,5 +1,5 @@
 import { initSignLinkResource } from "../../../../common/link/Action/impl"
-import { RequestResetTokenAction, RequestResetTokenEntryPoint } from "./action"
+import { RequestResetTokenAction, RequestResetTokenEntryPoint } from "./entryPoint"
 import { RequestResetTokenCoreAction } from "./Core/action"
 import { RequestResetTokenFormAction } from "./Form/action"
 

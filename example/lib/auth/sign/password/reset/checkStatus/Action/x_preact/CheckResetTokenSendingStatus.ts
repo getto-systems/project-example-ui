@@ -1,25 +1,29 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
-import { buttons } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
-import { v_medium } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
+import { buttons } from "../../../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
+import { v_medium } from "../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../../../x_preact/common/site"
-import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
 import {
-    CheckPasswordResetSendingStatusEntryPoint,
-    CheckPasswordResetSendingStatusResource,
-    CheckSendingStatusState,
-} from "../action"
+    CheckResetTokenSendingStatusEntryPoint,
+    CheckResetTokenSendingStatusResource,
+    CheckResetTokenSendingStatusResourceState,
+} from "../entryPoint"
 
-import { SendingStatus, CheckSendingStatusError, SendTokenError } from "../../../data"
+import {
+    ResetTokenSendingStatus,
+    CheckResetTokenSendingStatusError,
+    SendResetTokenError,
+} from "../../data"
 
 export function CheckPasswordResetSendingStatus(
-    entryPoint: CheckPasswordResetSendingStatusEntryPoint,
+    entryPoint: CheckResetTokenSendingStatusEntryPoint,
 ): VNode {
     const resource = useEntryPoint(entryPoint)
     return h(View, <CheckPasswordResetSendingStatusProps>{
@@ -28,8 +32,8 @@ export function CheckPasswordResetSendingStatus(
     })
 }
 
-export type CheckPasswordResetSendingStatusProps = CheckPasswordResetSendingStatusResource &
-    Readonly<{ state: CheckSendingStatusState }>
+export type CheckPasswordResetSendingStatusProps = CheckResetTokenSendingStatusResource &
+    CheckResetTokenSendingStatusResourceState
 export function View(props: CheckPasswordResetSendingStatusProps): VNode {
     switch (props.state.type) {
         case "initial-check-status":
@@ -57,7 +61,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
 
     type CheckStatusContent =
         | Readonly<{ type: "initial" }>
-        | Readonly<{ type: "retry"; status: SendingStatus }>
+        | Readonly<{ type: "retry"; status: ResetTokenSendingStatus }>
 
     function checkStatusMessage(content: CheckStatusContent): VNode {
         return loginBox(siteInfo(), {
@@ -102,7 +106,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
     }
 }
 
-function status(status: SendingStatus): VNodeContent {
+function status(status: ResetTokenSendingStatus): VNodeContent {
     if (!status.sending) {
         return html`<p>${spinner} トークン送信の準備をしています</p>`
     }
@@ -112,7 +116,7 @@ function sendTokenMessage(): VNodeContent {
     return html`<p>送信しURLからパスワードのリセットができます</p>`
 }
 
-function checkStatusError(err: CheckSendingStatusError): VNodeContent[] {
+function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[] {
     switch (err.type) {
         case "empty-session-id":
             return ["パスワードリセットのためのセッションIDが取得できませんでした"]
@@ -133,7 +137,7 @@ function checkStatusError(err: CheckSendingStatusError): VNodeContent[] {
             return ["ネットワークエラーによりステータスの取得に失敗しました", ...detail(err.err)]
     }
 }
-function sendTokenError(err: SendTokenError): VNodeContent[] {
+function sendTokenError(err: SendResetTokenError): VNodeContent[] {
     switch (err.type) {
         case "infra-error":
             return ["サーバーエラーによりリセットトークンの送信に失敗しました", ...detail(err.err)]

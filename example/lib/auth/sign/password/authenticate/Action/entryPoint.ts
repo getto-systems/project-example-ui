@@ -1,6 +1,6 @@
 import { ApplicationAction } from "../../../../../z_vendor/getto-application/action/action"
 
-import { SignLinkResource } from "../../../common/link/Action/action"
+import { SignLinkResource } from "../../../common/link/Action/resource"
 import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreState } from "./Core/action"
 import { AuthenticatePasswordFormAction } from "./Form/action"

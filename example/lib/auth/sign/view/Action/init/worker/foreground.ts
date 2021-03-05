@@ -12,7 +12,7 @@ import {
 import {
     CheckPasswordResetSendingStatusProxy,
     newCheckPasswordResetSendingStatusProxy,
-} from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/foreground"
+} from "../../../../password/reset/checkStatus/Action/init/worker/foreground"
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,

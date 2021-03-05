@@ -15,7 +15,7 @@ import {
 
 import { RequestResetTokenCoreAction } from "../../Core/action"
 
-import { RequestResetTokenEntryPoint } from "../../action"
+import { RequestResetTokenEntryPoint } from "../../entryPoint"
 
 export interface RequestPasswordResetTokenProxy
     extends WorkerProxy<

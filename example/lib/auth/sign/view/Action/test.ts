@@ -1,7 +1,7 @@
 import { initMockAuthenticatePasswordResource } from "../../password/authenticate/Action/mock"
 import { initMockRequestResetTokenResource } from "../../password/reset/requestToken/Action/mock"
 import { initMockResetPasswordResource } from "../../password/reset/reset/x_Action/Reset/mock"
-import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/x_Action/CheckStatus/mock"
+import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/Action/mock"
 import { initMockCheckAuthInfoResource } from "../../kernel/authInfo/check/Action/mock"
 import { initSignViewLocationDetecter } from "../impl/testHelper"
 import { SignAction, SignActionState } from "./Core/action"
