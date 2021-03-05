@@ -16,7 +16,7 @@ export function newCheckAuthInfoEntryPoint(
         initCheckAuthInfoCoreAction(
             initCheckAuthInfoCoreMaterial(
                 {
-                    renew: newCheckAuthInfoInfra(webStorage),
+                    check: newCheckAuthInfoInfra(webStorage),
                     startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
                     getSecureScriptPath: newGetSecureScriptPathInfra(),
                 },

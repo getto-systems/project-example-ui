@@ -78,7 +78,7 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayedChecker(renew(info.nonce), config.delay, () =>
+    const response = await delayedChecker(renew(info.nonce), config.takeLongTimeThreshold, () =>
         post({ type: "delayed-to-renew" }),
     )
     if (!response.success) {

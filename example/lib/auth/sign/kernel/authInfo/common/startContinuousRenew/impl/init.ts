@@ -5,7 +5,7 @@ import { newLastAuthRepository } from "../../../kernel/infra/repository/lastAuth
 import { newClock } from "../../../../../../../z_vendor/getto-application/infra/clock/init"
 
 import {
-    delayMinute,
+    expireMinute,
     intervalMinute,
 } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
 
@@ -20,7 +20,7 @@ export function newStartContinuousRenewAuthnInfoInfra(
         renew: newRenewAuthInfoRemote(),
         clock: newClock(),
         config: {
-            delay: delayMinute(1), // TODO last auth が expire するまでの時間、という名前に変えたい
+            lastAuthExpire: expireMinute(1),
             interval: intervalMinute(2),
         },
     }

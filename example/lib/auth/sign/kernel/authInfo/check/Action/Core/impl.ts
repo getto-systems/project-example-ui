@@ -21,7 +21,7 @@ import { AuthInfo } from "../../../kernel/data"
 import { LoadScriptError } from "../../../../../common/secure/getScriptPath/data"
 
 export type CheckAuthInfoCoreInfra = Readonly<{
-    renew: CheckAuthInfoInfra
+    check: CheckAuthInfoInfra
     startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetScriptPathInfra
 }>
@@ -31,8 +31,8 @@ export function initCheckAuthInfoCoreMaterial(
     locationInfo: GetScriptPathLocationDetecter,
 ): CheckAuthInfoCoreMaterial {
     return {
-        renew: checkAuthInfo(infra.renew),
-        forceRenew: renewAuthInfo(infra.renew),
+        renew: checkAuthInfo(infra.check),
+        forceRenew: renewAuthInfo(infra.check),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         saveAuthInfo: saveAuthInfo(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),

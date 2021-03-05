@@ -1,35 +1,36 @@
 import {
+    initAsyncActionTestRunner,
+    initSyncActionTestRunner,
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
+
+import {
     ClockPubSub,
-    ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
-
-import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
-
-import { CheckAuthInfoResource } from "./entryPoint"
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
+
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { toCheckAuthInfoEntryPoint } from "./impl"
+import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Core/impl"
+
+import { startContinuousRenewEventHasDone } from "../../common/startContinuousRenew/impl/core"
+import { checkAuthInfoEventHasDone } from "../impl/core"
+
+import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
+import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewAuthInfoRemotePod,
 } from "../../kernel/infra"
-import { toCheckAuthInfoEntryPoint } from "./impl"
-import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Core/impl"
-import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
-} from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { initMockCheckAuthInfoCoreAction } from "./Core/mock"
-import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../kernel/convert"
-import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { startContinuousRenewEventHasDone } from "../../common/startContinuousRenew/impl/core"
-import { checkAuthInfoEventHasDone } from "../impl/core"
-import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+
+import { CheckAuthInfoEntryPoint } from "./entryPoint"
+
 import { CheckAuthInfoCoreState } from "./Core/action"
 
 // last auth at : テスト開始時刻と expire 設定によって instant load の可否が決まる
@@ -37,7 +38,7 @@ const STORED_LAST_AUTH_AT = new Date("2020-01-01 10:00:00").toISOString()
 
 // テスト開始時刻
 const START_AT_INSTANT_LOAD_AVAILABLE = new Date("2020-01-01 10:00:10")
-const START_AT_INSTANT_LOAD_DISABLED = new Date("2020-01-01 10:00:30")
+const START_AT = new Date("2020-01-01 10:00:30")
 
 // renew 設定時刻 : succeed-to-start-continuous-renew でこの時刻に移行
 const CONTINUOUS_RENEW_START_AT = new Date("2020-01-01 10:00:40")
@@ -51,7 +52,8 @@ const CONTINUOUS_RENEW_AT = [
 
 describe("CheckAuthInfo", () => {
     test("instant load", (done) => {
-        const { clock, resource } = instantRenewCredentialResource()
+        const { clock, entryPoint } = instantLoadable_elements()
+        const resource = entryPoint.resource
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -91,7 +93,8 @@ describe("CheckAuthInfo", () => {
     })
 
     test("instant load failed", (done) => {
-        const { clock, resource } = instantRenewCredentialResource()
+        const { clock, entryPoint } = instantLoadable_elements()
+        const resource = entryPoint.resource
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -137,7 +140,8 @@ describe("CheckAuthInfo", () => {
     })
 
     test("renew stored credential", (done) => {
-        const { clock, resource } = standardRenewCredentialResource()
+        const { clock, entryPoint } = standard_elements()
+        const resource = entryPoint.resource
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -175,7 +179,8 @@ describe("CheckAuthInfo", () => {
 
     test("renew stored credential; with delayed", (done) => {
         // wait for delayed timeout
-        const { clock, resource } = waitRenewCredentialResource()
+        const { clock, entryPoint } = takeLongTime_elements()
+        const resource = entryPoint.resource
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -214,8 +219,8 @@ describe("CheckAuthInfo", () => {
 
     test("renew without stored credential", (done) => {
         // empty credential
-        const { repository, resource } = emptyRenewCredentialResource()
-        const lastAuth = repository.lastAuth(lastAuthRepositoryConverter)
+        const { entryPoint } = noStored_elements()
+        const resource = entryPoint.resource
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -224,10 +229,6 @@ describe("CheckAuthInfo", () => {
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([{ type: "required-to-login" }])
-                    expect(lastAuth.get()).toEqual({
-                        success: true,
-                        found: false,
-                    })
                 },
             },
         ])
@@ -236,7 +237,8 @@ describe("CheckAuthInfo", () => {
     })
 
     test("load error", (done) => {
-        const { resource } = standardRenewCredentialResource()
+        const { entryPoint } = standard_elements()
+        const resource = entryPoint.resource
 
         const runner = initSyncActionTestRunner([
             {
@@ -258,13 +260,15 @@ describe("CheckAuthInfo", () => {
     })
 
     test("terminate", (done) => {
-        const entryPoint = toCheckAuthInfoEntryPoint(initMockCheckAuthInfoCoreAction())
+        const { entryPoint } = standard_elements()
 
         const runner = initSyncActionTestRunner([
             {
-                statement: () => {
+                statement: (check) => {
                     entryPoint.terminate()
                     entryPoint.resource.core.ignite()
+
+                    setTimeout(check, 256) // wait for some event
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -277,144 +281,125 @@ describe("CheckAuthInfo", () => {
     })
 })
 
-function standardRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function standard_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
-function instantRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function instantLoadable_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = instantAvailableClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT_INSTANT_LOAD_AVAILABLE, clockPubSub),
+    )
 
-    return { repository, clock: clockPubSub, resource }
+    return { clock: clockPubSub, entryPoint }
 }
-function waitRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = standardRepository()
+function takeLongTime_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = waitSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
-
-    return { repository, clock: clockPubSub, resource }
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        standard_lastAuth(),
+        standard_authz(),
+        wait_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
+    return { clock: clockPubSub, entryPoint }
 }
-function emptyRenewCredentialResource() {
-    const currentURL = standardURL()
-    const repository = emptyRepository()
+function noStored_elements() {
     const clockPubSub = staticClockPubSub()
-    const simulator = standardSimulator(clockPubSub)
-    const clock = standardClock(clockPubSub)
-    const resource = newTestRenewAuthnInfoResource(currentURL, repository, simulator, clock)
-
-    return { repository, resource }
+    const entryPoint = newCheckAuthInfoEntryPoint(
+        noStored_lastAuth(),
+        noStored_authz(),
+        standard_renew(clockPubSub),
+        initStaticClock(START_AT, clockPubSub),
+    )
+    return { entryPoint }
 }
 
-type RenewCredentialTestRepository = Readonly<{
-    authz: AuthzRepositoryPod
-    lastAuth: LastAuthRepositoryPod
-}>
-type RenewCredentialTestRemoteAccess = Readonly<{
-    renew: RenewAuthInfoRemotePod
-}>
-
-function newTestRenewAuthnInfoResource(
-    currentURL: URL,
-    repository: RenewCredentialTestRepository,
-    remote: RenewCredentialTestRemoteAccess,
+function newCheckAuthInfoEntryPoint(
+    lastAuth: LastAuthRepositoryPod,
+    authz: AuthzRepositoryPod,
+    renew: RenewAuthInfoRemotePod,
     clock: Clock,
-): CheckAuthInfoResource {
-    const config = standardConfig()
+): CheckAuthInfoEntryPoint {
+    const currentURL = new URL("https://example.com/index.html")
+    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
     return toCheckAuthInfoEntryPoint(
         initCheckAuthInfoCoreAction(
             initCheckAuthInfoCoreMaterial(
                 {
-                    renew: {
-                        ...repository,
-                        ...remote,
-                        config: config.renew,
+                    check: {
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            instantLoadExpire: { expire_millisecond: 20 * 1000 },
+                            takeLongTimeThreshold: { delay_millisecond: 32 },
+                        },
                         clock,
                     },
                     startContinuousRenew: {
-                        ...repository,
-                        ...remote,
-                        config: config.continuousRenew,
+                        lastAuth,
+                        authz,
+                        renew,
+                        config: {
+                            interval: { interval_millisecond: 128 },
+                            lastAuthExpire: { expire_millisecond: 1 * 1000 },
+                        },
                         clock,
                     },
                     getSecureScriptPath: {
-                        config: config.location,
+                        config: {
+                            secureServerURL: "https://secure.example.com",
+                        },
                     },
                 },
-                initGetScriptPathLocationDetecter(currentURL),
+                getScriptPathDetecter,
             ),
         ),
-    ).resource
+    )
 }
 
-function standardURL(): URL {
-    return new URL("https://example.com/index.html")
-}
-function standardConfig() {
-    return {
-        location: {
-            secureServerURL: "https://secure.example.com",
-        },
-        renew: {
-            instantLoadExpire: { expire_millisecond: 20 * 1000 },
-            delay: { delay_millisecond: 1 },
-        },
-        continuousRenew: {
-            interval: { interval_millisecond: 64 },
-            delay: { delay_millisecond: 1 },
-        },
-    }
-}
-
-function standardRepository(): RenewCredentialTestRepository {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
-    authz.set({
-        nonce: "api-nonce",
-        roles: ["role"],
-    })
-
+function standard_lastAuth(): LastAuthRepositoryPod {
     const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
     lastAuth.set({
         nonce: "stored-authn-nonce",
         lastAuthAt: STORED_LAST_AUTH_AT,
     })
-
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
-    }
+    return wrapRepository(lastAuth)
 }
-function emptyRepository(): RenewCredentialTestRepository {
-    return {
-        authz: wrapRepository(initMemoryDB<AuthzRepositoryValue>()),
-        lastAuth: wrapRepository(initMemoryDB<LastAuthRepositoryValue>()),
-    }
-}
-function standardSimulator(clock: ClockPubSub): RenewCredentialTestRemoteAccess {
-    return {
-        renew: renewRemoteAccess(clock, { wait_millisecond: 0 }),
-    }
-}
-function waitSimulator(clock: ClockPubSub): RenewCredentialTestRemoteAccess {
-    return {
-        // wait for delayed timeout
-        renew: renewRemoteAccess(clock, { wait_millisecond: 3 }),
-    }
+function noStored_lastAuth(): LastAuthRepositoryPod {
+    return wrapRepository(initMemoryDB())
 }
 
-function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
+function standard_authz(): AuthzRepositoryPod {
+    const lastAuth = initMemoryDB<AuthzRepositoryValue>()
+    lastAuth.set({
+        nonce: "api-nonce",
+        roles: ["role"],
+    })
+    return wrapRepository(lastAuth)
+}
+function noStored_authz(): AuthzRepositoryPod {
+    return wrapRepository(initMemoryDB())
+}
+
+function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+    return renewPod(clock, { wait_millisecond: 0 })
+}
+function wait_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+    // wait for delayed timeout
+    return renewPod(clock, { wait_millisecond: 64 })
+}
+function renewPod(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
     let count = 0
     return initRemoteSimulator(() => {
         if (count > 2) {
@@ -440,13 +425,6 @@ function renewRemoteAccess(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInf
             },
         }
     }, waitTime)
-}
-
-function standardClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(START_AT_INSTANT_LOAD_DISABLED, subscriber)
-}
-function instantAvailableClock(subscriber: ClockSubscriber): Clock {
-    return initStaticClock(START_AT_INSTANT_LOAD_AVAILABLE, subscriber)
 }
 
 function actionHasDone(state: CheckAuthInfoCoreState): boolean {

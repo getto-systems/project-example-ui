@@ -327,7 +327,7 @@ function standardConfig() {
         },
         continuousRenew: {
             interval: { interval_millisecond: 64 },
-            delay: { delay_millisecond: 1 },
+            lastAuthExpire: { expire_millisecond: 1 },
         },
     }
 }

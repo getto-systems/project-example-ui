@@ -65,10 +65,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         }
 
         // 前回の更新時刻が新しければ今回は通信しない
-        const time = {
-            now: clock.now(),
-            expire_millisecond: config.delay.delay_millisecond,
-        }
+        const time = { now: clock.now(), ...config.lastAuthExpire }
         if (!hasExpired(result.value.lastAuthAt, time)) {
             post({ type: "lastAuth-not-expired" })
             return NEXT
@@ -116,5 +113,5 @@ export function startContinuousRenewEventHasDone(event: StartContinuousRenewEven
         case "failed-to-continuous-renew":
         case "repository-error":
             return true
-    }    
+    }
 }
