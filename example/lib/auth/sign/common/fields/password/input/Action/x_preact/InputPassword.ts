@@ -14,9 +14,7 @@ import { InputBoard } from "../../../../../../../../z_vendor/getto-application/b
 import { ValidateBoardFieldState } from "../../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 import { InputPasswordResource, InputPasswordResourceState } from "../resource"
 
-import { PASSWORD_MAX_BYTES, ValidatePasswordError } from "../../../convert"
-
-import { PasswordCharacterState } from "../../../data"
+import { ValidatePasswordError } from "../../../data"
 
 type Resource = InputPasswordResource & Readonly<{ help: VNodeContent[] }>
 export function InputPassword(resource: Resource): VNode {
@@ -42,7 +40,7 @@ export function View(props: InputPasswordProps): VNode {
         } else {
             return field_error({
                 ...content,
-                notice: passwordValidationError(props.state, props.field.checkCharacter()),
+                notice: passwordValidationError(props.state),
             })
         }
     }
@@ -58,23 +56,22 @@ export function View(props: InputPasswordProps): VNode {
 
 function passwordValidationError(
     result: ValidateBoardFieldState<ValidatePasswordError>,
-    character: PasswordCharacterState,
 ): VNodeContent[] {
     if (result.valid) {
         return []
     }
 
     return result.err.map((err) => {
-        switch (err) {
+        switch (err.type) {
             case "empty":
                 return ["パスワードを入力してください"]
 
             case "too-long":
-                if (character.multiByte) {
+                if (err.multiByte) {
                     // マルチバイト文字は最大で 4 bytes なので max bytes / 4 をヒントとして表示する
-                    return [`パスワードが長すぎます(${Math.floor(PASSWORD_MAX_BYTES / 4)}文字程度)`]
+                    return [`パスワードが長すぎます(${Math.floor(err.maxBytes / 4)}文字程度)`]
                 } else {
-                    return [`パスワードが長すぎます(${PASSWORD_MAX_BYTES}文字以内)`]
+                    return [`パスワードが長すぎます(${err.maxBytes}文字以内)`]
                 }
         }
     })

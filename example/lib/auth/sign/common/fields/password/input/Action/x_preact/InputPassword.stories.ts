@@ -10,6 +10,8 @@ import { initMockInputPasswordAction } from "../Core/mock"
 
 import { ValidatePasswordState } from "../Core/action"
 
+import { PASSWORD_MAX_BYTES } from "../../../convert"
+
 import { PasswordCharacterState } from "../../../data"
 
 enum ValidateEnum {
@@ -53,8 +55,15 @@ const template = storyTemplate<Props>((props) => {
                 return { valid: true }
 
             case "empty":
+                return { valid: false, err: [{ type: props.validate }] }
+
             case "too-long":
-                return { valid: false, err: [props.validate] }
+                return {
+                    valid: false,
+                    err: [
+                        { type: props.validate, maxBytes: PASSWORD_MAX_BYTES, ...characterState() },
+                    ],
+                }
         }
     }
     function characterState(): PasswordCharacterState {

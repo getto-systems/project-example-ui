@@ -4,9 +4,7 @@ import {
     ValidateBoardFieldState,
 } from "../../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 
-import { ValidatePasswordError } from "../../../convert"
-
-import { Password, PasswordCharacterState } from "../../../data"
+import { Password, PasswordCharacterState, ValidatePasswordError } from "../../../data"
 import { ApplicationAction } from "../../../../../../../../z_vendor/getto-application/action/action"
 
 export interface InputPasswordAction extends ApplicationAction {
