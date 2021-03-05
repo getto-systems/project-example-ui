@@ -16,7 +16,7 @@ import {
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,
-} from "../../../../password/reset/reset/x_Action/Reset/init/worker/foreground"
+} from "../../../../password/reset/reset/Action/init/worker/foreground"
 
 import { toSignEntryPoint } from "../../impl"
 import { initSignAction } from "../../Core/impl"

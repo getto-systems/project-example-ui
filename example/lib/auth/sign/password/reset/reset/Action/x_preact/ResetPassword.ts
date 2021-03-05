@@ -2,25 +2,25 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../../../z_vendor/getto-css/preact/common"
+import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
 import {
     buttons,
     button_disabled,
     button_send,
     button_undo,
     fieldError,
-} from "../../../../../../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../../../../../../z_vendor/getto-css/preact/layout/login"
+} from "../../../../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { useApplicationAction, useEntryPoint } from "../../../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../../../x_preact/common/site"
-import { icon, spinner } from "../../../../../../../../x_preact/common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../../../../../../../../x_preact/auth/Sign/script"
+import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
 
-import { ApplicationError } from "../../../../../../../../x_preact/common/System/ApplicationError"
-import { InputLoginID } from "../../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
-import { InputPassword } from "../../../../../../common/fields/password/input/Action/x_preact/InputPassword"
+import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
+import { InputLoginID } from "../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
+import { InputPassword } from "../../../../../common/fields/password/input/Action/x_preact/InputPassword"
 
 import {
     ResetPasswordEntryPoint,
@@ -28,11 +28,11 @@ import {
     ResetPasswordResourceState,
 } from "../action"
 
-import { ResetError } from "../../../data"
+import { ResetPasswordError } from "../../data"
 
 export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    return h(View, <ResetPasswordProps>{
+    return h(ResetPasswordComponent, {
         ...resource,
         state: {
             core: useApplicationAction(resource.reset.core),
@@ -41,9 +41,8 @@ export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
     })
 }
 
-export type ResetPasswordProps = ResetPasswordResource &
-    Readonly<{ state: ResetPasswordResourceState }>
-export function View(props: ResetPasswordProps): VNode {
+export type ResetPasswordProps = ResetPasswordResource & ResetPasswordResourceState
+export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.core.type) {
@@ -208,7 +207,7 @@ export function View(props: ResetPasswordProps): VNode {
     }
 }
 
-function resetError(err: ResetError): VNodeContent[] {
+function resetError(err: ResetPasswordError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

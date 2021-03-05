@@ -1,15 +1,15 @@
-import { newResetInfra } from "../../../../init"
+import { newResetPasswordInfra } from "../../../impl/init"
 
 import { newCoreBackgroundPod } from "../common"
 
-import { resetEventHasDone } from "../../../../impl"
+import { resetPasswordEventHasDone } from "../../../impl/core"
 
-import { WorkerHandler } from "../../../../../../../../../z_vendor/getto-application/action/worker/background"
+import { WorkerHandler } from "../../../../../../../../z_vendor/getto-application/action/worker/background"
 
-import { CoreBackgroundInfra } from "../../Core/impl"
+import { ResetPasswordCoreBackgroundInfra } from "../../Core/impl"
 
 import { ResetPasswordProxyMessage, ResetPasswordProxyResponse } from "./message"
-import { backgroundLocationDetecter } from "../../../../../../../../../z_vendor/getto-application/location/helper"
+import { backgroundLocationDetecter } from "../../../../../../../../z_vendor/getto-application/location/helper"
 
 export function newResetPasswordHandler(
     post: Post<ResetPasswordProxyResponse>,
@@ -23,7 +23,7 @@ export function newResetPasswordHandler(
                     (event) => {
                         post({
                             ...message,
-                            done: resetEventHasDone(event),
+                            done: resetPasswordEventHasDone(event),
                             event,
                         })
                     },
@@ -33,9 +33,9 @@ export function newResetPasswordHandler(
     }
 }
 
-export function newCoreBackgroundInfra(): CoreBackgroundInfra {
+export function newCoreBackgroundInfra(): ResetPasswordCoreBackgroundInfra {
     return {
-        reset: newResetInfra(),
+        reset: newResetPasswordInfra(),
     }
 }
 

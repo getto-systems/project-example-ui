@@ -1,17 +1,17 @@
 import { LoginID } from "../../../common/fields/loginID/data"
 import { Password } from "../../../common/fields/password/data"
 
-export type ResetFields = Readonly<{
+export type ResetPasswordFields = Readonly<{
     loginID: LoginID
     password: Password
 }>
 
-export type ResetError =
+export type ResetPasswordError =
     | Readonly<{ type: "validation-error" }>
     | Readonly<{ type: "empty-reset-token" }>
-    | ResetRemoteError
+    | ResetPasswordRemoteError
 
-export type ResetRemoteError =
+export type ResetPasswordRemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "server-error" }>

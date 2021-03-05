@@ -1,41 +1,41 @@
-import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 
 import {
     ClockPubSub,
     ClockSubscriber,
     initStaticClock,
     staticClockPubSub,
-} from "../../../../../../../z_vendor/getto-application/infra/clock/simulate"
+} from "../../../../../../z_vendor/getto-application/infra/clock/simulate"
 
-import { Clock } from "../../../../../../../z_vendor/getto-application/infra/clock/infra"
-import { ResetRemotePod, ResetResult } from "../../infra"
+import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
+import { ResetPasswordRemotePod, ResetPasswordResult } from "../infra"
 
 import { ResetPasswordAction } from "./action"
 
-import { CoreState } from "./Core/action"
+import { ResetPasswordCoreState } from "./Core/action"
 
-import { initGetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/impl/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
     RenewAuthInfoRemotePod,
-} from "../../../../../kernel/authInfo/kernel/infra"
-import { resetEventHasDone } from "../../impl"
+} from "../../../../kernel/authInfo/kernel/infra"
+import { resetPasswordEventHasDone } from "../impl/core"
 import {
     initAsyncActionTester_legacy,
     initSyncActionTestRunner,
-} from "../../../../../../../z_vendor/getto-application/action/testHelper"
-import { initFormAction } from "./Form/impl"
-import { standardBoardValueStore } from "../../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
-import { toAction, toEntryPoint } from "./impl"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../../common/authz/infra"
-import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { lastAuthRepositoryConverter } from "../../../../../kernel/authInfo/kernel/convert"
-import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initResetLocationDetecter } from "../../testHelper"
-import { startContinuousRenewEventHasDone } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
+import { initResetPasswordFormAction } from "./Form/impl"
+import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { toAction, toResetPasswordEntryPoint } from "./impl"
+import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./Core/impl"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { lastAuthRepositoryConverter } from "../../../../kernel/authInfo/kernel/convert"
+import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initResetPasswordLocationDetecter } from "../impl/testHelper"
+import { startContinuousRenewEventHasDone } from "../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
 
 // テスト開始時刻
 const START_AT = new Date("2020-01-01 10:00:00")
@@ -203,7 +203,7 @@ describe("RegisterPassword", () => {
 
     test("terminate", (done) => {
         const { resource } = standardPasswordResetResource()
-        const entryPoint = toEntryPoint(resource)
+        const entryPoint = toResetPasswordEntryPoint(resource)
 
         const runner = initSyncActionTestRunner([
             {
@@ -265,7 +265,7 @@ type PasswordResetTestRepository = Readonly<{
     lastAuth: LastAuthRepositoryPod
 }>
 type PasswordResetTestRemoteAccess = Readonly<{
-    reset: ResetRemotePod
+    reset: ResetPasswordRemotePod
     renew: RenewAuthInfoRemotePod
 }>
 
@@ -277,8 +277,8 @@ function newPasswordResetTestResource(
 ): ResetPasswordAction {
     const config = standardConfig()
     const action = toAction({
-        core: initCoreAction(
-            initCoreMaterial(
+        core: initResetPasswordCoreAction(
+            initResetPasswordCoreMaterial(
                 {
                     startContinuousRenew: {
                         ...repository,
@@ -297,12 +297,12 @@ function newPasswordResetTestResource(
                 },
                 {
                     getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
-                    reset: initResetLocationDetecter(currentURL),
+                    reset: initResetPasswordLocationDetecter(currentURL),
                 },
             ),
         ),
 
-        form: initFormAction(),
+        form: initResetPasswordFormAction(),
     })
 
     action.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
@@ -362,7 +362,7 @@ function waitRemoteAccess(clock: ClockPubSub): PasswordResetTestRemoteAccess {
     }
 }
 
-function simulateReset(): ResetResult {
+function simulateReset(): ResetPasswordResult {
     return {
         success: true,
         value: {
@@ -412,7 +412,7 @@ function standardClock(subscriber: ClockSubscriber): Clock {
 }
 
 function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: CoreState) => {
+    return initAsyncActionTester_legacy((state: ResetPasswordCoreState) => {
         switch (state.type) {
             case "initial-reset":
             case "try-to-load":
@@ -429,7 +429,7 @@ function initAsyncTester() {
                 return startContinuousRenewEventHasDone(state)
 
             default:
-                return resetEventHasDone(state)
+                return resetPasswordEventHasDone(state)
         }
     })
 }

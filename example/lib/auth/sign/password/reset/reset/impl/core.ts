@@ -1,24 +1,24 @@
-import { delayedChecker } from "../../../../../z_vendor/getto-application/infra/timer/helper"
+import { delayedChecker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 
-import { ResetInfra } from "./infra"
+import { ResetPasswordInfra } from "../infra"
 
-import { ResetLocationDetectMethod, ResetLocationKeys, ResetPod } from "./method"
+import { ResetPasswordLocationDetectMethod, ResetPasswordLocationKeys, ResetPasswordPod } from "../method"
 
-import { ResetEvent } from "./event"
+import { ResetPasswordEvent } from "../event"
 
-import { authRemoteConverter } from "../../../kernel/authInfo/kernel/convert"
-import { resetTokenLocationConverter } from "../kernel/convert"
+import { authRemoteConverter } from "../../../../kernel/authInfo/kernel/convert"
+import { resetTokenLocationConverter } from "../../kernel/convert"
 
 interface Detecter {
-    (keys: ResetLocationKeys): ResetLocationDetectMethod
+    (keys: ResetPasswordLocationKeys): ResetPasswordLocationDetectMethod
 }
 export const detectResetToken: Detecter = (keys) => (currentURL) =>
     resetTokenLocationConverter(currentURL.searchParams.get(keys.token))
 
 interface Reset {
-    (infra: ResetInfra): ResetPod
+    (infra: ResetPasswordInfra): ResetPasswordPod
 }
-export const reset: Reset = (infra) => (detecter) => async (fields, post) => {
+export const resetPassword: Reset = (infra) => (detecter) => async (fields, post) => {
     if (!fields.valid) {
         post({ type: "failed-to-reset", err: { type: "validation-error" } })
         return
@@ -49,7 +49,7 @@ export const reset: Reset = (infra) => (detecter) => async (fields, post) => {
     post({ type: "succeed-to-reset", auth: response.value })
 }
 
-export function resetEventHasDone(event: ResetEvent): boolean {
+export function resetPasswordEventHasDone(event: ResetPasswordEvent): boolean {
     switch (event.type) {
         case "succeed-to-reset":
         case "failed-to-reset":

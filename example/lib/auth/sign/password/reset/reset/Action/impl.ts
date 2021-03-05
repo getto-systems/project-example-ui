@@ -1,10 +1,10 @@
-import { initSignLinkResource } from "../../../../../common/link/Action/impl"
+import { initSignLinkResource } from "../../../../common/link/Action/impl"
 
 import { ResetPasswordAction, ResetPasswordEntryPoint } from "./action"
-import { CoreAction } from "./Core/action"
-import { FormAction } from "./Form/action"
+import { ResetPasswordCoreAction } from "./Core/action"
+import { ResetPasswordFormAction } from "./Form/action"
 
-export function toEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoint {
+export function toResetPasswordEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoint {
     return {
         resource: { reset: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
@@ -13,8 +13,8 @@ export function toEntryPoint(action: ResetPasswordAction): ResetPasswordEntryPoi
 
 export function toAction(
     actions: Readonly<{
-        core: CoreAction
-        form: FormAction
+        core: ResetPasswordCoreAction
+        form: ResetPasswordFormAction
     }>,
 ): ResetPasswordAction {
     return {

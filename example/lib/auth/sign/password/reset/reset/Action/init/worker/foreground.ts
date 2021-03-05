@@ -1,18 +1,18 @@
 import { newCoreForegroundMaterial } from "../common"
 
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../../kernel/authInfo/common/startContinuousRenew/impl/init"
-import { newGetSecureScriptPathInfra } from "../../../../../../../common/secure/getScriptPath/impl/init"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../../../kernel/authInfo/common/startContinuousRenew/impl/init"
+import { newGetSecureScriptPathInfra } from "../../../../../../common/secure/getScriptPath/impl/init"
 
-import { newResetLocationDetecter } from "../../../../init"
+import { newResetPasswordLocationDetecter } from "../../../impl/init"
 
-import { toAction, toEntryPoint } from "../../impl"
-import { CoreForegroundInfra, initCoreAction } from "../../Core/impl"
-import { initFormAction } from "../../Form/impl"
+import { toAction, toResetPasswordEntryPoint } from "../../impl"
+import { ResetPasswordCoreForegroundInfra, initResetPasswordCoreAction } from "../../Core/impl"
+import { initResetPasswordFormAction } from "../../Form/impl"
 
 import {
     WorkerAbstractProxy,
     WorkerProxy,
-} from "../../../../../../../../../z_vendor/getto-application/action/worker/foreground"
+} from "../../../../../../../../z_vendor/getto-application/action/worker/foreground"
 
 import {
     ResetPasswordProxyMaterial,
@@ -21,8 +21,8 @@ import {
 } from "./message"
 
 import { ResetPasswordEntryPoint } from "../../action"
-import { CoreAction } from "../../Core/action"
-import { FormAction } from "../../Form/action"
+import { ResetPasswordCoreAction } from "../../Core/action"
+import { ResetPasswordFormAction } from "../../Form/action"
 
 export interface ResetPasswordProxy
     extends WorkerProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse> {
@@ -46,9 +46,9 @@ class Proxy
 
     entryPoint(webStorage: Storage, currentLocation: Location): ResetPasswordEntryPoint {
         const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
-        const detecter = newResetLocationDetecter(currentLocation)
+        const detecter = newResetPasswordLocationDetecter(currentLocation)
         return newEntryPoint(
-            initCoreAction({
+            initResetPasswordCoreAction({
                 reset: (fields, post) =>
                     this.material.reset.call({ fields, resetToken: detecter() }, post),
                 ...foreground,
@@ -64,19 +64,19 @@ class Proxy
     }
 }
 
-export function newCoreForegroundInfra(webStorage: Storage): CoreForegroundInfra {
+export function newCoreForegroundInfra(webStorage: Storage): ResetPasswordCoreForegroundInfra {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }
 
-export function newEntryPoint(core: CoreAction): ResetPasswordEntryPoint {
-    return toEntryPoint(toAction({ core, form: newFormAction() }))
+export function newEntryPoint(core: ResetPasswordCoreAction): ResetPasswordEntryPoint {
+    return toResetPasswordEntryPoint(toAction({ core, form: newFormAction() }))
 }
 
-function newFormAction(): FormAction {
-    return initFormAction()
+function newFormAction(): ResetPasswordFormAction {
+    return initResetPasswordFormAction()
 }
 
 interface Post<M> {
