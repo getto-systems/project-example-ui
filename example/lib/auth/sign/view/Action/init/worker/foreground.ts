@@ -4,7 +4,7 @@ import { newSignViewLocationDetecter } from "../../../impl/init"
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
-} from "../../../../password/authenticate/x_Action/Authenticate/init/worker/foreground"
+} from "../../../../password/authenticate/Action/init/worker/foreground"
 import {
     newRequestPasswordResetTokenProxy,
     RequestPasswordResetTokenProxy,

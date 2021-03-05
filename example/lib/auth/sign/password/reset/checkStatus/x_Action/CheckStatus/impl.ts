@@ -1,6 +1,6 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { newSignLinkResource } from "../../../../../common/link/Action/impl"
+import { initSignLinkResource } from "../../../../../common/link/Action/impl"
 
 import { checkSendingStatus } from "../../impl"
 
@@ -20,7 +20,7 @@ export function toEntryPoint(
     action: CheckPasswordResetSendingStatusAction,
 ): CheckPasswordResetSendingStatusEntryPoint {
     return {
-        resource: { checkStatus: action, ...newSignLinkResource() },
+        resource: { checkStatus: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }

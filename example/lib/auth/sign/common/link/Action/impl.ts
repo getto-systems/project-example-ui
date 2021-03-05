@@ -3,7 +3,7 @@ import { SignLinkResource } from "./action"
 import { SignHref, signLinkParams } from "../data"
 import { ResetSessionID } from "../../../password/reset/kernel/data"
 
-export function newSignLinkResource(): SignLinkResource {
+export function initSignLinkResource(): SignLinkResource {
     return {
         href: {
             password_authenticate,

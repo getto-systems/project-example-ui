@@ -173,7 +173,7 @@ describe("CheckAuthInfo", () => {
         resource.core.subscriber.subscribe(runner(done))
     })
 
-    test("renew stored credential; with delayed", (done) => {
+    test("renew stored credential; take long time", (done) => {
         // wait for delayed timeout
         const { clock, entryPoint } = takeLongTime_elements()
         const resource = entryPoint.resource

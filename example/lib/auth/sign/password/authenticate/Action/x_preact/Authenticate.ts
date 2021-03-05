@@ -2,8 +2,8 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../../z_vendor/getto-css/preact/common"
-import { loginBox } from "../../../../../../../z_vendor/getto-css/preact/layout/login"
+import { VNodeContent } from "../../../../../../z_vendor/getto-css/preact/common"
+import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import {
     buttons,
     button_disabled,
@@ -11,29 +11,29 @@ import {
     button_undo,
     fieldError,
     form,
-} from "../../../../../../../z_vendor/getto-css/preact/design/form"
+} from "../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { useApplicationAction, useEntryPoint } from "../../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../../x_preact/common/site"
-import { icon, spinner } from "../../../../../../../x_preact/common/icon"
+import { useApplicationAction, useEntryPoint } from "../../../../../../x_preact/common/hooks"
+import { siteInfo } from "../../../../../../x_preact/common/site"
+import { icon, spinner } from "../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../../../../../../../x_preact/auth/Sign/script"
+import { appendScript } from "../../../../../../x_preact/auth/Sign/script"
 
-import { ApplicationError } from "../../../../../../../x_preact/common/System/ApplicationError"
-import { InputLoginID } from "../../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
-import { InputPassword } from "../../../../../common/fields/password/input/Action/x_preact/InputPassword"
+import { ApplicationError } from "../../../../../../x_preact/common/System/ApplicationError"
+import { InputLoginID } from "../../../../common/fields/loginID/input/Action/x_preact/InputLoginID"
+import { InputPassword } from "../../../../common/fields/password/input/Action/x_preact/InputPassword"
 
 import {
     AuthenticatePasswordEntryPoint,
     AuthenticatePasswordResource,
     AuthenticatePasswordResourceState,
-} from "../action"
+} from "../entryPoint"
 
-import { AuthenticateError } from "../../../data"
+import { AuthenticatePasswordError } from "../../data"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    return h(View, <AuthenticatePasswordProps>{
+    return h(AuthenticatePasswordComponent, {
         ...resource,
         state: {
             core: useApplicationAction(resource.authenticate.core),
@@ -43,8 +43,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
 }
 
 export type AuthenticatePasswordProps = AuthenticatePasswordResource &
-    Readonly<{ state: AuthenticatePasswordResourceState }>
-export function View(props: AuthenticatePasswordProps): VNode {
+    AuthenticatePasswordResourceState
+export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.core.type) {
@@ -214,7 +214,7 @@ export function View(props: AuthenticatePasswordProps): VNode {
     }
 }
 
-function loginError(err: AuthenticateError): VNodeContent[] {
+function loginError(err: AuthenticatePasswordError): VNodeContent[] {
     switch (err.type) {
         case "validation-error":
             return ["正しく入力してください"]

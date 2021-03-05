@@ -1,4 +1,4 @@
-import { newSignLinkResource } from "../../../../../common/link/Action/impl"
+import { initSignLinkResource } from "../../../../../common/link/Action/impl"
 import { RequestPasswordResetTokenAction, RequestPasswordResetTokenEntryPoint } from "./action"
 import { CoreAction } from "./Core/action"
 import { FormAction } from "./Form/action"
@@ -7,7 +7,7 @@ export function toEntryPoint(
     action: RequestPasswordResetTokenAction,
 ): RequestPasswordResetTokenEntryPoint {
     return {
-        resource: { requestToken: action, ...newSignLinkResource() },
+        resource: { requestToken: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }

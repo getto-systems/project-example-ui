@@ -1,10 +1,13 @@
-import { AuthenticateEvent } from "./event"
+import { AuthenticatePasswordEvent } from "./event"
 
 import { ConvertBoardResult } from "../../../../z_vendor/getto-application/board/kernel/data"
-import { AuthenticateFields } from "./data"
+import { AuthenticatePasswordFields } from "./data"
 
-export interface AuthenticateMethod {
-    (fields: ConvertBoardResult<AuthenticateFields>, post: Post<AuthenticateEvent>): void
+export interface AuthenticatePasswordMethod {
+    (
+        fields: ConvertBoardResult<AuthenticatePasswordFields>,
+        post: Post<AuthenticatePasswordEvent>,
+    ): void
 }
 
 interface Post<E> {
