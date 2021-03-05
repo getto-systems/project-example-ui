@@ -24,7 +24,7 @@ export const outlineMenuExpandRepositoryConverter: RepositoryConverter<
 > = {
     toRepository: (value) => value,
     fromRepository: (value) => ({
-        success: true,
+        valid: true,
         // label の配列なので、validation error にする手がかりがない
         value: value.map((labels) => labels.map(markOutlineMenuCategoryLabel)),
     }),

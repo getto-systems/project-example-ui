@@ -28,7 +28,7 @@ class Wrapped<V, R> implements Repository<V> {
         }
 
         const convertResult = this.converter.fromRepository(fetchResult.value)
-        if (!convertResult.success) {
+        if (!convertResult.valid) {
             return { success: true, found: false }
         }
 
