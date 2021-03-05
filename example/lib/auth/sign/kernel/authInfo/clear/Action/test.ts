@@ -1,47 +1,36 @@
-import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
+import {
+    initAsyncActionTestRunner,
+    initSyncActionTestRunner,
+} from "../../../../../../z_vendor/getto-application/action/testHelper"
+
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
+
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./Core/impl"
 import { toLogoutResource } from "./impl"
-import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import { LastAuthRepositoryPod, LastAuthRepositoryValue } from "../../kernel/infra"
-import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
-import { LogoutCoreState } from "./Core/action"
 
-const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
-const STORED_AUTH_AT = new Date("2020-01-01 09:00:00").toISOString()
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
+import { LastAuthRepositoryPod } from "../../kernel/infra"
+
+import { LogoutResource } from "./action"
+import { LogoutCoreState } from "./Core/action"
 
 describe("Logout", () => {
     test("clear", (done) => {
         const { resource } = standardResource()
 
-        resource.logout.subscriber.subscribe(stateHandler())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.logout.submit()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ type: "succeed-to-logout" }])
+                },
+            },
+        ])
 
-        resource.logout.submit()
-
-        function stateHandler(): Post<LogoutCoreState> {
-            const stack: LogoutCoreState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-logout":
-                        // work in progress...
-                        break
-
-                    case "succeed-to-logout":
-                        expect(stack).toEqual([{ type: "succeed-to-logout" }])
-                        done()
-                        break
-
-                    case "failed-to-logout":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
+        resource.logout.subscriber.subscribe(runner(done))
     })
 
     test("terminate", (done) => {
@@ -49,9 +38,11 @@ describe("Logout", () => {
 
         const runner = initSyncActionTestRunner([
             {
-                statement: () => {
+                statement: (check) => {
                     resource.logout.terminate()
                     resource.logout.submit()
+
+                    setTimeout(check, 256) // wait for events...
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -65,33 +56,46 @@ describe("Logout", () => {
 })
 
 function standardResource() {
-    const repository = standardRepository()
+    const resource = newResource(standard_lastAuth(), standard_authz())
 
-    const resource = toLogoutResource(initLogoutCoreAction(initLogoutCoreMaterial(repository)))
-
-    return { repository, resource }
+    return { resource }
 }
 
-function standardRepository() {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
-    authz.set({ nonce: "nonce", roles: ["role"] })
+function newResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
+    return toLogoutResource(
+        initLogoutCoreAction(
+            initLogoutCoreMaterial({
+                lastAuth,
+                authz,
+            }),
+        ),
+    )
+}
 
-    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
+function standard_lastAuth(): LastAuthRepositoryPod {
+    const lastAuth = initMemoryDB()
     lastAuth.set({
-        nonce: STORED_AUTHN_NONCE,
-        lastAuthAt: STORED_AUTH_AT,
+        nonce: "stored-authn-nonce",
+        lastAuthAt: new Date("2020-01-01 09:00:00").toISOString(),
     })
+    return wrapRepository(lastAuth)
+}
+function standard_authz(): AuthzRepositoryPod {
+    const authz = initMemoryDB<AuthzRepositoryValue>()
+    authz.set({
+        nonce: "nonce",
+        roles: ["role"],
+    })
+    return wrapRepository(authz)
+}
 
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        lastAuth: <LastAuthRepositoryPod>wrapRepository(lastAuth),
+function actionHasDone(state: LogoutCoreState): boolean {
+    switch (state.type) {
+        case "initial-logout":
+            return false
+
+        case "succeed-to-logout":
+        case "failed-to-logout":
+            return true
     }
-}
-
-interface Post<T> {
-    (state: T): void
-}
-
-function assertNever(_: never): never {
-    throw new Error("NEVER")
 }

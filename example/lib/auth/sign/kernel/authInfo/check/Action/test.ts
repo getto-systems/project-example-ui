@@ -22,12 +22,8 @@ import { checkAuthInfoEventHasDone } from "../impl/core"
 
 import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
-import {
-    LastAuthRepositoryPod,
-    LastAuthRepositoryValue,
-    RenewAuthInfoRemotePod,
-} from "../../kernel/infra"
+import { AuthzRepositoryPod } from "../../../../../../common/authz/infra"
+import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/infra"
 
 import { CheckAuthInfoEntryPoint } from "./entryPoint"
 
@@ -268,7 +264,7 @@ describe("CheckAuthInfo", () => {
                     entryPoint.terminate()
                     entryPoint.resource.core.ignite()
 
-                    setTimeout(check, 256) // wait for some event
+                    setTimeout(check, 256) // wait for event...
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -283,7 +279,7 @@ describe("CheckAuthInfo", () => {
 
 function standard_elements() {
     const clockPubSub = staticClockPubSub()
-    const entryPoint = newCheckAuthInfoEntryPoint(
+    const entryPoint = newEntryPoint(
         standard_lastAuth(),
         standard_authz(),
         standard_renew(clockPubSub),
@@ -294,7 +290,7 @@ function standard_elements() {
 }
 function instantLoadable_elements() {
     const clockPubSub = staticClockPubSub()
-    const entryPoint = newCheckAuthInfoEntryPoint(
+    const entryPoint = newEntryPoint(
         standard_lastAuth(),
         standard_authz(),
         standard_renew(clockPubSub),
@@ -305,7 +301,7 @@ function instantLoadable_elements() {
 }
 function takeLongTime_elements() {
     const clockPubSub = staticClockPubSub()
-    const entryPoint = newCheckAuthInfoEntryPoint(
+    const entryPoint = newEntryPoint(
         standard_lastAuth(),
         standard_authz(),
         wait_renew(clockPubSub),
@@ -315,7 +311,7 @@ function takeLongTime_elements() {
 }
 function noStored_elements() {
     const clockPubSub = staticClockPubSub()
-    const entryPoint = newCheckAuthInfoEntryPoint(
+    const entryPoint = newEntryPoint(
         noStored_lastAuth(),
         noStored_authz(),
         standard_renew(clockPubSub),
@@ -324,7 +320,7 @@ function noStored_elements() {
     return { entryPoint }
 }
 
-function newCheckAuthInfoEntryPoint(
+function newEntryPoint(
     lastAuth: LastAuthRepositoryPod,
     authz: AuthzRepositoryPod,
     renew: RenewAuthInfoRemotePod,
@@ -369,7 +365,7 @@ function newCheckAuthInfoEntryPoint(
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    const lastAuth = initMemoryDB<LastAuthRepositoryValue>()
+    const lastAuth = initMemoryDB()
     lastAuth.set({
         nonce: "stored-authn-nonce",
         lastAuthAt: STORED_LAST_AUTH_AT,
@@ -381,7 +377,7 @@ function noStored_lastAuth(): LastAuthRepositoryPod {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const lastAuth = initMemoryDB<AuthzRepositoryValue>()
+    const lastAuth = initMemoryDB()
     lastAuth.set({
         nonce: "api-nonce",
         roles: ["role"],
