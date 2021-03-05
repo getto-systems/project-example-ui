@@ -3,7 +3,7 @@ import { ProfileFactory, AuthProfileResource, AuthProfileEntryPoint } from "./en
 import { initErrorResource } from "../../../../availability/x_Resource/Error/impl"
 import { initMenuResource } from "../../../../common/x_Resource/Outline/Menu/impl"
 
-import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/x_Action/Logout/action"
+import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/action"
 
 export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProfileEntryPoint {
     return {

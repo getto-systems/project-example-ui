@@ -19,7 +19,7 @@ import { ApplicationError } from "../../../../../x_preact/common/System/Applicat
 import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"
 import { Menu } from "../../../../../x_preact/common/Outline/Menu"
 import { BreadcrumbList } from "../../../../../x_preact/common/Outline/BreadcrumbList"
-import { Logout } from "../../../../../auth/sign/kernel/authInfo/clear/x_Action/Logout/x_preact/Logout"
+import { Logout } from "../../../../../auth/sign/kernel/authInfo/clear/Action/x_preact/Logout"
 
 import { AuthProfileEntryPoint, AuthProfileResource } from "../entryPoint"
 

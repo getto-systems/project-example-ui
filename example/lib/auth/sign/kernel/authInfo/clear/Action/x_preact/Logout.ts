@@ -2,26 +2,26 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { box } from "../../../../../../../../z_vendor/getto-css/preact/design/box"
-import { button_send, field } from "../../../../../../../../z_vendor/getto-css/preact/design/form"
-import { notice_alert } from "../../../../../../../../z_vendor/getto-css/preact/design/highlight"
-import { v_small } from "../../../../../../../../z_vendor/getto-css/preact/design/alignment"
+import { box } from "../../../../../../../z_vendor/getto-css/preact/design/box"
+import { button_send, field } from "../../../../../../../z_vendor/getto-css/preact/design/form"
+import { notice_alert } from "../../../../../../../z_vendor/getto-css/preact/design/highlight"
+import { v_small } from "../../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { useApplicationAction } from "../../../../../../../../x_preact/common/hooks"
+import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
 
-import { LogoutResource, LogoutState } from "../action"
+import { LogoutResource, LogoutResourceState } from "../action"
 
-import { RepositoryError } from "../../../../../../../../z_vendor/getto-application/infra/repository/data"
+import { RepositoryError } from "../../../../../../../z_vendor/getto-application/infra/repository/data"
 
 export function Logout(resource: LogoutResource): VNode {
-    return h(View, <LogoutProps>{
+    return h(LogoutComponent, {
         ...resource,
         state: useApplicationAction(resource.logout),
     })
 }
 
-export type LogoutProps = LogoutResource & Readonly<{ state: LogoutState }>
-export function View(props: LogoutProps): VNode {
+export type LogoutProps = LogoutResource & LogoutResourceState
+export function LogoutComponent(props: LogoutProps): VNode {
     useLayoutEffect(() => {
         switch (props.state.type) {
             case "succeed-to-logout":
