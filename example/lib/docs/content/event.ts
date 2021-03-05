@@ -1,3 +1,8 @@
-import { ContentPath } from "./data";
+import { ConvertLocationResult } from "../../z_vendor/getto-application/location/detecter"
 
-export type LoadContentEvent = Readonly<{ type: "succeed-to-load"; path: ContentPath }>
+import { ContentPath } from "./data"
+
+export type LoadContentEvent = Readonly<{
+    type: "succeed-to-load"
+    path: ConvertLocationResult<ContentPath>
+}>

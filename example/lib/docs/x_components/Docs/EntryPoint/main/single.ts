@@ -1,8 +1,4 @@
-import { env } from "../../../../../y_environment/env"
-
 import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../impl/core"
-
-import { detectContentPath } from "../../../../content/impl/location"
 
 import { initContentComponent } from "../../content/impl"
 
@@ -12,14 +8,14 @@ import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
 import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/load/main/document"
+import { newLoadContentLocationDetecter } from "../../../../content/init"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
-    currentURL: URL
     currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
-    const { webStorage, currentURL, currentLocation } = feature
+    const { webStorage, currentLocation } = feature
 
     const factory: DocumentFactory = {
         actions: {
@@ -33,9 +29,7 @@ export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
         },
     }
     const locationInfo: DocumentLocationInfo = {
-        content: {
-            getContentPath: () => detectContentPath(env.version, currentURL),
-        },
+        content: newLoadContentLocationDetecter(currentLocation),
     }
     const resource = initDocumentResource(factory, locationInfo)
     return {

@@ -32,7 +32,10 @@ describe("Content", () => {
 
                     case "succeed-to-load":
                         expect(stack).toEqual([
-                            { type: "succeed-to-load", path: "/docs/index.html" },
+                            {
+                                type: "succeed-to-load",
+                                path: { valid: true, value: "/docs/index.html" },
+                            },
                         ])
                         done()
                         break

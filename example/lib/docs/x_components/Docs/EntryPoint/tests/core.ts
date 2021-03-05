@@ -2,7 +2,6 @@ import {
     initOutlineBreadcrumbListAction,
     initOutlineMenuAction,
 } from "../../../../../auth/permission/outline/load/impl"
-import { detectContentPath } from "../../../../content/impl/location"
 
 import { DocumentFactory, initDocumentResource } from "../impl/core"
 
@@ -20,6 +19,7 @@ import { initUnexpectedErrorAction } from "../../../../../availability/unexpecte
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
+import { initLoadContentLocationDetecter } from "../../../../content/testHelper"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -57,8 +57,6 @@ export function newTestDocumentResource(
     }
 
     return initDocumentResource(factory, {
-        content: {
-            getContentPath: () => detectContentPath(version, currentURL),
-        },
+        content: initLoadContentLocationDetecter(currentURL, version),
     })
 }
