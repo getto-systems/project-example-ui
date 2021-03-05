@@ -1,95 +1,108 @@
 import {
-    initAsyncActionTester_legacy,
+    initAsyncActionTestRunner,
     initSyncActionTestRunner,
 } from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+
 import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initLocationDetecter } from "../../../../../../z_vendor/getto-application/location/testHelper"
-import { signLinkParams } from "../../../../common/link/data"
-import { ResetTokenSendingResult } from "../data"
-import { checkSessionStatusEventHasDone, detectSessionID } from "../impl/core"
+
+import { initCheckResetTokenSendingStatusLocationDetecter } from "../impl/testHelper"
+
+import { toCheckResetTokenSendingStatusEntryPoint } from "./impl"
+import {
+    initCheckResetTokenSendingStatusCoreAction,
+    initCheckResetTokenSendingStatusCoreMaterial,
+} from "./Core/impl"
+
+import { checkSessionStatusEventHasDone } from "../impl/core"
+
 import {
     GetResetTokenSendingStatusRemotePod,
     GetResetTokenSendingStatusResult,
     SendResetTokenRemotePod,
     SendResetTokenResult,
 } from "../infra"
-import {
-    CheckResetTokenSendingStatusCoreAction,
-    CheckResetTokenSendingStatusCoreState,
-} from "./Core/action"
-import {
-    initCheckResetTokenSendingStatusCoreAction,
-    initCheckResetTokenSendingStatusCoreMaterial,
-} from "./Core/impl"
-import { toCheckResetTokenSendingStatusEntryPoint } from "./impl"
+
+import { CheckResetTokenSendingStatusEntryPoint } from "./entryPoint"
+
+import { CheckResetTokenSendingStatusCoreState } from "./Core/action"
+
+import { ResetTokenSendingResult } from "../data"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
-        const { resource } = standardPasswordResetSessionResource()
+        const { entryPoint } = standardPasswordResetSessionResource()
+        const resource = entryPoint.resource.checkStatus
 
-        resource.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-check-status" },
+                        { type: "succeed-to-send-token" },
+                    ])
+                },
+            },
+        ])
 
-        resource.ignite()
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "try-to-check-status" },
-                    { type: "succeed-to-send-token" },
-                ])
-                done()
-            })
-        }
+        resource.subscriber.subscribe(runner(done))
     })
 
     test("submit valid login-id; with long sending", (done) => {
         // wait for send token check limit
-        const { resource } = longSendingPasswordResetSessionResource()
+        const { entryPoint } = longSendingPasswordResetSessionResource()
+        const resource = entryPoint.resource.checkStatus
 
-        resource.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "try-to-check-status" },
+                        { type: "retry-to-check-status", status: { sending: true } },
+                        { type: "retry-to-check-status", status: { sending: true } },
+                        { type: "retry-to-check-status", status: { sending: true } },
+                        { type: "retry-to-check-status", status: { sending: true } },
+                        { type: "retry-to-check-status", status: { sending: true } },
+                        {
+                            type: "failed-to-check-status",
+                            err: { type: "infra-error", err: "overflow check limit" },
+                        },
+                    ])
+                },
+            },
+        ])
 
-        resource.ignite()
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "try-to-check-status" },
-                    { type: "retry-to-check-status", status: { sending: true } },
-                    { type: "retry-to-check-status", status: { sending: true } },
-                    { type: "retry-to-check-status", status: { sending: true } },
-                    { type: "retry-to-check-status", status: { sending: true } },
-                    { type: "retry-to-check-status", status: { sending: true } },
-                    {
-                        type: "failed-to-check-status",
-                        err: { type: "infra-error", err: "overflow check limit" },
-                    },
-                ])
-                done()
-            })
-        }
+        resource.subscriber.subscribe(runner(done))
     })
 
     test("check without session id", (done) => {
-        const { resource } = noSessionIDPasswordResetSessionResource()
+        const { entryPoint } = noSessionIDPasswordResetSessionResource()
+        const resource = entryPoint.resource.checkStatus
 
-        resource.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        { type: "failed-to-check-status", err: { type: "empty-session-id" } },
+                    ])
+                },
+            },
+        ])
 
-        resource.ignite()
-
-        function initTester() {
-            return initAsyncTester()((stack) => {
-                expect(stack).toEqual([
-                    { type: "failed-to-check-status", err: { type: "empty-session-id" } },
-                ])
-                done()
-            })
-        }
+        resource.subscriber.subscribe(runner(done))
     })
 
     test("terminate", (done) => {
-        const { resource } = standardPasswordResetSessionResource()
-        const entryPoint = toCheckResetTokenSendingStatusEntryPoint(resource)
+        const { entryPoint } = standardPasswordResetSessionResource()
+        const resource = entryPoint.resource.checkStatus
 
         const runner = initSyncActionTestRunner([
             {
@@ -97,8 +110,7 @@ describe("CheckPasswordResetSendingStatus", () => {
                     entryPoint.terminate()
                     resource.ignite()
 
-                    // checkStatus の処理が終わるのを待つ
-                    setTimeout(check, 32)
+                    setTimeout(check, 256) // wait for events...
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -112,29 +124,26 @@ describe("CheckPasswordResetSendingStatus", () => {
 })
 
 function standardPasswordResetSessionResource() {
-    const currentURL = standardURL()
-    const simulator = standardRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(currentURL, simulator)
+    const entryPoint = newEntryPoint(standard_URL(), standard_sendToken(), standard_getStatus())
 
-    return { resource }
+    return { entryPoint }
 }
 function longSendingPasswordResetSessionResource() {
-    const currentURL = standardURL()
-    const simulator = longSendingSimulator()
-    const resource = newTestPasswordResetSessionResource(currentURL, simulator)
+    const entryPoint = newEntryPoint(
+        standard_URL(),
+        takeLongTime_sendToken(),
+        takeLongTime_getStatus(),
+    )
 
-    return { resource }
+    return { entryPoint }
 }
 function noSessionIDPasswordResetSessionResource() {
-    3
-    const currentURL = noSessionID_URL()
-    const simulator = standardRemoteAccess()
-    const resource = newTestPasswordResetSessionResource(currentURL, simulator)
+    const entryPoint = newEntryPoint(noSessionID_URL(), standard_sendToken(), standard_getStatus())
 
-    return { resource }
+    return { entryPoint }
 }
 
-function standardURL() {
+function standard_URL() {
     return new URL(
         "https://example.com/index.html?_password_reset=checkStatus&_password_reset_session_id=session-id",
     )
@@ -143,48 +152,49 @@ function noSessionID_URL() {
     return new URL("https://example.com/index.html?_password_reset=checkStatus")
 }
 
-type PasswordResetSessionTestRemoteAccess = Readonly<{
-    sendToken: SendResetTokenRemotePod
-    getStatus: GetResetTokenSendingStatusRemotePod
-}>
-
-function newTestPasswordResetSessionResource(
+function newEntryPoint(
     currentURL: URL,
-    remote: PasswordResetSessionTestRemoteAccess,
-): CheckResetTokenSendingStatusCoreAction {
-    const config = standardConfig()
-    return initCheckResetTokenSendingStatusCoreAction(
-        initCheckResetTokenSendingStatusCoreMaterial(
-            {
-                ...remote,
-                config: config.session.checkStatus,
-            },
-            initLocationDetecter(currentURL, detectSessionID(signLinkParams.password.reset)),
+    sendToken: SendResetTokenRemotePod,
+    getStatus: GetResetTokenSendingStatusRemotePod,
+): CheckResetTokenSendingStatusEntryPoint {
+    const checkStatusDetecter = initCheckResetTokenSendingStatusLocationDetecter(currentURL)
+    return toCheckResetTokenSendingStatusEntryPoint(
+        initCheckResetTokenSendingStatusCoreAction(
+            initCheckResetTokenSendingStatusCoreMaterial(
+                {
+                    sendToken,
+                    getStatus,
+                    config: {
+                        wait: { wait_millisecond: 32 },
+                        limit: { limit: 5 },
+                    },
+                },
+                checkStatusDetecter,
+            ),
         ),
     )
 }
 
-function standardConfig() {
-    return {
-        session: {
-            checkStatus: {
-                wait: { wait_millisecond: 2 },
-                limit: { limit: 5 },
-            },
-        },
-    }
+function standard_sendToken(): SendResetTokenRemotePod {
+    return initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 })
 }
-function standardRemoteAccess(): PasswordResetSessionTestRemoteAccess {
-    return {
-        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 }),
-        getStatus: getStatusRemoteAccess(standardGetStatusResponse(), { wait_millisecond: 0 }),
-    }
+function takeLongTime_sendToken(): SendResetTokenRemotePod {
+    return initRemoteSimulator(simulateSendToken, { wait_millisecond: 64 })
 }
-function longSendingSimulator(): PasswordResetSessionTestRemoteAccess {
-    return {
-        sendToken: initRemoteSimulator(simulateSendToken, { wait_millisecond: 3 }),
-        getStatus: getStatusRemoteAccess(longSendingGetStatusResponse(), { wait_millisecond: 0 }),
-    }
+
+function standard_getStatus(): GetResetTokenSendingStatusRemotePod {
+    return getStatusRemoteAccess([{ done: true, send: true }])
+}
+function takeLongTime_getStatus(): GetResetTokenSendingStatusRemotePod {
+    // 完了するまでに 5回以上かかる
+    return getStatusRemoteAccess([
+        { done: false, status: { sending: true } },
+        { done: false, status: { sending: true } },
+        { done: false, status: { sending: true } },
+        { done: false, status: { sending: true } },
+        { done: false, status: { sending: true } },
+        { done: false, status: { sending: true } },
+    ])
 }
 
 function simulateSendToken(): SendResetTokenResult {
@@ -192,18 +202,20 @@ function simulateSendToken(): SendResetTokenResult {
 }
 function getStatusRemoteAccess(
     responseCollection: ResetTokenSendingResult[],
-    interval: WaitTime,
 ): GetResetTokenSendingStatusRemotePod {
     let position = 0
-    return initRemoteSimulator((): GetResetTokenSendingStatusResult => {
-        if (responseCollection.length === 0) {
-            return { success: false, err: { type: "infra-error", err: "no response" } }
-        }
-        const response = getResponse()
-        position++
+    return initRemoteSimulator(
+        (): GetResetTokenSendingStatusResult => {
+            if (responseCollection.length === 0) {
+                return { success: false, err: { type: "infra-error", err: "no response" } }
+            }
+            const response = getResponse()
+            position++
 
-        return { success: true, value: response }
-    }, interval)
+            return { success: true, value: response }
+        },
+        { wait_millisecond: 0 },
+    )
 
     function getResponse(): ResetTokenSendingResult {
         if (position < responseCollection.length) {
@@ -212,33 +224,17 @@ function getStatusRemoteAccess(
         return responseCollection[responseCollection.length - 1]
     }
 }
-function standardGetStatusResponse(): ResetTokenSendingResult[] {
-    return [{ done: true, send: true }]
-}
-function longSendingGetStatusResponse(): ResetTokenSendingResult[] {
-    // 完了するまでに 5回以上かかる
-    return [
-        { done: false, status: { sending: true } },
-        { done: false, status: { sending: true } },
-        { done: false, status: { sending: true } },
-        { done: false, status: { sending: true } },
-        { done: false, status: { sending: true } },
-        { done: false, status: { sending: true } },
-    ]
-}
 
-function initAsyncTester() {
-    return initAsyncActionTester_legacy((state: CheckResetTokenSendingStatusCoreState) => {
-        switch (state.type) {
-            case "initial-check-status":
-                return false
+function actionHasDone(state: CheckResetTokenSendingStatusCoreState): boolean {
+    switch (state.type) {
+        case "initial-check-status":
+            return false
 
-            case "try-to-check-status":
-            case "retry-to-check-status":
-            case "failed-to-check-status":
-            case "failed-to-send-token":
-            case "succeed-to-send-token":
-                return checkSessionStatusEventHasDone(state)
-        }
-    })
+        case "try-to-check-status":
+        case "retry-to-check-status":
+        case "failed-to-check-status":
+        case "failed-to-send-token":
+        case "succeed-to-send-token":
+            return checkSessionStatusEventHasDone(state)
+    }
 }

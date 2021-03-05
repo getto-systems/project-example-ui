@@ -1,4 +1,4 @@
-import { newCheckSendingStatusInfra } from "../../impl/init"
+import { newCheckResetTokenSendingStatusInfra } from "../../impl/init"
 
 import {
     initCheckResetTokenSendingStatusCoreMaterial,
@@ -15,8 +15,8 @@ import { CheckResetTokenSendingStatusLocationDetecter } from "../../method"
 export function newCheckSendingStatusMaterial(
     detecter: CheckResetTokenSendingStatusLocationDetecter,
 ): CheckResetTokenSendingStatusCoreMaterial {
-    return initCheckResetTokenSendingStatusCoreMaterial(newCheckSendingStatusInfra(), detecter)
+    return initCheckResetTokenSendingStatusCoreMaterial(newCheckResetTokenSendingStatusInfra(), detecter)
 }
 export function newCheckSendingStatusMaterialPod(): CheckResetTokenSendingStatusCoreMaterialPod {
-    return initCheckResetTokenSendingStatusCoreMaterialPod(newCheckSendingStatusInfra())
+    return initCheckResetTokenSendingStatusCoreMaterialPod(newCheckResetTokenSendingStatusInfra())
 }
