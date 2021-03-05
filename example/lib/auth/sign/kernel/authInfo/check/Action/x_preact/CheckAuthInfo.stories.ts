@@ -2,10 +2,11 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { RenewAuthnInfoProps, View } from "./CheckAuthInfo"
+import { CheckAuthInfoComponent } from "./CheckAuthInfo"
 
-import { CheckAuthInfoResourceState } from "../action"
-import { initMockRenewAuthnInfoResource } from "../mock"
+import { initMockCheckAuthInfoResource } from "../mock"
+
+import { CheckAuthInfoCoreState } from "../Core/action"
 
 const renewOptions = {
     delayed: true,
@@ -29,12 +30,12 @@ type Props = Readonly<{
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <RenewAuthnInfoProps>{
-        ...initMockRenewAuthnInfoResource(),
+    return h(CheckAuthInfoComponent, {
+        ...initMockCheckAuthInfoResource(),
         state: state(),
     })
 
-    function state(): CheckAuthInfoResourceState {
+    function state(): CheckAuthInfoCoreState {
         switch (props.renew) {
             case "delayed":
                 return { type: "delayed-to-renew" }

@@ -2,15 +2,15 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { InputPasswordProps, InputPasswordView } from "./InputPassword"
+import { InputPasswordComponent } from "./InputPassword"
 
 import { markBoardValue } from "../../../../../../../../z_vendor/getto-application/board/kernel/testHelper"
 
 import { initMockInputPasswordAction } from "../Core/mock"
 
-import { ValidatePasswordState } from "../Core/action"
-
 import { PASSWORD_MAX_BYTES } from "../../../convert"
+
+import { ValidatePasswordState } from "../Core/action"
 
 import { PasswordCharacterState } from "../../../data"
 
@@ -43,7 +43,7 @@ type Props = Readonly<{
     help: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(InputPasswordView, <InputPasswordProps>{
+    return h(InputPasswordComponent, {
         field: initMockInputPasswordAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: validateState(),

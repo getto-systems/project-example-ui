@@ -19,14 +19,14 @@ import { ValidateLoginIDError } from "../../../data"
 
 type Resource = InputLoginIDResource & Readonly<{ help: VNodeContent[] }>
 export function InputLoginID(resource: Resource): VNode {
-    return h(InputLoginIDView, <InputLoginIDProps>{
+    return h(InputLoginIDComponent, {
         ...resource,
         state: useApplicationAction(resource.field.validate),
     })
 }
 
 export type InputLoginIDProps = Resource & InputLoginIDResourceState
-export function InputLoginIDView(props: InputLoginIDProps): VNode {
+export function InputLoginIDComponent(props: InputLoginIDProps): VNode {
     return label_text_fill(content())
 
     function content() {

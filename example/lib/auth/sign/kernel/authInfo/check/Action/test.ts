@@ -7,7 +7,7 @@ import {
 
 import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 
-import { CheckAuthInfoResource, CheckAuthInfoResourceState } from "./action"
+import { CheckAuthInfoResource } from "./entryPoint"
 
 import { initGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/testHelper"
 import {
@@ -15,21 +15,22 @@ import {
     LastAuthRepositoryValue,
     RenewAuthInfoRemotePod,
 } from "../../kernel/infra"
-import { toEntryPoint } from "./impl"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { toCheckAuthInfoEntryPoint } from "./impl"
+import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Core/impl"
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
 } from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { initMockCoreAction } from "./Core/mock"
+import { initMockCheckAuthInfoCoreAction } from "./Core/mock"
 import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
 import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
 import { lastAuthRepositoryConverter } from "../../kernel/convert"
 import { initRemoteSimulator } from "../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { startContinuousRenewEventHasDone } from "../../common/startContinuousRenew/impl/core"
-import { checkAuthInfoEventHasDone } from "../impl"
+import { checkAuthInfoEventHasDone } from "../impl/core"
 import { WaitTime } from "../../../../../../z_vendor/getto-application/infra/config/infra"
+import { CheckAuthInfoCoreState } from "./Core/action"
 
 // last auth at : テスト開始時刻と expire 設定によって instant load の可否が決まる
 const STORED_LAST_AUTH_AT = new Date("2020-01-01 10:00:00").toISOString()
@@ -257,7 +258,7 @@ describe("CheckAuthInfo", () => {
     })
 
     test("terminate", (done) => {
-        const entryPoint = toEntryPoint(initMockCoreAction())
+        const entryPoint = toCheckAuthInfoEntryPoint(initMockCheckAuthInfoCoreAction())
 
         const runner = initSyncActionTestRunner([
             {
@@ -332,9 +333,9 @@ function newTestRenewAuthnInfoResource(
     clock: Clock,
 ): CheckAuthInfoResource {
     const config = standardConfig()
-    return toEntryPoint(
-        initCoreAction(
-            initCoreMaterial(
+    return toCheckAuthInfoEntryPoint(
+        initCheckAuthInfoCoreAction(
+            initCheckAuthInfoCoreMaterial(
                 {
                     renew: {
                         ...repository,
@@ -448,9 +449,9 @@ function instantAvailableClock(subscriber: ClockSubscriber): Clock {
     return initStaticClock(START_AT_INSTANT_LOAD_AVAILABLE, subscriber)
 }
 
-function actionHasDone(state: CheckAuthInfoResourceState): boolean {
+function actionHasDone(state: CheckAuthInfoCoreState): boolean {
     switch (state.type) {
-        case "initial-renew":
+        case "initial-check":
         case "try-to-load":
             return false
 

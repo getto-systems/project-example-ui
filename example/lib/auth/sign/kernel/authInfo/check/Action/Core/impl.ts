@@ -2,29 +2,34 @@ import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/ge
 
 import { getScriptPath } from "../../../../../common/secure/getScriptPath/impl/core"
 import { startContinuousRenew, saveAuthInfo } from "../../../common/startContinuousRenew/impl/core"
-import { renewAuthInfo, checkAuthInfo } from "../../impl"
+import { renewAuthInfo, checkAuthInfo } from "../../impl/core"
 
 import { GetScriptPathInfra } from "../../../../../common/secure/getScriptPath/infra"
 import { StartContinuousRenewInfra } from "../../../common/startContinuousRenew/infra"
 import { CheckAuthInfoInfra } from "../../infra"
 
-import { CoreAction, CoreMaterial, CoreState } from "./action"
+import {
+    CheckAuthInfoCoreAction,
+    CheckAuthInfoCoreMaterial,
+    CheckAuthInfoCoreState,
+    initialCheckAuthInfoCoreState,
+} from "./action"
 
 import { GetScriptPathLocationDetecter } from "../../../../../common/secure/getScriptPath/method"
 
 import { AuthInfo } from "../../../kernel/data"
 import { LoadScriptError } from "../../../../../common/secure/getScriptPath/data"
 
-export type CoreInfra = Readonly<{
+export type CheckAuthInfoCoreInfra = Readonly<{
     renew: CheckAuthInfoInfra
     startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetScriptPathInfra
 }>
 
-export function initCoreMaterial(
-    infra: CoreInfra,
+export function initCheckAuthInfoCoreMaterial(
+    infra: CheckAuthInfoCoreInfra,
     locationInfo: GetScriptPathLocationDetecter,
-): CoreMaterial {
+): CheckAuthInfoCoreMaterial {
     return {
         renew: checkAuthInfo(infra.renew),
         forceRenew: renewAuthInfo(infra.renew),
@@ -34,16 +39,20 @@ export function initCoreMaterial(
     }
 }
 
-export function initCoreAction(material: CoreMaterial): CoreAction {
+export function initCheckAuthInfoCoreAction(
+    material: CheckAuthInfoCoreMaterial,
+): CheckAuthInfoCoreAction {
     return new Action(material)
 }
 
-class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAction {
-    readonly initialState: CoreState = { type: "initial-renew" }
+class Action
+    extends ApplicationAbstractStateAction<CheckAuthInfoCoreState>
+    implements CheckAuthInfoCoreAction {
+    readonly initialState = initialCheckAuthInfoCoreState
 
-    material: CoreMaterial
+    material: CheckAuthInfoCoreMaterial
 
-    constructor(material: CoreMaterial) {
+    constructor(material: CheckAuthInfoCoreMaterial) {
         super()
         this.material = material
 

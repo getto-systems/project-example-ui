@@ -18,20 +18,19 @@ import {
     CheckAuthInfoEntryPoint,
     CheckAuthInfoResource,
     CheckAuthInfoResourceState,
-} from "../action"
+} from "../entryPoint"
 import { RenewAuthInfoError } from "../../../kernel/data"
 
 export function CheckAuthInfo(entryPoint: CheckAuthInfoEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
-    return h(View, <RenewAuthnInfoProps>{
+    return h(CheckAuthInfoComponent, {
         ...resource,
         state: useApplicationAction(resource.core),
     })
 }
 
-export type RenewAuthnInfoProps = CheckAuthInfoResource &
-    Readonly<{ state: CheckAuthInfoResourceState }>
-export function View(props: RenewAuthnInfoProps): VNode {
+export type CheckAuthInfoProps = CheckAuthInfoResource & CheckAuthInfoResourceState
+export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.type) {
@@ -74,7 +73,7 @@ export function View(props: RenewAuthnInfoProps): VNode {
     }, [props.state])
 
     switch (props.state.type) {
-        case "initial-renew":
+        case "initial-check":
         case "required-to-login":
             return EMPTY_CONTENT
 

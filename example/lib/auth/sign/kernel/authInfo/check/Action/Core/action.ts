@@ -15,13 +15,13 @@ import {
     LoadScriptError,
 } from "../../../../../common/secure/getScriptPath/data"
 
-export interface CoreAction extends ApplicationStateAction<CoreState> {
+export interface CheckAuthInfoCoreAction extends ApplicationStateAction<CheckAuthInfoCoreState> {
     succeedToInstantLoad(): void
     failedToInstantLoad(): void
     loadError(err: LoadScriptError): void
 }
 
-export type CoreMaterial = Readonly<{
+export type CheckAuthInfoCoreMaterial = Readonly<{
     renew: CheckAuthInfoMethod
     forceRenew: RenewAuthInfoMethod
     saveAuthInfo: SaveAuthInfoMethod
@@ -29,14 +29,14 @@ export type CoreMaterial = Readonly<{
     getSecureScriptPath: GetScriptPathMethod
 }>
 
-export type CoreState =
-    | Readonly<{ type: "initial-renew" }>
+export type CheckAuthInfoCoreState =
+    | Readonly<{ type: "initial-check" }>
     | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" | "succeed-to-renew" }>
     | StartContinuousRenewEvent
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ConvertScriptPathResult }>
     | Readonly<{ type: "try-to-load"; scriptPath: ConvertScriptPathResult }>
     | Readonly<{ type: "load-error"; err: LoadScriptError }>
 
-export const initialCoreState: CoreState = {
-    type: "initial-renew",
+export const initialCheckAuthInfoCoreState: CheckAuthInfoCoreState = {
+    type: "initial-check",
 }

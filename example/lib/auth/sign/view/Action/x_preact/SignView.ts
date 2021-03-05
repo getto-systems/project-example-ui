@@ -13,7 +13,7 @@ import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_pr
 
 import { SignEntryPoint, SignResource, SignResourceState } from "../entryPoint"
 
-export function SignEntryPoint(entryPoint: SignEntryPoint): VNode {
+export function SignView(entryPoint: SignEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
@@ -24,14 +24,14 @@ export function SignEntryPoint(entryPoint: SignEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    return h(SignView, <SignProps>{
+    return h(SignComponent, {
         state: useApplicationAction(resource.view),
         ...resource,
     })
 }
 
 export type SignProps = SignResource & SignResourceState
-export function SignView(props: SignProps): VNode {
+export function SignComponent(props: SignProps): VNode {
     switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT

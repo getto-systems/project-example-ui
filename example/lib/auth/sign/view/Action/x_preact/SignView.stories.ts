@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../z_vendor/storybook/preact/story"
 
-import { SignProps, SignView } from "./SignEntryPoint"
+import { SignComponent } from "./SignView"
 
 import { initMockSignAction } from "../Core/mock"
 
@@ -19,7 +19,7 @@ type Props = Readonly<{
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(SignView, <SignProps>{
+    return h(SignComponent, {
         view: initMockSignAction(),
         state: state(),
     })

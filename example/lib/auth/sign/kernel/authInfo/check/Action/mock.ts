@@ -1,7 +1,7 @@
-import { initMockCoreAction } from "./Core/mock"
+import { initMockCheckAuthInfoCoreAction } from "./Core/mock"
 
-import { CheckAuthInfoResource } from "./action"
+import { CheckAuthInfoResource } from "./entryPoint"
 
-export function initMockRenewAuthnInfoResource(): CheckAuthInfoResource {
-    return { core: initMockCoreAction() }
+export function initMockCheckAuthInfoResource(): CheckAuthInfoResource {
+    return { core: initMockCheckAuthInfoCoreAction() }
 }

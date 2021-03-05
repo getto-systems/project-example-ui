@@ -1,20 +1,20 @@
-import { newCheckAuthInfoInfra } from "../init"
+import { newCheckAuthInfoInfra } from "../impl/init"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../common/startContinuousRenew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../../../common/secure/getScriptPath/impl/init"
 
-import { toEntryPoint } from "./impl"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { toCheckAuthInfoEntryPoint } from "./impl"
+import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Core/impl"
 
-import { CheckAuthInfoEntryPoint } from "./action"
+import { CheckAuthInfoEntryPoint } from "./entryPoint"
 import { newGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/init"
 
-export function newRenewAuthnInfo(
+export function newCheckAuthInfoEntryPoint(
     webStorage: Storage,
     currentLocation: Location,
 ): CheckAuthInfoEntryPoint {
-    return toEntryPoint(
-        initCoreAction(
-            initCoreMaterial(
+    return toCheckAuthInfoEntryPoint(
+        initCheckAuthInfoCoreAction(
+            initCheckAuthInfoCoreMaterial(
                 {
                     renew: newCheckAuthInfoInfra(webStorage),
                     startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
