@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
 
-import { InputLoginIDProps, View } from "./InputLoginID"
+import { InputLoginIDProps, InputLoginIDView } from "./InputLoginID"
 
 import { initMockInputLoginIDAction } from "../Core/mock"
 
@@ -30,7 +30,7 @@ type Props = Readonly<{
     help: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <InputLoginIDProps>{
+    return h(InputLoginIDView, <InputLoginIDProps>{
         field: initMockInputLoginIDAction(),
         help: [props.help],
         state: state(),
