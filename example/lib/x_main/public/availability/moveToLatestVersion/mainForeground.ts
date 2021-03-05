@@ -8,7 +8,7 @@ render(
     h(
         EntryPoint,
         newForeground({
-            currentURL: new URL(location.toString()),
+            currentLocation: location,
         }),
     ),
     document.body,

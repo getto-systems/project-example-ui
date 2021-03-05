@@ -1,31 +1,27 @@
-import { env } from "../../../../y_environment/env"
+import { newNextVersionAction } from "../../../nextVersion/main/nextVersion"
 
-import { initNextVersionAction } from "../../../nextVersion/main/nextVersion"
-
-import { detectAppTarget } from "../../../nextVersion/impl/location"
 import { initNextVersionResource } from "../impl/nextVersion"
 
 import { initNextVersionComponent } from "../../../x_Resource/MoveToNextVersion/nextVersion/impl"
 
 import { MoveToNextVersionEntryPoint } from "../entryPoint"
+import { newFindLocationDetecter } from "../../../nextVersion/init"
 
 type OutsideFeature = Readonly<{
-    currentURL: URL
+    currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): MoveToNextVersionEntryPoint {
-    const { currentURL } = feature
+    const { currentLocation } = feature
     const factory = {
         actions: {
-            nextVersion: initNextVersionAction(),
+            nextVersion: newNextVersionAction(),
         },
         components: {
             nextVersion: initNextVersionComponent,
         },
     }
     const locationInfo = {
-        nextVersion: {
-            getAppTarget: () => detectAppTarget(env.version, currentURL),
-        },
+        nextVersion: newFindLocationDetecter(currentLocation),
     }
     const resource = initNextVersionResource(factory, locationInfo)
     return {

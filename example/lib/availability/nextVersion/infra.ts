@@ -8,6 +8,7 @@ export type NextVersionActionConfig = Readonly<{
 }>
 
 export type FindInfra = Readonly<{
+    version: string
     config: FindConfig
     check: CheckDeployExistsRemotePod
 }>

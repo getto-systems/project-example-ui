@@ -2,7 +2,7 @@ import { ApplicationStateAction } from "../../../../z_vendor/getto-application/a
 
 import { Find } from "../../../nextVersion/action"
 
-import { AppTarget, FindError } from "../../../nextVersion/data"
+import { FindEvent } from "../../../nextVersion/event"
 
 export interface NextVersionComponentFactory {
     (material: NextVersionMaterial): NextVersionComponent
@@ -13,11 +13,7 @@ export type NextVersionMaterial = Readonly<{
 
 export type NextVersionComponent = ApplicationStateAction<NextVersionComponentState>
 
-export type NextVersionComponentState =
-    | Readonly<{ type: "initial-next-version" }>
-    | Readonly<{ type: "delayed-to-find" }>
-    | Readonly<{ type: "failed-to-find"; err: FindError }>
-    | Readonly<{ type: "succeed-to-find"; upToDate: boolean; target: AppTarget }>
+export type NextVersionComponentState = Readonly<{ type: "initial-next-version" }> | FindEvent
 
 export const initialNextVersionComponentState: NextVersionComponentState = {
     type: "initial-next-version",

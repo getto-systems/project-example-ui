@@ -1,4 +1,4 @@
-import { FindPod, FindLocationInfo } from "../../../nextVersion/action"
+import { FindPod, FindLocationDetecter } from "../../../nextVersion/action"
 import { NextVersionComponentFactory } from "../../../x_Resource/MoveToNextVersion/nextVersion/component"
 import { NextVersionResource } from "../entryPoint"
 
@@ -13,7 +13,7 @@ export type NextVersionFactory = Readonly<{
     }>
 }>
 export type NextVersionLocationInfo = Readonly<{
-    nextVersion: FindLocationInfo
+    nextVersion: FindLocationDetecter
 }>
 export function initNextVersionResource(
     factory: NextVersionFactory,

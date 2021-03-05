@@ -4,8 +4,8 @@ import { NextVersionActionConfig } from "../../../../nextVersion/infra"
 
 import { NextVersionComponentState } from "../component"
 
-import { appTargetToPath } from "../../../../nextVersion/data"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { appTargetToPath } from "../../../../nextVersion/helper"
 
 describe("NextVersion", () => {
     test("up to date", (done) => {
@@ -31,26 +31,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: true,
+                                version: "1.0.0",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.0/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -89,26 +76,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: true,
+                                version: "1.0.0",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.0/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -146,26 +120,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.1.0",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 1,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.0/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -203,26 +164,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.0.1",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 1,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.1/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -260,26 +208,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.2.0",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 2,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.2.0/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -317,26 +252,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.0.2",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 2,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.0.2/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -374,26 +296,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.1.1",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 1,
-                                        patch: 1,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.1/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -435,26 +344,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.1.1",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 1,
-                                        patch: 1,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.1/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -492,26 +388,13 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: false,
+                                version: "1.1.0",
                                 target: {
-                                    versioned: true,
-                                    pageLocation: {
-                                        pathname: "/index.html",
-                                        search: "?search=parameter",
-                                        hash: "#hash",
-                                    },
-                                    version: {
-                                        major: 1,
-                                        minor: 1,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe(
-                            "/1.1.0/index.html?search=parameter#hash",
-                        )
                         done()
                         break
 
@@ -549,19 +432,15 @@ describe("NextVersion", () => {
                             {
                                 type: "succeed-to-find",
                                 upToDate: true,
+                                version: "1.0.0",
                                 target: {
-                                    versioned: false,
-                                    version: {
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 0,
-                                        suffix: "",
-                                        valid: true,
-                                    },
+                                    valid: false,
                                 },
                             },
                         ])
-                        expect(appTargetToPath(state.target)).toBe("/1.0.0/index.html")
+                        expect(appTargetToPath(state.version, state.target)).toBe(
+                            "/1.0.0/index.html",
+                        )
                         done()
                         break
 

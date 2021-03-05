@@ -2,19 +2,33 @@ import { delayedChecker } from "../../../z_vendor/getto-application/infra/timer/
 
 import { CheckDeployExistsRemote, FindInfra } from "../infra"
 
-import { FindPod } from "../action"
+import { FindLocationDetectMethod, FindLocationKeys, FindPod } from "../action"
 
-import { CheckRemoteError, markVersion, Version, versionToString } from "../data"
+import { CheckRemoteError, Version } from "../data"
 import { passThroughRemoteConverter } from "../../../z_vendor/getto-application/infra/remote/helper"
+import { appTargetLocationConverter, versionConverter } from "../convert"
+import { versionToString } from "../helper"
 
-export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post) => {
-    const { config } = infra
+interface Detecter {
+    (keys: FindLocationKeys): FindLocationDetectMethod
+}
+export const detectAppTarget: Detecter = (keys) => (currentURL) =>
+    appTargetLocationConverter(currentURL, keys.version)
+
+export const find = (infra: FindInfra): FindPod => (detecter) => async (post) => {
+    const { version, config } = infra
     const check = infra.check(passThroughRemoteConverter)
 
-    const current = locationInfo.getAppTarget()
+    const target = detecter()
+    const currentVersion = versionConverter(version)
+
+    if (!currentVersion.valid) {
+        post({ type: "succeed-to-find", upToDate: true, version, target })
+        return
+    }
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const next = await delayedChecker(findNext(check, current.version), config.delay, () =>
+    const next = await delayedChecker(findNext(check, currentVersion.value), config.delay, () =>
         post({ type: "delayed-to-find" }),
     )
     if (!next.success) {
@@ -23,12 +37,13 @@ export const find = (infra: FindInfra): FindPod => (locationInfo) => async (post
     }
 
     if (!next.found) {
-        post({ type: "succeed-to-find", upToDate: true, target: current })
+        post({ type: "succeed-to-find", upToDate: true, version, target })
     } else {
         post({
             type: "succeed-to-find",
             upToDate: false,
-            target: { ...current, version: next.version },
+            version: versionToString(next.version),
+            target,
         })
     }
 }
@@ -76,28 +91,22 @@ async function findNext(check: CheckDeployExistsRemote, current: Version): Promi
 }
 
 function nextMinorVersion(version: Version): Version {
-    if (!version.valid) {
-        return version
-    }
-    return markVersion({
-        valid: true,
+    return {
+        ...version,
         major: version.major,
         minor: version.minor + 1,
         patch: 0,
         suffix: "",
-    })
+    }
 }
 function nextPatchVersion(version: Version): Version {
-    if (!version.valid) {
-        return version
-    }
-    return markVersion({
-        valid: true,
+    return {
+        ...version,
         major: version.major,
         minor: version.minor,
         patch: version.patch + 1,
         suffix: "",
-    })
+    }
 }
 
 function checkURL(version: Version): string {
