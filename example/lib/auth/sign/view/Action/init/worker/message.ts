@@ -1,19 +1,19 @@
 import {
     AuthenticatePasswordProxyMessage,
     AuthenticatePasswordProxyResponse,
-} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"
+} from "../../../../password/authenticate/x_Action/Authenticate/init/worker/message"
 import {
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse,
-} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
+} from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
 import {
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse,
-} from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/message"
+} from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/message"
 import {
     ResetPasswordProxyMessage,
     ResetPasswordProxyResponse,
-} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/message"
+} from "../../../../password/reset/reset/x_Action/Reset/init/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{

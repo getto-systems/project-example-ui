@@ -5,15 +5,15 @@ import { html } from "htm/preact"
 import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/common/hooks"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
-import { RenewAuthInfo } from "../../../../../auth/sign/kernel/authInfo/check/Action/x_preact/Renew"
-import { AuthenticatePassword } from "../../../../../auth/sign/password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
-import { RequestPasswordResetToken } from "../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
-import { CheckPasswordResetSendingStatus } from "../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
-import { ResetPassword } from "../../../../../auth/sign/password/reset/reset/x_Action/Reset/x_preact/Reset"
+import { RenewAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/Renew"
+import { AuthenticatePassword } from "../../../password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
+import { RequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
+import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
+import { ResetPassword } from "../../../password/reset/reset/x_Action/Reset/x_preact/Reset"
 
-import { AuthSignEntryPoint, AuthSignResource, AuthSignActionState } from "../entryPoint"
+import { SignEntryPoint, SignResource, SignResourceState } from "../entryPoint"
 
-export function EntryPoint(entryPoint: AuthSignEntryPoint): VNode {
+export function SignEntryPoint(entryPoint: SignEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
@@ -24,14 +24,14 @@ export function EntryPoint(entryPoint: AuthSignEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    return h(View, <AuthSignProps>{
-        ...resource,
+    return h(SignView, <SignProps>{
         state: useApplicationAction(resource.view),
+        ...resource,
     })
 }
 
-export type AuthSignProps = AuthSignResource & Readonly<{ state: AuthSignActionState }>
-export function View(props: AuthSignProps): VNode {
+export type SignProps = SignResource & SignResourceState
+export function SignView(props: SignProps): VNode {
     switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT

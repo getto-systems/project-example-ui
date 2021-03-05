@@ -1,6 +1,6 @@
 import { SignLinkResource } from "./action"
 
-import { SignHref, authSignLinkParams } from "../data"
+import { SignHref, signLinkParams } from "../data"
 import { ResetSessionID } from "../../../password/reset/kernel/data"
 
 export function newSignLinkResource(): SignLinkResource {
@@ -19,14 +19,14 @@ type Search<K extends string> = Readonly<{
 }>
 
 function password_authenticate(): SignHref {
-    return searchQuery(authSignLinkParams.password.authenticate, "authenticate", [])
+    return searchQuery(signLinkParams.password.authenticate, "authenticate", [])
 }
 function password_reset_checkStatus(sessionID: ResetSessionID): SignHref {
-    const search = authSignLinkParams.password.reset
+    const search = signLinkParams.password.reset
     return searchQuery(search, "checkStatus", [[search.sessionID, sessionID]])
 }
 function password_reset_requestToken(): SignHref {
-    return searchQuery(authSignLinkParams.password.reset, "requestToken", [])
+    return searchQuery(signLinkParams.password.reset, "requestToken", [])
 }
 
 function searchQuery<K extends string>(
@@ -34,7 +34,7 @@ function searchQuery<K extends string>(
     target: K,
     query: [string, string][],
 ): SignHref {
-    return markAuthSignHref(
+    return markSignHref(
         [
             `?${keys.key}=${target}`,
             ...query.map((param) => {
@@ -45,6 +45,6 @@ function searchQuery<K extends string>(
     )
 }
 
-function markAuthSignHref(href: string): SignHref {
+function markSignHref(href: string): SignHref {
     return href as SignHref
 }
