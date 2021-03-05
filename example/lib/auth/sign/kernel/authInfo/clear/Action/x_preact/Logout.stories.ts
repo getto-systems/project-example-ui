@@ -1,36 +1,39 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { LogoutProps, View } from "./Logout"
+import { LogoutComponent } from "./Logout"
 
 import { initMockLogoutResource } from "../mock"
 
-import { LogoutState } from "../action"
+import { LogoutCoreState } from "../Core/action"
 
-const logoutOptions = ["initial", "failed"] as const
+enum LogoutEnum {
+    "initial",
+    "failed",
+}
 
 export default {
-    title: "library/Auth/Profile/Logout",
+    title: "library/Auth/Sign/AuthInfo/Logout",
     argTypes: {
         logout: {
-            control: { type: "select", options: logoutOptions },
+            control: { type: "select", options: enumKeys(LogoutEnum) },
         },
     },
 }
 
 type Props = Readonly<{
-    logout: "initial" | "failed"
+    logout: keyof typeof LogoutEnum
     err: string
 }>
 
 const template = storyTemplate<Props>((props) => {
-    return h(View, <LogoutProps>{
+    return h(LogoutComponent, {
         ...initMockLogoutResource(),
         state: state(),
     })
 
-    function state(): LogoutState {
+    function state(): LogoutCoreState {
         switch (props.logout) {
             case "initial":
                 return { type: "initial-logout" }

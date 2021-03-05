@@ -1,12 +1,11 @@
-import { LogoutState } from "./action"
-
-import { initSyncActionTestRunner } from "../../../../../../../z_vendor/getto-application/action/testHelper"
-import { initCoreAction, initCoreMaterial } from "./Core/impl"
+import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
+import { initLogoutCoreAction, initLogoutCoreMaterial } from "./Core/impl"
 import { toLogoutResource } from "./impl"
-import { initMemoryDB } from "../../../../../../../z_vendor/getto-application/infra/repository/memory"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../../common/authz/infra"
-import { LastAuthRepositoryPod, LastAuthRepositoryValue } from "../../../kernel/infra"
-import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { initMemoryDB } from "../../../../../../z_vendor/getto-application/infra/repository/memory"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
+import { LastAuthRepositoryPod, LastAuthRepositoryValue } from "../../kernel/infra"
+import { wrapRepository } from "../../../../../../z_vendor/getto-application/infra/repository/helper"
+import { LogoutCoreState } from "./Core/action"
 
 const STORED_AUTHN_NONCE = "stored-authn-nonce" as const
 const STORED_AUTH_AT = new Date("2020-01-01 09:00:00").toISOString()
@@ -19,8 +18,8 @@ describe("Logout", () => {
 
         resource.logout.submit()
 
-        function stateHandler(): Post<LogoutState> {
-            const stack: LogoutState[] = []
+        function stateHandler(): Post<LogoutCoreState> {
+            const stack: LogoutCoreState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -68,7 +67,7 @@ describe("Logout", () => {
 function standardResource() {
     const repository = standardRepository()
 
-    const resource = toLogoutResource(initCoreAction(initCoreMaterial(repository)))
+    const resource = toLogoutResource(initLogoutCoreAction(initLogoutCoreMaterial(repository)))
 
     return { repository, resource }
 }

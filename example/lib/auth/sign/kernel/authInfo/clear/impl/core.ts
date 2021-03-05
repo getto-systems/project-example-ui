@@ -1,14 +1,14 @@
-import { authzRepositoryConverter } from "../../../../../common/authz/convert"
-import { RepositoryStoreResult } from "../../../../../z_vendor/getto-application/infra/repository/infra"
-import { lastAuthRepositoryConverter } from "../kernel/convert"
-import { ClearInfra } from "./infra"
+import { authzRepositoryConverter } from "../../../../../../common/authz/convert"
+import { RepositoryStoreResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
+import { lastAuthRepositoryConverter } from "../../kernel/convert"
+import { ClearAuthInfoInfra } from "../infra"
 
-import { ClearMethod } from "./method"
+import { ClearAuthInfoMethod } from "../method"
 
 interface Clear {
-    (infra: ClearInfra): ClearMethod
+    (infra: ClearAuthInfoInfra): ClearAuthInfoMethod
 }
-export const clear: Clear = (infra) => async (post) => {
+export const clearAuthInfo: Clear = (infra) => async (post) => {
     const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
 
