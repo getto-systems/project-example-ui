@@ -21,12 +21,42 @@ class Impl<T> implements DB<T> {
         if (!value) {
             return { found: false }
         }
-        return { found: true, value: this.transformer.fromString(value) }
+
+        const result = this.fromString(value)
+        if (!result.success) {
+            return { found: false }
+        }
+
+        return { found: true, value: result.value }
     }
     set(value: T): void {
-        this.storage.setItem(this.key, this.transformer.toString(value))
+        const result = this.toString(value)
+        if (!result.success) {
+            this.remove()
+            return
+        }
+
+        this.storage.setItem(this.key, result.value)
     }
     remove(): void {
         this.storage.removeItem(this.key)
     }
+
+    // transform のエラーはこの中で吸収する
+    fromString(value: string): TransformResult<T> {
+        try {
+            return { success: true, value: this.transformer.fromString(value) }
+        } catch (err) {
+            return { success: false }
+        }
+    }
+    toString(value: T): TransformResult<string> {
+        try {
+            return { success: true, value: this.transformer.toString(value) }
+        } catch (err) {
+            return { success: false }
+        }
+    }
 }
+
+type TransformResult<T> = Readonly<{ success: true; value: T }> | Readonly<{ success: false }>

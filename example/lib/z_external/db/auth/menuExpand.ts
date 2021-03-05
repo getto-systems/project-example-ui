@@ -1,12 +1,13 @@
 import { OutlineMenuExpandMessage } from "../y_protobuf/auth_pb.js"
 
-import { initDB } from "../base"
-
-import { DB } from "../../../z_vendor/getto-application/infra/repository/infra"
 import {
     decodeBase64StringToUint8Array,
     encodeUint8ArrayToBase64String,
-} from "../../../z_vendor/base64/transform.js"
+} from "../../../z_vendor/base64/transform"
+
+import { initDB } from "../base"
+
+import { DB } from "../../../z_vendor/getto-application/infra/repository/infra"
 
 type Expand = string[][]
 export function newDB_OutlineMenuExpand(storage: Storage, key: string): DB<Expand> {
