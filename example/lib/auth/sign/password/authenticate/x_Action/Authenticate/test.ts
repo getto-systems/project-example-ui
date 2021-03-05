@@ -17,7 +17,7 @@ import { AuthenticateFields } from "../../data"
 import {
     LastAuthRepositoryPod,
     LastAuthRepositoryValue,
-    RenewRemotePod,
+    RenewAuthInfoRemotePod,
 } from "../../../../kernel/authInfo/kernel/infra"
 import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 import { authenticateEventHasDone } from "../../impl"
@@ -278,7 +278,7 @@ type PasswordLoginTestRepository = Readonly<{
 }>
 type PasswordLoginTestRemoteAccess = Readonly<{
     authenticate: AuthenticateRemotePod
-    renew: RenewRemotePod
+    renew: RenewAuthInfoRemotePod
 }>
 
 function newTestPasswordLoginResource(
@@ -382,7 +382,7 @@ function simulateLogin(_fields: AuthenticateFields): AuthenticateResult {
         },
     }
 }
-function renewRemoteAccess(clock: ClockPubSub): RenewRemotePod {
+function renewRemoteAccess(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let renewed = false
     return initRemoteSimulator(
         () => {
