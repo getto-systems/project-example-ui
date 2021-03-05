@@ -1,9 +1,9 @@
 import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/detecter"
 
-import { AuthSignViewSearch } from "./entryPoint"
+import { SignViewSearch } from "../view"
 
-export function authSignViewSearchLocationConverter<N extends string>(
-    search: AuthSignViewSearch<N>,
+export function signViewSearchLocationConverter<N extends string>(
+    search: SignViewSearch<N>,
     getter: { (key: string): string | null },
 ): ConvertLocationResult<N> {
     const key = getter(search.key)

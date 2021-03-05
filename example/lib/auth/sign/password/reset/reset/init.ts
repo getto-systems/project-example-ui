@@ -9,12 +9,12 @@ import { ResetInfra } from "./infra"
 
 import { ResetLocationDetecter } from "./method"
 
-import { authSignLinkParams } from "../../../common/link/data"
+import { signLinkParams } from "../../../common/link/data"
 
 export function newResetLocationDetecter(currentLocation: Location): ResetLocationDetecter {
     return newLocationDetecter(
         currentLocation,
-        detectResetToken(authSignLinkParams.password.reset),
+        detectResetToken(signLinkParams.password.reset),
     )
 }
 

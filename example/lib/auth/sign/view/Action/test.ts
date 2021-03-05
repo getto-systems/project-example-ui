@@ -1,24 +1,24 @@
-import { View } from "./impl"
+import { initMockAuthenticatePasswordResource } from "../../password/authenticate/x_Action/Authenticate/mock"
+import { initMockRequestPasswordResetTokenResource } from "../../password/reset/requestToken/x_Action/RequestToken/mock"
+import { initMockResetPasswordResource } from "../../password/reset/reset/x_Action/Reset/mock"
+import { initMockStartPasswordResetSessionResource } from "../../password/reset/checkStatus/x_Action/CheckStatus/mock"
+import { initMockRenewAuthnInfoResource } from "../../kernel/authInfo/check/Action/mock"
+import { initSignViewLocationDetecter } from "../impl/testHelper"
+import { SignAction, SignActionState } from "./Core/action"
+import { initSignAction } from "./Core/impl"
+import { toSignEntryPoint } from "./impl"
+import { initSyncActionTestRunner } from "../../../../z_vendor/getto-application/action/testHelper"
 
-import { AuthSignActionState } from "./entryPoint"
-
-import { initMockAuthenticatePasswordResource } from "../../../../auth/sign/password/authenticate/x_Action/Authenticate/mock"
-import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/mock"
-import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
-import { initMockStartPasswordResetSessionResource } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/mock"
-import { initMockRenewAuthnInfoResource } from "../../../../auth/sign/kernel/authInfo/check/Action/mock"
-import { initAuthSignViewLocationDetecter } from "./testHelper"
-
-describe("LoginView", () => {
+describe("SignView", () => {
     test("redirect login view", (done) => {
-        const { view } = standardLoginView()
+        const { action } = standardLoginView()
 
-        view.subscriber.subscribe(stateHandler())
+        action.subscriber.subscribe(stateHandler())
 
-        view.ignite()
+        action.ignite()
 
-        function stateHandler(): Handler<AuthSignActionState> {
-            const stack: AuthSignActionState[] = []
+        function stateHandler(): Handler<SignActionState> {
+            const stack: SignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -62,14 +62,14 @@ describe("LoginView", () => {
     })
 
     test("password reset request token", (done) => {
-        const { view } = passwordResetSessionLoginView()
+        const { action } = passwordResetSessionLoginView()
 
-        view.subscriber.subscribe(stateHandler())
+        action.subscriber.subscribe(stateHandler())
 
-        view.ignite()
+        action.ignite()
 
-        function stateHandler(): Handler<AuthSignActionState> {
-            const stack: AuthSignActionState[] = []
+        function stateHandler(): Handler<SignActionState> {
+            const stack: SignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -113,14 +113,14 @@ describe("LoginView", () => {
     })
 
     test("password reset check status", (done) => {
-        const { view } = passwordResetCheckStatusLoginView()
+        const { action } = passwordResetCheckStatusLoginView()
 
-        view.subscriber.subscribe(stateHandler())
+        action.subscriber.subscribe(stateHandler())
 
-        view.ignite()
+        action.ignite()
 
-        function stateHandler(): Handler<AuthSignActionState> {
-            const stack: AuthSignActionState[] = []
+        function stateHandler(): Handler<SignActionState> {
+            const stack: SignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -164,14 +164,14 @@ describe("LoginView", () => {
     })
 
     test("password reset", (done) => {
-        const { view } = passwordResetLoginView()
+        const { action } = passwordResetLoginView()
 
-        view.subscriber.subscribe(stateHandler())
+        action.subscriber.subscribe(stateHandler())
 
-        view.ignite()
+        action.ignite()
 
-        function stateHandler(): Handler<AuthSignActionState> {
-            const stack: AuthSignActionState[] = []
+        function stateHandler(): Handler<SignActionState> {
+            const stack: SignActionState[] = []
             const terminates: Terminate[] = []
             return (state) => {
                 stack.push(state)
@@ -215,14 +215,14 @@ describe("LoginView", () => {
     })
 
     test("error", (done) => {
-        const { view } = standardLoginView()
+        const { action } = standardLoginView()
 
-        view.subscriber.subscribe(stateHandler())
+        action.subscriber.subscribe(stateHandler())
 
-        view.error("view error")
+        action.error("view error")
 
-        function stateHandler(): Handler<AuthSignActionState> {
-            const stack: AuthSignActionState[] = []
+        function stateHandler(): Handler<SignActionState> {
+            const stack: SignActionState[] = []
             return (state) => {
                 stack.push(state)
 
@@ -250,55 +250,60 @@ describe("LoginView", () => {
             }
         }
     })
+
+    test("terminate", (done) => {
+        const { action } = standardLoginView()
+        const entryPoint = toSignEntryPoint(action)
+
+        const runner = initSyncActionTestRunner([
+            {
+                statement: () => {
+                    entryPoint.terminate()
+                    entryPoint.resource.view.error("view error")
+                },
+                examine: (stack) => {
+                    // no input/validate event after terminate
+                    expect(stack).toEqual([])
+                },
+            },
+        ])
+
+        entryPoint.resource.view.subscriber.subscribe(runner(done))
+    })
 })
 
 function standardLoginView() {
     const currentURL = standardURL()
-    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
-        renew: () => standardRenewCredentialEntryPoint(),
-        password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () => standardPasswordResetResource(),
-        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
-    })
+    const action = standardSignAction(currentURL)
 
-    return { view }
+    return { action }
 }
 function passwordResetSessionLoginView() {
     const currentURL = passwordResetSessionURL()
-    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
-        renew: () => standardRenewCredentialEntryPoint(),
-        password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () => standardPasswordResetResource(),
-        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
-    })
+    const action = standardSignAction(currentURL)
 
-    return { view }
+    return { action }
 }
 function passwordResetCheckStatusLoginView() {
     const currentURL = passwordResetCheckStatusURL()
-    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
-        renew: () => standardRenewCredentialEntryPoint(),
-        password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () => standardPasswordResetResource(),
-        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
-    })
+    const action = standardSignAction(currentURL)
 
-    return { view }
+    return { action }
 }
 function passwordResetLoginView() {
     const currentURL = passwordResetURL()
-    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
+    const action = standardSignAction(currentURL)
+
+    return { action }
+}
+function standardSignAction(currentURL: URL): SignAction {
+    return initSignAction(initSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
         password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
         password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
     })
-
-    return { view }
 }
 
 function standardPasswordLoginEntryPoint() {

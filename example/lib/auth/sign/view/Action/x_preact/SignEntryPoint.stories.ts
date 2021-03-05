@@ -2,11 +2,11 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../z_vendor/storybook/preact/story"
 
-import { AuthSignProps, View } from "./EntryPoint"
+import { SignProps, SignView } from "./SignEntryPoint"
 
-import { initMockAuthSignAction } from "../mock"
+import { initMockSignAction } from "../Core/mock"
 
-import { AuthSignActionState } from "../entryPoint"
+import { SignActionState } from "../Core/action"
 
 export default {
     title: "main/Auth/Sign",
@@ -19,13 +19,12 @@ type Props = Readonly<{
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    const action = initMockAuthSignAction()
-    return h(View, <AuthSignProps>{
-        view: action,
+    return h(SignView, <SignProps>{
+        view: initMockSignAction(),
         state: state(),
     })
 
-    function state(): AuthSignActionState {
+    function state(): SignActionState {
         return { type: "error", err: props.err }
     }
 })

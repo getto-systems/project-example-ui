@@ -1,39 +1,40 @@
-import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authInfo/check/Action/init"
-
-import { toAuthSignEntryPoint, View } from "../../impl"
+import { newRenewAuthnInfo } from "../../../../kernel/authInfo/check/Action/init"
+import { newSignViewLocationDetecter } from "../../../impl/init"
 
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
-} from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/foreground"
+} from "../../../../password/authenticate/x_Action/Authenticate/init/worker/foreground"
 import {
     newRequestPasswordResetTokenProxy,
     RequestPasswordResetTokenProxy,
-} from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/foreground"
+} from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/foreground"
 import {
     CheckPasswordResetSendingStatusProxy,
     newCheckPasswordResetSendingStatusProxy,
-} from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/foreground"
+} from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/foreground"
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,
-} from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/foreground"
+} from "../../../../password/reset/reset/x_Action/Reset/init/worker/foreground"
+
+import { toSignEntryPoint } from "../../impl"
+import { initSignAction } from "../../Core/impl"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
-import { AuthSignAction, AuthSignEntryPoint } from "../../entryPoint"
-import { newAuthSignViewLocationDetecter } from "../../init"
+import { SignEntryPoint } from "../../entryPoint"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
     worker: Worker
 }>
-export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint {
+export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint {
     const { webStorage, currentLocation, worker } = feature
     const proxy = initProxy(postForegroundMessage)
 
-    const view: AuthSignAction = new View(newAuthSignViewLocationDetecter(currentLocation), {
+    const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
         renew: () => newRenewAuthnInfo(webStorage, currentLocation),
 
         password_authenticate: () =>
@@ -52,7 +53,7 @@ export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint
         messageHandler(event.data)
     })
 
-    const entryPoint = toAuthSignEntryPoint(view)
+    const entryPoint = toSignEntryPoint(view)
     return {
         resource: entryPoint.resource,
         terminate: () => {

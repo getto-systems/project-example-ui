@@ -4,8 +4,8 @@ import { detectResetToken } from "./impl"
 
 import { ResetLocationDetecter } from "./method"
 
-import { authSignLinkParams } from "../../../common/link/data"
+import { signLinkParams } from "../../../common/link/data"
 
 export function initResetLocationDetecter(currentURL: URL): ResetLocationDetecter {
-    return initLocationDetecter(currentURL, detectResetToken(authSignLinkParams.password.reset))
+    return initLocationDetecter(currentURL, detectResetToken(signLinkParams.password.reset))
 }

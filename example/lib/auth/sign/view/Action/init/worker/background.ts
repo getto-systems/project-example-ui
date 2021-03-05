@@ -1,17 +1,17 @@
-import { newAuthenticatePasswordHandler } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/background"
-import { newRequestPasswordResetTokenHandler } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/background"
-import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/background"
-import { newResetPasswordHandler } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/background"
+import { newAuthenticatePasswordHandler } from "../../../../password/authenticate/x_Action/Authenticate/init/worker/background"
+import { newRequestPasswordResetTokenHandler } from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/background"
+import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/background"
+import { newResetPasswordHandler } from "../../../../password/reset/reset/x_Action/Reset/init/worker/background"
 
 import { WorkerHandler } from "../../../../../../z_vendor/getto-application/action/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { AuthenticatePasswordProxyMessage } from "../../../../../../auth/sign/password/authenticate/x_Action/Authenticate/init/worker/message"
-import { RequestPasswordResetTokenProxyMessage } from "../../../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/init/worker/message"
-import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
-import { ResetPasswordProxyMessage } from "../../../../../../auth/sign/password/reset/reset/x_Action/Reset/init/worker/message"
+import { AuthenticatePasswordProxyMessage } from "../../../../password/authenticate/x_Action/Authenticate/init/worker/message"
+import { RequestPasswordResetTokenProxyMessage } from "../../../../password/reset/requestToken/x_Action/RequestToken/init/worker/message"
+import { CheckPasswordResetSendingStatusProxyMessage } from "../../../../password/reset/checkStatus/x_Action/CheckStatus/init/worker/message"
+import { ResetPasswordProxyMessage } from "../../../../password/reset/reset/x_Action/Reset/init/worker/message"
 
-export function newWorkerBackground(worker: Worker): void {
+export function newSignWorkerBackground(worker: Worker): void {
     const handler: Handler = {
         password: {
             authenticate: newAuthenticatePasswordHandler((response) =>

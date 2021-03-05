@@ -1,3 +1,3 @@
-import { newWorkerBackground } from "../main/worker/background"
+import { newSignWorkerBackground } from "../../../../../auth/sign/view/Action/init/worker/background"
 
-newWorkerBackground((self as unknown) as Worker)
+newSignWorkerBackground((self as unknown) as Worker)

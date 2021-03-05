@@ -1,7 +1,7 @@
 export type SignHref = string & { SignHref: never }
 
 // ログイン前画面ではアンダースコアから始まるクエリを使用する
-export const authSignLinkParams = {
+export const signLinkParams = {
     password: {
         authenticate: {
             key: "_password_authenticate",

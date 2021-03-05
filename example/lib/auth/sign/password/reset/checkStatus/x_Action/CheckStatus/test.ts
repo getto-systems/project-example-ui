@@ -5,7 +5,7 @@ import {
 import { WaitTime } from "../../../../../../../z_vendor/getto-application/infra/config/infra"
 import { initRemoteSimulator } from "../../../../../../../z_vendor/getto-application/infra/remote/simulate"
 import { initLocationDetecter } from "../../../../../../../z_vendor/getto-application/location/testHelper"
-import { authSignLinkParams } from "../../../../../common/link/data"
+import { signLinkParams } from "../../../../../common/link/data"
 import { SendingTokenStatus } from "../../data"
 import { checkSessionStatusEventHasDone, detectSessionID } from "../../impl"
 import {
@@ -152,7 +152,7 @@ function newTestPasswordResetSessionResource(
                 ...remote,
                 config: config.session.checkStatus,
             },
-            initLocationDetecter(currentURL, detectSessionID(authSignLinkParams.password.reset)),
+            initLocationDetecter(currentURL, detectSessionID(signLinkParams.password.reset)),
         ),
     )
 }

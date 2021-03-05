@@ -1,14 +1,14 @@
 import { render, h } from "preact"
 
 import { newWorker } from "../../../../../z_vendor/getto-application/action/init/worker"
-import { newWorkerForeground } from "../main/worker/foreground"
+import { newSignWorkerForeground } from "../../../../../auth/sign/view/Action/init/worker/foreground"
 
-import { EntryPoint } from "../x_preact/EntryPoint"
+import { SignEntryPoint } from "../../../../../auth/sign/view/Action/x_preact/SignEntryPoint"
 
 render(
     h(
-        EntryPoint,
-        newWorkerForeground({
+        SignEntryPoint,
+        newSignWorkerForeground({
             webStorage: localStorage,
             currentLocation: location,
             worker: newWorker({
