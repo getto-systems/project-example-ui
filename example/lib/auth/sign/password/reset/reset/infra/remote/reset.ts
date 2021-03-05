@@ -4,9 +4,9 @@ import { newApi_ResetPassword } from "../../../../../../../z_external/api/auth/s
 
 import { wrapRemote } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
 
-import { ResetRemotePod } from "../../infra"
+import { ResetPasswordRemotePod } from "../../infra"
 
-export function newResetPasswordRemote(): ResetRemotePod {
+export function newResetPasswordRemote(): ResetPasswordRemotePod {
     return wrapRemote(newApi_ResetPassword(env.apiServerURL), (err) => ({
         type: "infra-error",
         err: `${err}`,

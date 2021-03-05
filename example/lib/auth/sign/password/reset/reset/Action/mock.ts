@@ -1,15 +1,15 @@
-import { initSignLinkResource } from "../../../../../common/link/Action/impl"
+import { initSignLinkResource } from "../../../../common/link/Action/impl"
 
-import { initMockFormAction } from "./Form/mock"
+import { initMockResetPasswordFormAction } from "./Form/mock"
 import { initMockResetPasswordCoreAction } from "./Core/mock"
 
-import { ResetPasswordResource } from "./action"
+import { ResetPasswordResource } from "./entryPoint"
 
 export function initMockResetPasswordResource(): ResetPasswordResource {
     return {
         reset: {
             core: initMockResetPasswordCoreAction(),
-            form: initMockFormAction(),
+            form: initMockResetPasswordFormAction(),
             terminate: () => null,
         },
         ...initSignLinkResource(),

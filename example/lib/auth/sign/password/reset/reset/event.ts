@@ -1,8 +1,8 @@
 import { AuthInfo } from "../../../kernel/authInfo/kernel/data"
-import { ResetError } from "./data"
+import { ResetPasswordError } from "./data"
 
-export type ResetEvent =
+export type ResetPasswordEvent =
     | Readonly<{ type: "try-to-reset" }>
     | Readonly<{ type: "delayed-to-reset" }>
-    | Readonly<{ type: "failed-to-reset"; err: ResetError }>
+    | Readonly<{ type: "failed-to-reset"; err: ResetPasswordError }>
     | Readonly<{ type: "succeed-to-reset"; auth: AuthInfo }>

@@ -1,22 +1,22 @@
-import { ResetEvent } from "./event"
+import { ResetPasswordEvent } from "./event"
 
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 import { ResetToken } from "../kernel/data"
-import { ResetFields } from "./data"
+import { ResetPasswordFields } from "./data"
 import { LocationTypes } from "../../../../../z_vendor/getto-application/location/detecter"
 
-export interface ResetPod {
-    (detecter: ResetLocationDetecter): ResetMethod
+export interface ResetPasswordPod {
+    (detecter: ResetPasswordLocationDetecter): ResetPasswordMethod
 }
 
 type ResetLocationTypes = LocationTypes<Readonly<{ token: string }>, ResetToken>
-export type ResetLocationDetecter = ResetLocationTypes["detecter"]
-export type ResetLocationDetectMethod = ResetLocationTypes["method"]
-export type ResetLocationInfo = ResetLocationTypes["info"]
-export type ResetLocationKeys = ResetLocationTypes["keys"]
+export type ResetPasswordLocationDetecter = ResetLocationTypes["detecter"]
+export type ResetPasswordLocationDetectMethod = ResetLocationTypes["method"]
+export type ResetPasswordLocationInfo = ResetLocationTypes["info"]
+export type ResetPasswordLocationKeys = ResetLocationTypes["keys"]
 
-export interface ResetMethod {
-    (fields: ConvertBoardResult<ResetFields>, post: Post<ResetEvent>): void
+export interface ResetPasswordMethod {
+    (fields: ConvertBoardResult<ResetPasswordFields>, post: Post<ResetPasswordEvent>): void
 }
 
 interface Post<T> {

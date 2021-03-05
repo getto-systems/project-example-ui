@@ -1,16 +1,16 @@
 import { h } from "preact"
 
-import { enumKeys, storyTemplate } from "../../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { ResetPasswordProps, View } from "./Reset"
+import { ResetPasswordComponent } from "./ResetPassword"
 
 import { initMockResetPasswordResource } from "../mock"
 
-import { ValidateBoardActionState } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { CoreState } from "../Core/action"
-import { ValidateBoardStateEnum } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/data"
+import { ValidateBoardActionState } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ResetPasswordCoreState } from "../Core/action"
+import { ValidateBoardStateEnum } from "../../../../../../../z_vendor/getto-application/board/validateBoard/data"
 
-const resetOptions = [
+enum ResetEnum {
     "initial",
     "try",
     "delayed",
@@ -20,13 +20,13 @@ const resetOptions = [
     "server-error",
     "bad-response",
     "infra-error",
-] as const
+}
 
 export default {
-    title: "Auth/Sign/Password/ResetSession/Register",
+    title: "library/Auth/Sign/Password/Reset/Reset",
     argTypes: {
         reset: {
-            control: { type: "select", options: resetOptions },
+            control: { type: "select", options: enumKeys(ResetEnum) },
         },
         form: {
             control: { type: "select", options: enumKeys(ValidateBoardStateEnum) },
@@ -35,26 +35,17 @@ export default {
 }
 
 type Props = Readonly<{
-    reset:
-        | "initial"
-        | "try"
-        | "delayed"
-        | "validation-error"
-        | "bad-request"
-        | "invalid"
-        | "server-error"
-        | "bad-response"
-        | "infra-error"
+    reset: keyof typeof ResetEnum
     form: ValidateBoardActionState
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    return h(View, <ResetPasswordProps>{
+    return h(ResetPasswordComponent, {
         ...initMockResetPasswordResource(),
         state: { core: state(), form: props.form },
     })
 
-    function state(): CoreState {
+    function state(): ResetPasswordCoreState {
         switch (props.reset) {
             case "initial":
                 return { type: "initial-reset" }

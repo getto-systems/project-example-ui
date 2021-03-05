@@ -1,13 +1,13 @@
-import { initInputLoginIDAction } from "../../../../../../common/fields/loginID/input/Action/Core/impl"
-import { initInputPasswordAction } from "../../../../../../common/fields/password/input/Action/Core/impl"
-import { initValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
+import { initInputLoginIDAction } from "../../../../../common/fields/loginID/input/Action/Core/impl"
+import { initInputPasswordAction } from "../../../../../common/fields/password/input/Action/Core/impl"
+import { initValidateBoardAction } from "../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
 
-import { FormAction, ResetPasswordFieldsEnum } from "./action"
+import { ResetPasswordFormAction, ResetPasswordFieldsEnum } from "./action"
 
-import { ResetFields } from "../../../data"
-import { ConvertBoardResult } from "../../../../../../../../z_vendor/getto-application/board/kernel/data"
+import { ResetPasswordFields } from "../../data"
+import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 
-export function initFormAction(): FormAction {
+export function initResetPasswordFormAction(): ResetPasswordFormAction {
     const loginID = initInputLoginIDAction()
     const password = initInputPasswordAction()
     const validate = initValidateBoardAction({
@@ -32,7 +32,7 @@ export function initFormAction(): FormAction {
         },
     }
 
-    function converter(): ConvertBoardResult<ResetFields> {
+    function converter(): ConvertBoardResult<ResetPasswordFields> {
         const loginIDResult = loginID.validate.get()
         const passwordResult = password.validate.get()
         if (!loginIDResult.valid || !passwordResult.valid) {
