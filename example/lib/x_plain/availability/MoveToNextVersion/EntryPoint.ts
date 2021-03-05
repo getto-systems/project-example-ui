@@ -1,7 +1,9 @@
 import { MoveToNextVersionEntryPoint } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
 import { NextVersionComponentState } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/component"
 
-import { AppTarget, appTargetToPath } from "../../../availability/nextVersion/data"
+import { AppTarget } from "../../../availability/nextVersion/data"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
+import { appTargetToPath } from "../../../availability/nextVersion/helper"
 
 export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint): void {
     // /${version}/index.html とかで実行する
@@ -21,7 +23,7 @@ export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint)
                 return
 
             case "succeed-to-find":
-                redirectToAppTarget(state.upToDate, state.target)
+                redirectToAppTarget(state.upToDate, state.version, state.target)
                 return
 
             case "failed-to-find":
@@ -32,13 +34,17 @@ export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint)
                 assertNever(state)
         }
     }
-    function redirectToAppTarget(upToDate: boolean, target: AppTarget) {
+    function redirectToAppTarget(
+        upToDate: boolean,
+        version: string,
+        target: ConvertLocationResult<AppTarget>,
+    ) {
         // 今のバージョンが最新なら何もしない
         if (upToDate) {
             return
         }
 
-        location.href = appTargetToPath(target)
+        location.href = appTargetToPath(version, target)
         terminate()
     }
 

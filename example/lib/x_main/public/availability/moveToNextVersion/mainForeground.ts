@@ -4,6 +4,6 @@ import { EntryPoint } from "../../../../x_plain/availability/MoveToNextVersion/E
 
 EntryPoint(
     newForeground({
-        currentURL: new URL(location.toString()),
+        currentLocation: location,
     }),
 )

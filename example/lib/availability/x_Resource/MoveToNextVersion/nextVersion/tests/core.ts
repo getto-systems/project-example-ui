@@ -1,4 +1,3 @@
-import { detectAppTarget } from "../../../../nextVersion/impl/location"
 import { initNextVersionResource } from "../../../../z_EntryPoint/MoveToNextVersion/impl/nextVersion"
 
 import { initNextVersionComponent } from "../impl"
@@ -8,6 +7,7 @@ import { initTestNextVersionAction } from "../../../../nextVersion/tests/nextVer
 import { CheckDeployExistsRemotePod, NextVersionActionConfig } from "../../../../nextVersion/infra"
 
 import { NextVersionResource } from "../../../../z_EntryPoint/MoveToNextVersion/entryPoint"
+import { initFindLocationDetecter } from "../../../../nextVersion/testHelper"
 
 export type NextVersionRemoteAccess = Readonly<{
     check: CheckDeployExistsRemotePod
@@ -21,16 +21,14 @@ export function newTestNextVersionResource(
 ): NextVersionResource {
     const factory = {
         actions: {
-            nextVersion: initTestNextVersionAction(config, remote.check),
+            nextVersion: initTestNextVersionAction(version, config, remote.check),
         },
         components: {
             nextVersion: initNextVersionComponent,
         },
     }
     const locationInfo = {
-        nextVersion: {
-            getAppTarget: () => detectAppTarget(version, currentURL),
-        },
+        nextVersion: initFindLocationDetecter(currentURL, version),
     }
     return initNextVersionResource(factory, locationInfo)
 }

@@ -12,7 +12,8 @@ import { ApplicationError } from "../../common/System/ApplicationError"
 
 import { NextVersionResource } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
 
-import { appTargetToPath, FindError } from "../../../availability/nextVersion/data"
+import { FindError } from "../../../availability/nextVersion/data"
+import { appTargetToPath } from "../../../availability/nextVersion/helper"
 
 export function NextVersion(resource: NextVersionResource): VNode {
     const state = useApplicationAction(resource.nextVersion)
@@ -22,7 +23,7 @@ export function NextVersion(resource: NextVersionResource): VNode {
             case "succeed-to-find":
                 // /index.html から呼び出されるはずなので、最新かによらず
                 // /${version}/index.html に遷移する
-                location.href = appTargetToPath(state.target)
+                location.href = appTargetToPath(state.version, state.target)
                 break
         }
     }, [state])
