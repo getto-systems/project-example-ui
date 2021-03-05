@@ -1,6 +1,9 @@
 import { ApplicationAbstractStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
 
-import { startContinuousRenew } from "../../../../../kernel/authInfo/common/startContinuousRenew/impl"
+import {
+    saveAuthInfo,
+    startContinuousRenew,
+} from "../../../../../kernel/authInfo/common/startContinuousRenew/impl/core"
 import { getScriptPath } from "../../../../../common/secure/getScriptPath/impl/core"
 import { authenticate } from "../../../impl"
 
@@ -47,6 +50,7 @@ export function initCoreForegroundMaterial(
     locationInfo: GetScriptPathLocationDetecter,
 ): CoreForegroundMaterial {
     return {
+        saveAuthInfo: saveAuthInfo(infra.startContinuousRenew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
@@ -84,8 +88,13 @@ class Action extends ApplicationAbstractStateAction<CoreState> implements CoreAc
             }
         })
     }
-    startContinuousRenew(auth: AuthInfo): void {
-        this.material.startContinuousRenew(auth, (event) => {
+    startContinuousRenew(info: AuthInfo): void {
+        const result = this.material.saveAuthInfo(info)
+        if (!result.success) {
+            this.post({ type: "repository-error", err: result.err })
+        }
+
+        this.material.startContinuousRenew((event) => {
             switch (event.type) {
                 case "succeed-to-start-continuous-renew":
                     this.post({

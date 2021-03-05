@@ -4,8 +4,8 @@ import { DelayTime, IntervalTime } from "../../../../../../z_vendor/getto-applic
 import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/infra"
 
 export type StartContinuousRenewInfra = Readonly<{
-    authz: AuthzRepositoryPod
     lastAuth: LastAuthRepositoryPod
+    authz: AuthzRepositoryPod
     renew: RenewAuthInfoRemotePod
     clock: Clock
     config: Readonly<{

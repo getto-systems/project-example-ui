@@ -2,7 +2,7 @@ import { ApplicationStateAction } from "../../../../../../../../z_vendor/getto-a
 
 import { ResetMethod, ResetPod } from "../../../method"
 import { GetScriptPathMethod } from "../../../../../../common/secure/getScriptPath/method"
-import { StartContinuousRenewMethod } from "../../../../../../kernel/authInfo/common/startContinuousRenew/method"
+import { SaveAuthInfoMethod, StartContinuousRenewMethod } from "../../../../../../kernel/authInfo/common/startContinuousRenew/method"
 
 import { ResetEvent } from "../../../event"
 import { StartContinuousRenewEvent } from "../../../../../../kernel/authInfo/common/startContinuousRenew/event"
@@ -22,6 +22,7 @@ export interface CoreAction extends ApplicationStateAction<CoreState> {
 export type CoreMaterial = CoreForegroundMaterial & CoreBackgroundMaterial
 
 export type CoreForegroundMaterial = Readonly<{
+    saveAuthInfo: SaveAuthInfoMethod
     startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
 }>

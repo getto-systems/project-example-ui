@@ -5,7 +5,7 @@ import { html } from "htm/preact"
 import { useApplicationAction, useEntryPoint } from "../../../../../x_preact/common/hooks"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
-import { RenewAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/Renew"
+import { CheckAuthInfo } from "../../../kernel/authInfo/check/Action/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../../password/authenticate/x_Action/Authenticate/x_preact/Authenticate"
 import { RequestPasswordResetToken } from "../../../password/reset/requestToken/x_Action/RequestToken/x_preact/RequestToken"
 import { CheckPasswordResetSendingStatus } from "../../../password/reset/checkStatus/x_Action/CheckStatus/x_preact/CheckStatus"
@@ -37,7 +37,7 @@ export function SignView(props: SignProps): VNode {
             return EMPTY_CONTENT
 
         case "renew-credential":
-            return h(RenewAuthInfo, props.state.entryPoint)
+            return h(CheckAuthInfo, props.state.entryPoint)
 
         case "password-authenticate":
             return h(AuthenticatePassword, props.state.entryPoint)

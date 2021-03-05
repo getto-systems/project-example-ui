@@ -1,15 +1,15 @@
-import { newAuthzRepository } from "../../../../../../common/authz/infra/repository/authz"
-import { newRenewAuthInfoRemote } from "../../kernel/infra/remote/renew"
-import { newLastAuthRepository } from "../../kernel/infra/repository/lastAuth"
+import { newAuthzRepository } from "../../../../../../../common/authz/infra/repository/authz"
+import { newRenewAuthInfoRemote } from "../../../kernel/infra/remote/renew"
+import { newLastAuthRepository } from "../../../kernel/infra/repository/lastAuth"
 
-import { newClock } from "../../../../../../z_vendor/getto-application/infra/clock/init"
+import { newClock } from "../../../../../../../z_vendor/getto-application/infra/clock/init"
 
 import {
     delayMinute,
     intervalMinute,
-} from "../../../../../../z_vendor/getto-application/infra/config/infra"
+} from "../../../../../../../z_vendor/getto-application/infra/config/infra"
 
-import { StartContinuousRenewInfra } from "./infra"
+import { StartContinuousRenewInfra } from "../infra"
 
 export function newStartContinuousRenewAuthnInfoInfra(
     webStorage: Storage,

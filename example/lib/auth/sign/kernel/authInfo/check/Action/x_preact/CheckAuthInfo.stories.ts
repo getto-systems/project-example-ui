@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
-import { RenewAuthnInfoProps, View } from "./Renew"
+import { RenewAuthnInfoProps, View } from "./CheckAuthInfo"
 
 import { CheckAuthInfoResourceState } from "../action"
 import { initMockRenewAuthnInfoResource } from "../mock"

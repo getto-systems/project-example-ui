@@ -5,7 +5,7 @@ import { CheckAuthInfoInfra } from "./infra"
 
 import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "./method"
 
-import { RenewAuthInfoEvent } from "./event"
+import { CheckAuthInfoEvent, RenewAuthInfoEvent } from "./event"
 
 import { hasExpired, LastAuth, toLastAuth } from "../kernel/data"
 import { lastAuthRepositoryConverter, authRemoteConverter } from "../kernel/convert"
@@ -29,6 +29,16 @@ export const checkAuthInfo: CheckAuthInfo = (infra) => async (post) => {
 
         post({ type: "try-to-instant-load" })
     })
+}
+
+export function checkAuthInfoEventHasDone(event: CheckAuthInfoEvent): boolean {
+    switch (event.type) {
+        case "try-to-instant-load":
+            return true
+
+        default:
+            return renewAuthInfoEventHasDone(event)
+    }
 }
 
 interface RenewAuthInfo {
@@ -99,6 +109,20 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
             post({ type: "repository-error", err: result.err })
         }
         return result.success
+    }
+}
+
+export function renewAuthInfoEventHasDone(event: RenewAuthInfoEvent): boolean {
+    switch (event.type) {
+        case "required-to-login":
+        case "failed-to-renew":
+        case "repository-error":
+        case "succeed-to-renew":
+            return true
+
+        case "try-to-renew":
+        case "delayed-to-renew":
+            return false
     }
 }
 

@@ -2,7 +2,7 @@ import { ApplicationStateAction } from "../../../../../../../z_vendor/getto-appl
 
 import { GetScriptPathMethod } from "../../../../../common/secure/getScriptPath/method"
 import {
-    ForceStartContinuousRenewMethod,
+    SaveAuthInfoMethod,
     StartContinuousRenewMethod,
 } from "../../../common/startContinuousRenew/method"
 import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../../method"
@@ -24,14 +24,14 @@ export interface CoreAction extends ApplicationStateAction<CoreState> {
 export type CoreMaterial = Readonly<{
     renew: CheckAuthInfoMethod
     forceRenew: RenewAuthInfoMethod
+    saveAuthInfo: SaveAuthInfoMethod
     startContinuousRenew: StartContinuousRenewMethod
-    forceStartContinuousRenew: ForceStartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
 }>
 
 export type CoreState =
     | Readonly<{ type: "initial-renew" }>
-    | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" } | { type: "succeed-to-renew" }>
+    | Exclude<CheckAuthInfoEvent, { type: "try-to-instant-load" | "succeed-to-renew" }>
     | StartContinuousRenewEvent
     | Readonly<{ type: "try-to-instant-load"; scriptPath: ConvertScriptPathResult }>
     | Readonly<{ type: "try-to-load"; scriptPath: ConvertScriptPathResult }>
