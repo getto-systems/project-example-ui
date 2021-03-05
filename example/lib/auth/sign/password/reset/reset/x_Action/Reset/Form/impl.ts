@@ -1,5 +1,5 @@
-import { initInputLoginIDAction } from "../../../../../../common/loginID/board/Action/Core/impl"
-import { initInputPasswordAction } from "../../../../../../common/password/board/Action/Core/impl"
+import { initInputLoginIDAction } from "../../../../../../common/fields/loginID/board/Action/Core/impl"
+import { initInputPasswordAction } from "../../../../../../common/fields/password/board/Action/Core/impl"
 import { initValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
 
 import { FormAction, ResetPasswordFieldsEnum } from "./action"

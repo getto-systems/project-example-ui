@@ -1,4 +1,4 @@
-import { initMockInputLoginIDAction } from "../../../../../../common/loginID/board/Action/Core/mock"
+import { initMockInputLoginIDAction } from "../../../../../../common/fields/loginID/board/Action/Core/mock"
 import { initMockValidateBoardAction } from "../../../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/mock"
 
 import { FormAction } from "./action"

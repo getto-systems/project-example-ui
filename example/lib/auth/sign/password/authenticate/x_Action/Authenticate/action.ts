@@ -3,7 +3,7 @@ import {
     initialValidateBoardState,
     ValidateBoardActionState,
 } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { SignSearchResource } from "../../../../common/search/Action/action"
+import { SignLinkResource } from "../../../../common/link/Action/action"
 import {
     CoreAction,
     CoreState,
@@ -16,7 +16,7 @@ export type AuthenticatePasswordEntryPoint = Readonly<{
     terminate: { (): void }
 }>
 
-export type AuthenticatePasswordResource = SignSearchResource &
+export type AuthenticatePasswordResource = SignLinkResource &
     Readonly<{ authenticate: AuthenticatePasswordAction }>
 
 export interface AuthenticatePasswordAction extends ApplicationAction {
