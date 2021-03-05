@@ -35,8 +35,11 @@ describe("InputLoginID", () => {
                     action.board.input.set(markBoardValue(""))
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual([{ valid: false, err: ["empty"] }])
-                    expect(action.validate.get()).toEqual({ valid: false, err: ["empty"] })
+                    expect(stack).toEqual([{ valid: false, err: [{ type: "empty" }] }])
+                    expect(action.validate.get()).toEqual({
+                        valid: false,
+                        err: [{ type: "empty" }],
+                    })
                 },
             },
         ])
@@ -54,8 +57,13 @@ describe("InputLoginID", () => {
                     action.board.input.set(markBoardValue("a".repeat(100 + 1)))
                 },
                 examine: (stack) => {
-                    expect(stack).toEqual([{ valid: false, err: ["too-long"] }])
-                    expect(action.validate.get()).toEqual({ valid: false, err: ["too-long"] })
+                    expect(stack).toEqual([
+                        { valid: false, err: [{ type: "too-long", maxLength: 100 }] },
+                    ])
+                    expect(action.validate.get()).toEqual({
+                        valid: false,
+                        err: [{ type: "too-long", maxLength: 100 }],
+                    })
                 },
             },
         ])

@@ -11,10 +11,11 @@ import { useApplicationAction } from "../../../../../../../../x_preact/common/ho
 
 import { InputBoard } from "../../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
 
-import { ValidateBoardFieldState } from "../../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
 import { InputLoginIDResource, InputLoginIDResourceState } from "../resource"
 
-import { LOGIN_ID_MAX_LENGTH, ValidateLoginIDError } from "../../../convert"
+import { ValidateBoardFieldState } from "../../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
+
+import { ValidateLoginIDError } from "../../../data"
 
 type Resource = InputLoginIDResource & Readonly<{ help: VNodeContent[] }>
 export function InputLoginID(resource: Resource): VNode {
@@ -51,12 +52,12 @@ function loginIDValidationError(
     }
 
     return result.err.map((err) => {
-        switch (err) {
+        switch (err.type) {
             case "empty":
                 return ["ログインIDを入力してください"]
 
             case "too-long":
-                return [`ログインIDが長すぎます(${LOGIN_ID_MAX_LENGTH}文字以内)`]
+                return [`ログインIDが長すぎます(${err.maxLength}文字以内)`]
         }
     })
 }
