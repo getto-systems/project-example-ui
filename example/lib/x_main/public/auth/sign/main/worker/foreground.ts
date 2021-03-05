@@ -1,6 +1,6 @@
 import { newRenewAuthnInfo } from "../../../../../../auth/sign/kernel/authInfo/check/Action/init"
 
-import { initLoginViewLocationInfo, toAuthSignEntryPoint, View } from "../../impl"
+import { toAuthSignEntryPoint, View } from "../../impl"
 
 import {
     AuthenticatePasswordProxy,
@@ -22,18 +22,18 @@ import {
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
 import { AuthSignAction, AuthSignEntryPoint } from "../../entryPoint"
+import { newAuthSignViewLocationDetecter } from "../../init"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
-    currentURL: URL
     currentLocation: Location
     worker: Worker
 }>
 export function newWorkerForeground(feature: OutsideFeature): AuthSignEntryPoint {
-    const { webStorage, currentURL, currentLocation, worker } = feature
+    const { webStorage, currentLocation, worker } = feature
     const proxy = initProxy(postForegroundMessage)
 
-    const view: AuthSignAction = new View(initLoginViewLocationInfo(currentURL), {
+    const view: AuthSignAction = new View(newAuthSignViewLocationDetecter(currentLocation), {
         renew: () => newRenewAuthnInfo(webStorage, currentLocation),
 
         password_authenticate: () =>

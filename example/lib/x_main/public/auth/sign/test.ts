@@ -1,4 +1,4 @@
-import { initLoginViewLocationInfo, View } from "./impl"
+import { View } from "./impl"
 
 import { AuthSignActionState } from "./entryPoint"
 
@@ -7,6 +7,7 @@ import { initMockRequestPasswordResetTokenResource } from "../../../../auth/sign
 import { initMockResetPasswordResource } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/mock"
 import { initMockStartPasswordResetSessionResource } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/mock"
 import { initMockRenewAuthnInfoResource } from "../../../../auth/sign/kernel/authInfo/check/Action/mock"
+import { initAuthSignViewLocationDetecter } from "./testHelper"
 
 describe("LoginView", () => {
     test("redirect login view", (done) => {
@@ -253,7 +254,7 @@ describe("LoginView", () => {
 
 function standardLoginView() {
     const currentURL = standardURL()
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
@@ -265,7 +266,7 @@ function standardLoginView() {
 }
 function passwordResetSessionLoginView() {
     const currentURL = passwordResetSessionURL()
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
@@ -277,7 +278,7 @@ function passwordResetSessionLoginView() {
 }
 function passwordResetCheckStatusLoginView() {
     const currentURL = passwordResetCheckStatusURL()
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
@@ -289,7 +290,7 @@ function passwordResetCheckStatusLoginView() {
 }
 function passwordResetLoginView() {
     const currentURL = passwordResetURL()
-    const view = new View(initLoginViewLocationInfo(currentURL), {
+    const view = new View(initAuthSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),

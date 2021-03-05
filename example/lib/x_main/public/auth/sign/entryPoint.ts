@@ -4,6 +4,7 @@ import { AuthenticatePasswordEntryPoint } from "../../../../auth/sign/password/a
 import { RequestPasswordResetTokenEntryPoint } from "../../../../auth/sign/password/reset/requestToken/x_Action/RequestToken/action"
 import { CheckPasswordResetSendingStatusEntryPoint } from "../../../../auth/sign/password/reset/checkStatus/x_Action/CheckStatus/action"
 import { ResetPasswordEntryPoint } from "../../../../auth/sign/password/reset/reset/x_Action/Reset/action"
+import { LocationTypes } from "../../../../z_vendor/getto-application/location/detecter"
 
 export type AuthSignEntryPoint = Readonly<{
     resource: AuthSignResource
@@ -23,9 +24,22 @@ export interface AuthSignSubEntryPoint {
     password_reset(): ResetPasswordEntryPoint
 }
 
-export interface AuthSignViewLocationInfo {
-    getAuthSignViewType(): AuthSignViewType
-}
+type AuthSignViewLocationTypes = LocationTypes<AuthSignViewLocationKeys, AuthSignViewType>
+export type AuthSignViewLocationDetecter = AuthSignViewLocationTypes["detecter"]
+export type AuthSignViewLocationDetectMethod = AuthSignViewLocationTypes["method"]
+export type AuthSignViewLocationInfo = AuthSignViewLocationTypes["info"]
+export type AuthSignViewLocationKeys = Readonly<{
+    password: Readonly<{
+        reset: Readonly<{
+            key: string
+            variant: Record<"requestToken" | "checkStatus" | "reset", true>
+        }>
+    }>
+}>
+export type AuthSignViewSearch<N extends string> = Readonly<{
+    key: string
+    variant: Record<N, true>
+}>
 
 export interface AuthSignAction extends ApplicationStateAction<AuthSignActionState> {
     error(err: string): void
@@ -47,7 +61,6 @@ export type AuthSignActionState =
     | Readonly<{ type: "error"; err: string }>
 
 export type AuthSignViewType =
-    | "password-authenticate"
     | "password-reset-requestToken"
     | "password-reset-checkStatus"
     | "password-reset"

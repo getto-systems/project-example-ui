@@ -1,15 +1,19 @@
 import { ApplicationAbstractStateAction } from "../../../../z_vendor/getto-application/action/impl"
 
+import { authSignViewSearchLocationConverter } from "./convert"
+
 import {
     AuthSignAction,
     AuthSignActionState,
     AuthSignViewType,
-    AuthSignViewLocationInfo,
+    AuthSignViewLocationDetecter,
     AuthSignSubEntryPoint,
     AuthSignEntryPoint,
+    AuthSignViewLocationKeys,
+    AuthSignViewLocationDetectMethod,
 } from "./entryPoint"
 
-import { authSignSearchVariant_password_reset } from "../../../../auth/sign/common/searchParams/data"
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/detecter"
 
 export function toAuthSignEntryPoint(action: AuthSignAction): AuthSignEntryPoint {
     return {
@@ -17,12 +21,6 @@ export function toAuthSignEntryPoint(action: AuthSignAction): AuthSignEntryPoint
         terminate: () => {
             action.terminate()
         },
-    }
-}
-
-export function initLoginViewLocationInfo(currentURL: URL): AuthSignViewLocationInfo {
-    return {
-        getAuthSignViewType: () => detectViewState(currentURL),
     }
 }
 
@@ -34,31 +32,18 @@ const viewTypes = {
     },
 } as const
 
-function detectViewState(currentURL: URL): AuthSignViewType {
-    // パスワードリセット
-    const password_reset = viewType_password_reset()
-    if (password_reset.found) {
-        return password_reset.viewType
+interface Detecter {
+    (keys: AuthSignViewLocationKeys): AuthSignViewLocationDetectMethod
+}
+export const detectAuthSignViewType: Detecter = (keys) => (currentURL) => {
+    const password_reset = authSignViewSearchLocationConverter(keys.password.reset, (key) =>
+        currentURL.searchParams.get(key),
+    )
+    if (password_reset.valid) {
+        return { valid: true, value: viewTypes.reset[password_reset.value] }
     }
 
-    // 特に指定が無ければパスワードログイン
-    return "password-authenticate"
-
-    type ViewTypeResult =
-        | Readonly<{ found: false }>
-        | Readonly<{ found: true; viewType: AuthSignViewType }>
-
-    function viewType_password_reset(): ViewTypeResult {
-        const reset = authSignSearchVariant_password_reset()
-        const search = currentURL.searchParams.get(reset.key)
-        if (search) {
-            const variant = reset.variant(search)
-            if (variant.found) {
-                return { found: true, viewType: viewTypes.reset[variant.key] }
-            }
-        }
-        return { found: false }
-    }
+    return { valid: false }
 }
 
 export class View
@@ -66,12 +51,12 @@ export class View
     implements AuthSignAction {
     readonly initialState: AuthSignActionState = { type: "initial-view" }
 
-    locationInfo: AuthSignViewLocationInfo
+    detecter: AuthSignViewLocationDetecter
     entryPoints: AuthSignSubEntryPoint
 
-    constructor(locationInfo: AuthSignViewLocationInfo, components: AuthSignSubEntryPoint) {
+    constructor(detecter: AuthSignViewLocationDetecter, components: AuthSignSubEntryPoint) {
         super()
-        this.locationInfo = locationInfo
+        this.detecter = detecter
         this.entryPoints = components
 
         this.igniteHook(() => {
@@ -81,7 +66,7 @@ export class View
             entryPoint.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
                     case "required-to-login":
-                        this.post(this.mapViewType(this.locationInfo.getAuthSignViewType()))
+                        this.post(this.mapViewType(this.detecter()))
                         return
                 }
             })
@@ -94,10 +79,17 @@ export class View
         this.post({ type: "error", err })
     }
 
-    mapViewType(type: AuthSignViewType): AuthSignActionState {
+    mapViewType(result: ConvertLocationResult<AuthSignViewType>): AuthSignActionState {
+        if (!result.valid) {
+            // 特に指定が無ければパスワードログイン
+            return {
+                type: "password-authenticate",
+                entryPoint: this.entryPoints.password_authenticate(),
+            }
+        }
+
+        const type = result.value
         switch (type) {
-            case "password-authenticate":
-                return { type, entryPoint: this.entryPoints.password_authenticate() }
             case "password-reset-requestToken":
                 return { type, entryPoint: this.entryPoints.password_reset_requestToken() }
             case "password-reset-checkStatus":

@@ -10,7 +10,6 @@ render(
         EntryPoint,
         newWorkerForeground({
             webStorage: localStorage,
-            currentURL: new URL(location.toString()),
             currentLocation: location,
             worker: newWorker({
                 currentScript: document.currentScript,
