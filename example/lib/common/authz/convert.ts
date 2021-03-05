@@ -10,13 +10,13 @@ export const authzRepositoryConverter: RepositoryConverter<Authz, AuthzRepositor
         const roles = value.roles
 
         if (!nonce) {
-            return { success: false }
+            return { valid: false }
         }
 
         // roles のバリデーションは特にしない
 
         return {
-            success: true,
+            valid: true,
             found: true,
             value: {
                 nonce: markNonce(nonce),

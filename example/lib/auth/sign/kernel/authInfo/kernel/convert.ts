@@ -20,11 +20,11 @@ export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuth
         const lastAuthAt = new Date(value.lastAuthAt)
 
         if (!nonce || !lastAuthAt) {
-            return { success: false }
+            return { valid: false }
         }
 
         return {
-            success: true,
+            valid: true,
             value: {
                 nonce: markNonce(nonce),
                 lastAuthAt: markAuthAt(lastAuthAt),

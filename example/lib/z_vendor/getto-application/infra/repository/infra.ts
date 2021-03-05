@@ -25,8 +25,8 @@ export interface RepositoryConverter<V, R> {
 }
 
 export type ConvertRepositoryResult<T> =
-    | Readonly<{ success: true; value: T }>
-    | Readonly<{ success: false }>
+    | Readonly<{ valid: true; value: T }>
+    | Readonly<{ valid: false }>
 
 // z_external/db のインターフェイスと合わせる
 export interface DB<T> {
