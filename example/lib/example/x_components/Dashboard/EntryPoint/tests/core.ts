@@ -20,9 +20,9 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 import { DashboardResource } from "../entryPoint"
-import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
+import { initNotifyUnexpectedErrorAction } from "../../../../../availability/unexpectedError/Action/impl"
 
 export type DashboardRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -43,7 +43,8 @@ export function newTestDashboardResource(
     const detecter = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DashboardFactory = {
         actions: {
-            error: initUnexpectedErrorAction({
+            error: initNotifyUnexpectedErrorAction({
+                authz: repository.authz,
                 notify: initNotifyUnexpectedErrorSimulator(),
             }),
             breadcrumbList: initOutlineBreadcrumbListAction(detecter, { version, menuTree }),

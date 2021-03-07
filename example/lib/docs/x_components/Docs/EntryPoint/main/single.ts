@@ -2,7 +2,7 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 
 import { initContentComponent } from "../../content/impl"
 
-import { newErrorAction } from "../../../../../availability/unexpectedError/main"
+import { newNotifyUnexpectedErrorAction } from "../../../../../availability/unexpectedError/Action/init"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
@@ -19,7 +19,7 @@ export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
 
     const factory: DocumentFactory = {
         actions: {
-            error: newErrorAction(),
+            error: newNotifyUnexpectedErrorAction(webStorage),
             ...newDocumentOutlineAction(webStorage, currentLocation),
 
             content: initContentAction(),

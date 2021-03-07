@@ -1,21 +1,17 @@
 import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 
-import { NotifyUnexpectedErrorPod } from "./action"
+import { AuthzRepositoryPod } from "../../common/authz/infra"
 
+import { AuthzNonce } from "../../common/authz/data"
 import { NotifyUnexpectedErrorRemoteError } from "./data"
 
-export type UnexpectedErrorInfra = UnexpectedNotifyInfra
-
-export type UnexpectedNotifyInfra = Readonly<{
+export type NotifyUnexpectedErrorInfra = Readonly<{
+    authz: AuthzRepositoryPod
     notify: NotifyUnexpectedErrorRemotePod
 }>
 
-export interface NotifyUnexpectedError {
-    (infra: UnexpectedNotifyInfra): NotifyUnexpectedErrorPod
-}
-
 type NotifyUnexpectedErrorRemoteTypes = RemoteTypes<
-    unknown,
+    NotifyUnexpectedErrorMessage,
     true,
     true,
     NotifyUnexpectedErrorRemoteError
@@ -23,3 +19,7 @@ type NotifyUnexpectedErrorRemoteTypes = RemoteTypes<
 export type NotifyUnexpectedErrorRemotePod = NotifyUnexpectedErrorRemoteTypes["pod"]
 export type NotifyUnexpectedErrorRemoteResult = NotifyUnexpectedErrorRemoteTypes["result"]
 export type NotifyUnexpectedErrorSimulator = NotifyUnexpectedErrorRemoteTypes["simulator"]
+export type NotifyUnexpectedErrorMessage = Readonly<{
+    nonce: AuthzNonce
+    err: unknown
+}>

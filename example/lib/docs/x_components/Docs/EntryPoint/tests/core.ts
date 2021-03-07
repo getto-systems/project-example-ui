@@ -15,11 +15,11 @@ import {
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
-import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
 import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 import { initLoadContentLocationDetecter } from "../../../../content/testHelper"
+import { initNotifyUnexpectedErrorAction } from "../../../../../availability/unexpectedError/Action/impl"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -38,7 +38,8 @@ export function newTestDocumentResource(
     const locationInfo = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DocumentFactory = {
         actions: {
-            error: initUnexpectedErrorAction({
+            error: initNotifyUnexpectedErrorAction({
+                authz: repository.authz,
                 notify: initNotifyUnexpectedErrorSimulator(),
             }),
             breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { version, menuTree }),

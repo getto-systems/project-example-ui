@@ -5,7 +5,7 @@ import { CheckDeployExistsRemote, FindInfra } from "../infra"
 import { FindLocationDetectMethod, FindLocationKeys, FindPod } from "../action"
 
 import { CheckRemoteError, Version } from "../data"
-import { passThroughRemoteConverter } from "../../../z_vendor/getto-application/infra/remote/helper"
+import { passThroughRemoteValue } from "../../../z_vendor/getto-application/infra/remote/helper"
 import { appTargetLocationConverter, versionConverter } from "../convert"
 import { versionToString } from "../helper"
 
@@ -17,7 +17,7 @@ export const detectAppTarget: Detecter = (keys) => (currentURL) =>
 
 export const find = (infra: FindInfra): FindPod => (detecter) => async (post) => {
     const { version, config } = infra
-    const check = infra.check(passThroughRemoteConverter)
+    const check = infra.check(passThroughRemoteValue)
 
     const target = detecter()
     const currentVersion = versionConverter(version)

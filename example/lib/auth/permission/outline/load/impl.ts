@@ -40,7 +40,7 @@ import {
     OutlineMenuTarget,
 } from "./data"
 import { outlineMenuExpandRepositoryConverter, outlineMenuTargetLocationConverter } from "./convert"
-import { passThroughRemoteConverter } from "../../../../z_vendor/getto-application/infra/remote/helper"
+import { passThroughRemoteValue } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 interface Detecter {
     (keys: LoadOutlineMenuLocationKeys): LoadOutlineMenuLocationDetectMethod
@@ -123,7 +123,7 @@ const loadMenu: LoadOutlineMenu = (infra) => (detecter) => async (post) => {
     const { version } = infra
     const authz = infra.authz(authzRepositoryConverter)
     const menuExpands = infra.menuExpands(outlineMenuExpandRepositoryConverter)
-    const loadMenuBadge = infra.loadMenuBadge(passThroughRemoteConverter)
+    const loadMenuBadge = infra.loadMenuBadge(passThroughRemoteValue)
 
     const authzResult = authz.get()
     if (!authzResult.success) {
