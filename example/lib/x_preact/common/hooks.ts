@@ -1,7 +1,6 @@
-import { useEffect, useErrorBoundary, useLayoutEffect, useState } from "preact/hooks"
+import { useEffect, useLayoutEffect, useState } from "preact/hooks"
 
 import { ApplicationStateAction } from "../../z_vendor/getto-application/action/action"
-import { NotifyComponent } from "../../availability/x_Resource/Error/Notify/component"
 
 export function useEntryPoint<R>({ resource, terminate }: EntryPoint<R>): R {
     useTermination_deprecated(terminate)
@@ -17,11 +16,6 @@ interface EntryPoint<R> {
 }
 interface Terminate {
     (): void
-}
-
-export function useErrorNotify(notify: NotifyComponent): unknown {
-    const [err] = useErrorBoundary((err) => notify.send(err))
-    return err
 }
 
 export function useDocumentTitle(title: string): void {

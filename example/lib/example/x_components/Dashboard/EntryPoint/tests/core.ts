@@ -20,9 +20,11 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 import { DashboardResource } from "../entryPoint"
-import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
-import { initNotifyUnexpectedErrorAction } from "../../../../../availability/unexpectedError/Action/impl"
+import { initNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/impl"
+import { NotifyUnexpectedErrorRemotePod } from "../../../../../availability/unexpectedError/infra"
+import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initNotifyUnexpectedErrorCoreAction } from "../../../../../availability/unexpectedError/Action/Core/impl"
 
 export type DashboardRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -43,10 +45,6 @@ export function newTestDashboardResource(
     const detecter = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DashboardFactory = {
         actions: {
-            error: initNotifyUnexpectedErrorAction({
-                authz: repository.authz,
-                notify: initNotifyUnexpectedErrorSimulator(),
-            }),
             breadcrumbList: initOutlineBreadcrumbListAction(detecter, { version, menuTree }),
             menu: initOutlineMenuAction(detecter, {
                 ...repository,
@@ -64,5 +62,17 @@ export function newTestDashboardResource(
         },
     }
 
-    return initDashboardResource(factory)
+    return initDashboardResource(
+        factory,
+        initNotifyUnexpectedErrorResource(
+            initNotifyUnexpectedErrorCoreAction({
+                authz: repository.authz,
+                notify: standard_notify(),
+            }),
+        ),
+    )
+}
+
+function standard_notify(): NotifyUnexpectedErrorRemotePod {
+    return initRemoteSimulator(() => ({ success: true, value: true }), { wait_millisecond: 0 })
 }

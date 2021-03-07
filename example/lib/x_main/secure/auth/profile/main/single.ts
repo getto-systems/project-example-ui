@@ -1,5 +1,5 @@
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
-import { newNotifyUnexpectedErrorAction } from "../../../../../availability/unexpectedError/Action/init"
+import { newNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/init"
 import { newLogoutResource } from "../../../../../auth/sign/kernel/authInfo/clear/Action/init"
 
 import { initAuthProfileResource, toAuthProfileEntryPoint } from "../impl"
@@ -19,7 +19,6 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
 
     const factory: ProfileFactory = {
         actions: {
-            error: newNotifyUnexpectedErrorAction(webStorage),
             ...newMainOutlineAction(webStorage, currentLocation),
 
             season: initSeasonAction(),
@@ -28,6 +27,10 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
             seasonInfo: initSeasonInfoComponent,
         },
     }
-    const resource = initAuthProfileResource(factory, newLogoutResource(webStorage))
+    const resource = initAuthProfileResource(
+        factory,
+        newLogoutResource(webStorage),
+        newNotifyUnexpectedErrorResource(webStorage),
+    )
     return toAuthProfileEntryPoint(resource)
 }

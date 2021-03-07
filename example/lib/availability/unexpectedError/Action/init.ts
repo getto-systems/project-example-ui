@@ -1,13 +1,18 @@
 import { newAuthzRepository } from "../../../common/authz/infra/repository/authz"
-import { newNotifyUnexpectedErrorRemote } from "../infra/remote/notifyUnexpectedError/init"
+import { newNotifyUnexpectedErrorRemote } from "../infra/remote/notify"
 
-import { initNotifyUnexpectedErrorAction } from "./impl"
+import { initNotifyUnexpectedErrorCoreAction } from "./Core/impl"
 
-import { NotifyUnexpectedErrorAction } from "./action"
+import { NotifyUnexpectedErrorResource } from "./resource"
+import { initNotifyUnexpectedErrorResource } from "./impl"
 
-export function newNotifyUnexpectedErrorAction(webStorage: Storage): NotifyUnexpectedErrorAction {
-    return initNotifyUnexpectedErrorAction({
-        authz: newAuthzRepository(webStorage),
-        notify: newNotifyUnexpectedErrorRemote(),
-    })
+export function newNotifyUnexpectedErrorResource(
+    webStorage: Storage,
+): NotifyUnexpectedErrorResource {
+    return initNotifyUnexpectedErrorResource(
+        initNotifyUnexpectedErrorCoreAction({
+            authz: newAuthzRepository(webStorage),
+            notify: newNotifyUnexpectedErrorRemote(),
+        }),
+    )
 }

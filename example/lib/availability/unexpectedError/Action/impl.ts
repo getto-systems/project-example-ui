@@ -1,13 +1,9 @@
-import { notifyUnexpectedError } from "../impl"
+import { NotifyUnexpectedErrorResource } from "./resource"
 
-import { NotifyUnexpectedErrorInfra } from "../infra"
+import { NotifyUnexpectedErrorCoreAction } from "./Core/action"
 
-import { NotifyUnexpectedErrorAction } from "./action"
-
-export function initNotifyUnexpectedErrorAction(
-    infra: NotifyUnexpectedErrorInfra,
-): NotifyUnexpectedErrorAction {
-    return {
-        notify: notifyUnexpectedError(infra),
-    }
+export function initNotifyUnexpectedErrorResource(
+    error: NotifyUnexpectedErrorCoreAction,
+): NotifyUnexpectedErrorResource {
+    return { error }
 }

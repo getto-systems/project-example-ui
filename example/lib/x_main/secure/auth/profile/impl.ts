@@ -1,9 +1,9 @@
 import { ProfileFactory, AuthProfileResource, AuthProfileEntryPoint } from "./entryPoint"
 
-import { initErrorResource } from "../../../../availability/x_Resource/Error/impl"
 import { initMenuResource } from "../../../../common/x_Resource/Outline/Menu/impl"
 
 import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/action"
+import { NotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/resource"
 
 export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProfileEntryPoint {
     return {
@@ -20,7 +20,8 @@ export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProf
 
 export function initAuthProfileResource(
     factory: ProfileFactory,
-    resource: LogoutResource,
+    logout: LogoutResource,
+    error: NotifyUnexpectedErrorResource,
 ): AuthProfileResource {
     const actions = {
         loadSeason: factory.actions.season.loadSeason(),
@@ -28,8 +29,8 @@ export function initAuthProfileResource(
     return {
         seasonInfo: factory.components.seasonInfo(actions),
 
-        ...initErrorResource(factory.actions),
         ...initMenuResource(factory.actions),
-        ...resource,
+        ...logout,
+        ...error,
     }
 }
