@@ -12,7 +12,7 @@ import { toLogoutResource } from "./impl"
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../../common/authz/infra"
 import { LastAuthRepositoryPod } from "../../kernel/infra"
 
-import { LogoutResource } from "./action"
+import { LogoutResource } from "./resource"
 import { LogoutCoreState } from "./Core/action"
 
 describe("Logout", () => {

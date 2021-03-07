@@ -1,14 +1,11 @@
-import { ApplicationAction } from "../../../../../../z_vendor/getto-application/action/action"
+import { ApplicationAction, ApplicationEntryPoint } from "../../../../../../z_vendor/getto-application/action/action"
 
 import { SignLinkResource } from "../../../../common/link/Action/resource"
 import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
 import { RequestResetTokenCoreAction, RequestResetTokenCoreState } from "./Core/action"
 import { RequestResetTokenFormAction } from "./Form/action"
 
-export type RequestResetTokenEntryPoint = Readonly<{
-    resource: RequestResetTokenResource
-    terminate: { (): void }
-}>
+export type RequestResetTokenEntryPoint = ApplicationEntryPoint<RequestResetTokenResource>
 
 export type RequestResetTokenResource = SignLinkResource &
     Readonly<{ requestToken: RequestResetTokenAction }>

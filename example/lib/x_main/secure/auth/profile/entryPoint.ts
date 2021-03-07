@@ -2,7 +2,7 @@ import {
     MenuForegroundAction,
     MenuResource,
 } from "../../../../common/x_Resource/Outline/Menu/resource"
-import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/action"
+import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/resource"
 
 import {
     SeasonInfoComponent,

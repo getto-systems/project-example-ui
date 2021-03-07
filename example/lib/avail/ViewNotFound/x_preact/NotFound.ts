@@ -5,22 +5,16 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import {
-    useApplicationAction,
-    useDocumentTitle,
-    useTermination_deprecated,
-} from "../../common/hooks"
-import { siteInfo } from "../../common/site"
-import { icon } from "../../common/icon"
+import { useDocumentTitle, useEntryPoint } from "../../../x_preact/common/hooks"
+import { siteInfo } from "../../../x_preact/common/site"
+import { icon } from "../../../x_preact/common/icon"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../x_preact/common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../../avail/z_EntryPoint/NotFound/entryPoint"
+import { NotFoundEntryPoint, NotFoundResource } from "../entryPoint"
 
-import { CurrentVersionComponent } from "../../../avail/x_Resource/GetCurrentVersion/currentVersion/component"
-
-export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
-    useTermination_deprecated(terminate)
+export function NotFound(entryPoint: NotFoundEntryPoint): VNode {
+    const resource = useEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない
@@ -30,16 +24,12 @@ export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
         return h(ApplicationError, { err: `${err}` })
     }
 
-    useDocumentTitle("Not Found")
-
-    return h(Content, resource)
+    return h(NotFoundComponent, resource)
 }
 
-type ContentProps = Readonly<{
-    currentVersion: CurrentVersionComponent
-}>
-function Content({ currentVersion }: ContentProps): VNode {
-    const state = useApplicationAction(currentVersion)
+export type NotFoundProps = NotFoundResource
+export function NotFoundComponent(props: NotFoundProps): VNode {
+    useDocumentTitle("Not Found")
 
     return loginBox(siteInfo(), {
         title: "リンクが切れていました",
@@ -60,12 +50,6 @@ function Content({ currentVersion }: ContentProps): VNode {
     })
 
     function homeHref() {
-        switch (state.type) {
-            case "initial-current-version":
-                return "#"
-
-            case "succeed-to-find":
-                return `/${state.version}/index.html`
-        }
+        return `/${props.version.getCurrent()}/index.html`
     }
 }
