@@ -23,7 +23,10 @@ enum AuthenticateEnum {
 }
 
 export default {
-    title: "library/Auth/Sign/Password/Authenticate",
+    title: "main/public/Auth/Sign/Password/Authenticate",
+    parameters: {
+        layout: "fullscreen",
+    },
     argTypes: {
         authenticate: {
             control: { type: "select", options: enumKeys(AuthenticateEnum) },

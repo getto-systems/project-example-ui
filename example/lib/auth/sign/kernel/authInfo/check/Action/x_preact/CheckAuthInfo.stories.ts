@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook/preact/story"
 
 import { CheckAuthInfoComponent } from "./CheckAuthInfo"
 
@@ -8,25 +8,28 @@ import { initMockCheckAuthInfoResource } from "../mock"
 
 import { CheckAuthInfoCoreState } from "../Core/action"
 
-const renewOptions = {
-    delayed: true,
-    "bad-request": true,
-    "server-error": true,
-    "bad-response": true,
-    "infra-error": true,
-} as const
+enum CheckEnum {
+    "delayed",
+    "bad-request",
+    "server-error",
+    "bad-response",
+    "infra-error",
+}
 
 export default {
-    title: "library/Auth/Sign/AuthInfo/Renew",
+    title: "main/public/Auth/Sign/AuthInfo/Check",
+    parameters: {
+        layout: "fullscreen",
+    },
     argTypes: {
         renew: {
-            control: { type: "select", options: Object.keys(renewOptions) },
+            control: { type: "select", options: enumKeys(CheckEnum) },
         },
     },
 }
 
 type Props = Readonly<{
-    renew: keyof typeof renewOptions
+    renew: keyof typeof CheckEnum
     err: string
 }>
 const template = storyTemplate<Props>((props) => {

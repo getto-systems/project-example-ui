@@ -5,6 +5,12 @@ import { initLogoutCoreAction, initLogoutCoreMaterial } from "./Core/impl"
 
 import { LogoutResource } from "./resource"
 
-export function newLogoutResource(webStorage: Storage): LogoutResource {
-    return toLogoutResource(initLogoutCoreAction(initLogoutCoreMaterial(newClearAuthInfoInfra(webStorage))))
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+}>
+export function newLogoutResource(feature: OutsideFeature): LogoutResource {
+    const { webStorage } = feature
+    return toLogoutResource(
+        initLogoutCoreAction(initLogoutCoreMaterial(newClearAuthInfoInfra(webStorage))),
+    )
 }

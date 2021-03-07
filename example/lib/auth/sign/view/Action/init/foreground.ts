@@ -15,16 +15,16 @@ type OutsideFeature = Readonly<{
     currentLocation: Location
 }>
 export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
-    const { webStorage, currentLocation } = feature
+    const { currentLocation } = feature
     return toSignEntryPoint(
         initSignAction(newSignViewLocationDetecter(currentLocation), {
-            renew: () => newCheckAuthInfoEntryPoint(webStorage, currentLocation),
+            renew: () => newCheckAuthInfoEntryPoint(feature),
 
-            password_authenticate: () => newAuthenticatePasswordEntryPoint(webStorage, currentLocation),
+            password_authenticate: () => newAuthenticatePasswordEntryPoint(feature),
 
             password_reset_requestToken: () => newRequestResetTokenEntryPoint(),
-            password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(currentLocation),
-            password_reset: () => newResetPassword(webStorage, currentLocation),
+            password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(feature),
+            password_reset: () => newResetPassword(feature),
         }),
     )
 }

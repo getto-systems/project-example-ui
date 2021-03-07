@@ -24,9 +24,13 @@ import { ResetPasswordEntryPoint } from "../../entryPoint"
 import { ResetPasswordCoreAction } from "../../Core/action"
 import { ResetPasswordFormAction } from "../../Form/action"
 
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentLocation: Location
+}>
 export interface ResetPasswordProxy
     extends WorkerProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse> {
-    entryPoint(webStorage: Storage, currentLocation: Location): ResetPasswordEntryPoint
+    entryPoint(feature: OutsideFeature): ResetPasswordEntryPoint
 }
 export function newResetPasswordProxy(post: Post<ResetPasswordProxyMessage>): ResetPasswordProxy {
     return new Proxy(post)
@@ -44,7 +48,8 @@ class Proxy
         }
     }
 
-    entryPoint(webStorage: Storage, currentLocation: Location): ResetPasswordEntryPoint {
+    entryPoint(feature: OutsideFeature): ResetPasswordEntryPoint {
+        const { webStorage, currentLocation } = feature
         const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
         const detecter = newResetPasswordLocationDetecter(currentLocation)
         return newEntryPoint(

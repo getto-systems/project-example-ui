@@ -23,7 +23,10 @@ enum RequestEnum {
 }
 
 export default {
-    title: "library/Auth/Sign/Password/Reset/RequestToken",
+    title: "main/public/Auth/Sign/Password/Reset/RequestToken",
+    parameters: {
+        layout: "fullscreen",
+    },
     argTypes: {
         request: {
             control: { type: "select", options: enumKeys(RequestEnum) },

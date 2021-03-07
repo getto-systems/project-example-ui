@@ -6,9 +6,13 @@ import { initNotifyUnexpectedErrorCoreAction } from "./Core/impl"
 import { NotifyUnexpectedErrorResource } from "./resource"
 import { initNotifyUnexpectedErrorResource } from "./impl"
 
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+}>
 export function newNotifyUnexpectedErrorResource(
-    webStorage: Storage,
+    feature: OutsideFeature,
 ): NotifyUnexpectedErrorResource {
+    const { webStorage } = feature
     return initNotifyUnexpectedErrorResource(
         initNotifyUnexpectedErrorCoreAction({
             authz: newAuthzRepository(webStorage),

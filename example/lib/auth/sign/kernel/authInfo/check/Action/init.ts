@@ -8,10 +8,12 @@ import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./Co
 import { CheckAuthInfoEntryPoint } from "./entryPoint"
 import { newGetScriptPathLocationDetecter } from "../../../../common/secure/getScriptPath/impl/init"
 
-export function newCheckAuthInfoEntryPoint(
-    webStorage: Storage,
-    currentLocation: Location,
-): CheckAuthInfoEntryPoint {
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentLocation: Location
+}>
+export function newCheckAuthInfoEntryPoint(feature: OutsideFeature): CheckAuthInfoEntryPoint {
+    const { webStorage, currentLocation } = feature
     return toCheckAuthInfoEntryPoint(
         initCheckAuthInfoCoreAction(
             initCheckAuthInfoCoreMaterial(

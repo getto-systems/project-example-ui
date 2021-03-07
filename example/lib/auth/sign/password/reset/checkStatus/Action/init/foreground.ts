@@ -7,12 +7,18 @@ import { toCheckResetTokenSendingStatusEntryPoint } from "../impl"
 import { CheckResetTokenSendingStatusEntryPoint } from "../entryPoint"
 import { initCheckResetTokenSendingStatusCoreAction } from "../Core/impl"
 
+type OutsideFeature = Readonly<{
+    currentLocation: Location
+}>
 export function newCheckPasswordResetSendingStatus(
-    currentLocation: Location,
+    feature: OutsideFeature,
 ): CheckResetTokenSendingStatusEntryPoint {
+    const { currentLocation } = feature
     return toCheckResetTokenSendingStatusEntryPoint(
         initCheckResetTokenSendingStatusCoreAction(
-            newCheckSendingStatusMaterial(newCheckResetTokenSendingStatusLocationDetecter(currentLocation)),
+            newCheckSendingStatusMaterial(
+                newCheckResetTokenSendingStatusLocationDetecter(currentLocation),
+            ),
         ),
     )
 }

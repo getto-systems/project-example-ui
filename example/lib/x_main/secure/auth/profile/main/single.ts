@@ -29,8 +29,8 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
     }
     const resource = initAuthProfileResource(
         factory,
-        newLogoutResource(webStorage),
-        newNotifyUnexpectedErrorResource(webStorage),
+        newLogoutResource(feature),
+        newNotifyUnexpectedErrorResource(feature),
     )
     return toAuthProfileEntryPoint(resource)
 }

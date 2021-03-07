@@ -28,7 +28,7 @@ export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
             example: initExampleComponent,
         },
     }
-    const resource = initDashboardResource(factory, newNotifyUnexpectedErrorResource(webStorage))
+    const resource = initDashboardResource(factory, newNotifyUnexpectedErrorResource(feature))
     return {
         resource,
         terminate: () => {

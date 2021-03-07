@@ -33,7 +33,7 @@ export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
     const resource = initDocumentResource(
         factory,
         locationInfo,
-        newNotifyUnexpectedErrorResource(webStorage),
+        newNotifyUnexpectedErrorResource(feature),
     )
     return {
         resource,
