@@ -21,10 +21,10 @@ import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 
 import { DashboardResource } from "../entryPoint"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
-import { initNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/impl"
-import { NotifyUnexpectedErrorRemotePod } from "../../../../../availability/unexpectedError/infra"
+import { initNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/impl"
+import { NotifyUnexpectedErrorRemotePod } from "../../../../../avail/unexpectedError/infra"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initNotifyUnexpectedErrorCoreAction } from "../../../../../availability/unexpectedError/Action/Core/impl"
+import { initNotifyUnexpectedErrorCoreAction } from "../../../../../avail/unexpectedError/Action/Core/impl"
 
 export type DashboardRepository = Readonly<{
     authz: AuthzRepositoryPod

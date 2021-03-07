@@ -1,5 +1,5 @@
-import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../availability/unexpectedError/Action/Core/mock"
-import { initNotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/impl"
+import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../avail/unexpectedError/Action/Core/mock"
+import { initNotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/impl"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,

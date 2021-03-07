@@ -5,7 +5,7 @@ import { useTermination_deprecated } from "../../common/hooks"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { MoveToNextVersionEntryPoint } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
+import { MoveToNextVersionEntryPoint } from "../../../avail/z_EntryPoint/MoveToNextVersion/entryPoint"
 import { NextVersion } from "./NextVersion"
 
 export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint): VNode {

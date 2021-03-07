@@ -10,10 +10,10 @@ import { spinner } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { NextVersionResource } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
+import { NextVersionResource } from "../../../avail/z_EntryPoint/MoveToNextVersion/entryPoint"
 
-import { FindError } from "../../../availability/nextVersion/data"
-import { appTargetToPath } from "../../../availability/nextVersion/helper"
+import { FindError } from "../../../avail/nextVersion/data"
+import { appTargetToPath } from "../../../avail/nextVersion/helper"
 
 export function NextVersion(resource: NextVersionResource): VNode {
     const state = useApplicationAction(resource.nextVersion)

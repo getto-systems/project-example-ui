@@ -5,7 +5,7 @@ import { ContentComponentFactory } from "../../content/component"
 import { ContentAction, LoadContentLocationDetecter } from "../../../../content/action"
 import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
-import { NotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/resource"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{

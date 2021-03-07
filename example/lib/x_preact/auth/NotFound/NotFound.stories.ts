@@ -6,11 +6,11 @@ import { noPaddedStory } from "../../../z_vendor/storybook/preact/display"
 
 import { EntryPoint } from "./NotFound"
 
-import { newMockNotFound } from "../../../availability/z_EntryPoint/NotFound/mock"
+import { newMockNotFound } from "../../../avail/z_EntryPoint/NotFound/mock"
 
 import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
 
-import { CurrentVersionMockProps } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/mock"
+import { CurrentVersionMockProps } from "../../../avail/x_Resource/GetCurrentVersion/currentVersion/mock"
 
 export default {
     title: "Auth/NotFound",

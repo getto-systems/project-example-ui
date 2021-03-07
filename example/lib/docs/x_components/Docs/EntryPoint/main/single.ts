@@ -2,7 +2,7 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 
 import { initContentComponent } from "../../content/impl"
 
-import { newNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/init"
+import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/init"
 
 import { DocumentEntryPoint } from "../entryPoint"
 

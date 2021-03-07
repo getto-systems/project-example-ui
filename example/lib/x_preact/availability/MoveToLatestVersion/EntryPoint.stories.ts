@@ -7,9 +7,9 @@ import { EntryPoint } from "./EntryPoint"
 
 import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
 
-import { newMockMoveToNextVersion } from "../../../availability/z_EntryPoint/MoveToNextVersion/mock"
+import { newMockMoveToNextVersion } from "../../../avail/z_EntryPoint/MoveToNextVersion/mock"
 
-import { NextVersionMockProps } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/mock"
+import { NextVersionMockProps } from "../../../avail/x_Resource/MoveToNextVersion/nextVersion/mock"
 
 export default {
     title: "Update/MoveToNextVersion",

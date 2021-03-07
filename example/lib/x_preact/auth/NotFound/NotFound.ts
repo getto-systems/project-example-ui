@@ -15,9 +15,9 @@ import { icon } from "../../common/icon"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 
-import { NotFoundEntryPoint } from "../../../availability/z_EntryPoint/NotFound/entryPoint"
+import { NotFoundEntryPoint } from "../../../avail/z_EntryPoint/NotFound/entryPoint"
 
-import { CurrentVersionComponent } from "../../../availability/x_Resource/GetCurrentVersion/currentVersion/component"
+import { CurrentVersionComponent } from "../../../avail/x_Resource/GetCurrentVersion/currentVersion/component"
 
 export function EntryPoint({ resource, terminate }: NotFoundEntryPoint): VNode {
     useTermination_deprecated(terminate)
