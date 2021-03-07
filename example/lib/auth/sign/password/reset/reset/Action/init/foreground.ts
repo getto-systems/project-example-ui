@@ -8,10 +8,12 @@ import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "../C
 
 import { ResetPasswordEntryPoint } from "../entryPoint"
 
-export function newResetPassword(
-    webStorage: Storage,
-    currentLocation: Location,
-): ResetPasswordEntryPoint {
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentLocation: Location
+}>
+export function newResetPassword(feature: OutsideFeature): ResetPasswordEntryPoint {
+    const { webStorage, currentLocation } = feature
     return newEntryPoint(
         initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(

@@ -16,12 +16,15 @@ import {
 
 import { CheckResetTokenSendingStatusEntryPoint } from "../../entryPoint"
 
+type OutsideFeature = Readonly<{
+    currentLocation: Location
+}>
 export interface CheckPasswordResetSendingStatusProxy
     extends WorkerProxy<
         CheckPasswordResetSendingStatusProxyMessage,
         CheckPasswordResetSendingStatusProxyResponse
     > {
-    entryPoint(currentLocation: Location): CheckResetTokenSendingStatusEntryPoint
+    entryPoint(feature: OutsideFeature): CheckResetTokenSendingStatusEntryPoint
 }
 export function newCheckPasswordResetSendingStatusProxy(
     post: Post<CheckPasswordResetSendingStatusProxyMessage>,
@@ -44,7 +47,8 @@ class Proxy
         }
     }
 
-    entryPoint(currentLocation: Location): CheckResetTokenSendingStatusEntryPoint {
+    entryPoint(feature: OutsideFeature): CheckResetTokenSendingStatusEntryPoint {
+        const { currentLocation } = feature
         const detecter = newCheckResetTokenSendingStatusLocationDetecter(currentLocation)
         return toCheckResetTokenSendingStatusEntryPoint(
             initCheckResetTokenSendingStatusCoreAction({

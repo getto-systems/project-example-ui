@@ -31,18 +31,16 @@ type OutsideFeature = Readonly<{
     worker: Worker
 }>
 export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint {
-    const { webStorage, currentLocation, worker } = feature
+    const { currentLocation, worker } = feature
     const proxy = initProxy(postForegroundMessage)
 
     const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
-        renew: () => newCheckAuthInfoEntryPoint(webStorage, currentLocation),
+        renew: () => newCheckAuthInfoEntryPoint(feature),
 
-        password_authenticate: () =>
-            proxy.password.authenticate.entryPoint(webStorage, currentLocation),
+        password_authenticate: () => proxy.password.authenticate.entryPoint(feature),
         password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),
-        password_reset_checkStatus: () =>
-            proxy.password.reset.checkStatus.entryPoint(currentLocation),
-        password_reset: () => proxy.password.reset.reset.entryPoint(webStorage, currentLocation),
+        password_reset_checkStatus: () => proxy.password.reset.checkStatus.entryPoint(feature),
+        password_reset: () => proxy.password.reset.reset.entryPoint(feature),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {

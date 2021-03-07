@@ -23,7 +23,10 @@ enum ResetEnum {
 }
 
 export default {
-    title: "library/Auth/Sign/Password/Reset/Reset",
+    title: "main/public/Auth/Sign/Password/Reset/Reset",
+    parameters: {
+        layout: "fullscreen",
+    },
     argTypes: {
         reset: {
             control: { type: "select", options: enumKeys(ResetEnum) },

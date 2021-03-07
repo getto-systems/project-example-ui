@@ -25,9 +25,13 @@ import {
 import { AuthenticatePasswordEntryPoint } from "../../entryPoint"
 import { AuthenticatePasswordCoreAction } from "../../Core/action"
 
+type OutsideFeature = Readonly<{
+    webStorage: Storage
+    currentLocation: Location
+}>
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
-    entryPoint(webStorage: Storage, currentLocation: Location): AuthenticatePasswordEntryPoint
+    entryPoint(feature: OutsideFeature): AuthenticatePasswordEntryPoint
 }
 export function newAuthenticatePasswordProxy(
     post: Post<AuthenticatePasswordProxyMessage>,
@@ -47,7 +51,8 @@ class Proxy
         }
     }
 
-    entryPoint(webStorage: Storage, currentLocation: Location): AuthenticatePasswordEntryPoint {
+    entryPoint(feature: OutsideFeature): AuthenticatePasswordEntryPoint {
+        const { webStorage, currentLocation } = feature
         const foreground = newAuthenticatePasswordCoreForegroundMaterial(
             webStorage,
             currentLocation,

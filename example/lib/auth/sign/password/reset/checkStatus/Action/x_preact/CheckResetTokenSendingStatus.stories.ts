@@ -23,7 +23,10 @@ enum CheckStatusEnum {
 }
 
 export default {
-    title: "library/Auth/Sign/Password/Reset/CheckStatus",
+    title: "main/public/Auth/Sign/Password/Reset/CheckStatus",
+    parameters: {
+        layout: "fullscreen",
+    },
     argTypes: {
         checkStatus: {
             control: { type: "select", options: enumKeys(CheckStatusEnum) },

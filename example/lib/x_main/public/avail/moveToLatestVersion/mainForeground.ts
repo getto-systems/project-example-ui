@@ -1,13 +1,13 @@
 import { h, render } from "preact"
 
-import { newForeground } from "../../../../avail/z_EntryPoint/MoveToNextVersion/main/single"
+import { newFindNextVersionEntryPoint } from "../../../../avail/version/findNext/Action/init"
 
-import { EntryPoint } from "../../../../x_preact/availability/MoveToLatestVersion/EntryPoint"
+import { MoveToLatestVersion } from "../../../../avail/version/findNext/Action/x_preact/MoveToLatestVersion"
 
 render(
     h(
-        EntryPoint,
-        newForeground({
+        MoveToLatestVersion,
+        newFindNextVersionEntryPoint({
             currentLocation: location,
         }),
     ),

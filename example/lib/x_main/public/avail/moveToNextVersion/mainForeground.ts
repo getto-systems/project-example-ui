@@ -1,9 +1,9 @@
-import { newForeground } from "../../../../avail/z_EntryPoint/MoveToNextVersion/main/single"
+import { newFindNextVersionEntryPoint } from "../../../../avail/version/findNext/Action/init"
 
-import { EntryPoint } from "../../../../x_plain/availability/MoveToNextVersion/EntryPoint"
+import { MoveToNextVersion } from "../../../../avail/version/findNext/Action/x_plain/MoveToNextVersion"
 
-EntryPoint(
-    newForeground({
+MoveToNextVersion(
+    newFindNextVersionEntryPoint({
         currentLocation: location,
     }),
 )
