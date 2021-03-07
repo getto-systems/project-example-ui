@@ -1,9 +1,9 @@
-import { MoveToNextVersionEntryPoint } from "../../../availability/z_EntryPoint/MoveToNextVersion/entryPoint"
-import { NextVersionComponentState } from "../../../availability/x_Resource/MoveToNextVersion/nextVersion/component"
+import { MoveToNextVersionEntryPoint } from "../../../avail/z_EntryPoint/MoveToNextVersion/entryPoint"
+import { NextVersionComponentState } from "../../../avail/x_Resource/MoveToNextVersion/nextVersion/component"
 
-import { AppTarget } from "../../../availability/nextVersion/data"
+import { AppTarget } from "../../../avail/nextVersion/data"
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
-import { appTargetToPath } from "../../../availability/nextVersion/helper"
+import { appTargetToPath } from "../../../avail/nextVersion/helper"
 
 export function EntryPoint({ resource, terminate }: MoveToNextVersionEntryPoint): void {
     // /${version}/index.html とかで実行する

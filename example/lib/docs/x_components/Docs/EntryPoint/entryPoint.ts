@@ -1,4 +1,4 @@
-import { NotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/resource"
 import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
 
 import { ContentComponent } from "../content/component"

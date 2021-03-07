@@ -8,7 +8,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useNotifyUnexpectedError } from "../../../availability/unexpectedError/Action/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../avail/unexpectedError/Action/x_preact/hooks"
 
 import { useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
 import { copyright, siteInfo } from "../../common/site"

@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { useNotifyUnexpectedError } from "../../../availability/unexpectedError/Action/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../avail/unexpectedError/Action/x_preact/hooks"
 
 import { useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"

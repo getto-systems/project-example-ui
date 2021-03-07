@@ -18,10 +18,10 @@ import { initTestContentAction } from "../../../../content/tests/content"
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 import { initLoadContentLocationDetecter } from "../../../../content/testHelper"
-import { initNotifyUnexpectedErrorCoreAction } from "../../../../../availability/unexpectedError/Action/Core/impl"
-import { NotifyUnexpectedErrorRemotePod } from "../../../../../availability/unexpectedError/infra"
+import { initNotifyUnexpectedErrorCoreAction } from "../../../../../avail/unexpectedError/Action/Core/impl"
+import { NotifyUnexpectedErrorRemotePod } from "../../../../../avail/unexpectedError/infra"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/impl"
+import { initNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/impl"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
