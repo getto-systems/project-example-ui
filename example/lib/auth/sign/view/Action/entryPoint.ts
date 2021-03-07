@@ -1,16 +1,11 @@
+import { ApplicationEntryPoint } from "../../../../z_vendor/getto-application/action/action"
 import { SignAction, SignActionState } from "./Core/action"
 
-export type SignEntryPoint = Readonly<{
-    resource: SignResource
-    terminate: Terminate
-}>
+export type SignEntryPoint = ApplicationEntryPoint<SignResource>
+
 export type SignResource = Readonly<{
     view: SignAction
 }>
 export type SignResourceState = Readonly<{
     state: SignActionState
 }>
-
-interface Terminate {
-    (): void
-}

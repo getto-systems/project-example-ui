@@ -9,7 +9,7 @@ import { v_small } from "../../../../../../../z_vendor/getto-css/preact/design/a
 
 import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
 
-import { LogoutResource, LogoutResourceState } from "../action"
+import { LogoutResource, LogoutResourceState } from "../resource"
 
 import { RepositoryError } from "../../../../../../../z_vendor/getto-application/infra/repository/data"
 

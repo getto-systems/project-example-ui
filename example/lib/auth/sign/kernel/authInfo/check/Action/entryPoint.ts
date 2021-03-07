@@ -1,9 +1,9 @@
+import { ApplicationEntryPoint } from "../../../../../../z_vendor/getto-application/action/action"
+
 import { CheckAuthInfoCoreAction, CheckAuthInfoCoreState } from "./Core/action"
 
-export type CheckAuthInfoEntryPoint = Readonly<{
-    resource: CheckAuthInfoResource
-    terminate: { (): void }
-}>
+export type CheckAuthInfoEntryPoint = ApplicationEntryPoint<CheckAuthInfoResource>
+
 export type CheckAuthInfoResource = Readonly<{
     core: CheckAuthInfoCoreAction
 }>
