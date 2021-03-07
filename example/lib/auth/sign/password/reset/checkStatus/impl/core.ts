@@ -1,5 +1,5 @@
 import { ticker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
-import { passThroughRemoteConverter } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
+import { passThroughRemoteValue } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { CheckResetTokenSendingStatusInfra } from "../infra"
 
@@ -26,8 +26,8 @@ interface CheckStatus {
 }
 export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (post) => {
     const { config } = infra
-    const sendToken = infra.sendToken(passThroughRemoteConverter)
-    const getStatus = infra.getStatus(passThroughRemoteConverter)
+    const sendToken = infra.sendToken(passThroughRemoteValue)
+    const getStatus = infra.getStatus(passThroughRemoteValue)
 
     const sessionID = detecter()
     if (!sessionID.valid) {

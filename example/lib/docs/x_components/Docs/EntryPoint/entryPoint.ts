@@ -1,7 +1,7 @@
+import { NotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/resource"
 import { MenuResource } from "../../../../common/x_Resource/Outline/Menu/resource"
 
 import { ContentComponent } from "../content/component"
-import { ErrorResource } from "../../../../availability/x_Resource/Error/resource"
 
 export type DocumentEntryPoint = Readonly<{
     resource: DocumentResource
@@ -11,7 +11,7 @@ export type DocumentEntryPoint = Readonly<{
 export type DocumentResource = Readonly<{
     content: ContentComponent
 }> &
-    ErrorResource &
+    NotifyUnexpectedErrorResource &
     MenuResource
 
 interface Terminate {

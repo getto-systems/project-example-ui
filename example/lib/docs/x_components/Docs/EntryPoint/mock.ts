@@ -1,3 +1,5 @@
+import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../availability/unexpectedError/Action/Core/mock"
+import { initNotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/impl"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
@@ -9,7 +11,6 @@ import {
 import { ContentMockPropsPasser, initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
-import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
 
 export type DocumentMockPropsPasser = Readonly<{
     menu: MenuMockPropsPasser
@@ -19,7 +20,7 @@ export type DocumentMockPropsPasser = Readonly<{
 export function newMockDocument(passer: DocumentMockPropsPasser): DocumentEntryPoint {
     return {
         resource: {
-            ...initMockErrorResource(),
+            ...initNotifyUnexpectedErrorResource(initMockNotifyUnexpectedErrorCoreAction()),
             menu: initMockMenuComponent(passer.menu),
             breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
             content: initMockContentComponent(passer.content),

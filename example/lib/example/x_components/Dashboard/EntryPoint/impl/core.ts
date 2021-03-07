@@ -6,14 +6,12 @@ import { ExampleComponentFactory } from "../../example/component"
 import { SeasonAction } from "../../../../shared/season/action"
 import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
 import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
-import { ErrorForegroundAction } from "../../../../../availability/x_Resource/Error/resource"
-import { initErrorResource } from "../../../../../availability/x_Resource/Error/impl"
+import { NotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/resource"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
         season: SeasonAction
     }> &
-        ErrorForegroundAction &
         MenuForegroundAction
     components: Readonly<{
         seasonInfo: SeasonInfoComponentFactory
@@ -21,7 +19,10 @@ export type DashboardFactory = Readonly<{
         example: ExampleComponentFactory
     }>
 }>
-export function initDashboardResource(factory: DashboardFactory): DashboardResource {
+export function initDashboardResource(
+    factory: DashboardFactory,
+    error: NotifyUnexpectedErrorResource,
+): DashboardResource {
     const actions = {
         loadSeason: factory.actions.season.loadSeason(),
     }
@@ -30,7 +31,7 @@ export function initDashboardResource(factory: DashboardFactory): DashboardResou
 
         example: factory.components.example(actions),
 
-        ...initErrorResource(factory.actions),
         ...initMenuResource(factory.actions),
+        ...error,
     }
 }

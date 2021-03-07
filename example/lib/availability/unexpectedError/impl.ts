@@ -1,16 +1,33 @@
-import { passThroughRemoteConverter } from "../../z_vendor/getto-application/infra/remote/helper"
-import { UnexpectedErrorAction } from "./action"
-import { UnexpectedErrorInfra, NotifyUnexpectedError } from "./infra"
+import { passThroughRemoteValue } from "../../z_vendor/getto-application/infra/remote/helper"
+import { authzRepositoryConverter } from "../../common/authz/convert"
 
-export function initUnexpectedErrorAction(infra: UnexpectedErrorInfra): UnexpectedErrorAction {
-    return {
-        notifyUnexpectedError: notify(infra)(),
-    }
+import { NotifyUnexpectedErrorInfra } from "./infra"
+
+import { NotifyUnexpectedErrorMethod } from "./method"
+
+interface Notify {
+    (infra: NotifyUnexpectedErrorInfra): NotifyUnexpectedErrorMethod
 }
+export const notifyUnexpectedError: Notify = (infra) => async (err) => {
+    const authz = infra.authz(authzRepositoryConverter)
+    const notify = infra.notify(passThroughRemoteValue)
 
-const notify: NotifyUnexpectedError = (infra) => () => async (err) => {
-    const notify = infra.notify(passThroughRemoteConverter)
-    const result = await notify(err)
+    const authzResult = authz.get()
+    if (!authzResult.success) {
+        // ここはエラーの行きつく先なので、発生したエラーはどうしようもない
+        console.log(authzResult.err)
+        return
+    }
+    if (!authzResult.found) {
+        // 認証していないならエラーはどうしようもない
+        console.log(err)
+        return
+    }
+
+    const result = await notify({
+        nonce: authzResult.value.nonce,
+        err,
+    })
     if (!result.success) {
         // エラーの通知に失敗したらもうどうしようもないので console.log しておく
         console.log(result.err)

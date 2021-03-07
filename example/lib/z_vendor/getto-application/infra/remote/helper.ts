@@ -21,6 +21,6 @@ export function wrapRemote<M, V, R, E>(
     }
 }
 
-export function passThroughRemoteConverter<T>(value: T): T {
+export function passThroughRemoteValue<T>(value: T): T {
     return value
 }

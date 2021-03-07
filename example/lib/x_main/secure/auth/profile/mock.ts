@@ -1,5 +1,6 @@
 import { initMockLogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/mock"
-import { initMockErrorResource } from "../../../../availability/x_Resource/Error/mock"
+import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../availability/unexpectedError/Action/Core/mock"
+import { initNotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/impl"
 import {
     BreadcrumbListMockPropsPasser,
     initMockBreadcrumbListComponent,
@@ -27,7 +28,7 @@ export function initMockAuthProfileResource(
         seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
         menu: initMockMenuComponent(passer.menu),
         breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
-        ...initMockErrorResource(),
+        ...initNotifyUnexpectedErrorResource(initMockNotifyUnexpectedErrorCoreAction()),
         ...initMockLogoutResource(),
     }
 }

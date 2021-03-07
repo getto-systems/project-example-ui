@@ -8,11 +8,9 @@ import {
     mainTitle,
 } from "../../../../../z_vendor/getto-css/preact/layout/app"
 
-import {
-    useDocumentTitle,
-    useEntryPoint,
-    useErrorNotify,
-} from "../../../../../x_preact/common/hooks"
+import { useNotifyUnexpectedError } from "../../../../../availability/unexpectedError/Action/x_preact/hooks"
+
+import { useDocumentTitle, useEntryPoint } from "../../../../../x_preact/common/hooks"
 import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
@@ -26,7 +24,7 @@ import { AuthProfileEntryPoint, AuthProfileResource } from "../entryPoint"
 export function EntryPoint(entryPoint: AuthProfileEntryPoint): VNode {
     const resource = useEntryPoint(entryPoint)
 
-    const err = useErrorNotify(resource.notify)
+    const err = useNotifyUnexpectedError(resource)
     if (err) {
         return h(ApplicationError, { err: `${err}` })
     }

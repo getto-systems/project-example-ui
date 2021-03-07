@@ -10,22 +10,19 @@ import {
 } from "../../../../example/x_components/Outline/seasonInfo/component"
 
 import { SeasonAction } from "../../../../example/shared/season/action"
-import {
-    ErrorForegroundAction,
-    ErrorResource,
-} from "../../../../availability/x_Resource/Error/resource"
 import { ApplicationEntryPoint } from "../../../../z_vendor/getto-application/action/action"
+import { NotifyUnexpectedErrorResource } from "../../../../availability/unexpectedError/Action/resource"
 
 export type AuthProfileEntryPoint = ApplicationEntryPoint<AuthProfileResource>
 
 export type AuthProfileResource = Readonly<{
     seasonInfo: SeasonInfoComponent
 }> &
-    ErrorResource &
+    NotifyUnexpectedErrorResource &
     MenuResource &
     LogoutResource
 
-export type AuthProfileMaterial = ErrorForegroundAction & MenuForegroundAction
+export type AuthProfileMaterial = MenuForegroundAction
 
 export type ProfileFactory = Readonly<{
     actions: Readonly<{

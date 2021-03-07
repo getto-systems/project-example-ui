@@ -15,11 +15,13 @@ import {
 
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
-import { initUnexpectedErrorAction } from "../../../../../availability/unexpectedError/impl"
-import { initNotifyUnexpectedErrorSimulator } from "../../../../../availability/unexpectedError/infra/remote/notifyUnexpectedError/testHelper"
 import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
 import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 import { initLoadContentLocationDetecter } from "../../../../content/testHelper"
+import { initNotifyUnexpectedErrorCoreAction } from "../../../../../availability/unexpectedError/Action/Core/impl"
+import { NotifyUnexpectedErrorRemotePod } from "../../../../../availability/unexpectedError/infra"
+import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { initNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/impl"
 
 export type DocumentRepository = Readonly<{
     authz: AuthzRepositoryPod
@@ -38,9 +40,6 @@ export function newTestDocumentResource(
     const locationInfo = initLoadOutlineMenuLocationDetecter(currentURL, version)
     const factory: DocumentFactory = {
         actions: {
-            error: initUnexpectedErrorAction({
-                notify: initNotifyUnexpectedErrorSimulator(),
-            }),
             breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { version, menuTree }),
             menu: initOutlineMenuAction(locationInfo, {
                 ...repository,
@@ -56,7 +55,20 @@ export function newTestDocumentResource(
         },
     }
 
-    return initDocumentResource(factory, {
-        content: initLoadContentLocationDetecter(currentURL, version),
-    })
+    return initDocumentResource(
+        factory,
+        {
+            content: initLoadContentLocationDetecter(currentURL, version),
+        },
+        initNotifyUnexpectedErrorResource(
+            initNotifyUnexpectedErrorCoreAction({
+                authz: repository.authz,
+                notify: standard_notify(),
+            }),
+        ),
+    )
+}
+
+function standard_notify(): NotifyUnexpectedErrorRemotePod {
+    return initRemoteSimulator(() => ({ success: true, value: true }), { wait_millisecond: 0 })
 }

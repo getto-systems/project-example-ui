@@ -3,7 +3,7 @@ import { DashboardFactory, initDashboardResource } from "../impl/core"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { newErrorAction } from "../../../../../availability/unexpectedError/main"
+import { newNotifyUnexpectedErrorResource } from "../../../../../availability/unexpectedError/Action/init"
 import { initSeasonAction } from "../../../../shared/season/main/season"
 import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 
@@ -18,7 +18,6 @@ export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
 
     const factory: DashboardFactory = {
         actions: {
-            error: newErrorAction(),
             ...newMainOutlineAction(webStorage, currentLocation),
 
             season: initSeasonAction(),
@@ -29,7 +28,7 @@ export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
             example: initExampleComponent,
         },
     }
-    const resource = initDashboardResource(factory)
+    const resource = initDashboardResource(factory, newNotifyUnexpectedErrorResource(webStorage))
     return {
         resource,
         terminate: () => {
