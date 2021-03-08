@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
@@ -35,7 +35,7 @@ import {
 import { ResetPasswordError } from "../../reset/data"
 
 export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
     return h(ResetPasswordComponent, {
         ...resource,
         state: {

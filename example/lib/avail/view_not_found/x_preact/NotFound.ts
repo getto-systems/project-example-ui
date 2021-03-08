@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
@@ -16,7 +16,7 @@ import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { NotFoundEntryPoint, NotFoundResource } from "../entry_point"
 
 export function NotFound(entryPoint: NotFoundEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない

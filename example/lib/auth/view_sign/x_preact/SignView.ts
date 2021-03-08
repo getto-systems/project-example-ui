@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { ApplicationError } from "../../../common/x_preact/ApplicationError"
@@ -17,7 +17,7 @@ import { ResetPassword } from "../../sign/password/reset/view_reset/x_preact/Res
 import { SignEntryPoint, SignResource, SignResourceState } from "../entry_point"
 
 export function SignView(entryPoint: SignEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない

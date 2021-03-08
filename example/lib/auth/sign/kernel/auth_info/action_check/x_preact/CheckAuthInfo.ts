@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
@@ -26,7 +26,7 @@ import {
 import { RenewAuthInfoError } from "../../kernel/data"
 
 export function CheckAuthInfo(entryPoint: CheckAuthInfoEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
     return h(CheckAuthInfoComponent, {
         ...resource,
         state: useApplicationAction(resource.core),

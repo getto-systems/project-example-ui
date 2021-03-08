@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
@@ -31,7 +31,7 @@ import { RequestResetTokenError } from "../../request_token/data"
 import { InputLoginID } from "../../../../common/fields/login_id/action/x_preact/InputLoginID"
 
 export function RequestResetToken(entryPoint: RequestResetTokenEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
     return h(RequestResetTokenComponent, {
         ...resource,
         state: {
