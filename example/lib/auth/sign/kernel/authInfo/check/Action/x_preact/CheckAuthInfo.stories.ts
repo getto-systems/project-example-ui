@@ -22,14 +22,14 @@ export default {
         layout: "fullscreen",
     },
     argTypes: {
-        renew: {
+        check: {
             control: { type: "select", options: enumKeys(CheckEnum) },
         },
     },
 }
 
 type Props = Readonly<{
-    renew: keyof typeof CheckEnum
+    check: keyof typeof CheckEnum
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
@@ -39,7 +39,7 @@ const template = storyTemplate<Props>((props) => {
     })
 
     function state(): CheckAuthInfoCoreState {
-        switch (props.renew) {
+        switch (props.check) {
             case "delayed":
                 return { type: "delayed-to-renew" }
 
@@ -64,4 +64,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({ renew: "delayed", err: "" })
+export const Box = template({ check: "delayed", err: "" })

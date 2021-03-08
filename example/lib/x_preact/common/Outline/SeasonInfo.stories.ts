@@ -13,14 +13,11 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { Menu } from "./Menu"
+import { LoadMenu } from "../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
 import { SeasonInfo } from "./SeasonInfo"
 
 import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
-import {
-    initMockMenuComponent,
-    MenuMockProps,
-} from "../../../common/x_Resource/Outline/Menu/Menu/mock"
+import { initMockLoadMenuCoreAction, standard_MockMenu } from "../../../outline/menu/loadMenu/Action/Core/mock"
 import {
     SeasonInfoMockProps,
     initMockSeasonInfoComponent,
@@ -39,20 +36,14 @@ type MockProps = SeasonInfoMockProps
 const template = storyTemplate<MockProps>((args) => {
     const passer = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
-        menuList: initMockPropsPasser<MenuMockProps>(),
     }
     const seasonInfo = initMockSeasonInfoComponent(passer.seasonInfo)
-    const menu = initMockMenuComponent(passer.menuList)
+    const menu = initMockLoadMenuCoreAction(standard_MockMenu())
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.seasonInfo.update(props.args)
-            passer.menuList.update({
-                type: "success",
-                label: "ホーム",
-                badgeCount: 0,
-            })
         })
         return noPaddedStory(
             appLayout({
@@ -63,8 +54,8 @@ const template = storyTemplate<MockProps>((args) => {
                     body: mainBody("コンテンツ"),
                     copyright: copyright(),
                 }),
-                menu: h(Menu, { menu }),
-            })
+                menu: h(LoadMenu, { menu }),
+            }),
         )
     }
 })

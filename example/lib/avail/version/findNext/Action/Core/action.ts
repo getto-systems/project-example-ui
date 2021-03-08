@@ -4,16 +4,16 @@ import { FindNextVersionMethod } from "../../method"
 
 import { FindNextVersionEvent } from "../../event"
 
-export type FindNextVersionCoreAction = ApplicationStateAction<FindNextVersionCoreActionState>
+export type FindNextVersionCoreAction = ApplicationStateAction<FindNextVersionCoreState>
 
 export type FindNextVersionMaterial = Readonly<{
     find: FindNextVersionMethod
 }>
 
-export type FindNextVersionCoreActionState =
+export type FindNextVersionCoreState =
     | Readonly<{ type: "initial-next-version" }>
     | FindNextVersionEvent
 
-export const initialFindNextVersionCoreActionState: FindNextVersionCoreActionState = {
+export const initialFindNextVersionCoreState: FindNextVersionCoreState = {
     type: "initial-next-version",
 }

@@ -15,8 +15,8 @@ import { copyright, siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 import { SeasonInfo } from "../../common/Outline/SeasonInfo"
-import { Menu } from "../../common/Outline/Menu"
-import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
+import { LoadMenu } from "../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
+import { LoadBreadcrumbList } from "../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"
@@ -35,10 +35,10 @@ export function EntryPoint({ resource, terminate }: DashboardEntryPoint): VNode 
         siteInfo: siteInfo(),
         header: [h(SeasonInfo, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("ホーム"), h(BreadcrumbList, resource)]),
+            header: mainHeader([mainTitle("ホーム"), h(LoadBreadcrumbList, resource)]),
             body: mainBody(h(Example, resource)),
             copyright: copyright(),
         }),
-        menu: h(Menu, resource),
+        menu: h(LoadMenu, resource),
     })
 }

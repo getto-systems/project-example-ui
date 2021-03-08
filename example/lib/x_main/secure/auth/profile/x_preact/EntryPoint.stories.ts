@@ -10,8 +10,6 @@ import { AuthProfileMockPropsPasser, initMockAuthProfileResource } from "../mock
 import { initMockPropsPasser } from "../../../../../z_vendor/getto-application/action/mock"
 
 import { SeasonInfoMockProps } from "../../../../../example/x_components/Outline/seasonInfo/mock"
-import { MenuMockProps } from "../../../../../common/x_Resource/Outline/Menu/Menu/mock"
-import { BreadcrumbListMockProps } from "../../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 
 export default {
     title: "main/secure/Auth/Profile",
@@ -34,8 +32,6 @@ type MockProps = Readonly<{
 const template = storyTemplate<MockProps>((args) => {
     const passer: AuthProfileMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
-        menu: initMockPropsPasser<MenuMockProps>(),
-        breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
     }
     const resource = initMockAuthProfileResource(passer)
     return h(Preview, { args })
@@ -43,16 +39,6 @@ const template = storyTemplate<MockProps>((args) => {
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.seasonInfo.update({ type: "success", year: props.args.seasonYear })
-            passer.menu.update({
-                type: "success",
-                label: "ホーム",
-                badgeCount: props.args.menuBadgeCount,
-            })
-            passer.breadcrumbList.update({
-                type: "success",
-                label: props.args.breadcrumbLabel,
-                icon: props.args.breadcrumbIcon,
-            })
         })
         return h(View, resource)
     }

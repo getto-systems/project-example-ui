@@ -1,4 +1,4 @@
-import { ApplicationMockStateAction } from "../../../../../../../z_vendor/getto-application/action/impl"
+import { ApplicationMockStateAction } from "../../../../../../../z_vendor/getto-application/action/mock"
 
 import {
     initialResetPasswordCoreState,

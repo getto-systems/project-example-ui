@@ -1,28 +1,26 @@
 import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../avail/unexpectedError/Action/Core/mock"
 import { initNotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/impl"
 import {
-    BreadcrumbListMockPropsPasser,
-    initMockBreadcrumbListComponent,
-} from "../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
+    initMockLoadBreadcrumbListCoreAction,
+    standard_MockBreadcrumbList,
+} from "../../../../outline/menu/loadBreadcrumbList/Action/Core/mock"
 import {
-    initMockMenuComponent,
-    MenuMockPropsPasser,
-} from "../../../../common/x_Resource/Outline/Menu/Menu/mock"
+    initMockLoadMenuCoreAction,
+    standard_MockMenu,
+} from "../../../../outline/menu/loadMenu/Action/Core/mock"
 import { ContentMockPropsPasser, initMockContentComponent } from "../content/mock"
 
 import { DocumentEntryPoint } from "./entryPoint"
 
 export type DocumentMockPropsPasser = Readonly<{
-    menu: MenuMockPropsPasser
-    breadcrumbList: BreadcrumbListMockPropsPasser
     content: ContentMockPropsPasser
 }>
 export function newMockDocument(passer: DocumentMockPropsPasser): DocumentEntryPoint {
     return {
         resource: {
             ...initNotifyUnexpectedErrorResource(initMockNotifyUnexpectedErrorCoreAction()),
-            menu: initMockMenuComponent(passer.menu),
-            breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
+            menu: initMockLoadMenuCoreAction(standard_MockMenu()),
+            breadcrumbList: initMockLoadBreadcrumbListCoreAction(standard_MockBreadcrumbList()),
             content: initMockContentComponent(passer.content),
         },
         terminate: () => {

@@ -3,15 +3,14 @@ import { DocumentResource } from "../entryPoint"
 import { ContentComponentFactory } from "../../content/component"
 
 import { ContentAction, LoadContentLocationDetecter } from "../../../../content/action"
-import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
-import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 import { NotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/resource"
+import { LoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/resource"
+import { LoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/resource"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{
         content: ContentAction
-    }> &
-        MenuForegroundAction
+    }>
     components: Readonly<{
         content: ContentComponentFactory
     }>
@@ -22,6 +21,8 @@ export type DocumentLocationInfo = Readonly<{
 export function initDocumentResource(
     factory: DocumentFactory,
     locationInfo: DocumentLocationInfo,
+    breadcrumbList: LoadBreadcrumbListResource,
+    menu: LoadMenuResource,
     error: NotifyUnexpectedErrorResource,
 ): DocumentResource {
     const actions = {
@@ -30,7 +31,8 @@ export function initDocumentResource(
     return {
         content: factory.components.content(actions),
 
-        ...initMenuResource(factory.actions),
+        ...breadcrumbList,
+        ...menu,
         ...error,
     }
 }

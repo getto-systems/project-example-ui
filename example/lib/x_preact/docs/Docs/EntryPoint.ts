@@ -6,7 +6,7 @@ import { useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
-import { Menu } from "../../common/Outline/Menu"
+import { LoadMenu } from "../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
 import { Content } from "./Content"
 
 import { DocumentEntryPoint } from "../../../docs/x_components/Docs/EntryPoint/entryPoint"
@@ -24,6 +24,6 @@ export function EntryPoint({ resource, terminate }: DocumentEntryPoint): VNode {
         siteInfo: siteInfo(),
         header: [],
         main: h(Content, resource),
-        menu: h(Menu, resource),
+        menu: h(LoadMenu, resource),
     })
 }

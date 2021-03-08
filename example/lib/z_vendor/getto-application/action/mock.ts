@@ -1,4 +1,16 @@
 import { ApplicationStateAction, ActionStateSubscriber, ActionStateHandler } from "./action"
+import { ApplicationAbstractStateAction } from "./impl"
+
+export abstract class ApplicationMockStateAction<S>
+    extends ApplicationAbstractStateAction<S>
+    implements ApplicationStateAction<S> {
+    addMockIgniter(igniter: MockIgniter<S>): void {
+        this.igniteHook(() => this.post(igniter()))
+    }
+}
+interface MockIgniter<S> {
+    (): S
+}
 
 // TODO ApplicationMockAction に置き換えて削除
 export abstract class MockAction<S> implements ApplicationStateAction<S> {

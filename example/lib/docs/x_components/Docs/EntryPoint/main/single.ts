@@ -7,20 +7,21 @@ import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpecte
 import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
-import { newDocumentOutlineAction } from "../../../../../auth/permission/outline/load/main/document"
 import { newLoadContentLocationDetecter } from "../../../../content/init"
+import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/init"
+import { docsMenuContent } from "../../../../../outline/menu/kernel/init/docs"
+import { newLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/init"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
-    const { webStorage, currentLocation } = feature
+    const { currentLocation } = feature
+    const menu = docsMenuContent()
 
     const factory: DocumentFactory = {
         actions: {
-            ...newDocumentOutlineAction(webStorage, currentLocation),
-
             content: initContentAction(),
         },
         components: {
@@ -33,13 +34,14 @@ export function newForeground(feature: OutsideFeature): DocumentEntryPoint {
     const resource = initDocumentResource(
         factory,
         locationInfo,
+        newLoadBreadcrumbListResource(feature, menu),
+        newLoadMenuResource(feature, menu),
         newNotifyUnexpectedErrorResource(feature),
     )
     return {
         resource,
         terminate: () => {
             resource.menu.terminate()
-            resource.breadcrumbList.terminate()
             resource.content.terminate()
         },
     }

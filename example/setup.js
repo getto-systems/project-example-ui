@@ -12,9 +12,7 @@ function envContent() {
     const isProduction = process.env.BUILD_ENV == "production"
     const version = (() => {
         if (isProduction) {
-            return fs
-                .readFileSync(path.join(__dirname, "../.release-version"), "utf8")
-                .trim()
+            return fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim()
         } else {
             return "dist"
         }
@@ -30,8 +28,8 @@ function envContent() {
             authn: "GETTO-EXAMPLE-AUTHN",
             authz: "GETTO-EXAMPLE-AUTHZ",
             menuExpand: {
-                main: "GETTO-EXAMPLE-MENU-EXPAND-MAIN", // TODO キーに main を使いたくない
-                document: "GETTO-EXAMPLE-MENU-EXPAND-DOCS", // TODO キーを docs にしたい
+                home: "GETTO-EXAMPLE-MENU-EXPAND-HOME",
+                docs: "GETTO-EXAMPLE-MENU-EXPAND-DOCS",
             },
         },
     }
@@ -41,14 +39,13 @@ function envContent() {
 
 function pathContent() {
     const files = ["/storybook/index.html", "/coverage/lcov-report/index.html"].concat(
-        entryPoint.findSecureFiles()
+        entryPoint.findSecureFiles(),
     )
     const documents = files.filter(isDocument)
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
         "export type StaticContentPath =" + toTypeVariant(documents),
-        "export const staticContentPaths: StaticContentPath[] = " +
-            toConstValue(documents),
+        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(documents),
     ].join("\n")
 
     function isDocument(file) {

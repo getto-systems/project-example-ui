@@ -18,7 +18,7 @@ import { CheckDeployExistsRemotePod } from "../infra"
 
 import { FindNextVersionEntryPoint } from "./entryPoint"
 
-import { FindNextVersionCoreActionState } from "./Core/action"
+import { FindNextVersionCoreState } from "./Core/action"
 
 describe("FindNextVersion", () => {
     test("up to date", (done) => {
@@ -423,7 +423,7 @@ function takeLongTime_check(): CheckDeployExistsRemotePod {
     })
 }
 
-function actionHasDone(state: FindNextVersionCoreActionState): boolean {
+function actionHasDone(state: FindNextVersionCoreState): boolean {
     switch (state.type) {
         case "initial-next-version":
             return false

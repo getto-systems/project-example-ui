@@ -1,4 +1,4 @@
-import { ApplicationMockStateAction } from "../../../../action/impl"
+import { ApplicationMockStateAction } from "../../../../action/mock"
 import { ConvertBoardResult } from "../../../kernel/data"
 import { initialValidateBoardState, ValidateBoardAction, ValidateBoardActionState } from "./action"
 

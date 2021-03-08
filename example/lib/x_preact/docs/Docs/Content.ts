@@ -12,19 +12,19 @@ import {
 
 import { copyright } from "../../common/site"
 
-import { BreadcrumbList } from "../../common/Outline/BreadcrumbList"
+import { LoadBreadcrumbList } from "../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
 
 import { ContentComponent } from "../../../docs/x_components/Docs/content/component"
-import { BreadcrumbListComponent } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/component"
 
 import { ContentPath } from "../../../docs/content/data"
 import { useApplicationAction } from "../../common/hooks"
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
+import { LoadBreadcrumbListResource } from "../../../outline/menu/loadBreadcrumbList/Action/resource"
 
 type Props = Readonly<{
     content: ContentComponent
-    breadcrumbList: BreadcrumbListComponent
-}>
+}> &
+    LoadBreadcrumbListResource
 export function Content(resource: Props): VNode {
     const state = useApplicationAction(resource.content)
     const [loadContentState, setLoadContentState] = useState(initialLoadContentState)
@@ -51,7 +51,7 @@ export function Content(resource: Props): VNode {
             return appMain({
                 header: mainHeader([
                     mainTitle(documentTitle(state.path)),
-                    h(BreadcrumbList, resource),
+                    h(LoadBreadcrumbList, resource),
                 ]),
                 body: mainBody(loadContentState.content),
                 copyright: copyright(),

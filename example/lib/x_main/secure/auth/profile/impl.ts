@@ -1,16 +1,15 @@
 import { ProfileFactory, AuthProfileResource, AuthProfileEntryPoint } from "./entryPoint"
 
-import { initMenuResource } from "../../../../common/x_Resource/Outline/Menu/impl"
-
 import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/resource"
 import { NotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/resource"
+import { LoadBreadcrumbListResource } from "../../../../outline/menu/loadBreadcrumbList/Action/resource"
+import { LoadMenuResource } from "../../../../outline/menu/loadMenu/Action/resource"
 
 export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProfileEntryPoint {
     return {
         resource,
         terminate: () => {
             resource.menu.terminate()
-            resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
             resource.logout.terminate()
@@ -20,6 +19,8 @@ export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProf
 
 export function initAuthProfileResource(
     factory: ProfileFactory,
+    breadcrumbList: LoadBreadcrumbListResource,
+    menu: LoadMenuResource,
     logout: LogoutResource,
     error: NotifyUnexpectedErrorResource,
 ): AuthProfileResource {
@@ -29,7 +30,8 @@ export function initAuthProfileResource(
     return {
         seasonInfo: factory.components.seasonInfo(actions),
 
-        ...initMenuResource(factory.actions),
+        ...breadcrumbList,
+        ...menu,
         ...logout,
         ...error,
     }
