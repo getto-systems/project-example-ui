@@ -1,29 +1,36 @@
-import { initLoadMenuLocationDetecter } from "../../kernel/init/testHelper"
 import {
-    initAsyncActionTester_legacy,
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
 } from "../../../../z_vendor/getto-application/action/testHelper"
-import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
+
+import { markMenuCategoryLabel, standard_MenuTree } from "../../kernel/impl/testHelper"
+
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
-import { RepositoryFetchResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
+import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
+
+import { initLoadMenuLocationDetecter } from "../../kernel/init/testHelper"
+
+import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./Core/impl"
+
+import { menuExpandRepositoryConverter } from "../../kernel/impl/convert"
+import { loadMenuEventHasDone } from "../impl/core"
+import { updateMenuBadgeEventHasDone } from "../../updateMenuBadge/impl/core"
+import { toggleMenuExpandEventHasDone } from "../../toggleMenuExpand/impl/core"
+
+import { RepositoryFetchResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { AuthzRepositoryPod } from "../../../../common/authz/infra"
-import { LoadMenuCoreState } from "./Core/action"
 import {
     FetchMenuResult,
     GetMenuBadgeRemotePod,
     MenuExpand,
     MenuExpandRepositoryPod,
 } from "../../kernel/infra"
-import { LoadMenuLocationDetecter } from "../../kernel/method"
-import { menuExpandRepositoryConverter } from "../../kernel/impl/convert"
-import { markMenuCategoryLabel, standard_MenuTree } from "../../kernel/impl/testHelper"
+
 import { LoadMenuResource } from "./resource"
-import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./Core/impl"
-import { loadMenuEventHasDone } from "../impl/core"
-import { updateMenuBadgeEventHasDone } from "../../updateMenuBadge/impl/core"
-import { toggleMenuExpandEventHasDone } from "../../toggleMenuExpand/impl/core"
+import { LoadMenuCoreState } from "./Core/action"
+
+import { LoadMenuLocationDetecter } from "../../kernel/method"
 
 describe("Menu", () => {
     test("load menu", (done) => {
@@ -35,62 +42,66 @@ describe("Menu", () => {
         })
         resource.menu.storeLinker.link({ get: () => menu })
 
-        resource.menu.subscriber.subscribe(initTester())
-
-        resource.menu.ignite()
-
-        function initTester() {
-            return initAsyncMenuTester()((stack) => {
-                expect(stack).toEqual([
-                    {
-                        type: "succeed-to-load",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.menu.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "succeed-to-load",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 0, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 0),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
                                 ]),
-                            ]),
-                        ],
-                    },
-                    {
-                        type: "succeed-to-update",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 30, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
                                 ]),
-                            ]),
-                        ],
-                    },
-                ])
-                done()
-            })
-        }
+                            ],
+                        },
+                        {
+                            type: "succeed-to-update",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                                ]),
+                                category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
+                                ]),
+                            ],
+                        },
+                    ])
+                },
+            },
+        ])
+
+        resource.menu.subscriber.subscribe(runner(done))
     })
 
     test("load menu; empty roles", (done) => {
         const { resource } = empty_elements()
 
-        resource.menu.subscriber.subscribe(initTester())
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.menu.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ type: "required-to-login" }])
+                },
+            },
+        ])
 
-        resource.menu.ignite()
-
-        function initTester() {
-            return initAsyncMenuTester()((stack) => {
-                expect(stack).toEqual([{ type: "required-to-login" }])
-                done()
-            })
-        }
+        resource.menu.subscriber.subscribe(runner(done))
     })
 
     test("load menu; saved expands", (done) => {
@@ -102,47 +113,49 @@ describe("Menu", () => {
         })
         resource.menu.storeLinker.link({ get: () => menu })
 
-        resource.menu.subscriber.subscribe(initTester())
-
-        resource.menu.ignite()
-
-        function initTester() {
-            return initAsyncMenuTester()((stack) => {
-                expect(stack).toEqual([
-                    {
-                        type: "succeed-to-load",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.menu.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "succeed-to-load",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 0, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 0),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
                                 ]),
-                            ]),
-                        ],
-                    },
-                    {
-                        type: "succeed-to-update",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 30, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
                                 ]),
-                            ]),
-                        ],
-                    },
-                ])
-                done()
-            })
-        }
+                            ],
+                        },
+                        {
+                            type: "succeed-to-update",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                                ]),
+                                $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
+                                ]),
+                            ],
+                        },
+                    ])
+                },
+            },
+        ])
+
+        resource.menu.subscriber.subscribe(runner(done))
     })
 
     test("load menu; toggle expands", (done) => {
@@ -153,9 +166,7 @@ describe("Menu", () => {
         resource.menu.subscriber.subscribe((state) => {
             menu = resource.menu.fetch(state)
         })
-        resource.menu.storeLinker.link({
-            get: () => menu,
-        })
+        resource.menu.storeLinker.link({ get: () => menu })
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -175,20 +186,14 @@ describe("Menu", () => {
                         {
                             type: "succeed-to-toggle",
                             menu: [
-                                category("MAIN", ["MAIN"], true, 30, [
-                                    item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                    item(
-                                        "ドキュメント",
-                                        "docs",
-                                        "/1.0.0/docs/index.html",
-                                        false,
-                                        20,
-                                    ),
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
                                 ]),
-                                category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                    category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                        item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
                                     ]),
                                 ]),
                             ],
@@ -208,20 +213,14 @@ describe("Menu", () => {
                         {
                             type: "succeed-to-toggle",
                             menu: [
-                                category("MAIN", ["MAIN"], true, 30, [
-                                    item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                    item(
-                                        "ドキュメント",
-                                        "docs",
-                                        "/1.0.0/docs/index.html",
-                                        false,
-                                        20,
-                                    ),
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
                                 ]),
-                                category("DOCUMENT", ["DOCUMENT"], true, 0, [
-                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                    category("DETAIL", ["DOCUMENT", "DETAIL"], true, 0, [
-                                        item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    $category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
                                     ]),
                                 ]),
                             ],
@@ -247,69 +246,67 @@ describe("Menu", () => {
         resource.menu.subscriber.subscribe((state) => {
             menu = resource.menu.fetch(state)
         })
-        resource.menu.storeLinker.link({
-            get: () => menu,
-        })
+        resource.menu.storeLinker.link({ get: () => menu })
 
-        resource.menu.subscriber.subscribe(initTester())
-
-        resource.menu.ignite()
-
-        function initTester() {
-            return initAsyncMenuTester()((stack) => {
-                expect(stack).toEqual([
-                    {
-                        type: "succeed-to-load",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 0, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 0),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 0),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+        const runner = initAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    resource.menu.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "succeed-to-load",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 0, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 0),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 0),
                                 ]),
-                            ]),
-                            category("DEVELOPMENT", ["DEVELOPMENT"], false, 0, [
-                                item(
-                                    "配備構成",
-                                    "deployment",
-                                    "/1.0.0/docs/z_dev/deployment.html",
-                                    false,
-                                    0,
-                                ),
-                            ]),
-                        ],
-                    },
-                    {
-                        type: "succeed-to-update",
-                        menu: [
-                            category("MAIN", ["MAIN"], true, 30, [
-                                item("ホーム", "home", "/1.0.0/index.html", true, 10),
-                                item("ドキュメント", "docs", "/1.0.0/docs/index.html", false, 20),
-                            ]),
-                            category("DOCUMENT", ["DOCUMENT"], false, 0, [
-                                item("認証・認可", "auth", "/1.0.0/docs/auth.html", false, 0),
-                                category("DETAIL", ["DOCUMENT", "DETAIL"], false, 0, [
-                                    item("詳細", "detail", "/1.0.0/docs/auth.html", false, 0),
+                                category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
                                 ]),
-                            ]),
-                            category("DEVELOPMENT", ["DEVELOPMENT"], false, 0, [
-                                item(
-                                    "配備構成",
-                                    "deployment",
-                                    "/1.0.0/docs/z_dev/deployment.html",
-                                    false,
-                                    0,
-                                ),
-                            ]),
-                        ],
-                    },
-                ])
-                done()
-            })
-        }
+                                category("DEVELOPMENT", ["DEVELOPMENT"], 0, [
+                                    item(
+                                        "配備構成",
+                                        "deployment",
+                                        "/1.0.0/docs/z_dev/deployment.html",
+                                        0,
+                                    ),
+                                ]),
+                            ],
+                        },
+                        {
+                            type: "succeed-to-update",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                                ]),
+                                category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
+                                ]),
+                                category("DEVELOPMENT", ["DEVELOPMENT"], 0, [
+                                    item(
+                                        "配備構成",
+                                        "deployment",
+                                        "/1.0.0/docs/z_dev/deployment.html",
+                                        0,
+                                    ),
+                                ]),
+                            ],
+                        },
+                    ])
+                },
+            },
+        ])
+
+        resource.menu.subscriber.subscribe(runner(done))
     })
 
     test("terminate", (done) => {
@@ -348,7 +345,14 @@ describe("Menu", () => {
               isActive: boolean
               badgeCount: number
           }>
-    function category(
+
+    function category(label: string, path: string[], badgeCount: number, children: MenuNode[]) {
+        return categoryNode(label, path, false, badgeCount, children)
+    }
+    function $category(label: string, path: string[], badgeCount: number, children: MenuNode[]) {
+        return categoryNode(label, path, true, badgeCount, children)
+    }
+    function categoryNode(
         label: string,
         path: string[],
         isExpand: boolean,
@@ -364,7 +368,14 @@ describe("Menu", () => {
             children,
         }
     }
-    function item(
+
+    function item(label: string, icon: string, href: string, badgeCount: number) {
+        return itemNode(label, icon, href, false, badgeCount)
+    }
+    function $item(label: string, icon: string, href: string, badgeCount: number) {
+        return itemNode(label, icon, href, true, badgeCount)
+    }
+    function itemNode(
         label: string,
         icon: string,
         href: string,
@@ -478,18 +489,6 @@ function expectToSaveExpand(result: RepositoryFetchResult<MenuExpand>, menuExpan
     expect(result).toEqual({ success: true, found: true, value: menuExpand })
 }
 
-function initAsyncMenuTester() {
-    return initAsyncActionTester_legacy((state: LoadMenuCoreState) => {
-        switch (state.type) {
-            case "initial-menu":
-            case "succeed-to-load":
-                return false
-
-            default:
-                return true
-        }
-    })
-}
 function actionHasDone(state: LoadMenuCoreState): boolean {
     switch (state.type) {
         case "initial-menu":
