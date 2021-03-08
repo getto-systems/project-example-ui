@@ -13,11 +13,11 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { LoadMenu } from "../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
+import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"
 import { SeasonInfo } from "./SeasonInfo"
 
 import { initMockPropsPasser } from "../../../z_vendor/getto-application/action/mock"
-import { initMockLoadMenuCoreAction, standard_MockMenu } from "../../../outline/menu/loadMenu/Action/Core/mock"
+import { initMockLoadMenuCoreAction, standard_MockMenu } from "../../../outline/menu/action_load_menu/core/mock"
 import {
     SeasonInfoMockProps,
     initMockSeasonInfoComponent,

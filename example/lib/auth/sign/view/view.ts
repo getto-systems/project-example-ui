@@ -1,4 +1,4 @@
-import { LocationTypes } from "../../../z_vendor/getto-application/location/detecter"
+import { LocationTypes } from "../../../z_vendor/getto-application/location/infra"
 
 export type SignViewType =
     | "password-reset-requestToken"

@@ -1,4 +1,4 @@
-import { LocationDetecter, LocationDetectMethod } from "./detecter"
+import { LocationDetecter, LocationDetectMethod } from "./infra"
 
 export function newLocationDetecter<T>(
     currentLocation: Location,

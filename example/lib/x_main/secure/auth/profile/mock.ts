@@ -1,14 +1,14 @@
-import { initMockLogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/mock"
-import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../avail/unexpectedError/Action/Core/mock"
-import { initNotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/impl"
+import { initMockLogoutResource } from "../../../../auth/sign/kernel/auth_info/action_logout/mock"
+import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../avail/action_unexpected_error/core/mock"
+import { initNotifyUnexpectedErrorResource } from "../../../../avail/action_unexpected_error/impl"
 import {
     initMockLoadBreadcrumbListCoreAction,
     standard_MockBreadcrumbList,
-} from "../../../../outline/menu/loadBreadcrumbList/Action/Core/mock"
+} from "../../../../outline/menu/action_load_breadcrumb_list/core/mock"
 import {
     initMockLoadMenuCoreAction,
     standard_MockMenu,
-} from "../../../../outline/menu/loadMenu/Action/Core/mock"
+} from "../../../../outline/menu/action_load_menu/core/mock"
 import {
     initMockSeasonInfoComponent,
     SeasonInfoMockPropsPasser,

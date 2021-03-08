@@ -8,7 +8,7 @@ import { useApplicationAction } from "../hooks"
 
 import { SeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/component"
 
-import { Season, SeasonError } from "../../../example/shared/season/data"
+import { Season, SeasonError } from "../../../example/common/season/data"
 
 type Props = Readonly<{
     seasonInfo: SeasonInfoComponent

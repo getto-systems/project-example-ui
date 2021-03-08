@@ -8,16 +8,16 @@ import {
     mainTitle,
 } from "../../../../../z_vendor/getto-css/preact/layout/app"
 
-import { useNotifyUnexpectedError } from "../../../../../avail/unexpectedError/Action/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../../../avail/action_unexpected_error/x_preact/hooks"
 
 import { useDocumentTitle, useEntryPoint } from "../../../../../x_preact/common/hooks"
 import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"
-import { LoadMenu } from "../../../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
-import { LoadBreadcrumbList } from "../../../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
-import { Logout } from "../../../../../auth/sign/kernel/authInfo/clear/Action/x_preact/Logout"
+import { LoadMenu } from "../../../../../outline/menu/action_load_menu/x_preact/LoadMenu"
+import { LoadBreadcrumbList } from "../../../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
+import { Logout } from "../../../../../auth/sign/kernel/auth_info/action_logout/x_preact/Logout"
 
 import { AuthProfileEntryPoint, AuthProfileResource } from "../entryPoint"
 

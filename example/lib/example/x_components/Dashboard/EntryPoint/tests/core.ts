@@ -1,17 +1,17 @@
-import { initTestSeasonAction } from "../../../../shared/season/tests/season"
+import { initTestSeasonAction } from "../../../../common/season/tests/season"
 
 import { DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { SeasonRepository } from "../../../../shared/season/infra"
+import { SeasonRepository } from "../../../../common/season/infra"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"
-import { standard_MockLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/mock"
-import { standard_MockLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/mock"
-import { standard_MockNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/mock"
+import { standard_MockLoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/mock"
+import { standard_MockLoadMenuResource } from "../../../../../outline/menu/action_load_menu/mock"
+import { standard_MockNotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/mock"
 
 export type DashboardRepository = Readonly<{
     seasons: SeasonRepository

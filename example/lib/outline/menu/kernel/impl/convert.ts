@@ -1,5 +1,5 @@
 import { RepositoryConverter } from "../../../../z_vendor/getto-application/infra/repository/infra"
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/infra"
 import { MenuCategoryLabel, MenuTargetPath } from "../data"
 import { MenuBadge, MenuBadgeItem, MenuExpand, MenuExpandRepositoryValue } from "../infra"
 

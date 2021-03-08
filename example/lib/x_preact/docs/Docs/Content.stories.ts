@@ -13,7 +13,7 @@ import {
 import {
     initMockLoadBreadcrumbListCoreAction,
     standard_MockBreadcrumbList,
-} from "../../../outline/menu/loadBreadcrumbList/Action/Core/mock"
+} from "../../../outline/menu/action_load_breadcrumb_list/core/mock"
 
 export default {
     title: "Document/Content",

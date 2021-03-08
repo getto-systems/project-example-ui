@@ -2,15 +2,15 @@ import { DocumentLocationInfo, DocumentFactory, initDocumentResource } from "../
 
 import { initContentComponent } from "../../content/impl"
 
-import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/init"
+import { newNotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/init"
 
 import { DocumentEntryPoint } from "../entryPoint"
 
 import { initContentAction } from "../../../../content/main/content"
 import { newLoadContentLocationDetecter } from "../../../../content/init"
-import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/init"
+import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/init"
 import { docsMenuContent } from "../../../../../outline/menu/kernel/init/docs"
-import { newLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/init"
+import { newLoadMenuResource } from "../../../../../outline/menu/action_load_menu/init"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage

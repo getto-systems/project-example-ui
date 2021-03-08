@@ -3,12 +3,12 @@ import { DashboardFactory, initDashboardResource } from "../impl/core"
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/init"
-import { initSeasonAction } from "../../../../shared/season/main/season"
+import { newNotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/init"
+import { initSeasonAction } from "../../../../common/season/main/season"
 
 import { DashboardEntryPoint } from "../entryPoint"
-import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/init"
-import { newLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/init"
+import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/init"
+import { newLoadMenuResource } from "../../../../../outline/menu/action_load_menu/init"
 import { homeMenuContent } from "../../../../../outline/menu/kernel/init/home"
 
 type OutsideFeature = Readonly<{

@@ -2,9 +2,9 @@ import { RemoteTypes } from "../../../../z_vendor/getto-application/infra/remote
 import { DelayTime } from "../../../../z_vendor/getto-application/infra/config/infra"
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 
-import { AuthRemoteValue } from "../../kernel/authInfo/kernel/infra"
+import { AuthRemoteValue } from "../../kernel/auth_info/kernel/infra"
 
-import { AuthInfo } from "../../kernel/authInfo/kernel/data"
+import { AuthInfo } from "../../kernel/auth_info/kernel/data"
 import { AuthenticatePasswordFields, AuthenticatePasswordRemoteError } from "./data"
 
 export type AuthenticatePasswordInfra = Readonly<{
