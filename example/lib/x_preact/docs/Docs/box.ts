@@ -1,12 +1,12 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { v_medium, v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 import { label_alert, label_pending } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { box } from "../../../z_vendor/getto-css/preact/design/box"
 import { field } from "../../../z_vendor/getto-css/preact/design/form"
 
+import { VNodeContent } from "../../../common/x_preact/common"
 import { icon } from "../../common/icon"
 
 export function itemsSection(title: VNodeContent, list: VNodeContent[]): VNode {

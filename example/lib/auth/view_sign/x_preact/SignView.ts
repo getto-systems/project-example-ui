@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import { useApplicationAction, useEntryPoint } from "../../../x_preact/common/hooks"
 
-import { ApplicationError } from "../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { CheckAuthInfo } from "../../sign/kernel/auth_info/action_check/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../sign/password/view_authenticate/x_preact/Authenticate"
 import { RequestResetToken } from "../../sign/password/reset/view_request_token/x_preact/RequestResetToken"

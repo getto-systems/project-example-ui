@@ -13,7 +13,7 @@ import { useNotifyUnexpectedError } from "../../../../../avail/action_unexpected
 import { useDocumentTitle, useEntryPoint } from "../../../../../x_preact/common/hooks"
 import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
-import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../../../common/x_preact/ApplicationError"
 import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"
 import { LoadMenu } from "../../../../../outline/menu/action_load_menu/x_preact/LoadMenu"
 import { LoadBreadcrumbList } from "../../../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
