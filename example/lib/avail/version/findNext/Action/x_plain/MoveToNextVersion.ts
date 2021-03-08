@@ -1,6 +1,6 @@
 import { FindNextVersionEntryPoint } from "../entryPoint"
 
-import { FindNextVersionCoreActionState } from "../Core/action"
+import { FindNextVersionCoreState } from "../Core/action"
 
 import { applicationPath } from "../../impl/helper"
 
@@ -17,7 +17,7 @@ export function MoveToNextVersion(entryPoint: FindNextVersionEntryPoint): void {
         handleError(err)
     }
 
-    function handleState(state: FindNextVersionCoreActionState) {
+    function handleState(state: FindNextVersionCoreState) {
         switch (state.type) {
             case "initial-next-version":
             case "delayed-to-find":

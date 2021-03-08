@@ -10,7 +10,7 @@ import { initDB } from "../base"
 import { DB } from "../../../z_vendor/getto-application/infra/repository/infra"
 
 type Expand = string[][]
-export function newDB_OutlineMenuExpand(storage: Storage, key: string): DB<Expand> {
+export function newDB_MenuExpand(storage: Storage, key: string): DB<Expand> {
     return initDB(storage, key, {
         toString: (value: Expand) => {
             const f = OutlineMenuExpandMessage

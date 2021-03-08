@@ -13,7 +13,7 @@ type LoadError =
 interface Load {
     (nonce: ApiNonce): Promise<LoadResult>
 }
-export function initApiLoadOutlineMenuBadge(_apiServerURL: string): Load {
+export function initApi_LoadMenuBadge(_apiServerURL: string): Load {
     return async (_nonce: ApiNonce): Promise<LoadResult> => {
         // TODO ちゃんと実装する
         return { success: true, value: [] }

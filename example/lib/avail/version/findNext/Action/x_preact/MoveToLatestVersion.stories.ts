@@ -6,7 +6,7 @@ import { initMockFindNextVersionCoreAction } from "../Core/mock"
 
 import { MoveToLatestVersionComponent } from "./MoveToLatestVersion"
 
-import { FindNextVersionCoreActionState } from "../Core/action"
+import { FindNextVersionCoreState } from "../Core/action"
 
 enum FindNextEnum {
     "delayed",
@@ -35,7 +35,7 @@ const template = storyTemplate<MockProps>((props) => {
         state: state(),
     })
 
-    function state(): FindNextVersionCoreActionState {
+    function state(): FindNextVersionCoreState {
         switch (props.findNext) {
             case "delayed":
                 return { type: "delayed-to-find" }

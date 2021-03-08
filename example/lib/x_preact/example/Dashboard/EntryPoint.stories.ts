@@ -12,8 +12,6 @@ import {
     newMockDashboard,
 } from "../../../example/x_components/Dashboard/EntryPoint/mock"
 import { SeasonInfoMockProps } from "../../../example/x_components/Outline/seasonInfo/mock"
-import { MenuMockProps } from "../../../common/x_Resource/Outline/Menu/Menu/mock"
-import { BreadcrumbListMockProps } from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
 import { ExampleMockProps } from "../../../example/x_components/Dashboard/example/mock"
 
 export default {
@@ -27,15 +25,10 @@ export default {
 
 type MockProps = Readonly<{
     seasonYear: number
-    menuBadgeCount: number
-    breadcrumbLabel: string
-    breadcrumbIcon: string
 }>
 const template = storyTemplate<MockProps>((args) => {
     const passer: DashboardMockPropsPasser = {
         seasonInfo: initMockPropsPasser<SeasonInfoMockProps>(),
-        menu: initMockPropsPasser<MenuMockProps>(),
-        breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         example: initMockPropsPasser<ExampleMockProps>(),
     }
     const entryPoint = newMockDashboard(passer)
@@ -44,16 +37,6 @@ const template = storyTemplate<MockProps>((args) => {
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
             passer.seasonInfo.update({ type: "success", year: props.args.seasonYear })
-            passer.menu.update({
-                type: "success",
-                label: "ホーム",
-                badgeCount: props.args.menuBadgeCount,
-            })
-            passer.breadcrumbList.update({
-                type: "success",
-                label: props.args.breadcrumbLabel,
-                icon: props.args.breadcrumbIcon,
-            })
             passer.example.update({ type: "success", year: props.args.seasonYear })
         })
         return noPaddedStory(h(EntryPoint, entryPoint))
@@ -62,7 +45,4 @@ const template = storyTemplate<MockProps>((args) => {
 
 export const Initial = template({
     seasonYear: new Date().getFullYear(),
-    menuBadgeCount: 99,
-    breadcrumbLabel: "ホーム",
-    breadcrumbIcon: "home",
 })

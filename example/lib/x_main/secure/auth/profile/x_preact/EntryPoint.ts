@@ -15,8 +15,8 @@ import { copyright, siteInfo } from "../../../../../x_preact/common/site"
 
 import { ApplicationError } from "../../../../../x_preact/common/System/ApplicationError"
 import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"
-import { Menu } from "../../../../../x_preact/common/Outline/Menu"
-import { BreadcrumbList } from "../../../../../x_preact/common/Outline/BreadcrumbList"
+import { LoadMenu } from "../../../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
+import { LoadBreadcrumbList } from "../../../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
 import { Logout } from "../../../../../auth/sign/kernel/authInfo/clear/Action/x_preact/Logout"
 
 import { AuthProfileEntryPoint, AuthProfileResource } from "../entryPoint"
@@ -40,10 +40,10 @@ export function View(props: AuthProfileProps): VNode {
         siteInfo: siteInfo(),
         header: [h(SeasonInfo, props)],
         main: appMain({
-            header: mainHeader([mainTitle("プロフィール"), h(BreadcrumbList, props)]),
+            header: mainHeader([mainTitle("プロフィール"), h(LoadBreadcrumbList, props)]),
             body: mainBody(h(Logout, props)),
             copyright: copyright(),
         }),
-        menu: h(Menu, props),
+        menu: h(LoadMenu, props),
     })
 }

@@ -4,15 +4,14 @@ import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/componen
 import { ExampleComponentFactory } from "../../example/component"
 
 import { SeasonAction } from "../../../../shared/season/action"
-import { MenuForegroundAction } from "../../../../../common/x_Resource/Outline/Menu/resource"
-import { initMenuResource } from "../../../../../common/x_Resource/Outline/Menu/impl"
 import { NotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/resource"
+import { LoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/resource"
+import { LoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/resource"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{
         season: SeasonAction
-    }> &
-        MenuForegroundAction
+    }>
     components: Readonly<{
         seasonInfo: SeasonInfoComponentFactory
 
@@ -21,6 +20,8 @@ export type DashboardFactory = Readonly<{
 }>
 export function initDashboardResource(
     factory: DashboardFactory,
+    breadcrumbList: LoadBreadcrumbListResource,
+    menu: LoadMenuResource,
     error: NotifyUnexpectedErrorResource,
 ): DashboardResource {
     const actions = {
@@ -31,7 +32,8 @@ export function initDashboardResource(
 
         example: factory.components.example(actions),
 
-        ...initMenuResource(factory.actions),
+        ...breadcrumbList,
+        ...menu,
         ...error,
     }
 }

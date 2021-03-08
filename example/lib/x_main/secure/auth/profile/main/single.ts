@@ -1,4 +1,3 @@
-import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/init"
 import { newLogoutResource } from "../../../../../auth/sign/kernel/authInfo/clear/Action/init"
 
@@ -9,18 +8,19 @@ import { initSeasonInfoComponent } from "../../../../../example/x_components/Out
 import { initSeasonAction } from "../../../../../example/shared/season/main/season"
 
 import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
+import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/init"
+import { newLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/init"
+import { homeMenuContent } from "../../../../../outline/menu/kernel/init/home"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
-    const { webStorage, currentLocation } = feature
+    const menu = homeMenuContent()
 
     const factory: ProfileFactory = {
         actions: {
-            ...newMainOutlineAction(webStorage, currentLocation),
-
             season: initSeasonAction(),
         },
         components: {
@@ -29,6 +29,8 @@ export function newForeground(feature: OutsideFeature): AuthProfileEntryPoint {
     }
     const resource = initAuthProfileResource(
         factory,
+        newLoadBreadcrumbListResource(feature, menu),
+        newLoadMenuResource(feature, menu),
         newLogoutResource(feature),
         newNotifyUnexpectedErrorResource(feature),
     )

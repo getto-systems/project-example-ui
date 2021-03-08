@@ -5,21 +5,20 @@ import { initExampleComponent } from "../../example/impl"
 
 import { newNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/init"
 import { initSeasonAction } from "../../../../shared/season/main/season"
-import { newMainOutlineAction } from "../../../../../auth/permission/outline/load/main/main"
 
 import { DashboardEntryPoint } from "../entryPoint"
+import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/init"
+import { newLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/init"
+import { homeMenuContent } from "../../../../../outline/menu/kernel/init/home"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
 export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
-    const { webStorage, currentLocation } = feature
-
+    const menu = homeMenuContent()
     const factory: DashboardFactory = {
         actions: {
-            ...newMainOutlineAction(webStorage, currentLocation),
-
             season: initSeasonAction(),
         },
         components: {
@@ -28,12 +27,16 @@ export function newForeground(feature: OutsideFeature): DashboardEntryPoint {
             example: initExampleComponent,
         },
     }
-    const resource = initDashboardResource(factory, newNotifyUnexpectedErrorResource(feature))
+    const resource = initDashboardResource(
+        factory,
+        newLoadBreadcrumbListResource(feature, menu),
+        newLoadMenuResource(feature, menu),
+        newNotifyUnexpectedErrorResource(feature),
+    )
     return {
         resource,
         terminate: () => {
             resource.menu.terminate()
-            resource.breadcrumbList.terminate()
             resource.seasonInfo.terminate()
 
             resource.example.terminate()

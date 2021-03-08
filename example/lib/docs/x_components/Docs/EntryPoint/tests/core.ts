@@ -1,53 +1,17 @@
-import {
-    initOutlineBreadcrumbListAction,
-    initOutlineMenuAction,
-} from "../../../../../auth/permission/outline/load/impl"
-
 import { DocumentFactory, initDocumentResource } from "../impl/core"
 
 import { initContentComponent } from "../../content/impl"
 
-import {
-    LoadOutlineMenuBadgeRemotePod,
-    OutlineMenuExpandRepositoryPod,
-    OutlineMenuTree,
-} from "../../../../../auth/permission/outline/load/infra"
-
 import { DocumentResource } from "../entryPoint"
 import { initTestContentAction } from "../../../../content/tests/content"
-import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
-import { initLoadOutlineMenuLocationDetecter } from "../../../../../auth/permission/outline/load/testHelper"
 import { initLoadContentLocationDetecter } from "../../../../content/testHelper"
-import { initNotifyUnexpectedErrorCoreAction } from "../../../../../avail/unexpectedError/Action/Core/impl"
-import { NotifyUnexpectedErrorRemotePod } from "../../../../../avail/unexpectedError/infra"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
-import { initNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/impl"
+import { standard_MockLoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/mock"
+import { standard_MockLoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/mock"
+import { standard_MockNotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/mock"
 
-export type DocumentRepository = Readonly<{
-    authz: AuthzRepositoryPod
-    menuExpands: OutlineMenuExpandRepositoryPod
-}>
-export type DocumentRemoteAccess = Readonly<{
-    loadMenuBadge: LoadOutlineMenuBadgeRemotePod
-}>
-export function newTestDocumentResource(
-    version: string,
-    currentURL: URL,
-    menuTree: OutlineMenuTree,
-    repository: DocumentRepository,
-    remote: DocumentRemoteAccess,
-): DocumentResource {
-    const locationInfo = initLoadOutlineMenuLocationDetecter(currentURL, version)
+export function newTestDocumentResource(version: string, currentURL: URL): DocumentResource {
     const factory: DocumentFactory = {
         actions: {
-            breadcrumbList: initOutlineBreadcrumbListAction(locationInfo, { version, menuTree }),
-            menu: initOutlineMenuAction(locationInfo, {
-                ...repository,
-                ...remote,
-                version,
-                menuTree,
-            }),
-
             content: initTestContentAction(),
         },
         components: {
@@ -60,15 +24,8 @@ export function newTestDocumentResource(
         {
             content: initLoadContentLocationDetecter(currentURL, version),
         },
-        initNotifyUnexpectedErrorResource(
-            initNotifyUnexpectedErrorCoreAction({
-                authz: repository.authz,
-                notify: standard_notify(),
-            }),
-        ),
+        standard_MockLoadBreadcrumbListResource(),
+        standard_MockLoadMenuResource(),
+        standard_MockNotifyUnexpectedErrorResource(),
     )
-}
-
-function standard_notify(): NotifyUnexpectedErrorRemotePod {
-    return initRemoteSimulator(() => ({ success: true, value: true }), { wait_millisecond: 0 })
 }

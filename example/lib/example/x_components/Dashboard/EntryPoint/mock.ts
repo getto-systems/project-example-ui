@@ -1,13 +1,13 @@
 import { initMockNotifyUnexpectedErrorCoreAction } from "../../../../avail/unexpectedError/Action/Core/mock"
 import { initNotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/impl"
 import {
-    BreadcrumbListMockPropsPasser,
-    initMockBreadcrumbListComponent,
-} from "../../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
+    initMockLoadBreadcrumbListCoreAction,
+    standard_MockBreadcrumbList,
+} from "../../../../outline/menu/loadBreadcrumbList/Action/Core/mock"
 import {
-    initMockMenuComponent,
-    MenuMockPropsPasser,
-} from "../../../../common/x_Resource/Outline/Menu/Menu/mock"
+    initMockLoadMenuCoreAction,
+    standard_MockMenu,
+} from "../../../../outline/menu/loadMenu/Action/Core/mock"
 import {
     initMockSeasonInfoComponent,
     SeasonInfoMockPropsPasser,
@@ -18,8 +18,6 @@ import { DashboardEntryPoint } from "./entryPoint"
 
 export type DashboardMockPropsPasser = Readonly<{
     seasonInfo: SeasonInfoMockPropsPasser
-    menu: MenuMockPropsPasser
-    breadcrumbList: BreadcrumbListMockPropsPasser
     example: ExampleMockPropsPasser
 }>
 export function newMockDashboard(passer: DashboardMockPropsPasser): DashboardEntryPoint {
@@ -27,8 +25,8 @@ export function newMockDashboard(passer: DashboardMockPropsPasser): DashboardEnt
         resource: {
             ...initNotifyUnexpectedErrorResource(initMockNotifyUnexpectedErrorCoreAction()),
             seasonInfo: initMockSeasonInfoComponent(passer.seasonInfo),
-            menu: initMockMenuComponent(passer.menu),
-            breadcrumbList: initMockBreadcrumbListComponent(passer.breadcrumbList),
+            menu: initMockLoadMenuCoreAction(standard_MockMenu()),
+            breadcrumbList: initMockLoadBreadcrumbListCoreAction(standard_MockBreadcrumbList()),
             example: initMockExampleComponent(passer.example),
         },
         terminate: () => {

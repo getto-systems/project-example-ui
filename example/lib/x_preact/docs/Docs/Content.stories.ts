@@ -11,9 +11,9 @@ import {
     initMockContentComponent,
 } from "../../../docs/x_components/Docs/content/mock"
 import {
-    BreadcrumbListMockProps,
-    initMockBreadcrumbListComponent,
-} from "../../../common/x_Resource/Outline/Menu/BreadcrumbList/mock"
+    initMockLoadBreadcrumbListCoreAction,
+    standard_MockBreadcrumbList,
+} from "../../../outline/menu/loadBreadcrumbList/Action/Core/mock"
 
 export default {
     title: "Document/Content",
@@ -27,20 +27,14 @@ export default {
 type MockProps = ContentMockProps
 const template = storyTemplate<MockProps>((args) => {
     const passer = {
-        breadcrumbList: initMockPropsPasser<BreadcrumbListMockProps>(),
         content: initMockPropsPasser<ContentMockProps>(),
     }
-    const breadcrumbList = initMockBreadcrumbListComponent(passer.breadcrumbList)
+    const breadcrumbList = initMockLoadBreadcrumbListCoreAction(standard_MockBreadcrumbList())
     const content = initMockContentComponent(passer.content)
     return h(Preview, { args })
 
     function Preview(props: { args: MockProps }) {
         useEffect(() => {
-            passer.breadcrumbList.update({
-                type: "success",
-                label: "ホーム",
-                icon: "home",
-            })
             passer.content.update(props.args)
         })
         return h(Content, { content, breadcrumbList })

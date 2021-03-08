@@ -5,8 +5,8 @@ import { FindNextVersionLocationDetecter } from "../../method"
 
 import {
     FindNextVersionMaterial,
-    FindNextVersionCoreActionState,
-    initialFindNextVersionCoreActionState,
+    FindNextVersionCoreState,
+    initialFindNextVersionCoreState,
     FindNextVersionCoreAction,
 } from "./action"
 
@@ -26,9 +26,9 @@ export function initFindNextVersionCoreAction(
 }
 
 class Action
-    extends ApplicationAbstractStateAction<FindNextVersionCoreActionState>
+    extends ApplicationAbstractStateAction<FindNextVersionCoreState>
     implements FindNextVersionCoreAction {
-    readonly initialState = initialFindNextVersionCoreActionState
+    readonly initialState = initialFindNextVersionCoreState
 
     material: FindNextVersionMaterial
 

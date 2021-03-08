@@ -1,16 +1,6 @@
-import { DocumentRemoteAccess, newTestDocumentResource } from "../../EntryPoint/tests/core"
-
-import {
-    OutlineMenuExpandRepositoryPod,
-    OutlineMenuExpandRepositoryValue,
-    OutlineMenuTree,
-} from "../../../../../auth/permission/outline/load/infra"
+import { newTestDocumentResource } from "../../EntryPoint/tests/core"
 
 import { ContentComponentState } from "../component"
-import { newLoadOutlineMenuBadgeNoopRemote } from "../../../../../auth/permission/outline/load/infra/remote/loadMenuBadge/noop"
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
-import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
-import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
 describe("Content", () => {
     test("load content", (done) => {
@@ -51,12 +41,9 @@ describe("Content", () => {
 function standardResource() {
     const version = standardVersion()
     const url = standardURL()
-    const menuTree = standardMenuTree()
-    const repository = standardRepository()
-    const simulator = standardSimulator()
-    const resource = newTestDocumentResource(version, url, menuTree, repository, simulator)
+    const resource = newTestDocumentResource(version, url)
 
-    return { repository, resource }
+    return { resource }
 }
 
 function standardVersion(): string {
@@ -65,28 +52,6 @@ function standardVersion(): string {
 
 function standardURL(): URL {
     return new URL("https://example.com/1.0.0/docs/index.html")
-}
-
-function standardMenuTree(): OutlineMenuTree {
-    return []
-}
-
-function standardRepository() {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
-    authz.set({ nonce: "api-nonce", roles: ["role"] })
-
-    const menuExpands = initMemoryDB<OutlineMenuExpandRepositoryValue>()
-
-    return {
-        authz: <AuthzRepositoryPod>wrapRepository(authz),
-        menuExpands: <OutlineMenuExpandRepositoryPod>wrapRepository(menuExpands),
-    }
-}
-
-function standardSimulator(): DocumentRemoteAccess {
-    return {
-        loadMenuBadge: newLoadOutlineMenuBadgeNoopRemote(),
-    }
 }
 
 interface Post<T> {

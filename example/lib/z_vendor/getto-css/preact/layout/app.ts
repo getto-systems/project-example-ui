@@ -179,7 +179,7 @@ export function menuFooter(poweredBy: string[]): VNode {
     </footer>`
 }
 
-export function mainBreadcrumb(content: VNodeContent): VNode {
+export function mainBreadcrumbList(content: VNodeContent): VNode {
     return html`<aside class="main__breadcrumb">${content}</aside>`
 }
 export function mainBreadcrumbLink(href: string, content: VNodeContent): VNode {

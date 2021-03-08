@@ -1,9 +1,9 @@
-import { ApplicationMockStateAction } from "../../../../../z_vendor/getto-application/action/impl"
+import { ApplicationMockStateAction } from "../../../../../z_vendor/getto-application/action/mock"
 
 import {
-    FindNextVersionCoreActionState,
+    FindNextVersionCoreState,
     FindNextVersionCoreAction,
-    initialFindNextVersionCoreActionState,
+    initialFindNextVersionCoreState,
 } from "./action"
 
 export function initMockFindNextVersionCoreAction(): FindNextVersionCoreAction {
@@ -11,9 +11,9 @@ export function initMockFindNextVersionCoreAction(): FindNextVersionCoreAction {
 }
 
 class Action
-    extends ApplicationMockStateAction<FindNextVersionCoreActionState>
+    extends ApplicationMockStateAction<FindNextVersionCoreState>
     implements FindNextVersionCoreAction {
-    readonly initialState = initialFindNextVersionCoreActionState
+    readonly initialState = initialFindNextVersionCoreState
 
     find(): void {
         // mock ではなにもしない
