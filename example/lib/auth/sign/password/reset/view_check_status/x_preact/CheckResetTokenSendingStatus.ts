@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { buttons } from "../../../../../../z_vendor/getto-css/preact/design/form"
@@ -29,7 +29,7 @@ import {
 export function CheckPasswordResetSendingStatus(
     entryPoint: CheckResetTokenSendingStatusEntryPoint,
 ): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
     return h(View, <CheckPasswordResetSendingStatusProps>{
         ...resource,
         state: useApplicationAction(resource.checkStatus),

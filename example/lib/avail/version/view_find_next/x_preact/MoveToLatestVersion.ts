@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
@@ -24,7 +24,7 @@ import {
 import { FindNextVersionError } from "../../find_next/data"
 
 export function MoveToLatestVersion(entryPoint: FindNextVersionEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない

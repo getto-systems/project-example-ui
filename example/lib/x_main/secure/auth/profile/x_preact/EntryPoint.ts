@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { useEntryPoint } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationEntryPoint } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
     appLayout,
@@ -24,7 +24,7 @@ import { Logout } from "../../../../../auth/sign/kernel/auth_info/action_logout/
 import { AuthProfileEntryPoint, AuthProfileResource } from "../entryPoint"
 
 export function EntryPoint(entryPoint: AuthProfileEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {

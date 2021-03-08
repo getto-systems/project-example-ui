@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useEntryPoint,
+    useApplicationEntryPoint,
 } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
@@ -36,7 +36,7 @@ import {
 import { AuthenticatePasswordError } from "../../authenticate/data"
 
 export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
-    const resource = useEntryPoint(entryPoint)
+    const resource = useApplicationEntryPoint(entryPoint)
     return h(AuthenticatePasswordComponent, {
         ...resource,
         state: {
