@@ -1,12 +1,12 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 import { box_double } from "../../../z_vendor/getto-css/preact/design/box"
 import { field } from "../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
 
+import { VNodeContent } from "../../../common/x_preact/common"
 import { useApplicationAction } from "../../common/hooks"
 
 import { ExampleComponent } from "../../../example/x_components/Dashboard/example/component"

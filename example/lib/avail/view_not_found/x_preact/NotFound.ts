@@ -9,7 +9,7 @@ import { useDocumentTitle, useEntryPoint } from "../../../x_preact/common/hooks"
 import { siteInfo } from "../../../x_preact/common/site"
 import { icon } from "../../../x_preact/common/icon"
 
-import { ApplicationError } from "../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 
 import { NotFoundEntryPoint, NotFoundResource } from "../entry_point"
 

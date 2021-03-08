@@ -8,7 +8,7 @@ import { spinner } from "../../../../x_preact/common/icon"
 
 import { useApplicationAction, useEntryPoint } from "../../../../x_preact/common/hooks"
 
-import { ApplicationError } from "../../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../../common/x_preact/ApplicationError"
 
 import { applicationPath } from "../../find_next/impl/helper"
 

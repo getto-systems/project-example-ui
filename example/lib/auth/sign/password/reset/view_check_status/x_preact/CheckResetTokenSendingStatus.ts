@@ -1,11 +1,11 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../z_vendor/getto-css/preact/common"
 import { buttons } from "../../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
+import { VNodeContent } from "../../../../../../common/x_preact/common"
 import { useApplicationAction, useEntryPoint } from "../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../x_preact/common/site"
 import { icon, spinner } from "../../../../../../x_preact/common/icon"

@@ -5,7 +5,7 @@ import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error
 import { useTermination_deprecated } from "../../common/hooks"
 import { siteInfo } from "../../common/site"
 
-import { ApplicationError } from "../../common/System/ApplicationError"
+import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"
 import { Content } from "./Content"
 

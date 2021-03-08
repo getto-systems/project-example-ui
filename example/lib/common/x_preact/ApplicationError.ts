@@ -1,11 +1,11 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { siteInfo } from "../site"
+import { siteInfo } from "../../x_preact/common/site"
 
-import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
-import { buttons, field } from "../../../z_vendor/getto-css/preact/design/form"
-import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { v_small } from "../../z_vendor/getto-css/preact/design/alignment"
+import { buttons, field } from "../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../z_vendor/getto-css/preact/layout/login"
 
 type Props = Readonly<{
     err: string

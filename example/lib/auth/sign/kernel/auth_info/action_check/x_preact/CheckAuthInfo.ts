@@ -2,17 +2,17 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../../../../z_vendor/getto-css/preact/common"
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
+import { VNodeContent } from "../../../../../../common/x_preact/common"
 import { useApplicationAction, useEntryPoint } from "../../../../../../x_preact/common/hooks"
 import { siteInfo } from "../../../../../../x_preact/common/site"
 import { spinner } from "../../../../../../x_preact/common/icon"
 
-import { appendScript } from "../../../../../../x_preact/auth/Sign/script"
+import { appendScript } from "../../../../common/x_preact/script"
 
-import { ApplicationError } from "../../../../../../x_preact/common/System/ApplicationError"
+import { ApplicationError } from "../../../../../../common/x_preact/ApplicationError"
 
 import {
     CheckAuthInfoEntryPoint,
