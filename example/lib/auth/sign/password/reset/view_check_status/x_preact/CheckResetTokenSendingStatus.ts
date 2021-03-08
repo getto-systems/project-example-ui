@@ -1,14 +1,18 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import {
+    useApplicationAction,
+    useEntryPoint,
+} from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { buttons } from "../../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { VNodeContent } from "../../../../../../common/x_preact/common"
-import { useApplicationAction, useEntryPoint } from "../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../x_preact/common/site"
-import { icon, spinner } from "../../../../../../x_preact/common/icon"
+import { VNodeContent } from "../../../../../../common/x_preact/design/common"
+import { siteInfo } from "../../../../../../common/x_preact/site"
+import { icon, spinner } from "../../../../../../common/x_preact/design/icon"
 
 import {
     CheckResetTokenSendingStatusEntryPoint,

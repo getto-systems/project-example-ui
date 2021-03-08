@@ -2,7 +2,8 @@ import { h, VNode } from "preact"
 import { useState, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
+import { useApplicationAction } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import {
     appMain,
     mainBody,
@@ -10,14 +11,14 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright } from "../../common/site"
+import { VNodeContent } from "../../../common/x_preact/design/common"
+import { copyright } from "../../../common/x_preact/site"
 
 import { LoadBreadcrumbList } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
 
 import { ContentComponent } from "../../../docs/x_components/Docs/content/component"
 
 import { ContentPath } from "../../../docs/content/data"
-import { useApplicationAction } from "../../common/hooks"
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
 import { LoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/resource"
 

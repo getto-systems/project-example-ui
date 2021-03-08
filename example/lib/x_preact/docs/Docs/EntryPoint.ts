@@ -3,7 +3,7 @@ import { h, VNode } from "preact"
 import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error/x_preact/hooks"
 
 import { useTermination_deprecated } from "../../common/hooks"
-import { siteInfo } from "../../common/site"
+import { siteInfo } from "../../../common/x_preact/site"
 
 import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"

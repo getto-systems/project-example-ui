@@ -9,9 +9,10 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error/x_preact/hooks"
+import { useDocumentTitle } from "../../../common/x_preact/hooks"
 
-import { useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
-import { copyright, siteInfo } from "../../common/site"
+import { useTermination_deprecated } from "../../common/hooks"
+import { copyright, siteInfo } from "../../../common/x_preact/site"
 
 import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { SeasonInfo } from "../../common/Outline/SeasonInfo"

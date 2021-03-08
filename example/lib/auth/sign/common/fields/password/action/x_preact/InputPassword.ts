@@ -1,13 +1,14 @@
 import { h, VNode } from "preact"
 
+import { useApplicationAction } from "../../../../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import {
     field,
     field_error,
     label_password_fill,
 } from "../../../../../../../z_vendor/getto-css/preact/design/form"
 
-import { VNodeContent } from "../../../../../../../common/x_preact/common"
-import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
+import { VNodeContent } from "../../../../../../../common/x_preact/design/common"
 
 import { InputBoard } from "../../../../../../../z_vendor/getto-application/board/action_input/x_preact/Input"
 

@@ -10,7 +10,7 @@ import {
     mainBody,
 } from "../../../../z_vendor/getto-css/preact/layout/app"
 
-import { copyright, siteInfo } from "../../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../../../common/x_preact/site"
 import { iconClass, lnir } from "../../../../z_external/icon/core"
 
 import { LoadMenuComponent } from "./LoadMenu"

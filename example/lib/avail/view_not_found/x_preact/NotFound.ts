@@ -2,12 +2,14 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useDocumentTitle, useEntryPoint } from "../../../x_preact/common/hooks"
-import { siteInfo } from "../../../x_preact/common/site"
-import { icon } from "../../../x_preact/common/icon"
+import { useDocumentTitle } from "../../../common/x_preact/hooks"
+import { siteInfo } from "../../../common/x_preact/site"
+import { icon } from "../../../common/x_preact/design/icon"
 
 import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 

@@ -1,8 +1,7 @@
-import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
-
 import { PagerOptionsContent, SortSign } from "../../../z_vendor/getto-css/preact/design/data"
 
-import { icon } from "../../../x_preact/common/icon"
+import { VNodeContent } from "./common"
+import { icon } from "./icon"
 
 export const sortSign: SortSign = {
     normal: icon("angle-double-down"),

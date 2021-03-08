@@ -1,10 +1,11 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
+import { useApplicationAction } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { label_alert } from "../../../z_vendor/getto-css/preact/design/highlight"
 
-import { VNodeContent } from "../../../common/x_preact/common"
-import { useApplicationAction } from "../hooks"
+import { VNodeContent } from "../../../common/x_preact/design/common"
 
 import { SeasonInfoComponent } from "../../../example/x_components/Outline/seasonInfo/component"
 
