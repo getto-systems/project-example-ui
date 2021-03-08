@@ -1,9 +1,9 @@
 import { ProfileFactory, AuthProfileResource, AuthProfileEntryPoint } from "./entryPoint"
 
-import { LogoutResource } from "../../../../auth/sign/kernel/authInfo/clear/Action/resource"
-import { NotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/resource"
-import { LoadBreadcrumbListResource } from "../../../../outline/menu/loadBreadcrumbList/Action/resource"
-import { LoadMenuResource } from "../../../../outline/menu/loadMenu/Action/resource"
+import { LogoutResource } from "../../../../auth/sign/kernel/auth_info/action_logout/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../avail/action_unexpected_error/resource"
+import { LoadBreadcrumbListResource } from "../../../../outline/menu/action_load_breadcrumb_list/resource"
+import { LoadMenuResource } from "../../../../outline/menu/action_load_menu/resource"
 
 export function toAuthProfileEntryPoint(resource: AuthProfileResource): AuthProfileEntryPoint {
     return {

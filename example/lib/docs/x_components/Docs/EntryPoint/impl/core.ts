@@ -3,9 +3,9 @@ import { DocumentResource } from "../entryPoint"
 import { ContentComponentFactory } from "../../content/component"
 
 import { ContentAction, LoadContentLocationDetecter } from "../../../../content/action"
-import { NotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/resource"
-import { LoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/resource"
-import { LoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/resource"
+import { LoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/resource"
+import { LoadMenuResource } from "../../../../../outline/menu/action_load_menu/resource"
 
 export type DocumentFactory = Readonly<{
     actions: Readonly<{

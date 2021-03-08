@@ -8,15 +8,15 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useNotifyUnexpectedError } from "../../../avail/unexpectedError/Action/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error/x_preact/hooks"
 
 import { useDocumentTitle, useTermination_deprecated } from "../../common/hooks"
 import { copyright, siteInfo } from "../../common/site"
 
 import { ApplicationError } from "../../common/System/ApplicationError"
 import { SeasonInfo } from "../../common/Outline/SeasonInfo"
-import { LoadMenu } from "../../../outline/menu/loadMenu/Action/x_preact/LoadMenu"
-import { LoadBreadcrumbList } from "../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
+import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"
+import { LoadBreadcrumbList } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
 import { Example } from "./Example"
 
 import { DashboardEntryPoint } from "../../../example/x_components/Dashboard/EntryPoint/entryPoint"

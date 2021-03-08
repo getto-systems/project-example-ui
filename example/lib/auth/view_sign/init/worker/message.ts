@@ -1,0 +1,53 @@
+import {
+    AuthenticatePasswordProxyMessage,
+    AuthenticatePasswordProxyResponse,
+} from "../../../sign/password/view_authenticate/init/worker/message"
+import {
+    CheckPasswordResetSendingStatusProxyMessage,
+    CheckPasswordResetSendingStatusProxyResponse,
+} from "../../../sign/password/reset/view_check_status/init/worker/message"
+import {
+    RequestPasswordResetTokenProxyMessage,
+    RequestPasswordResetTokenProxyResponse,
+} from "../../../sign/password/reset/view_request_token/init/worker/message"
+import {
+    ResetPasswordProxyMessage,
+    ResetPasswordProxyResponse,
+} from "../../../sign/password/reset/view_reset/init/worker/message"
+
+export type ForegroundMessage =
+    | Readonly<{
+          type: "password-authenticate"
+          message: AuthenticatePasswordProxyMessage
+      }>
+    | Readonly<{
+          type: "password-reset-requestToken"
+          message: RequestPasswordResetTokenProxyMessage
+      }>
+    | Readonly<{
+          type: "password-reset-checkStatus"
+          message: CheckPasswordResetSendingStatusProxyMessage
+      }>
+    | Readonly<{
+          type: "password-reset"
+          message: ResetPasswordProxyMessage
+      }>
+
+export type BackgroundMessage =
+    | Readonly<{
+          type: "password-authenticate"
+          response: AuthenticatePasswordProxyResponse
+      }>
+    | Readonly<{
+          type: "password-reset-requestToken"
+          response: RequestPasswordResetTokenProxyResponse
+      }>
+    | Readonly<{
+          type: "password-reset-checkStatus"
+          response: CheckPasswordResetSendingStatusProxyResponse
+      }>
+    | Readonly<{
+          type: "password-reset"
+          response: ResetPasswordProxyResponse
+      }>
+    | Readonly<{ type: "error"; err: string }>

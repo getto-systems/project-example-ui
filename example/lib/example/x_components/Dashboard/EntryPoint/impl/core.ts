@@ -4,9 +4,9 @@ import { SeasonInfoComponentFactory } from "../../../Outline/seasonInfo/componen
 import { ExampleComponentFactory } from "../../example/component"
 
 import { SeasonAction } from "../../../../shared/season/action"
-import { NotifyUnexpectedErrorResource } from "../../../../../avail/unexpectedError/Action/resource"
-import { LoadBreadcrumbListResource } from "../../../../../outline/menu/loadBreadcrumbList/Action/resource"
-import { LoadMenuResource } from "../../../../../outline/menu/loadMenu/Action/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/resource"
+import { LoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/resource"
+import { LoadMenuResource } from "../../../../../outline/menu/action_load_menu/resource"
 
 export type DashboardFactory = Readonly<{
     actions: Readonly<{

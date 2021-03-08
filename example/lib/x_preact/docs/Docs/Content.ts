@@ -12,14 +12,14 @@ import {
 
 import { copyright } from "../../common/site"
 
-import { LoadBreadcrumbList } from "../../../outline/menu/loadBreadcrumbList/Action/x_preact/LoadBreadcrumbList"
+import { LoadBreadcrumbList } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
 
 import { ContentComponent } from "../../../docs/x_components/Docs/content/component"
 
 import { ContentPath } from "../../../docs/content/data"
 import { useApplicationAction } from "../../common/hooks"
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
-import { LoadBreadcrumbListResource } from "../../../outline/menu/loadBreadcrumbList/Action/resource"
+import { LoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/resource"
 
 type Props = Readonly<{
     content: ContentComponent

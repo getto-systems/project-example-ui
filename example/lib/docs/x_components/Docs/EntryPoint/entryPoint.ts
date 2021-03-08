@@ -1,6 +1,6 @@
-import { NotifyUnexpectedErrorResource } from "../../../../avail/unexpectedError/Action/resource"
-import { LoadBreadcrumbListResource } from "../../../../outline/menu/loadBreadcrumbList/Action/resource"
-import { LoadMenuResource } from "../../../../outline/menu/loadMenu/Action/resource"
+import { NotifyUnexpectedErrorResource } from "../../../../avail/action_unexpected_error/resource"
+import { LoadBreadcrumbListResource } from "../../../../outline/menu/action_load_breadcrumb_list/resource"
+import { LoadMenuResource } from "../../../../outline/menu/action_load_menu/resource"
 import { ApplicationEntryPoint } from "../../../../z_vendor/getto-application/action/action"
 
 import { ContentComponent } from "../content/component"
