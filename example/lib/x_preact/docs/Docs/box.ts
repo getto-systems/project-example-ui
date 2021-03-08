@@ -6,8 +6,8 @@ import { label_alert, label_pending } from "../../../z_vendor/getto-css/preact/d
 import { box } from "../../../z_vendor/getto-css/preact/design/box"
 import { field } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { VNodeContent } from "../../../common/x_preact/common"
-import { icon } from "../../common/icon"
+import { VNodeContent } from "../../../common/x_preact/design/common"
+import { icon } from "../../../common/x_preact/design/icon"
 
 export function itemsSection(title: VNodeContent, list: VNodeContent[]): VNode {
     return html`

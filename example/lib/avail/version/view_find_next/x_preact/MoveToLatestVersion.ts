@@ -2,11 +2,14 @@ import { h, VNode } from "preact"
 import { useErrorBoundary, useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
-import { siteInfo } from "../../../../x_preact/common/site"
-import { spinner } from "../../../../x_preact/common/icon"
+import {
+    useApplicationAction,
+    useEntryPoint,
+} from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
-import { useApplicationAction, useEntryPoint } from "../../../../x_preact/common/hooks"
+import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
+import { siteInfo } from "../../../../common/x_preact/site"
+import { spinner } from "../../../../common/x_preact/design/icon"
 
 import { ApplicationError } from "../../../../common/x_preact/ApplicationError"
 

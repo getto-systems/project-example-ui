@@ -2,12 +2,12 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useApplicationAction } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { box } from "../../../../../../z_vendor/getto-css/preact/design/box"
 import { button_send, field } from "../../../../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
-
-import { useApplicationAction } from "../../../../../../x_preact/common/hooks"
 
 import { LogoutResource, LogoutResourceState } from "../resource"
 

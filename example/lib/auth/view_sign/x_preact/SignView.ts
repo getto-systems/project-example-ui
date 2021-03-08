@@ -2,7 +2,10 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useApplicationAction, useEntryPoint } from "../../../x_preact/common/hooks"
+import {
+    useApplicationAction,
+    useEntryPoint,
+} from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { ApplicationError } from "../../../common/x_preact/ApplicationError"
 import { CheckAuthInfo } from "../../sign/kernel/auth_info/action_check/x_preact/CheckAuthInfo"

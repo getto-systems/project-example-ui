@@ -2,13 +2,17 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import {
+    useApplicationAction,
+    useEntryPoint,
+} from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { VNodeContent } from "../../../../../../common/x_preact/common"
-import { useApplicationAction, useEntryPoint } from "../../../../../../x_preact/common/hooks"
-import { siteInfo } from "../../../../../../x_preact/common/site"
-import { spinner } from "../../../../../../x_preact/common/icon"
+import { VNodeContent } from "../../../../../../common/x_preact/design/common"
+import { siteInfo } from "../../../../../../common/x_preact/site"
+import { spinner } from "../../../../../../common/x_preact/design/icon"
 
 import { appendScript } from "../../../../common/x_preact/script"
 

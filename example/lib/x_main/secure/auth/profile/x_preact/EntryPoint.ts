@@ -1,5 +1,7 @@
 import { h, VNode } from "preact"
 
+import { useEntryPoint } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import {
     appLayout,
     appMain,
@@ -9,9 +11,9 @@ import {
 } from "../../../../../z_vendor/getto-css/preact/layout/app"
 
 import { useNotifyUnexpectedError } from "../../../../../avail/action_unexpected_error/x_preact/hooks"
+import { useDocumentTitle } from "../../../../../common/x_preact/hooks"
 
-import { useDocumentTitle, useEntryPoint } from "../../../../../x_preact/common/hooks"
-import { copyright, siteInfo } from "../../../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../../../../common/x_preact/site"
 
 import { ApplicationError } from "../../../../../common/x_preact/ApplicationError"
 import { SeasonInfo } from "../../../../../x_preact/common/Outline/SeasonInfo"

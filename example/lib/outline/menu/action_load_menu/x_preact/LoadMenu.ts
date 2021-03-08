@@ -2,6 +2,8 @@ import { h, VNode } from "preact"
 import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
+import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import {
     appMenu,
     menuBody,
@@ -10,13 +12,9 @@ import {
     menuFooter,
     menuItem,
 } from "../../../../z_vendor/getto-css/preact/layout/app"
-import {
-    badge_alert,
-    notice_alert,
-} from "../../../../z_vendor/getto-css/preact/design/highlight"
+import { badge_alert, notice_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
-import { useApplicationAction } from "../../../../x_preact/common/hooks"
-import { poweredBy } from "../../../../x_preact/common/site"
+import { poweredBy } from "../../../../common/x_preact/site"
 
 import { LoadMenuResource, LoadMenuResourceState } from "../resource"
 
