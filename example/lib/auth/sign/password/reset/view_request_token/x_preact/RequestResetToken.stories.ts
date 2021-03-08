@@ -6,9 +6,9 @@ import { RequestResetTokenComponent } from "./RequestResetToken"
 
 import { initMockRequestResetTokenResource } from "../mock"
 
-import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 import { RequestResetTokenCoreState } from "../core/action"
-import { ValidateBoardStateEnum } from "../../../../../../z_vendor/getto-application/board/validateBoard/data"
+import { ValidateBoardStateEnum } from "../../../../../../z_vendor/getto-application/board/validate_board/data"
 
 enum RequestEnum {
     "initial",

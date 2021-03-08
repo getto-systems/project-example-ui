@@ -1,7 +1,7 @@
 import { ApplicationAction } from "../../../../../../z_vendor/getto-application/action/action"
 import { InputLoginIDAction } from "../../../../common/fields/login_id/action/core/action"
 import { InputPasswordAction } from "../../../../common/fields/password/action/core/action"
-import { ValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 
 import { ResetPasswordFields } from "../../reset/data"
 

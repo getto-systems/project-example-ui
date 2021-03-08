@@ -1,5 +1,5 @@
-import { ApplicationMockStateAction } from "../../../../action/mock"
-import { ConvertBoardResult } from "../../../kernel/data"
+import { ApplicationMockStateAction } from "../../../action/mock"
+import { ConvertBoardResult } from "../../kernel/data"
 import { initialValidateBoardState, ValidateBoardAction, ValidateBoardActionState } from "./action"
 
 export function initMockValidateBoardAction<N extends string, T>(): ValidateBoardAction<N, T> {

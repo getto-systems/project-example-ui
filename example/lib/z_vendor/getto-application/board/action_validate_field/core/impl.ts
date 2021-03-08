@@ -1,6 +1,6 @@
-import { ApplicationAbstractStateAction } from "../../../../action/impl"
+import { ApplicationAbstractStateAction } from "../../../action/impl"
 
-import { convertBoardField } from "../../impl"
+import { convertBoardField } from "../../validate_field/impl"
 
 import {
     ValidateBoardFieldAction,
@@ -8,8 +8,8 @@ import {
     ValidateBoardFieldMaterial,
 } from "./action"
 
-import { ConvertBoardFieldResult } from "../../data"
-import { ValidateBoardFieldInfra } from "../../infra"
+import { ConvertBoardFieldResult } from "../../validate_field/data"
+import { ValidateBoardFieldInfra } from "../../validate_field/infra"
 
 export function initValidateBoardFieldAction<T, E>(
     infra: ValidateBoardFieldInfra<T, E>,

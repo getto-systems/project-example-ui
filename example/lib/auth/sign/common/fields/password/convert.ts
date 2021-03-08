@@ -1,5 +1,5 @@
 import { BoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
-import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validateField/data"
+import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validate_field/data"
 import { Password, ValidatePasswordError } from "./data"
 
 // bcrypt を想定しているので、72 バイト以上ではいけない

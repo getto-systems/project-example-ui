@@ -1,5 +1,5 @@
-import { initMockInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/mock"
-import { initMockValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/mock"
+import { initMockInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/action_input/mock"
+import { initMockValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/action_validate_field/core/mock"
 
 import { InputPasswordAction } from "./action"
 

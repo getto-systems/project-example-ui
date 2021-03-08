@@ -1,13 +1,13 @@
 import { newTestSeasonInfoComponent, SeasonInfoRepository } from "./core"
 
 import { initStaticClock, staticClockPubSub } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
+import { initMemorySeasonRepository } from "../../../../common/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { SeasonInfoComponentState } from "../component"
 
-import { markSeason } from "../../../../shared/season/data"
+import { markSeason } from "../../../../common/season/data"
 
 // デフォルトの season を取得する
 const NOW = new Date("2021-01-01 10:00:00")

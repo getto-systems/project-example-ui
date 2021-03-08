@@ -1,8 +1,8 @@
 import { ApplicationStateAction } from "../../../../z_vendor/getto-application/action/action"
 
-import { LoadSeason } from "../../../shared/season/action"
+import { LoadSeason } from "../../../common/season/action"
 
-import { Season, SeasonError } from "../../../shared/season/data"
+import { Season, SeasonError } from "../../../common/season/data"
 
 export interface ExampleComponentFactory {
     (material: ExampleMaterial): ExampleComponent

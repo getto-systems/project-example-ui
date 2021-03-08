@@ -1,6 +1,6 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
 
 import { SignViewLocationDetecter, SignViewType } from "../../sign/view/view"
 

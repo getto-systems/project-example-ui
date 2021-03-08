@@ -1,8 +1,8 @@
-import { initInputBoardValueAction } from "./Core/impl"
+import { initInputBoardValueAction } from "./core/impl"
 
 import { InputBoardValueResource } from "./action"
 
-import { InputBoardValueType } from "../data"
+import { InputBoardValueType } from "../input/data"
 
 export function initInputBoardValueResource(type: InputBoardValueType): InputBoardValueResource {
     return {

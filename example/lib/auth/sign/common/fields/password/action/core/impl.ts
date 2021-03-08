@@ -1,5 +1,5 @@
-import { initInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/input/Action/impl"
-import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/impl"
+import { initInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/action_input/impl"
+import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/action_validate_field/core/impl"
 
 import { checkPasswordCharacter } from "../../check_character/impl"
 

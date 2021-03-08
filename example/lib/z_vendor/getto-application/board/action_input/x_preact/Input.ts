@@ -2,11 +2,11 @@ import { VNode } from "preact"
 import { useLayoutEffect, useRef } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { InputBoardValueAction } from "../Core/action"
+import { InputBoardValueAction } from "../core/action"
 
-import { BoardValue, emptyBoardValue } from "../../../kernel/data"
+import { BoardValue, emptyBoardValue } from "../../kernel/data"
 import { InputBoardValueResource } from "../action"
-import { readBoardValue } from "../../../kernel/convert"
+import { readBoardValue } from "../../kernel/convert"
 
 export type InputBoardProps = InputBoardValueResource
 export function InputBoard(props: InputBoardProps): VNode {

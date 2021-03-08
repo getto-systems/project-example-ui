@@ -1,7 +1,7 @@
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../z_vendor/getto-application/action/testHelper"
+} from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import {
     ClockPubSub,
@@ -11,7 +11,7 @@ import {
 import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
-import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 import { toCheckAuthInfoEntryPoint } from "./impl"

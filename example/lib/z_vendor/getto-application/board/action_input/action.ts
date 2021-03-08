@@ -1,5 +1,5 @@
-import { InputBoardValueType } from "../data";
-import { InputBoardValueAction } from "./Core/action";
+import { InputBoardValueType } from "../input/data";
+import { InputBoardValueAction } from "./core/action";
 
 export type InputBoardValueResource = Readonly<{
     type: InputBoardValueType

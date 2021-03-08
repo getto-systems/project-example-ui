@@ -1,14 +1,14 @@
 import { h } from "preact"
 
-import { enumKeys, storyTemplate } from "../../../../../storybook/preact/story"
+import { enumKeys, storyTemplate } from "../../../../storybook/preact/story"
 
 import { InputBoard, InputBoardProps } from "./Input"
 
-import { markBoardValue } from "../../../kernel/testHelper"
+import { markBoardValue } from "../../kernel/test_helper"
 
-import { initMockInputBoardValueAction } from "../Core/mock"
+import { initMockInputBoardValueAction } from "../core/mock"
 
-import { InputBoardValueType, InputBoardValueTypeEnum } from "../../data"
+import { InputBoardValueType, InputBoardValueTypeEnum } from "../../input/data"
 
 export default {
     title: "Getto/Board/Input",

@@ -1,6 +1,6 @@
 import { WorkerProxySpec } from "../../../../../../../z_vendor/getto-application/action/worker/message"
 
-import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/infra"
 
 import { ResetPasswordEvent } from "../../../reset/event"
 

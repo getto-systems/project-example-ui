@@ -1,7 +1,7 @@
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../z_vendor/getto-application/action/testHelper"
+} from "../../../z_vendor/getto-application/action/test_helper"
 
 import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
 

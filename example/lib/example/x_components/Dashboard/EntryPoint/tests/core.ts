@@ -1,11 +1,11 @@
-import { initTestSeasonAction } from "../../../../shared/season/tests/season"
+import { initTestSeasonAction } from "../../../../common/season/tests/season"
 
 import { DashboardFactory, initDashboardResource } from "../impl/core"
 
 import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
-import { SeasonRepository } from "../../../../shared/season/infra"
+import { SeasonRepository } from "../../../../common/season/infra"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 
 import { DashboardResource } from "../entryPoint"

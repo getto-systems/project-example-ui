@@ -18,7 +18,7 @@ import { ContentComponent } from "../../../docs/x_components/Docs/content/compon
 
 import { ContentPath } from "../../../docs/content/data"
 import { useApplicationAction } from "../../common/hooks"
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
 import { LoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/resource"
 
 type Props = Readonly<{

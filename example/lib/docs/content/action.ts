@@ -1,7 +1,7 @@
 import { LoadContentEvent } from "./event"
 
 import { ContentPath } from "./data"
-import { LocationTypes } from "../../z_vendor/getto-application/location/detecter"
+import { LocationTypes } from "../../z_vendor/getto-application/location/infra"
 
 export type ContentAction = Readonly<{
     loadContent: LoadContentPod

@@ -5,7 +5,7 @@ import { initAuthProfileResource, toAuthProfileEntryPoint } from "../impl"
 
 import { initSeasonInfoComponent } from "../../../../../example/x_components/Outline/seasonInfo/impl"
 
-import { initSeasonAction } from "../../../../../example/shared/season/main/season"
+import { initSeasonAction } from "../../../../../example/common/season/main/season"
 
 import { AuthProfileEntryPoint, ProfileFactory } from "../entryPoint"
 import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/init"

@@ -1,9 +1,9 @@
-import { initMockInputBoardValueAction } from "./Core/mock"
+import { initMockInputBoardValueAction } from "./core/mock"
 
 import { InputBoardValueResource } from "./action"
 
-import { BoardValue } from "../../kernel/data"
-import { InputBoardValueType } from "../data"
+import { BoardValue } from "../kernel/data"
+import { InputBoardValueType } from "../input/data"
 
 export function initMockInputBoardValueResource(
     type: InputBoardValueType,

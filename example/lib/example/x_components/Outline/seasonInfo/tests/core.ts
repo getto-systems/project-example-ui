@@ -1,11 +1,11 @@
 import { initSeasonInfoComponent } from "../impl"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
-import { SeasonRepository } from "../../../../shared/season/infra"
+import { SeasonRepository } from "../../../../common/season/infra"
 
 import { SeasonInfoComponent } from "../component"
 
-import { initTestSeasonAction } from "../../../../shared/season/tests/season"
+import { initTestSeasonAction } from "../../../../common/season/tests/season"
 
 export type SeasonInfoRepository = Readonly<{
     seasons: SeasonRepository

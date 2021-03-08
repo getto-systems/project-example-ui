@@ -1,4 +1,4 @@
-import { initLocationDetecter } from "../../z_vendor/getto-application/location/testHelper"
+import { initLocationDetecter } from "../../z_vendor/getto-application/location/test_helper"
 
 import { detectContentPath } from "./impl/core"
 

@@ -1,8 +1,8 @@
-import { BoardValueStore } from "../../infra"
+import { BoardValueStore } from "../../input/infra"
 
 import { BoardValueStoreLinker, InputBoardValueAction, InputBoardValueHandler } from "./action"
 
-import { BoardValue, emptyBoardValue } from "../../../kernel/data"
+import { BoardValue, emptyBoardValue } from "../../kernel/data"
 
 export function initInputBoardValueAction(): InputBoardValueAction {
     return new Action()

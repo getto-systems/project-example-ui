@@ -1,4 +1,4 @@
-import { LocationTypes } from "../../../../../z_vendor/getto-application/location/detecter"
+import { LocationTypes } from "../../../../../z_vendor/getto-application/location/infra"
 import { ConvertScriptPathResult, LocationPathname } from "./data"
 
 export interface GetScriptPathPod {

@@ -1,9 +1,9 @@
-import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/testHelper"
-import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
+import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/test_helper"
 
 import { initInputPasswordAction } from "./core/impl"
 
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/test_helper"
 
 describe("InputPassword", () => {
     test("validate; valid input", (done) => {

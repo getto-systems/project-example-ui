@@ -1,10 +1,10 @@
-import { initSyncActionTestRunner } from "../../../action/testHelper"
+import { initSyncActionTestRunner } from "../../action/test_helper"
 
-import { initValidateBoardFieldAction } from "./Core/impl"
+import { initValidateBoardFieldAction } from "./core/impl"
 
-import { ValidateBoardFieldAction } from "./Core/action"
+import { ValidateBoardFieldAction } from "./core/action"
 
-import { ConvertBoardFieldResult } from "../data"
+import { ConvertBoardFieldResult } from "../validate_field/data"
 
 describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {

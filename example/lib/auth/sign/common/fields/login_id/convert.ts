@@ -1,5 +1,5 @@
 import { BoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
-import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validateField/data"
+import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validate_field/data"
 import { LoginID, ValidateLoginIDError } from "./data"
 
 // login id には技術的な制限はないが、使用可能な最大長さは定義しておく

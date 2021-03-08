@@ -1,6 +1,6 @@
 import { InputBoardValueAction } from "./action"
 
-import { BoardValue } from "../../../kernel/data"
+import { BoardValue } from "../../kernel/data"
 
 export function initMockInputBoardValueAction(value: BoardValue): InputBoardValueAction {
     return {

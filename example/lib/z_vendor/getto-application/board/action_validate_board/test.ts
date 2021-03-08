@@ -1,6 +1,6 @@
-import { initSyncActionTestRunner } from "../../../action/testHelper"
+import { initSyncActionTestRunner } from "../../action/test_helper"
 
-import { initValidateBoardAction } from "./Core/impl"
+import { initValidateBoardAction } from "./core/impl"
 
 describe("ValidateBoard", () => {
     test("validate; all valid state", (done) => {

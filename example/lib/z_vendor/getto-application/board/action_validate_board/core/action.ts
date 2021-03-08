@@ -1,11 +1,11 @@
-import { ApplicationStateAction } from "../../../../action/action"
+import { ApplicationStateAction } from "../../../action/action"
 
-import { ValidateBoardFieldStateHandler } from "../../../validateField/Action/Core/action"
+import { ValidateBoardFieldStateHandler } from "../../action_validate_field/core/action"
 
-import { UpdateBoardValidateStateMethod } from "../../method"
+import { UpdateBoardValidateStateMethod } from "../../validate_board/method"
 
-import { ValidateBoardState } from "../../data"
-import { ConvertBoardResult } from "../../../kernel/data"
+import { ValidateBoardState } from "../../validate_board/data"
+import { ConvertBoardResult } from "../../kernel/data"
 
 export interface ValidateBoardAction<N extends string, T>
     extends ApplicationStateAction<ValidateBoardActionState> {

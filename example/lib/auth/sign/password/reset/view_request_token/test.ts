@@ -1,10 +1,10 @@
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../z_vendor/getto-application/action/testHelper"
+} from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/input/Action/testHelper"
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { toRequestResetTokenEntryPoint } from "./impl"

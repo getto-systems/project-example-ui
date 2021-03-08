@@ -9,11 +9,11 @@ import {
 
 import { useApplicationAction } from "../../../../../../../x_preact/common/hooks"
 
-import { InputBoard } from "../../../../../../../z_vendor/getto-application/board/input/Action/x_preact/Input"
+import { InputBoard } from "../../../../../../../z_vendor/getto-application/board/action_input/x_preact/Input"
 
 import { InputLoginIDResource, InputLoginIDResourceState } from "../resource"
 
-import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/validateField/Action/Core/action"
+import { ValidateBoardFieldState } from "../../../../../../../z_vendor/getto-application/board/action_validate_field/core/action"
 
 import { ValidateLoginIDError } from "../../data"
 

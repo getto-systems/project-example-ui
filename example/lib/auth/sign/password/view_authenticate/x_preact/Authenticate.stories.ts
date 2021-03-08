@@ -7,8 +7,8 @@ import { AuthenticatePasswordComponent } from "./Authenticate"
 import { initMockAuthenticatePasswordResource } from "../mock"
 
 import { AuthenticatePasswordCoreState } from "../core/action"
-import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
-import { ValidateBoardStateEnum } from "../../../../../z_vendor/getto-application/board/validateBoard/data"
+import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
+import { ValidateBoardStateEnum } from "../../../../../z_vendor/getto-application/board/validate_board/data"
 
 enum AuthenticateEnum {
     "initial",

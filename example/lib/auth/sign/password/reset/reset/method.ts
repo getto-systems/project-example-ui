@@ -3,7 +3,7 @@ import { ResetPasswordEvent } from "./event"
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 import { ResetToken } from "../kernel/data"
 import { ResetPasswordFields } from "./data"
-import { LocationTypes } from "../../../../../z_vendor/getto-application/location/detecter"
+import { LocationTypes } from "../../../../../z_vendor/getto-application/location/infra"
 
 export interface ResetPasswordPod {
     (detecter: ResetPasswordLocationDetecter): ResetPasswordMethod

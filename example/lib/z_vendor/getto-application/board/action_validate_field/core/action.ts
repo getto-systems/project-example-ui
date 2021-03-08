@@ -1,8 +1,8 @@
-import { ApplicationStateAction } from "../../../../action/action"
+import { ApplicationStateAction } from "../../../action/action"
 
-import { ConvertBoardFieldMethod } from "../../method"
+import { ConvertBoardFieldMethod } from "../../validate_field/method"
 
-import { ConvertBoardFieldResult, ValidateBoardFieldResult } from "../../data"
+import { ConvertBoardFieldResult, ValidateBoardFieldResult } from "../../validate_field/data"
 
 export interface ValidateBoardFieldAction<T, E>
     extends ApplicationStateAction<ValidateBoardFieldState<E>> {

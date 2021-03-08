@@ -1,4 +1,4 @@
-import { ConvertLocationResult } from "../../../../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../../../../z_vendor/getto-application/location/infra"
 import { ConvertScriptPathResult, LocationPathname, ScriptPath } from "../data"
 
 export function pathnameLocationConverter(

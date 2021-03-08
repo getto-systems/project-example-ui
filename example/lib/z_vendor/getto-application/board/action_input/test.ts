@@ -1,8 +1,8 @@
-import { initSyncActionTestRunner } from "../../../action/testHelper"
-import { standardBoardValueStore } from "./testHelper"
-import { markBoardValue } from "../../kernel/testHelper"
+import { initSyncActionTestRunner } from "../../action/test_helper"
+import { standardBoardValueStore } from "./test_helper"
+import { markBoardValue } from "../kernel/test_helper"
 
-import { initInputBoardValueAction } from "./Core/impl"
+import { initInputBoardValueAction } from "./core/impl"
 
 describe("InputBoardValue", () => {
     test("get / set / clear; store linked", (done) => {

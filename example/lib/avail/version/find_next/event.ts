@@ -1,4 +1,4 @@
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/detecter"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
 
 import { VersionString } from "../common/data"
 import { ApplicationTargetPath, FindNextVersionError } from "./data"

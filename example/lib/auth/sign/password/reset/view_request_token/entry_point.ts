@@ -1,7 +1,7 @@
 import { ApplicationAction, ApplicationEntryPoint } from "../../../../../z_vendor/getto-application/action/action"
 
 import { SignLinkResource } from "../../../common/link/action/resource"
-import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/action"
+import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 import { RequestResetTokenCoreAction, RequestResetTokenCoreState } from "./core/action"
 import { RequestResetTokenFormAction } from "./form/action"
 

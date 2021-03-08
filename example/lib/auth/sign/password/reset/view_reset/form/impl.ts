@@ -1,6 +1,6 @@
 import { initInputLoginIDAction } from "../../../../common/fields/login_id/action/core/impl"
 import { initInputPasswordAction } from "../../../../common/fields/password/action/core/impl"
-import { initValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/validateBoard/Action/Core/impl"
+import { initValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/impl"
 
 import { ResetPasswordFormAction, ResetPasswordFieldsEnum } from "./action"
 

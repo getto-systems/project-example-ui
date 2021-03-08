@@ -2,7 +2,7 @@ import { MockAction, MockPropsPasser } from "../../../../z_vendor/getto-applicat
 
 import { SeasonInfoComponent, SeasonInfoComponentState } from "./component"
 
-import { markSeason } from "../../../shared/season/data"
+import { markSeason } from "../../../common/season/data"
 
 export type SeasonInfoMockPropsPasser = MockPropsPasser<SeasonInfoMockProps>
 export type SeasonInfoMockProps =

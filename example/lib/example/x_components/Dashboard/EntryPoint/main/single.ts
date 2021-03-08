@@ -4,7 +4,7 @@ import { initSeasonInfoComponent } from "../../../Outline/seasonInfo/impl"
 import { initExampleComponent } from "../../example/impl"
 
 import { newNotifyUnexpectedErrorResource } from "../../../../../avail/action_unexpected_error/init"
-import { initSeasonAction } from "../../../../shared/season/main/season"
+import { initSeasonAction } from "../../../../common/season/main/season"
 
 import { DashboardEntryPoint } from "../entryPoint"
 import { newLoadBreadcrumbListResource } from "../../../../../outline/menu/action_load_breadcrumb_list/init"

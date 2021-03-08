@@ -1,4 +1,4 @@
-import { ConvertLocationResult, LocationDetecter } from "./detecter"
+import { ConvertLocationResult, LocationDetecter } from "./infra"
 
 export function backgroundLocationDetecter<T>(
     result: ConvertLocationResult<T>,

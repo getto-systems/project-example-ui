@@ -4,7 +4,7 @@ import {
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initMemorySeasonRepository } from "../../../../shared/season/impl/repository/season/memory"
+import { initMemorySeasonRepository } from "../../../../common/season/impl/repository/season/memory"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 

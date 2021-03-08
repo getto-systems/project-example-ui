@@ -1,19 +1,19 @@
 import {
     initAsyncActionTestRunner,
     initSyncActionTestRunner,
-} from "../../../../../z_vendor/getto-application/action/testHelper"
+} from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/testHelper"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
 import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
 import {
     ClockPubSub,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/input/Action/testHelper"
+import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
-import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/testHelper"
+import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
 import { initResetPasswordLocationDetecter } from "../reset/impl/test_helper"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
