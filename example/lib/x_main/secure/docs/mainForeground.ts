@@ -1,13 +1,13 @@
 import { render, h } from "preact"
 
-import { newForeground } from "../../../docs/x_components/Docs/EntryPoint/main/single"
+import { newDocsContentEntryPoint } from "../../../docs/view_content/init"
 
-import { EntryPoint } from "../../../x_preact/docs/Docs/EntryPoint"
+import { DocsContent } from "../../../docs/view_content/x_preact/EntryPoint"
 
 render(
     h(
-        EntryPoint,
-        newForeground({
+        DocsContent,
+        newDocsContentEntryPoint({
             webStorage: localStorage,
             currentLocation: location,
         }),
