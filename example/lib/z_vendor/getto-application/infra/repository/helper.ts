@@ -3,9 +3,9 @@ import {
     DB,
     Repository,
     RepositoryConverter,
-    RepositoryFetchResult,
+    FetchRepositoryResult,
     RepositoryPod,
-    RepositoryStoreResult,
+    StoreRepositoryResult,
 } from "./infra"
 
 export function wrapRepository<V, R>(db: DB<R>): RepositoryPod<V, R> {
@@ -21,7 +21,7 @@ class Wrapped<V, R> implements Repository<V> {
         this.converter = converter
     }
 
-    get(): RepositoryFetchResult<V> {
+    get(): FetchRepositoryResult<V> {
         const fetchResult = this.fetch()
         if (!fetchResult.success || !fetchResult.found) {
             return fetchResult
@@ -34,14 +34,14 @@ class Wrapped<V, R> implements Repository<V> {
 
         return { success: true, found: true, value: convertResult.value }
     }
-    fetch(): RepositoryFetchResult<R> {
+    fetch(): FetchRepositoryResult<R> {
         try {
             return { success: true, ...this.db.get() }
         } catch (err) {
             return repositoryError(err)
         }
     }
-    set(value: V): RepositoryStoreResult {
+    set(value: V): StoreRepositoryResult {
         try {
             this.db.set(this.converter.toRepository(value))
             return { success: true }
@@ -49,7 +49,7 @@ class Wrapped<V, R> implements Repository<V> {
             return repositoryError(err)
         }
     }
-    remove(): RepositoryStoreResult {
+    remove(): StoreRepositoryResult {
         try {
             this.db.remove()
             return { success: true }

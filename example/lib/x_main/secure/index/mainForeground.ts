@@ -1,13 +1,13 @@
 import { render, h } from "preact"
 
-import { newForeground } from "../../../example/x_components/Dashboard/EntryPoint/main/single"
+import { newDashboardEntryPoint } from "../../../example/view_dashboard/init"
 
-import { EntryPoint } from "../../../x_preact/example/Dashboard/EntryPoint"
+import { Dashboard } from "../../../example/view_dashboard/x_preact/Dashboard"
 
 render(
     h(
-        EntryPoint,
-        newForeground({
+        Dashboard,
+        newDashboardEntryPoint({
             webStorage: localStorage,
             currentLocation: location,
         }),

@@ -18,7 +18,7 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { RepositoryFetchResult } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { FetchRepositoryResult } from "../../../z_vendor/getto-application/infra/repository/infra"
 import { AuthzRepositoryPod } from "../../../common/authz/infra"
 import {
     FetchMenuResult,
@@ -485,7 +485,7 @@ function standard_getMenuBadge(): GetMenuBadgeRemotePod {
     )
 }
 
-function expectToSaveExpand(result: RepositoryFetchResult<MenuExpand>, menuExpand: string[][]) {
+function expectToSaveExpand(result: FetchRepositoryResult<MenuExpand>, menuExpand: string[][]) {
     expect(result).toEqual({ success: true, found: true, value: menuExpand })
 }
 

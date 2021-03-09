@@ -1,5 +1,5 @@
 import { h, VNode } from "preact"
-import { useLayoutEffect } from "preact/hooks"
+import { useLayoutEffect, useMemo } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
@@ -25,11 +25,21 @@ export const MENU_ID = "menu"
 
 export function LoadMenu(resource: LoadMenuResource): VNode {
     const state = useApplicationAction(resource.menu)
+    const store = useMemo(() => {
+        return {
+            get: () => {
+                console.log(state, resource.menu.fetch(state))
+                return resource.menu.fetch(state)
+            },
+        }
+    }, [])
+
+    console.log(state)
 
     useLayoutEffect(() => {
-        resource.menu.storeLinker.link({ get: () => resource.menu.fetch(state) })
+        resource.menu.storeLinker.link(store)
         return resource.menu.storeLinker.unlink
-    })
+    }, [])
 
     return h(LoadMenuComponent, { ...resource, state })
 }

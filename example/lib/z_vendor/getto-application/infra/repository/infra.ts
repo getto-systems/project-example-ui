@@ -5,17 +5,17 @@ export interface RepositoryPod<V, R> {
 }
 
 export interface Repository<T> {
-    get(): RepositoryFetchResult<T>
-    set(value: T): RepositoryStoreResult
-    remove(): RepositoryStoreResult
+    get(): FetchRepositoryResult<T>
+    set(value: T): StoreRepositoryResult
+    remove(): StoreRepositoryResult
 }
 
-export type RepositoryFetchResult<T> =
+export type FetchRepositoryResult<T> =
     | Readonly<{ success: true; found: true; value: T }>
     | Readonly<{ success: true; found: false }>
     | Readonly<{ success: false; err: RepositoryError }>
 
-export type RepositoryStoreResult =
+export type StoreRepositoryResult =
     | Readonly<{ success: true }>
     | Readonly<{ success: false; err: RepositoryError }>
 
@@ -30,8 +30,8 @@ export type ConvertRepositoryResult<T> =
 
 // z_external/db のインターフェイスと合わせる
 export interface DB<T> {
-    get(): DBFetchResult<T>
+    get(): FetchDBResult<T>
     set(value: T): void
     remove(): void
 }
-export type DBFetchResult<T> = Readonly<{ found: true; value: T }> | Readonly<{ found: false }>
+export type FetchDBResult<T> = Readonly<{ found: true; value: T }> | Readonly<{ found: false }>

@@ -1,4 +1,4 @@
-import { DB, DBFetchResult, DBTransformer } from "./infra"
+import { DB, FetchDBResult, DBTransformer } from "./infra"
 
 export function initDB<T>(storage: Storage, key: string, transformer: DBTransformer<T>): DB<T> {
     return new Impl(storage, key, transformer)
@@ -16,7 +16,7 @@ class Impl<T> implements DB<T> {
         this.transformer = transformer
     }
 
-    get(): DBFetchResult<T> {
+    get(): FetchDBResult<T> {
         const value = this.storage.getItem(this.key)
         if (!value) {
             return { found: false }

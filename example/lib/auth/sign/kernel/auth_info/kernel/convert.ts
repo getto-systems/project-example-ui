@@ -1,8 +1,5 @@
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
-import {
-    ConvertRepositoryResult,
-    RepositoryConverter,
-} from "../../../../../z_vendor/getto-application/infra/repository/infra"
+import { RepositoryConverter } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 
 import { LastAuthRepositoryValue, AuthRemoteValue } from "./infra"
 
@@ -11,11 +8,11 @@ import { RemoteConverter } from "../../../../../z_vendor/getto-application/infra
 import { convertAuthzFromRemote } from "../../../../../common/authz/convert"
 
 export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuthRepositoryValue> = {
-    toRepository: (info) => ({
-        nonce: info.nonce,
-        lastAuthAt: info.lastAuthAt.toISOString(),
+    toRepository: (value) => ({
+        nonce: value.nonce,
+        lastAuthAt: value.lastAuthAt.toISOString(),
     }),
-    fromRepository: (value: LastAuthRepositoryValue): ConvertRepositoryResult<LastAuth> => {
+    fromRepository: (value) => {
         const nonce = value.nonce
         const lastAuthAt = new Date(value.lastAuthAt)
 

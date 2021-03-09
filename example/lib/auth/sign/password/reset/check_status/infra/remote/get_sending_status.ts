@@ -1,6 +1,6 @@
 import { env } from "../../../../../../../y_environment/env"
 
-import { newApi_GetResetTokenSendingStatus } from "../../../../../../../z_external/api/auth/sign/password/reset/checkStatus/getSendingStatus"
+import { newApi_GetResetTokenSendingStatus } from "../../../../../../../z_external/api/auth/sign/password/reset/check_status/get_sending_status"
 
 import { wrapRemote } from "../../../../../../../z_vendor/getto-application/infra/remote/helper"
 

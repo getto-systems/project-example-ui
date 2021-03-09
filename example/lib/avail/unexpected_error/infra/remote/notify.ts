@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { newApi_NotifyUnexpectedError } from "../../../../z_external/api/availability/notifyUnexpectedError"
+import { newApi_NotifyUnexpectedError } from "../../../../z_external/api/avail/notify_unexpected_error"
 
 import { wrapRemote } from "../../../../z_vendor/getto-application/infra/remote/helper"
 

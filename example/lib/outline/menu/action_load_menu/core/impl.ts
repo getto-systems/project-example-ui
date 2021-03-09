@@ -66,7 +66,7 @@ class Action
                 switch (event.type) {
                     case "succeed-to-load":
                         // 初期ロード完了で最初の badge 更新を行う
-                        this.updateBadge()
+                        setTimeout(() => this.updateBadge())
                 }
             })
         })
