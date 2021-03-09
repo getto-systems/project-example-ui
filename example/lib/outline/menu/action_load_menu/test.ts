@@ -3,7 +3,7 @@ import {
     initSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
-import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/testHelper"
+import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 
 import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
@@ -18,14 +18,8 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { RepositoryFetchResult } from "../../../z_vendor/getto-application/infra/repository/infra"
 import { AuthzRepositoryPod } from "../../../common/authz/infra"
-import {
-    FetchMenuResult,
-    GetMenuBadgeRemotePod,
-    MenuExpand,
-    MenuExpandRepositoryPod,
-} from "../kernel/infra"
+import { GetMenuBadgeRemotePod, MenuExpandRepositoryPod } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
 import { LoadMenuCoreState } from "./core/action"
@@ -35,12 +29,6 @@ import { LoadMenuLocationDetecter } from "../kernel/method"
 describe("Menu", () => {
     test("load menu", (done) => {
         const { resource } = standard_elements()
-
-        let menu: FetchMenuResult = { found: false }
-        resource.menu.subscriber.subscribe((state) => {
-            menu = resource.menu.fetch(state)
-        })
-        resource.menu.storeLinker.link({ get: () => menu })
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -107,12 +95,6 @@ describe("Menu", () => {
     test("load menu; saved expands", (done) => {
         const { resource } = expand_elements()
 
-        let menu: FetchMenuResult = { found: false }
-        resource.menu.subscriber.subscribe((state) => {
-            menu = resource.menu.fetch(state)
-        })
-        resource.menu.storeLinker.link({ get: () => menu })
-
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
@@ -161,12 +143,6 @@ describe("Menu", () => {
     test("load menu; toggle expands", (done) => {
         const { resource, repository } = standard_elements()
         const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
-
-        let menu: FetchMenuResult = { found: false }
-        resource.menu.subscriber.subscribe((state) => {
-            menu = resource.menu.fetch(state)
-        })
-        resource.menu.storeLinker.link({ get: () => menu })
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -227,8 +203,14 @@ describe("Menu", () => {
                         },
                     ])
 
-                    expectToSaveExpand(menuExpand.get(), [
-                        ["MAIN"],
+                    const result = menuExpand.get()
+                    if (!result.success) {
+                        fail("menu expand get failed")
+                    }
+                    if (!result.found) {
+                        fail("menu expand not found")
+                    }
+                    expect(result.value.values).toEqual([
                         ["DOCUMENT"],
                         ["DOCUMENT", "DETAIL"],
                     ])
@@ -241,12 +223,6 @@ describe("Menu", () => {
 
     test("load menu; dev docs", (done) => {
         const { resource } = devDocs_elements()
-
-        let menu: FetchMenuResult = { found: false }
-        resource.menu.subscriber.subscribe((state) => {
-            menu = resource.menu.fetch(state)
-        })
-        resource.menu.storeLinker.link({ get: () => menu })
 
         const runner = initAsyncActionTestRunner(actionHasDone, [
             {
@@ -483,10 +459,6 @@ function standard_getMenuBadge(): GetMenuBadgeRemotePod {
         }),
         { wait_millisecond: 0 },
     )
-}
-
-function expectToSaveExpand(result: RepositoryFetchResult<MenuExpand>, menuExpand: string[][]) {
-    expect(result).toEqual({ success: true, found: true, value: menuExpand })
 }
 
 function actionHasDone(state: LoadMenuCoreState): boolean {

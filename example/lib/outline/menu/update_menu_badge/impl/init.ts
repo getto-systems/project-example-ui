@@ -4,11 +4,16 @@ import { newAuthzRepository } from "../../../../common/authz/infra/repository/au
 import { newGetMenuBadgeRemote } from "../../kernel/infra/remote/getMenuBadge/core"
 
 import { UpdateMenuBadgeInfra } from "../infra"
+import { MenuContent } from "../../kernel/infra"
 
-export function newUpdateMenuBadgeInfra(webStorage: Storage): UpdateMenuBadgeInfra {
+export function newUpdateMenuBadgeInfra(
+    webStorage: Storage,
+    menuContent: MenuContent,
+): UpdateMenuBadgeInfra {
     return {
         version: env.version,
-        getMenuBadge: newGetMenuBadgeRemote(),
+        menuTree: menuContent.menuTree,
         authz: newAuthzRepository(webStorage),
+        getMenuBadge: newGetMenuBadgeRemote(),
     }
 }

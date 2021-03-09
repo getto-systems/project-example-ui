@@ -23,7 +23,7 @@ export function newLoadMenuResource(
             initLoadMenuCoreMaterial(
                 {
                     ...newLoadMenuInfra(webStorage, menuContent),
-                    ...newUpdateMenuBadgeInfra(webStorage),
+                    ...newUpdateMenuBadgeInfra(webStorage, menuContent),
                     ...newToggleMenuExpandInfra(webStorage, menuContent),
                 },
                 newLoadMenuLocationDetecter(currentLocation),

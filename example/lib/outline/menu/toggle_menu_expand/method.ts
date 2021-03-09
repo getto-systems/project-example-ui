@@ -1,9 +1,13 @@
 import { ToggleMenuExpandEvent } from "./event"
 
-import { Menu, MenuCategoryPath } from "../kernel/data"
+import { MenuCategoryPath } from "../kernel/data"
+import { LoadMenuLocationDetecter } from "../kernel/method"
 
+export interface ToggleMenuExpandPod {
+    (detecter: LoadMenuLocationDetecter): ToggleMenuExpandMethod
+}
 export interface ToggleMenuExpandMethod {
-    (menu: Menu, path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
+    (path: MenuCategoryPath, post: Post<ToggleMenuExpandEvent>): void
 }
 
 interface Post<T> {

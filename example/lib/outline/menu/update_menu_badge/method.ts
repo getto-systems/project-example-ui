@@ -1,8 +1,11 @@
-import { Menu } from "../kernel/data";
+import { LoadMenuLocationDetecter } from "../kernel/method";
 import { UpdateMenuBadgeEvent } from "./event"
 
+export interface UpdateMenuBadgePod {
+    (detecter: LoadMenuLocationDetecter): UpdateMenuBadgeMethod
+}
 export interface UpdateMenuBadgeMethod {
-    (menu: Menu, post: Post<UpdateMenuBadgeEvent>): void
+    (post: Post<UpdateMenuBadgeEvent>): void
 }
 
 interface Post<E> {

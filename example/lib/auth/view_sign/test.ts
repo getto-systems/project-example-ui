@@ -13,6 +13,7 @@ describe("SignView", () => {
     test("redirect login view", (done) => {
         const { action } = standardLoginView()
 
+        // TODO runner に変えたい
         action.subscriber.subscribe(stateHandler())
 
         action.ignite()

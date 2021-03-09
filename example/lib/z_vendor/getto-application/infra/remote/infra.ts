@@ -5,12 +5,6 @@ export type RemoteTypes<M, V, R, E> = {
     simulator: RemoteSimulator<M, R, E>
 }
 
-export type RemoteTypes_legacy<M, V, E> = {
-    remote: Remote<M, V, E>
-    result: RemoteResult<V, E>
-    simulator: RemoteSimulator<M, V, E>
-}
-
 export interface RemotePod<M, V, R, E> {
     (converter: RemoteConverter<V, R>): Remote<M, V, E>
 }

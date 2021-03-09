@@ -1,4 +1,4 @@
-import { toMenuCategory, toMenuItem } from "../../kernel/infra"
+import { toMenuCategory, toMenuItem } from "../../kernel/impl/convert"
 
 import { LoadBreadcrumbListCoreAction } from "./action"
 

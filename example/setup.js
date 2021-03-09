@@ -27,6 +27,7 @@ function envContent() {
         storageKey: {
             authn: "GETTO-EXAMPLE-AUTHN",
             authz: "GETTO-EXAMPLE-AUTHZ",
+            season: "GETTO-EXAMPLE-SEASON",
             menuExpand: {
                 home: "GETTO-EXAMPLE-MENU-EXPAND-HOME",
                 docs: "GETTO-EXAMPLE-MENU-EXPAND-DOCS",

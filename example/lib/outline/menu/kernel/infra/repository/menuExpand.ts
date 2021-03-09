@@ -1,4 +1,4 @@
-import { newDB_MenuExpand } from "../../../../../z_external/db/auth/menuExpand"
+import { newDB_MenuExpand } from "../../../../../z_external/db/auth/menu_expand"
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
 import { MenuExpandRepositoryPod } from "../../infra"

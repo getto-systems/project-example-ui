@@ -1,13 +1,13 @@
-import { DB, DBFetchResult } from "./infra"
+import { DB, FetchDBResult } from "./infra"
 
 export function initMemoryDB<T>(): DB<T> {
     return new Memory()
 }
 
 class Memory<T> implements DB<T> {
-    store: DBFetchResult<T> = { found: false }
+    store: FetchDBResult<T> = { found: false }
 
-    get(): DBFetchResult<T> {
+    get(): FetchDBResult<T> {
         return this.store
     }
     set(value: T): void {

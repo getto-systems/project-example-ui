@@ -4,33 +4,38 @@ import { loadMenu } from "../../load_menu/impl/core"
 import { updateMenuBadge } from "../../update_menu_badge/impl/core"
 import { toggleMenuExpand } from "../../toggle_menu_expand/impl/core"
 
-import { FetchMenuResult, MenuStore } from "../../kernel/infra"
-import { LoadMenuInfra } from "../../load_menu/infra"
-import { UpdateMenuBadgeInfra } from "../../update_menu_badge/infra"
-import { ToggleMenuExpandInfra } from "../../toggle_menu_expand/infra"
+import { LoadMenuInfra, LoadMenuStore } from "../../load_menu/infra"
+import { UpdateMenuBadgeInfra, UpdateMenuBadgeStore } from "../../update_menu_badge/infra"
+import { ToggleMenuExpandInfra, ToggleMenuExpandStore } from "../../toggle_menu_expand/infra"
 
 import {
     LoadMenuCoreMaterial,
     LoadMenuCoreAction,
     LoadMenuCoreState,
     initialLoadMenuCoreState,
-    MenuStoreLinker,
 } from "./action"
 
 import { LoadMenuLocationDetecter } from "../../kernel/method"
 
 import { MenuCategoryPath } from "../../kernel/data"
+import { initMenuBadgeStore, initMenuExpandStore } from "../../kernel/infra/store"
 
 export type LoadMenuCoreInfra = LoadMenuInfra & UpdateMenuBadgeInfra & ToggleMenuExpandInfra
+
+type Store = LoadMenuStore & UpdateMenuBadgeStore & ToggleMenuExpandStore
 
 export function initLoadMenuCoreMaterial(
     infra: LoadMenuCoreInfra,
     detecter: LoadMenuLocationDetecter,
 ): LoadMenuCoreMaterial {
+    const store: Store = {
+        menuExpand: initMenuExpandStore(),
+        menuBadge: initMenuBadgeStore(),
+    }
     return {
-        load: loadMenu(infra)(detecter),
-        updateBadge: updateMenuBadge(infra),
-        toggle: toggleMenuExpand(infra),
+        load: loadMenu(infra, store)(detecter),
+        updateBadge: updateMenuBadge(infra, store)(detecter),
+        toggle: toggleMenuExpand(infra, store)(detecter),
     }
 }
 
@@ -42,16 +47,6 @@ class Action
     extends ApplicationAbstractStateAction<LoadMenuCoreState>
     implements LoadMenuCoreAction {
     readonly initialState = initialLoadMenuCoreState
-
-    readonly storeLinker: MenuStoreLinker = {
-        link: (store: MenuStore) => {
-            this.link = { connect: true, store }
-        },
-        unlink: () => {
-            this.link = { connect: false }
-        },
-    }
-    link: MenuStoreLink = { connect: false }
 
     material: LoadMenuCoreMaterial
 
@@ -70,59 +65,13 @@ class Action
                 }
             })
         })
-        this.terminateHook(() => {
-            this.storeLinker.unlink()
-        })
-    }
-
-    fetch(state: LoadMenuCoreState): FetchMenuResult {
-        return fetchMenu(state)
     }
 
     updateBadge(): void {
-        const result = this.fetchMenu()
-        if (!result.found) {
-            return
-        }
-        this.material.updateBadge(result.value, this.post)
+        this.material.updateBadge(this.post)
     }
 
     toggle(path: MenuCategoryPath): void {
-        const result = this.fetchMenu()
-        if (!result.found) {
-            return
-        }
-        this.material.toggle(result.value, path, this.post)
-    }
-
-    fetchMenu(): FetchMenuResult {
-        if (!this.link.connect) {
-            this.post({ type: "failed-to-fetch-menu" })
-            return { found: false }
-        }
-        const result = this.link.store.get()
-        if (!result.found) {
-            this.post({ type: "failed-to-fetch-menu" })
-            return { found: false }
-        }
-        return result
+        this.material.toggle(path, this.post)
     }
 }
-
-export function fetchMenu(state: LoadMenuCoreState): FetchMenuResult {
-    switch (state.type) {
-        case "initial-menu":
-        case "failed-to-fetch-menu":
-        case "required-to-login":
-        case "repository-error":
-            return { found: false }
-
-        case "succeed-to-load":
-        case "succeed-to-update":
-        case "succeed-to-toggle":
-        case "failed-to-update":
-            return { found: true, value: state.menu }
-    }
-}
-
-type MenuStoreLink = Readonly<{ connect: true; store: MenuStore }> | Readonly<{ connect: false }>

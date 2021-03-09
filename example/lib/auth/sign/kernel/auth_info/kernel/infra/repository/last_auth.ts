@@ -1,6 +1,6 @@
 import { env } from "../../../../../../../y_environment/env"
 
-import { newDB_LastAuth } from "../../../../../../../z_external/db/auth/lastAuth"
+import { newDB_LastAuth } from "../../../../../../../z_external/db/auth/last_auth"
 
 import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
 

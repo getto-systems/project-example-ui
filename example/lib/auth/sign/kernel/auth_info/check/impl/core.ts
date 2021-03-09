@@ -1,6 +1,6 @@
 import { delayedChecker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 
-import { RepositoryStoreResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
+import { StoreRepositoryResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
 import { CheckAuthInfoInfra } from "../infra"
 
 import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../method"
@@ -104,7 +104,7 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
 
     post({ type: "succeed-to-renew", auth: response.value })
 
-    function checkRepositoryError(result: RepositoryStoreResult): boolean {
+    function checkRepositoryError(result: StoreRepositoryResult): boolean {
         if (!result.success) {
             post({ type: "repository-error", err: result.err })
         }

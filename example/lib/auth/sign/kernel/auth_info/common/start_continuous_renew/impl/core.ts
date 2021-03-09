@@ -1,7 +1,7 @@
 import { authzRepositoryConverter } from "../../../../../../../common/authz/convert"
 import { lastAuthRepositoryConverter, authRemoteConverter } from "../../../kernel/convert"
 
-import { RepositoryStoreResult } from "../../../../../../../z_vendor/getto-application/infra/repository/infra"
+import { StoreRepositoryResult } from "../../../../../../../z_vendor/getto-application/infra/repository/infra"
 import { StartContinuousRenewInfra } from "../infra"
 
 import { SaveAuthInfoMethod, StartContinuousRenewMethod } from "../method"
@@ -94,7 +94,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         return NEXT
     }
 
-    function handleStoreResult(result: RepositoryStoreResult): boolean {
+    function handleStoreResult(result: StoreRepositoryResult): boolean {
         if (!result.success) {
             post({ type: "repository-error", err: result.err })
         }

@@ -1,4 +1,4 @@
-import { standard_MenuTree } from "../kernel/impl/testHelper"
+import { standard_MenuTree } from "../kernel/impl/test_helper"
 import { initLoadMenuLocationDetecter } from "../kernel/init/testHelper"
 
 import { initLoadBreadcrumbListCoreAction, initLoadBreadcrumbListCoreMaterial } from "./core/impl"

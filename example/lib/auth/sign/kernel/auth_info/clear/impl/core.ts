@@ -1,5 +1,5 @@
 import { authzRepositoryConverter } from "../../../../../../common/authz/convert"
-import { RepositoryStoreResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
+import { StoreRepositoryResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
 import { lastAuthRepositoryConverter } from "../../kernel/convert"
 import { ClearAuthInfoInfra } from "../infra"
 
@@ -18,7 +18,7 @@ export const clearAuthInfo: Clear = (infra) => async (post) => {
 
     post({ type: "succeed-to-logout" })
 
-    function handleResult(result: RepositoryStoreResult): boolean {
+    function handleResult(result: StoreRepositoryResult): boolean {
         if (!result.success) {
             post({ type: "failed-to-logout", err: result.err })
         }

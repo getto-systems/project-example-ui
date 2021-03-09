@@ -5,6 +5,9 @@ import { ApplicationError } from "./ApplicationError"
 
 export default {
     title: "library/Common/ApplicationError",
+    parameters: {
+        layout: "fullscreen",
+    },
 }
 
 type MockProps = Readonly<{

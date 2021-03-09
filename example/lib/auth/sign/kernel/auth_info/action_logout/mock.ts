@@ -2,6 +2,6 @@ import { initMockLogoutCoreAction } from "./core/mock"
 
 import { LogoutResource } from "./resource"
 
-export function initMockLogoutResource(): LogoutResource {
+export function standard_MockLogoutResource(): LogoutResource {
     return { logout: initMockLogoutCoreAction() }
 }

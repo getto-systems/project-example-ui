@@ -1,5 +1,4 @@
 import { h, VNode } from "preact"
-import { useLayoutEffect } from "preact/hooks"
 import { html } from "htm/preact"
 
 import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
@@ -24,14 +23,10 @@ import { GetMenuBadgeError, Menu, MenuCategoryNode, MenuItemNode } from "../../k
 export const MENU_ID = "menu"
 
 export function LoadMenu(resource: LoadMenuResource): VNode {
-    const state = useApplicationAction(resource.menu)
-
-    useLayoutEffect(() => {
-        resource.menu.storeLinker.link({ get: () => resource.menu.fetch(state) })
-        return resource.menu.storeLinker.unlink
+    return h(LoadMenuComponent, {
+        ...resource,
+        state: useApplicationAction(resource.menu),
     })
-
-    return h(LoadMenuComponent, { ...resource, state })
 }
 
 export type LoadMenuComponentProps = LoadMenuResource & LoadMenuResourceState

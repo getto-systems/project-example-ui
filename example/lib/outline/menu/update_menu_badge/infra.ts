@@ -1,8 +1,14 @@
 import { AuthzRepositoryPod } from "../../../common/authz/infra"
-import { GetMenuBadgeRemotePod } from "../kernel/infra"
+import { GetMenuBadgeRemotePod, MenuBadgeStore, MenuExpandStore, MenuTree } from "../kernel/infra"
 
 export type UpdateMenuBadgeInfra = Readonly<{
     version: string
-    getMenuBadge: GetMenuBadgeRemotePod
+    menuTree: MenuTree
     authz: AuthzRepositoryPod
+    getMenuBadge: GetMenuBadgeRemotePod
+}>
+
+export type UpdateMenuBadgeStore = Readonly<{
+    menuExpand: MenuExpandStore
+    menuBadge: MenuBadgeStore
 }>

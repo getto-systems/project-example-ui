@@ -85,9 +85,6 @@ function toEntry(root) {
         return path.join(__dirname, "./lib/x_main", root, ...toSecureEntryPath(file), `${type}.ts`)
     }
     function toSecureEntryPath(file) {
-        if (file.startsWith("auth/profile")) {
-            return [file, "entryPoint"]
-        }
         if (file.startsWith(`${docsDirectory}/`)) {
             return [docsDirectory]
         }
