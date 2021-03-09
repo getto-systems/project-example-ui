@@ -1,21 +1,9 @@
 import { ApplicationMockStateAction } from "../../../../z_vendor/getto-application/action/mock"
 
-import {
-    appendMenuCategoryPath,
-    FetchMenuResult,
-    toMenuCategory,
-    toMenuItem,
-} from "../../kernel/infra"
-
 import { Menu } from "../../kernel/data"
+import { appendMenuCategoryPath, toMenuCategory, toMenuItem } from "../../kernel/impl/convert"
 
-import {
-    initialLoadMenuCoreState,
-    LoadMenuCoreAction,
-    LoadMenuCoreState,
-    MenuStoreLinker,
-} from "./action"
-import { fetchMenu } from "./impl"
+import { initialLoadMenuCoreState, LoadMenuCoreAction, LoadMenuCoreState } from "./action"
 
 export function initMockLoadMenuCoreAction(menu: Menu): LoadMenuCoreAction {
     return new Action(menu)
@@ -24,18 +12,9 @@ export function initMockLoadMenuCoreAction(menu: Menu): LoadMenuCoreAction {
 class Action extends ApplicationMockStateAction<LoadMenuCoreState> implements LoadMenuCoreAction {
     readonly initialState = initialLoadMenuCoreState
 
-    readonly storeLinker: MenuStoreLinker = {
-        link: () => null,
-        unlink: () => null,
-    }
-
     constructor(menu: Menu) {
         super()
         this.addMockIgniter(() => ({ type: "succeed-to-load", menu }))
-    }
-
-    fetch(state: LoadMenuCoreState): FetchMenuResult {
-        return fetchMenu(state)
     }
 
     updateBadge() {
@@ -63,14 +42,7 @@ export function initMockMenu(label: string, icon: string, badgeCount: number): M
                     type: "item",
                     isActive: true,
                     badgeCount,
-                    item: toMenuItem(
-                        {
-                            label,
-                            icon,
-                            path: "/index.html",
-                        },
-                        "1.0.0",
-                    ),
+                    item: toMenuItem({ label, icon, path: "/index.html" }, "1.0.0"),
                 },
             ],
         },

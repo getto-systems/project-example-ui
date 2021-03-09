@@ -1,73 +1,69 @@
 import { menuExpandRepositoryConverter } from "../../kernel/impl/convert"
+import { authzRepositoryConverter } from "../../../../common/authz/convert"
 
-import { MenuExpand } from "../../kernel/infra"
-import { ToggleMenuExpandInfra } from "../infra"
+import { buildMenu } from "../../kernel/impl/menu"
 
-import { ToggleMenuExpandMethod } from "../method"
+import { initMenuExpand, MenuBadge } from "../../kernel/infra"
+import { ToggleMenuExpandInfra, ToggleMenuExpandStore } from "../infra"
+
+import { ToggleMenuExpandPod } from "../method"
 
 import { ToggleMenuExpandEvent } from "../event"
 
-import { Menu, MenuCategoryLabel, MenuCategoryPath } from "../../kernel/data"
-
 interface Toggle {
-    (infra: ToggleMenuExpandInfra): ToggleMenuExpandMethod
+    (infra: ToggleMenuExpandInfra, store: ToggleMenuExpandStore): ToggleMenuExpandPod
 }
-export const toggleMenuExpand: Toggle = (infra) => (menu, path, post) => {
-    const menuExpands = infra.menuExpand(menuExpandRepositoryConverter)
+export const toggleMenuExpand: Toggle = (infra, store) => (detecter) => (path, post) => {
+    const authz = infra.authz(authzRepositoryConverter)
+    const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
 
-    const updatedMenu = toggleMenu(menu, path)
-
-    const response = menuExpands.set(gatherMenuExpand(updatedMenu, []))
-    if (!response.success) {
-        post({ type: "repository-error", menu: updatedMenu, err: response.err })
+    const authzResult = authz.get()
+    if (!authzResult.success) {
+        post({ type: "repository-error", err: authzResult.err })
+        return
+    }
+    if (!authzResult.found) {
+        authz.remove()
+        post({ type: "required-to-login" })
         return
     }
 
-    post({ type: "succeed-to-toggle", menu: updatedMenu })
+    const fetchMenuExpandResult = store.menuExpand.get()
+    const expand = fetchMenuExpandResult.found ? fetchMenuExpandResult.value : initMenuExpand()
 
-    function gatherMenuExpand(target: Menu, path: MenuCategoryPath): MenuExpand {
-        const expand: MenuExpand = []
-        target.forEach((node) => {
-            switch (node.type) {
-                case "item":
-                    break
-
-                case "category":
-                    if (node.isExpand) {
-                        gatherCategory(node.category.label, node.children)
-                    }
-                    break
-            }
-        })
-        return expand
-
-        function gatherCategory(label: MenuCategoryLabel, children: Menu) {
-            const currentPath = [...path, label]
-            expand.push(currentPath)
-            gatherMenuExpand(children, currentPath).forEach((entry) => {
-                expand.push(entry)
-            })
-        }
+    // toggle expand
+    if (expand.hasEntry(path)) {
+        expand.remove(path)
+    } else {
+        expand.register(path)
     }
-    function toggleMenu(menu: Menu, path: MenuCategoryPath): Menu {
-        if (path.length === 0) {
-            return menu
-        }
-        return menu.map((node) => {
-            if (node.type !== "category" || node.category.label !== path[0]) {
-                return node
-            }
-            if (path.length === 1) {
-                return { ...node, isExpand: !node.isExpand }
-            }
-            return {
-                ...node,
-                children: toggleMenu(node.children, path.slice(1)),
-            }
-        })
+
+    const storeResult = menuExpand.set(expand)
+    if (!storeResult.success) {
+        post({ type: "repository-error", err: storeResult.err })
+        return
     }
+
+    store.menuExpand.set(expand)
+
+    const fetchMenuBadgeResult = store.menuBadge.get()
+    const badge = fetchMenuBadgeResult.found ? fetchMenuBadgeResult.value : EMPTY_BADGE
+
+    post({
+        type: "succeed-to-toggle",
+        menu: buildMenu({
+            version: infra.version,
+            menuTree: infra.menuTree,
+            menuTargetPath: detecter(),
+            permittedRoles: authzResult.value.roles,
+            menuExpand: expand,
+            menuBadge: badge,
+        }),
+    })
 }
 
 export function toggleMenuExpandEventHasDone(_event: ToggleMenuExpandEvent): boolean {
     return true
 }
+
+const EMPTY_BADGE: MenuBadge = {}

@@ -1,3 +1,6 @@
+import { env } from "../../../../y_environment/env"
+
+import { newAuthzRepository } from "../../../../common/authz/infra/repository/authz"
 import { newMenuExpandRepository } from "../../kernel/infra/repository/menuExpand"
 
 import { MenuContent } from "../../kernel/infra"
@@ -8,6 +11,9 @@ export function newToggleMenuExpandInfra(
     menuContent: MenuContent,
 ): ToggleMenuExpandInfra {
     return {
+        version: env.version,
+        menuTree: menuContent.menuTree,
+        authz: newAuthzRepository(webStorage),
         menuExpand: newMenuExpandRepository(webStorage, menuContent.key),
     }
 }

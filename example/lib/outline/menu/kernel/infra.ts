@@ -1,15 +1,8 @@
 import { RemoteTypes } from "../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryPod } from "../../../z_vendor/getto-application/infra/repository/infra"
 
 import { AuthzNonce } from "../../../common/authz/data"
-import {
-    GetMenuBadgeRemoteError,
-    Menu,
-    MenuCategory,
-    MenuCategoryLabel,
-    MenuCategoryPath,
-    MenuItem,
-} from "./data"
-import { RepositoryPod } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
     key: string
@@ -40,10 +33,14 @@ export type MenuPermission =
     | Readonly<{ type: "all"; permits: MenuPermission[] }>
     | Readonly<{ type: "role"; role: string }>
 
-export interface MenuStore {
-    get(): FetchMenuResult
+export type MenuBadgeStore = MenuStore<MenuBadge>
+export type MenuExpandStore = MenuStore<MenuExpand>
+
+export interface MenuStore<T> {
+    get(): FetchMenuStoreResult<T>
+    set(value: T): void
 }
-export type FetchMenuResult = Readonly<{ found: true; value: Menu }> | Readonly<{ found: false }>
+export type FetchMenuStoreResult<T> = Readonly<{ found: true; value: T }> | Readonly<{ found: false }>
 
 type GetMenuBadgeRemoteTypes = RemoteTypes<
     AuthzNonce,
@@ -58,10 +55,13 @@ export type GetMenuBadgeSimulator = GetMenuBadgeRemoteTypes["simulator"]
 export type MenuBadge = Record<string, number>
 export type MenuBadgeItem = Readonly<{ path: string; count: number }>
 
-export type MenuExpand = MenuCategoryPath[]
+export type MenuExpand = ArraySet<MenuCategoryPath>
+
+export type MenuExpandRepositoryPod = RepositoryPod<MenuExpand, MenuExpandRepositoryValue>
+export type MenuExpandRepositoryValue = string[][]
 
 class ArraySet<T> {
-    set: T[] = []
+    values: T[] = []
     equals: ArraySetEntryEquals<T>
 
     constructor(equals: ArraySetEntryEquals<T>) {
@@ -77,53 +77,29 @@ class ArraySet<T> {
         if (this.hasEntry(entry)) {
             return
         }
-        this.set.push(entry)
+        this.values = [...this.values, entry]
+    }
+    remove(entry: T): void {
+        this.values = this.values.filter((value) => !this.equals(entry, value))
     }
     hasEntry(entry: T): boolean {
-        return this.set.some((value) => this.equals(entry, value))
+        return this.values.some((value) => this.equals(entry, value))
     }
 }
 interface ArraySetEntryEquals<T> {
     (a: T, b: T): boolean
 }
 
-export class MenuCategoryPathSet extends ArraySet<MenuCategoryPath> {
-    constructor() {
-        super((a, b) => {
-            if (a.length !== b.length) {
+export function initMenuExpand(): MenuExpand {
+    return new ArraySet<MenuCategoryPath>((a, b) => {
+        if (a.length !== b.length) {
+            return false
+        }
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) {
                 return false
             }
-            for (let i = 0; i < a.length; i++) {
-                if (a[i] !== b[i]) {
-                    return false
-                }
-            }
-            return true
-        })
-    }
-}
-
-export type MenuExpandRepositoryPod = RepositoryPod<MenuExpand, MenuExpandRepositoryValue>
-export type MenuExpandRepositoryValue = string[][]
-
-export function toMenuCategory(category: MenuTreeCategory): MenuCategory {
-    return {
-        label: markMenuCategoryLabel(category.label),
-    }
-}
-export function appendMenuCategoryPath(
-    path: MenuCategoryPath,
-    category: MenuTreeCategory,
-): MenuCategoryPath {
-    return [...path, markMenuCategoryLabel(category.label)]
-}
-export function toMenuItem({ label, icon, path }: MenuTreeItem, version: string): MenuItem {
-    return { label, icon, href: `/${version}${path}` } as MenuItem
-}
-export function toMenuPath(item: MenuItem, version: string): string {
-    return item.href.replace(`/${version}`, "")
-}
-
-function markMenuCategoryLabel(label: string): MenuCategoryLabel {
-    return label as MenuCategoryLabel
+        }
+        return true
+    })
 }
