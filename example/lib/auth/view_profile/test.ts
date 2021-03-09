@@ -1,14 +1,10 @@
 import { initSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { standard_MockNotifyUnexpectedErrorResource } from "../../avail/action_unexpected_error/mock"
-import { standard_MockLoadSeasonResource } from "../../example/common/action_load_season/mock"
-import { standard_MockLoadBreadcrumbListResource } from "../../outline/menu/action_load_breadcrumb_list/mock"
-import { standard_MockLoadMenuResource } from "../../outline/menu/action_load_menu/mock"
-import { standard_MockLogoutResource } from "../sign/kernel/auth_info/action_logout/mock"
+import { standard_MockAuthProfileResource } from "./mock"
 
 import { initProfileEntryPoint } from "./impl"
 
-describe("Dashboard", () => {
+describe("Profile", () => {
     test("terminate", (done) => {
         const { entryPoint } = standard_elements()
 
@@ -41,11 +37,5 @@ function standard_elements() {
 }
 
 function newEntryPoint() {
-    return initProfileEntryPoint({
-        ...standard_MockNotifyUnexpectedErrorResource(),
-        ...standard_MockLoadBreadcrumbListResource(),
-        ...standard_MockLoadMenuResource(),
-        ...standard_MockLoadSeasonResource(),
-        ...standard_MockLogoutResource(),
-    })
+    return initProfileEntryPoint(standard_MockAuthProfileResource())
 }
