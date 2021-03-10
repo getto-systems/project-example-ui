@@ -6,7 +6,7 @@ import { CheckResetTokenSendingStatusLocationDetecter } from "../method"
 
 import { signLinkParams } from "../../../../common/link/data"
 
-export function initCheckResetTokenSendingStatusLocationDetecter(
+export function mockCheckResetTokenSendingStatusLocationDetecter(
     currentURL: URL,
 ): CheckResetTokenSendingStatusLocationDetecter {
     return mockLocationDetecter(currentURL, detectSessionID(signLinkParams.password.reset))

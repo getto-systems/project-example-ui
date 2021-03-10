@@ -14,11 +14,11 @@ import {
 import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
 import { mockGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/mock"
-import { initResetPasswordLocationDetecter } from "../reset/impl/test_helper"
+import { mockResetPasswordLocationDetecter } from "../reset/impl/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { toResetPasswordEntryPoint } from "./impl"
+import { initResetPasswordEntryPoint } from "./impl"
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./core/impl"
 import { initResetPasswordFormAction } from "./form/impl"
 
@@ -50,7 +50,7 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, entryPoint } = standardPasswordResetResource()
+        const { clock, entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
@@ -92,7 +92,7 @@ describe("RegisterPassword", () => {
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { clock, entryPoint } = waitPasswordResetResource()
+        const { clock, entryPoint } = takeLongTime()
         const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
@@ -134,7 +134,7 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without fields", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -156,7 +156,7 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without resetToken", (done) => {
-        const { entryPoint } = emptyResetTokenPasswordResetResource()
+        const { entryPoint } = emptyResetToken()
         const resource = entryPoint.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -179,7 +179,7 @@ describe("RegisterPassword", () => {
     })
 
     test("clear", () => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -191,7 +191,7 @@ describe("RegisterPassword", () => {
     })
 
     test("load error", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -214,7 +214,7 @@ describe("RegisterPassword", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         const runner = setupSyncActionTestRunner([
@@ -243,9 +243,9 @@ describe("RegisterPassword", () => {
     })
 })
 
-function standardPasswordResetResource() {
+function standard() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = newEntryPoint(
+    const entryPoint = initEntryPoint(
         standard_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
@@ -254,9 +254,9 @@ function standardPasswordResetResource() {
 
     return { clock: clockPubSub, entryPoint }
 }
-function waitPasswordResetResource() {
+function takeLongTime() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = newEntryPoint(
+    const entryPoint = initEntryPoint(
         standard_URL(),
         takeLongTime_reset(),
         standard_renew(clockPubSub),
@@ -265,9 +265,9 @@ function waitPasswordResetResource() {
 
     return { clock: clockPubSub, entryPoint }
 }
-function emptyResetTokenPasswordResetResource() {
+function emptyResetToken() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = newEntryPoint(
+    const entryPoint = initEntryPoint(
         emptyResetToken_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
@@ -277,7 +277,7 @@ function emptyResetTokenPasswordResetResource() {
     return { entryPoint }
 }
 
-function newEntryPoint(
+function initEntryPoint(
     currentURL: URL,
     reset: ResetPasswordRemotePod,
     renew: RenewAuthInfoRemotePod,
@@ -288,10 +288,10 @@ function newEntryPoint(
 
     const detecter = {
         getSecureScriptPath: mockGetScriptPathLocationDetecter(currentURL),
-        reset: initResetPasswordLocationDetecter(currentURL),
+        reset: mockResetPasswordLocationDetecter(currentURL),
     }
 
-    const entryPoint = toResetPasswordEntryPoint({
+    const entryPoint = initResetPasswordEntryPoint({
         core: initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {

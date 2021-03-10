@@ -6,7 +6,7 @@ import {
     ResetPasswordCoreState,
 } from "./action"
 
-export function initMockResetPasswordCoreAction(): ResetPasswordCoreAction {
+export function mockResetPasswordCoreAction(): ResetPasswordCoreAction {
     return new Action()
 }
 

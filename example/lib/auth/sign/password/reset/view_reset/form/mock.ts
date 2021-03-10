@@ -6,7 +6,7 @@ import { ResetPasswordFormAction } from "./action"
 
 import { emptyBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/data"
 
-export function initMockResetPasswordFormAction(): ResetPasswordFormAction {
+export function mockResetPasswordFormAction(): ResetPasswordFormAction {
     return {
         loginID: mockInputLoginIDAction(),
         password: mockInputPasswordAction(emptyBoardValue, { multiByte: false }),

@@ -1,12 +1,12 @@
-import { initMockCheckResetTokenSendingStatusCoreAction } from "./core/mock"
+import { mockCheckResetTokenSendingStatusCoreAction } from "./core/mock"
 
 import { initSignLinkResource } from "../../../common/link/action/impl"
 
 import { CheckResetTokenSendingStatusResource } from "./entry_point"
 
-export function initMockStartPasswordResetSessionResource(): CheckResetTokenSendingStatusResource {
+export function mockStartPasswordResetSessionResource(): CheckResetTokenSendingStatusResource {
     return {
-        checkStatus: initMockCheckResetTokenSendingStatusCoreAction(),
+        checkStatus: mockCheckResetTokenSendingStatusCoreAction(),
         ...initSignLinkResource(),
     }
 }

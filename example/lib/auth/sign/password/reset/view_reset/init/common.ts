@@ -1,8 +1,8 @@
 import { newResetPasswordLocationDetecter } from "../../reset/impl/init"
 import { newGetScriptPathLocationDetecter } from "../../../../common/secure/get_script_path/impl/init"
 
-import { newCoreBackgroundInfra } from "./worker/background"
-import { newCoreForegroundInfra } from "./worker/foreground"
+import { newResetPasswordCoreBackgroundInfra } from "./worker/background"
+import { newResetPasswordCoreForegroundInfra } from "./worker/foreground"
 
 import {
     initResetPasswordCoreBackgroundMaterial,
@@ -20,17 +20,17 @@ export function newCoreForegroundMaterial(
     webStorage: Storage,
     currentLocation: Location,
 ): ResetPasswordCoreForegroundMaterial {
-    const infra = newCoreForegroundInfra(webStorage)
+    const infra = newResetPasswordCoreForegroundInfra(webStorage)
     return initResetPasswordCoreForegroundMaterial(infra, {
         getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
     })
 }
 
 export function newCoreBackgroundPod(): ResetPasswordCoreBackgroundMaterialPod {
-    return initResetPasswordCoreBackgroundMaterialPod(newCoreBackgroundInfra())
+    return initResetPasswordCoreBackgroundMaterialPod(newResetPasswordCoreBackgroundInfra())
 }
 export function newCoreBackgroundMaterial(currentLocation: Location): ResetPasswordCoreBackgroundMaterial {
-    const infra = newCoreBackgroundInfra()
+    const infra = newResetPasswordCoreBackgroundInfra()
     return initResetPasswordCoreBackgroundMaterial(infra, {
         reset: newResetPasswordLocationDetecter(currentLocation),
     })

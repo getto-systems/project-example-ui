@@ -6,7 +6,7 @@ import { AuthenticatePasswordFormAction } from "./action"
 
 import { emptyBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
-export function initMockAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
+export function mockAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
     return {
         loginID: mockInputLoginIDAction(),
         password: mockInputPasswordAction(emptyBoardValue, { multiByte: false }),

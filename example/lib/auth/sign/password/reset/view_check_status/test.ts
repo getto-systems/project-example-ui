@@ -5,9 +5,9 @@ import {
 
 import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { initCheckResetTokenSendingStatusLocationDetecter } from "../check_status/impl/test_helper"
+import { mockCheckResetTokenSendingStatusLocationDetecter } from "../check_status/impl/mock"
 
-import { toCheckResetTokenSendingStatusEntryPoint } from "./impl"
+import { initCheckResetTokenSendingStatusEntryPoint } from "./impl"
 import {
     initCheckResetTokenSendingStatusCoreAction,
     initCheckResetTokenSendingStatusCoreMaterial,
@@ -30,7 +30,7 @@ import { ResetTokenSendingResult } from "../check_status/data"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -52,7 +52,7 @@ describe("CheckPasswordResetSendingStatus", () => {
 
     test("submit valid login-id; with long sending", (done) => {
         // wait for send token check limit
-        const { entryPoint } = takeLongTime_elements()
+        const { entryPoint } = takeLongTime()
         const resource = entryPoint.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -81,7 +81,7 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("check without session id", (done) => {
-        const { entryPoint } = noSessionID_elements()
+        const { entryPoint } = noSessionID()
         const resource = entryPoint.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -101,7 +101,7 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.checkStatus
 
         const runner = setupSyncActionTestRunner([
@@ -123,13 +123,13 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint(standard_URL(), standard_sendToken(), standard_getStatus())
+function standard() {
+    const entryPoint = initEntryPoint(standard_URL(), standard_sendToken(), standard_getStatus())
 
     return { entryPoint }
 }
-function takeLongTime_elements() {
-    const entryPoint = newEntryPoint(
+function takeLongTime() {
+    const entryPoint = initEntryPoint(
         standard_URL(),
         takeLongTime_sendToken(),
         takeLongTime_getStatus(),
@@ -137,28 +137,19 @@ function takeLongTime_elements() {
 
     return { entryPoint }
 }
-function noSessionID_elements() {
-    const entryPoint = newEntryPoint(noSessionID_URL(), standard_sendToken(), standard_getStatus())
+function noSessionID() {
+    const entryPoint = initEntryPoint(noSessionID_URL(), standard_sendToken(), standard_getStatus())
 
     return { entryPoint }
 }
 
-function standard_URL() {
-    return new URL(
-        "https://example.com/index.html?_password_reset=checkStatus&_password_reset_session_id=session-id",
-    )
-}
-function noSessionID_URL() {
-    return new URL("https://example.com/index.html?_password_reset=checkStatus")
-}
-
-function newEntryPoint(
+function initEntryPoint(
     currentURL: URL,
     sendToken: SendResetTokenRemotePod,
     getStatus: GetResetTokenSendingStatusRemotePod,
 ): CheckResetTokenSendingStatusEntryPoint {
-    const checkStatusDetecter = initCheckResetTokenSendingStatusLocationDetecter(currentURL)
-    return toCheckResetTokenSendingStatusEntryPoint(
+    const checkStatusDetecter = mockCheckResetTokenSendingStatusLocationDetecter(currentURL)
+    return initCheckResetTokenSendingStatusEntryPoint(
         initCheckResetTokenSendingStatusCoreAction(
             initCheckResetTokenSendingStatusCoreMaterial(
                 {
@@ -173,6 +164,15 @@ function newEntryPoint(
             ),
         ),
     )
+}
+
+function standard_URL() {
+    return new URL(
+        "https://example.com/index.html?_password_reset=checkStatus&_password_reset_session_id=session-id",
+    )
+}
+function noSessionID_URL() {
+    return new URL("https://example.com/index.html?_password_reset=checkStatus")
 }
 
 function standard_sendToken(): SendResetTokenRemotePod {

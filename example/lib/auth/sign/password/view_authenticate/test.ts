@@ -17,7 +17,7 @@ import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_scrip
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { toAuthenticatePasswordEntryPoint } from "./impl"
+import { initAuthenticatePasswordEntryPoint } from "./impl"
 import {
     initAuthenticatePasswordCoreAction,
     initAuthenticatePasswordCoreMaterial,
@@ -252,7 +252,7 @@ function newEntryPoint(
 
     const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
 
-    const entryPoint = toAuthenticatePasswordEntryPoint({
+    const entryPoint = initAuthenticatePasswordEntryPoint({
         core: initAuthenticatePasswordCoreAction(
             initAuthenticatePasswordCoreMaterial(
                 {

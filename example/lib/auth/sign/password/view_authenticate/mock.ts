@@ -1,5 +1,5 @@
-import { initMockAuthenticatePasswordFormAction } from "./form/mock"
-import { initMockAuthenticatePasswordCoreAction } from "./core/mock"
+import { mockAuthenticatePasswordFormAction } from "./form/mock"
+import { mockAuthenticatePasswordCoreAction } from "./core/mock"
 
 import { AuthenticatePasswordResource } from "./entry_point"
 import { initSignLinkResource } from "../../common/link/action/impl"
@@ -7,8 +7,8 @@ import { initSignLinkResource } from "../../common/link/action/impl"
 export function initMockAuthenticatePasswordResource(): AuthenticatePasswordResource {
     return {
         authenticate: {
-            core: initMockAuthenticatePasswordCoreAction(),
-            form: initMockAuthenticatePasswordFormAction(),
+            core: mockAuthenticatePasswordCoreAction(),
+            form: mockAuthenticatePasswordFormAction(),
             terminate: () => null,
         },
         ...initSignLinkResource(),

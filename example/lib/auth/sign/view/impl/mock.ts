@@ -6,6 +6,6 @@ import { SignViewLocationDetecter } from "../view"
 
 import { signLinkParams } from "../../common/link/data"
 
-export function initSignViewLocationDetecter(currentURL: URL): SignViewLocationDetecter {
+export function mockSignViewLocationDetecter(currentURL: URL): SignViewLocationDetecter {
     return mockLocationDetecter(currentURL, detectSignViewType(signLinkParams))
 }

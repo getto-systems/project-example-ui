@@ -6,7 +6,7 @@ import { RequestResetTokenMethod } from "../method"
 
 import { RequestResetTokenEvent } from "../event"
 
-import { resetSessionIDRemoteConverter } from "../../kernel/convert"
+import { resetSessionIDRemoteConverter } from "../../kernel/converter"
 
 interface RequestToken {
     (infra: RequestResetTokenInfra): RequestResetTokenMethod

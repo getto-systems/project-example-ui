@@ -3,7 +3,7 @@ import { mockValidateBoardAction } from "../../../../../../z_vendor/getto-applic
 
 import { RequestResetTokenFormAction } from "./action"
 
-export function initMockRequestResetTokenFormAction(): RequestResetTokenFormAction {
+export function mockRequestResetTokenFormAction(): RequestResetTokenFormAction {
     return {
         loginID: mockInputLoginIDAction(),
         validate: mockValidateBoardAction(),

@@ -3,7 +3,7 @@ import { newAuthenticatePasswordCoreForegroundMaterial } from "../common"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../kernel/auth_info/common/start_continuous_renew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../../../common/secure/get_script_path/impl/init"
 
-import { toAuthenticatePasswordEntryPoint } from "../../impl"
+import { initAuthenticatePasswordEntryPoint } from "../../impl"
 
 import {
     AuthenticatePasswordCoreForegroundInfra,
@@ -57,7 +57,7 @@ class Proxy
             webStorage,
             currentLocation,
         )
-        return initAuthenticatePasswordEntryPoint(
+        return buildAuthenticatePasswordEntryPoint(
             initAuthenticatePasswordCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
                 ...foreground,
@@ -82,10 +82,10 @@ export function newAuthenticatePasswordCoreForegroundInfra(
     }
 }
 
-export function initAuthenticatePasswordEntryPoint(
+export function buildAuthenticatePasswordEntryPoint(
     core: AuthenticatePasswordCoreAction,
 ): AuthenticatePasswordEntryPoint {
-    return toAuthenticatePasswordEntryPoint({ core, form: initAuthenticatePasswordFormAction() })
+    return initAuthenticatePasswordEntryPoint({ core, form: initAuthenticatePasswordFormAction() })
 }
 
 interface Post<M> {

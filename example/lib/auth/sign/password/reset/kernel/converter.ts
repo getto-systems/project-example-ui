@@ -1,9 +1,9 @@
-import { ConvertLocationResult } from "../../../../../z_vendor/getto-application/location/data"
+import { LocationConverter } from "../../../../../z_vendor/getto-application/location/infra"
+
 import { ResetSessionID, ResetToken } from "./data"
 
-export function resetTokenLocationConverter(
-    resetToken: string | null,
-): ConvertLocationResult<ResetToken> {
+type ResetTokenConverter = LocationConverter<ResetToken, string | null>
+export const resetTokenLocationConverter: ResetTokenConverter = (resetToken) => {
     if (resetToken === null) {
         return { valid: false }
     }
@@ -13,9 +13,8 @@ export function resetTokenLocationConverter(
     return { valid: true, value: markResetToken(resetToken) }
 }
 
-export function resetSessionIDLocationConverter(
-    sessionID: string | null,
-): ConvertLocationResult<ResetSessionID> {
+type ResetSessionIDConverter = LocationConverter<ResetSessionID, string | null>
+export const resetSessionIDLocationConverter: ResetSessionIDConverter = (sessionID) => {
     if (sessionID === null) {
         return { valid: false }
     }

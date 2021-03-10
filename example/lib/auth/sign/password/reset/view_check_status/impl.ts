@@ -4,7 +4,7 @@ import { CheckResetTokenSendingStatusEntryPoint } from "./entry_point"
 
 import { CheckResetTokenSendingStatusCoreAction } from "./core/action"
 
-export function toCheckResetTokenSendingStatusEntryPoint(
+export function initCheckResetTokenSendingStatusEntryPoint(
     action: CheckResetTokenSendingStatusCoreAction,
 ): CheckResetTokenSendingStatusEntryPoint {
     return {

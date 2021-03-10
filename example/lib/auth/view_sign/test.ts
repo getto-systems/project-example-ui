@@ -1,9 +1,9 @@
 import { initMockAuthenticatePasswordResource } from "../sign/password/view_authenticate/mock"
-import { initMockRequestResetTokenResource } from "../sign/password/reset/view_request_token/mock"
-import { initMockResetPasswordResource } from "../sign/password/reset/view_reset/mock"
-import { initMockStartPasswordResetSessionResource } from "../sign/password/reset/view_check_status/mock"
+import { mockRequestResetTokenResource } from "../sign/password/reset/view_request_token/mock"
+import { mockResetPasswordResource } from "../sign/password/reset/view_reset/mock"
+import { mockStartPasswordResetSessionResource } from "../sign/password/reset/view_check_status/mock"
 import { mockCheckAuthInfoResource } from "../sign/kernel/auth_info/action_check/mock"
-import { initSignViewLocationDetecter } from "../sign/view/impl/test_helper"
+import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
 import { SignAction, SignActionState } from "./core/action"
 import { initSignAction } from "./core/impl"
 import { toSignEntryPoint } from "./impl"
@@ -298,7 +298,7 @@ function passwordResetLoginView() {
     return { action }
 }
 function standardSignAction(currentURL: URL): SignAction {
-    return initSignAction(initSignViewLocationDetecter(currentURL), {
+    return initSignAction(mockSignViewLocationDetecter(currentURL), {
         renew: () => standardRenewCredentialEntryPoint(),
         password_authenticate: () => standardPasswordLoginEntryPoint(),
         password_reset: () => standardPasswordResetResource(),
@@ -315,19 +315,19 @@ function standardPasswordLoginEntryPoint() {
 }
 function standardPasswordResetResource() {
     return {
-        resource: initMockResetPasswordResource(),
+        resource: mockResetPasswordResource(),
         terminate: () => null,
     }
 }
 function standardRequestPasswordResetTokenResource() {
     return {
-        resource: initMockRequestResetTokenResource(),
+        resource: mockRequestResetTokenResource(),
         terminate: () => null,
     }
 }
 function standardCheckPasswordResetSendingStatusResource() {
     return {
-        resource: initMockStartPasswordResetSessionResource(),
+        resource: mockStartPasswordResetSessionResource(),
         terminate: () => null,
     }
 }

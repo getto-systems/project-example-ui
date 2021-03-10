@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/pr
 
 import { ResetPasswordComponent } from "./ResetPassword"
 
-import { initMockResetPasswordResource } from "../mock"
+import { mockResetPasswordResource } from "../mock"
 
 import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 import { ResetPasswordCoreState } from "../core/action"
@@ -44,7 +44,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(ResetPasswordComponent, {
-        ...initMockResetPasswordResource(),
+        ...mockResetPasswordResource(),
         state: { core: state(), form: props.form },
     })
 

@@ -6,6 +6,6 @@ import { ResetPasswordLocationDetecter } from "../method"
 
 import { signLinkParams } from "../../../../common/link/data"
 
-export function initResetPasswordLocationDetecter(currentURL: URL): ResetPasswordLocationDetecter {
+export function mockResetPasswordLocationDetecter(currentURL: URL): ResetPasswordLocationDetecter {
     return mockLocationDetecter(currentURL, detectResetToken(signLinkParams.password.reset))
 }

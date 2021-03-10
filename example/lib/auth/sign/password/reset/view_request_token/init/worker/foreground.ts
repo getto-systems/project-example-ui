@@ -1,4 +1,4 @@
-import { toRequestResetTokenEntryPoint } from "../../impl"
+import { initRequestResetTokenEntryPoint } from "../../impl"
 import { initRequestResetTokenCoreAction } from "../../core/impl"
 import { initRequestResetTokenFormAction } from "../../form/impl"
 
@@ -46,7 +46,7 @@ class Proxy
     }
 
     entryPoint(): RequestResetTokenEntryPoint {
-        return initRequestResetTokenEntryPoint(
+        return buildRequestResetTokenEntryPoint(
             initRequestResetTokenCoreAction({
                 requestToken: (fields, post) => this.material.requestToken.call({ fields }, post),
             }),
@@ -61,10 +61,10 @@ class Proxy
     }
 }
 
-export function initRequestResetTokenEntryPoint(
+export function buildRequestResetTokenEntryPoint(
     action: RequestResetTokenCoreAction,
 ): RequestResetTokenEntryPoint {
-    return toRequestResetTokenEntryPoint({
+    return initRequestResetTokenEntryPoint({
         core: action,
         form: initRequestResetTokenFormAction(),
     })
