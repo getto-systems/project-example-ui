@@ -3,7 +3,7 @@ import {
     setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { mockDB } from "../../../../../z_vendor/getto-application/infra/repository/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
@@ -73,7 +73,7 @@ function newResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod)
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    const lastAuth = initMemoryDB()
+    const lastAuth = mockDB()
     lastAuth.set({
         nonce: "stored-authn-nonce",
         lastAuthAt: new Date("2020-01-01 09:00:00").toISOString(),
@@ -81,7 +81,7 @@ function standard_lastAuth(): LastAuthRepositoryPod {
     return wrapRepository(lastAuth)
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
+    const authz = mockDB<AuthzRepositoryValue>()
     authz.set({
         nonce: "nonce",
         roles: ["role"],

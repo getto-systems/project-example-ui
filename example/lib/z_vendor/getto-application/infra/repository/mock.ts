@@ -1,6 +1,6 @@
 import { DB, FetchDBResult } from "./infra"
 
-export function initMemoryDB<T>(): DB<T> {
+export function mockDB<T>(): DB<T> {
     return new Memory()
 }
 

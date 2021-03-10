@@ -1,6 +1,6 @@
 import { Clock } from "./infra"
 
-export function initStaticClock(initial: Date, subscriber: ClockSubscriber): Clock {
+export function mockClock(initial: Date, subscriber: ClockSubscriber): Clock {
     let now: Date = initial
 
     subscriber.subscribe((current: Date) => {
@@ -11,7 +11,7 @@ export function initStaticClock(initial: Date, subscriber: ClockSubscriber): Clo
         now: () => now,
     }
 }
-export function staticClockPubSub(): ClockPubSub {
+export function mockClockPubSub(): ClockPubSub {
     let handlers: Handler[] = []
 
     return {

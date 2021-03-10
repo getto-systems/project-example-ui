@@ -1,4 +1,4 @@
-import { initLocationDetecter } from "../../../z_vendor/getto-application/location/test_helper"
+import { mockLocationDetecter } from "../../../z_vendor/getto-application/location/mock"
 
 import { detectDocsContentPath } from "./core"
 
@@ -8,5 +8,5 @@ export function initLoadDocsContentPathLocationDetecter(
     currentURL: URL,
     version: string,
 ): LoadDocsContentPathLocationDetecter {
-    return initLocationDetecter(currentURL, detectDocsContentPath({ version }))
+    return mockLocationDetecter(currentURL, detectDocsContentPath({ version }))
 }

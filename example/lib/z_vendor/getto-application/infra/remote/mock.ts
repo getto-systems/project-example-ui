@@ -4,7 +4,7 @@ import { WaitTime } from "../config/infra"
 
 import { RemotePod, RemoteSimulator } from "./infra"
 
-export function initRemoteSimulator<M, V, R, E>(
+export function mockRemotePod<M, V, R, E>(
     simulator: RemoteSimulator<M, R, E>,
     time: WaitTime,
 ): RemotePod<M, V, R, E> {

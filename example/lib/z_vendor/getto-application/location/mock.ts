@@ -1,6 +1,6 @@
 import { LocationDetecter, LocationDetectMethod } from "./infra"
 
-export function initLocationDetecter<T>(
+export function mockLocationDetecter<T>(
     currentURL: URL,
     method: LocationDetectMethod<T>,
 ): LocationDetecter<T> {

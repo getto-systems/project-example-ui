@@ -5,7 +5,7 @@ import {
 
 import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
 import { toRequestResetTokenEntryPoint } from "./impl"
 import { initRequestResetTokenCoreMaterial, initRequestResetTokenCoreAction } from "./core/impl"
@@ -159,10 +159,10 @@ function newEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetTo
 }
 
 function standard_requestToken(): RequestResetTokenRemotePod {
-    return initRemoteSimulator(simulateRequestToken, { wait_millisecond: 0 })
+    return mockRemotePod(simulateRequestToken, { wait_millisecond: 0 })
 }
 function takeLongTime_requestToken(): RequestResetTokenRemotePod {
-    return initRemoteSimulator(simulateRequestToken, { wait_millisecond: 64 })
+    return mockRemotePod(simulateRequestToken, { wait_millisecond: 64 })
 }
 function simulateRequestToken(): RequestResetTokenResult {
     return { success: true, value: resetSessionIDRemoteConverter("session-id") }

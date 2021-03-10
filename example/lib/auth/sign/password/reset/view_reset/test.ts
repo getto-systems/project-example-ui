@@ -5,13 +5,13 @@ import {
 
 import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
-import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { mockDB } from "../../../../../z_vendor/getto-application/infra/repository/mock"
 import {
     ClockPubSub,
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+    mockClock,
+    mockClockPubSub,
+} from "../../../../../z_vendor/getto-application/infra/clock/mock"
+import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
 import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
 import { initResetPasswordLocationDetecter } from "../reset/impl/test_helper"
@@ -244,34 +244,34 @@ describe("RegisterPassword", () => {
 })
 
 function standardPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         standard_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
 function waitPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         standard_URL(),
         takeLongTime_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
 function emptyResetTokenPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         emptyResetToken_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { entryPoint }
@@ -339,10 +339,10 @@ function emptyResetToken_URL(): URL {
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
@@ -351,10 +351,10 @@ function standard_authz(): AuthzRepositoryPod {
 }
 
 function standard_reset(): ResetPasswordRemotePod {
-    return initRemoteSimulator(simulateReset, { wait_millisecond: 0 })
+    return mockRemotePod(simulateReset, { wait_millisecond: 0 })
 }
 function takeLongTime_reset(): ResetPasswordRemotePod {
-    return initRemoteSimulator(simulateReset, { wait_millisecond: 64 })
+    return mockRemotePod(simulateReset, { wait_millisecond: 64 })
 }
 function simulateReset(): ResetPasswordResult {
     return {
@@ -373,7 +373,7 @@ function simulateReset(): ResetPasswordResult {
 
 function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
-    return initRemoteSimulator(
+    return mockRemotePod(
         () => {
             if (count > 1) {
                 // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket

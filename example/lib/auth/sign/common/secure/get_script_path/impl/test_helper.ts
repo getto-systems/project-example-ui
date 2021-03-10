@@ -1,4 +1,4 @@
-import { initLocationDetecter } from "../../../../../../z_vendor/getto-application/location/test_helper"
+import { mockLocationDetecter } from "../../../../../../z_vendor/getto-application/location/mock"
 
 import { detectPathname } from "./core"
 
@@ -9,7 +9,7 @@ import { ScriptPath } from "../data"
 export function initGetScriptPathLocationDetecter(
     currentURL: URL,
 ): GetScriptPathLocationDetecter {
-    return initLocationDetecter(currentURL, detectPathname)
+    return mockLocationDetecter(currentURL, detectPathname)
 }
 
 export function markScriptPath(path: string): ScriptPath {

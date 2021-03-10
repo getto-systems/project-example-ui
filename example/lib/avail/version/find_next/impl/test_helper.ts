@@ -1,4 +1,4 @@
-import { initLocationDetecter } from "../../../../z_vendor/getto-application/location/test_helper"
+import { mockLocationDetecter } from "../../../../z_vendor/getto-application/location/mock"
 
 import { detectApplicationTargetPath } from "./core"
 
@@ -10,7 +10,7 @@ export function initFindNextVersionLocationDetecter(
     currentURL: URL,
     version: string,
 ): FindNextVersionLocationDetecter {
-    return initLocationDetecter(currentURL, detectApplicationTargetPath({ version }))
+    return mockLocationDetecter(currentURL, detectApplicationTargetPath({ version }))
 }
 
 export function markApplicationTargetPath(path: string): ApplicationTargetPath {

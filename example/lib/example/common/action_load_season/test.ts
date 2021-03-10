@@ -1,11 +1,11 @@
 import {
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../z_vendor/getto-application/infra/clock/simulate"
+    mockClock,
+    mockClockPubSub,
+} from "../../../z_vendor/getto-application/infra/clock/mock"
 
 import { initLoadSeasonCoreAction } from "./core/impl"
 import { SeasonRepositoryPod } from "../load_season/infra"
-import { initMemoryDB } from "../../../z_vendor/getto-application/infra/repository/memory"
+import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
 import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { markSeason } from "../load_season/impl/test_helper"
 import { seasonRepositoryConverter } from "../load_season/impl/convert"
@@ -43,7 +43,7 @@ function empty_elements() {
 }
 
 function newResource(season: SeasonRepositoryPod) {
-    const clock = initStaticClock(new Date("2021-01-01 10:00:00"), staticClockPubSub())
+    const clock = mockClock(new Date("2021-01-01 10:00:00"), mockClockPubSub())
     return {
         season: initLoadSeasonCoreAction({
             season,
@@ -53,10 +53,10 @@ function newResource(season: SeasonRepositoryPod) {
 }
 
 function standard_season(): SeasonRepositoryPod {
-    const season = initMemoryDB()
+    const season = mockDB()
     season.set({ year: 2020 })
     return wrapRepository(season)
 }
 function empty_season(): SeasonRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }

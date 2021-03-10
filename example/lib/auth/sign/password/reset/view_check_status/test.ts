@@ -3,7 +3,7 @@ import {
     setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
 import { initCheckResetTokenSendingStatusLocationDetecter } from "../check_status/impl/test_helper"
 
@@ -176,10 +176,10 @@ function newEntryPoint(
 }
 
 function standard_sendToken(): SendResetTokenRemotePod {
-    return initRemoteSimulator(simulateSendToken, { wait_millisecond: 0 })
+    return mockRemotePod(simulateSendToken, { wait_millisecond: 0 })
 }
 function takeLongTime_sendToken(): SendResetTokenRemotePod {
-    return initRemoteSimulator(simulateSendToken, { wait_millisecond: 64 })
+    return mockRemotePod(simulateSendToken, { wait_millisecond: 64 })
 }
 
 function standard_getStatus(): GetResetTokenSendingStatusRemotePod {
@@ -204,7 +204,7 @@ function getStatusRemoteAccess(
     responseCollection: ResetTokenSendingResult[],
 ): GetResetTokenSendingStatusRemotePod {
     let position = 0
-    return initRemoteSimulator(
+    return mockRemotePod(
         (): GetResetTokenSendingStatusResult => {
             if (responseCollection.length === 0) {
                 return { success: false, err: { type: "infra-error", err: "no response" } }

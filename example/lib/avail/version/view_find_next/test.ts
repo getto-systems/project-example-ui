@@ -3,7 +3,7 @@ import {
     setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
-import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
+import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 
 import { initFindNextVersionLocationDetecter, markApplicationTargetPath } from "../find_next/impl/test_helper"
 
@@ -405,12 +405,12 @@ function invalidVersion_URL(): URL {
 }
 
 function standard_check(): CheckDeployExistsRemotePod {
-    return initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
+    return mockRemotePod(() => ({ success: true, value: { found: false } }), {
         wait_millisecond: 0,
     })
 }
 function found_check(versions: string[]): CheckDeployExistsRemotePod {
-    return initRemoteSimulator(
+    return mockRemotePod(
         (version) => {
             return { success: true, value: { found: versions.includes(version) } }
         },
@@ -418,7 +418,7 @@ function found_check(versions: string[]): CheckDeployExistsRemotePod {
     )
 }
 function takeLongTime_check(): CheckDeployExistsRemotePod {
-    return initRemoteSimulator(() => ({ success: true, value: { found: false } }), {
+    return mockRemotePod(() => ({ success: true, value: { found: false } }), {
         wait_millisecond: 2,
     })
 }

@@ -5,11 +5,11 @@ import {
 
 import {
     ClockPubSub,
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
-import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
+    mockClock,
+    mockClockPubSub,
+} from "../../../../z_vendor/getto-application/infra/clock/mock"
+import { mockDB } from "../../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remote/mock"
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
@@ -220,21 +220,21 @@ describe("AuthenticatePassword", () => {
 })
 
 function standard_elements() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         standard_authenticate(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
 function takeLongTime_elements() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         takeLongTime_authenticate(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
@@ -297,10 +297,10 @@ function newEntryPoint(
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
@@ -309,10 +309,10 @@ function standard_authz(): AuthzRepositoryPod {
 }
 
 function standard_authenticate(): AuthenticatePasswordRemotePod {
-    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 0 })
+    return mockRemotePod(simulateAuthenticate, { wait_millisecond: 0 })
 }
 function takeLongTime_authenticate(): AuthenticatePasswordRemotePod {
-    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 64 })
+    return mockRemotePod(simulateAuthenticate, { wait_millisecond: 64 })
 }
 function simulateAuthenticate(_fields: AuthenticatePasswordFields): AuthenticatePasswordResult {
     return {
@@ -331,7 +331,7 @@ function simulateAuthenticate(_fields: AuthenticatePasswordFields): Authenticate
 
 function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
-    return initRemoteSimulator(
+    return mockRemotePod(
         () => {
             if (count > 1) {
                 // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket

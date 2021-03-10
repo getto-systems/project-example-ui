@@ -1,7 +1,7 @@
 import { AuthzRepositoryPod } from "../../common/authz/infra"
-import { initRemoteSimulator } from "../../z_vendor/getto-application/infra/remote/simulate"
+import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
 import { wrapRepository } from "../../z_vendor/getto-application/infra/repository/helper"
-import { initMemoryDB } from "../../z_vendor/getto-application/infra/repository/memory"
+import { mockDB } from "../../z_vendor/getto-application/infra/repository/mock"
 import { NotifyUnexpectedErrorRemotePod } from "../unexpected_error/infra"
 import { initNotifyUnexpectedErrorCoreAction } from "./core/impl"
 import { initNotifyUnexpectedErrorResource } from "./impl"
@@ -32,7 +32,7 @@ function newResource(authz: AuthzRepositoryPod) {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({
         nonce: "authz-nonce",
         roles: ["admin"],
@@ -41,5 +41,5 @@ function standard_authz(): AuthzRepositoryPod {
 }
 
 function standard_notify(): NotifyUnexpectedErrorRemotePod {
-    return initRemoteSimulator(() => ({ success: true, value: true }), { wait_millisecond: 0 })
+    return mockRemotePod(() => ({ success: true, value: true }), { wait_millisecond: 0 })
 }
