@@ -5,7 +5,7 @@ import { LastAuthRepositoryValue, AuthRemoteValue } from "./infra"
 
 import { AuthAt, AuthInfo, AuthnNonce, LastAuth } from "./data"
 import { RemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/infra"
-import { convertAuthzFromRemote } from "../../../../../common/authz/convert"
+import { authzRemoteConverter } from "../../../../../common/authz/converter"
 
 export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuthRepositoryValue> = {
     toRepository: (value) => ({
@@ -40,7 +40,7 @@ export const authRemoteConverter: AuthConverter = (clock) => (value) => {
             nonce: markNonce(value.authn.nonce),
             authAt: markAuthAt(clock.now()),
         },
-        authz: convertAuthzFromRemote(value.authz),
+        authz: authzRemoteConverter(value.authz),
     }
 }
 

@@ -4,7 +4,7 @@ import { detectDocsContentPath } from "./core"
 
 import { LoadDocsContentPathLocationDetecter } from "../method"
 
-export function initLoadDocsContentPathLocationDetecter(
+export function mockLoadDocsContentPathLocationDetecter(
     currentURL: URL,
     version: string,
 ): LoadDocsContentPathLocationDetecter {

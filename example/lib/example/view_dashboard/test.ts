@@ -1,12 +1,12 @@
 import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { standard_MockBaseResource } from "../view_base/mock"
+import { mockBaseResource } from "../view_base/mock"
 
 import { initDashboardEntryPoint } from "./impl"
 
 describe("Dashboard", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -27,12 +27,12 @@ describe("Dashboard", () => {
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint()
+function standard() {
+    const entryPoint = initEntryPoint()
 
     return { entryPoint }
 }
 
-function newEntryPoint() {
-    return initDashboardEntryPoint(standard_MockBaseResource())
+function initEntryPoint() {
+    return initDashboardEntryPoint(mockBaseResource())
 }

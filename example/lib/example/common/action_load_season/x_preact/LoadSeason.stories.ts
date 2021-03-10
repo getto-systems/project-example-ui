@@ -17,7 +17,7 @@ import { LoadSeason } from "./LoadSeason"
 import { markSeason } from "../../load_season/impl/test_helper"
 
 import { standard_MockLoadMenuResource } from "../../../../outline/menu/action_load_menu/mock"
-import { initMockLoadSeasonCoreAction } from "../core/mock"
+import { mockLoadSeasonCoreAction } from "../core/mock"
 
 import { LoadSeasonResult } from "../../load_season/data"
 
@@ -46,7 +46,7 @@ type MockProps = Readonly<{
 const template = storyTemplate<MockProps>((props) => {
     return appLayout({
         siteInfo: siteInfo(),
-        header: [h(LoadSeason, { season: initMockLoadSeasonCoreAction(season()) })],
+        header: [h(LoadSeason, { season: mockLoadSeasonCoreAction(season()) })],
         main: appMain({
             header: mainHeader([mainTitle("タイトル")]),
             body: mainBody("コンテンツ"),

@@ -1,4 +1,4 @@
-import { defaultSeason, seasonRepositoryConverter } from "./convert"
+import { defaultSeason, seasonRepositoryConverter } from "./converter"
 
 import { LoadSeasonInfra } from "../infra"
 

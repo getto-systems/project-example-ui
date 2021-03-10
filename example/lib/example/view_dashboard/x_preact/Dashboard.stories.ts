@@ -7,7 +7,7 @@ import { DashboardComponent } from "./Dashboard"
 import { mockNotifyUnexpectedErrorResource } from "../../../avail/action_unexpected_error/mock"
 import { standard_MockLoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/mock"
 import { standard_MockLoadMenuResource } from "../../../outline/menu/action_load_menu/mock"
-import { standard_MockLoadSeasonResource } from "../../common/action_load_season/mock"
+import { mockLoadSeasonResource } from "../../common/action_load_season/mock"
 
 export default {
     title: "main/secure/Example/Dashboard",
@@ -24,7 +24,7 @@ const template = storyTemplate<MockProps>(() => {
         ...mockNotifyUnexpectedErrorResource(),
         ...standard_MockLoadBreadcrumbListResource(),
         ...standard_MockLoadMenuResource(),
-        ...standard_MockLoadSeasonResource(),
+        ...mockLoadSeasonResource(),
     })
 })
 

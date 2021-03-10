@@ -1,4 +1,4 @@
-import { docsContentPathLocationConverter } from "./convert"
+import { docsContentPathLocationConverter } from "./converter"
 
 import { LoadDocsContentPathLocationDetectMethod, LoadDocsContentPathLocationKeys, LoadDocsContentPathPod } from "../method"
 

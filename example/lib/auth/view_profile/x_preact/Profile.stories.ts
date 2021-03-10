@@ -7,7 +7,7 @@ import { ProfileComponent } from "./Profile"
 import { mockNotifyUnexpectedErrorResource } from "../../../avail/action_unexpected_error/mock"
 import { standard_MockLoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/mock"
 import { standard_MockLoadMenuResource } from "../../../outline/menu/action_load_menu/mock"
-import { standard_MockLoadSeasonResource } from "../../../example/common/action_load_season/mock"
+import { mockLoadSeasonResource } from "../../../example/common/action_load_season/mock"
 import { mockLogoutResource } from "../../sign/kernel/auth_info/action_logout/mock"
 
 export default {
@@ -25,7 +25,7 @@ const template = storyTemplate<MockProps>(() => {
         ...mockNotifyUnexpectedErrorResource(),
         ...standard_MockLoadBreadcrumbListResource(),
         ...standard_MockLoadMenuResource(),
-        ...standard_MockLoadSeasonResource(),
+        ...mockLoadSeasonResource(),
         ...mockLogoutResource(),
     })
 })

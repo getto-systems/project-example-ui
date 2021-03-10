@@ -1,4 +1,4 @@
-import { authzRepositoryConverter } from "../../../../../../../common/authz/convert"
+import { authzRepositoryConverter } from "../../../../../../../common/authz/converter"
 import { lastAuthRepositoryConverter, authRemoteConverter } from "../../../kernel/converter"
 
 import { StoreRepositoryResult } from "../../../../../../../z_vendor/getto-application/infra/repository/infra"

@@ -6,7 +6,7 @@ import { Example } from "./Example"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
-import { initMockLoadSeasonCoreAction } from "../core/mock"
+import { mockLoadSeasonCoreAction } from "../core/mock"
 
 import { LoadSeasonResult } from "../../load_season/data"
 
@@ -30,7 +30,7 @@ type MockProps = Readonly<{
     err: string
 }>
 const template = storyTemplate<MockProps>((props) => {
-    return h(Example, { season: initMockLoadSeasonCoreAction(season()) })
+    return h(Example, { season: mockLoadSeasonCoreAction(season()) })
 
     function season(): LoadSeasonResult {
         switch (props.load) {

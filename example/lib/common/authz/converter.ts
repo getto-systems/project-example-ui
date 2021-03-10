@@ -26,7 +26,7 @@ export const authzRepositoryConverter: RepositoryConverter<Authz, AuthzRepositor
     },
 }
 
-export function convertAuthzFromRemote(value: AuthzRemoteValue): Authz {
+export function authzRemoteConverter(value: AuthzRemoteValue): Authz {
     return {
         nonce: markNonce(value.nonce),
         roles: markRoles(value.roles),
