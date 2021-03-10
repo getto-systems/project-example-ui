@@ -8,7 +8,7 @@ import { initNotifyUnexpectedErrorResource } from "./impl"
 
 describe("NotifyUnexpectedError", () => {
     test("notify", (done) => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         resource.error.notify("error")
 
@@ -16,13 +16,13 @@ describe("NotifyUnexpectedError", () => {
     })
 })
 
-function standard_elements() {
-    const resource = newResource(standard_authz())
+function standard() {
+    const resource = initResource(standard_authz())
 
     return { resource }
 }
 
-function newResource(authz: AuthzRepositoryPod) {
+function initResource(authz: AuthzRepositoryPod) {
     return initNotifyUnexpectedErrorResource(
         initNotifyUnexpectedErrorCoreAction({
             authz,

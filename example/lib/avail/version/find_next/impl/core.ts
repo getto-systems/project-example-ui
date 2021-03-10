@@ -10,9 +10,9 @@ import {
 
 import { CheckDeployExistsRemoteError, Version } from "../data"
 import { passThroughRemoteValue } from "../../../../z_vendor/getto-application/infra/remote/helper"
-import { applicationTargetPathLocationConverter, versionConfigConverter } from "./convert"
+import { applicationTargetPathLocationConverter, versionConfigConverter } from "./converter"
 import { versionToString } from "./helper"
-import { versionStringConfigConverter } from "../../common/convert"
+import { versionStringConfigConverter } from "../../common/converter"
 import { FindNextVersionEvent } from "../event"
 
 interface Detecter {

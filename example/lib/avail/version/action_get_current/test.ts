@@ -5,19 +5,19 @@ import { GetCurrentVersionResource } from "./resource"
 
 describe("GetCurrentVersion", () => {
     test("load current version", () => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         expect(resource.version.getCurrent()).toEqual("1.0.0")
     })
 })
 
-function standard_elements() {
-    const resource = newResource(standard_version())
+function standard() {
+    const resource = initResource(standard_version())
 
     return { resource }
 }
 
-function newResource(version: string): GetCurrentVersionResource {
+function initResource(version: string): GetCurrentVersionResource {
     return initGetCurrentVersionResource(
         initGetCurrentVersionCoreAction({
             version,

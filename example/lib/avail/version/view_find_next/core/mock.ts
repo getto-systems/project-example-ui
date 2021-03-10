@@ -6,7 +6,7 @@ import {
     initialFindNextVersionCoreState,
 } from "./action"
 
-export function initMockFindNextVersionCoreAction(): FindNextVersionCoreAction {
+export function mockFindNextVersionCoreAction(): FindNextVersionCoreAction {
     return new Action()
 }
 
