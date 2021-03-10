@@ -25,7 +25,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
         this.entryPoints = components
 
         this.igniteHook(() => {
-            const entryPoint = this.entryPoints.renew()
+            const entryPoint = this.entryPoints.check()
 
             entryPoint.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
@@ -35,7 +35,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
                 }
             })
 
-            this.post({ type: "renew-credential", entryPoint })
+            this.post({ type: "check-authInfo", entryPoint })
         })
     }
 

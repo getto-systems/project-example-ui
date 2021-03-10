@@ -18,7 +18,7 @@ export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
     const { currentLocation } = feature
     return initSignEntryPoint(
         initSignAction(newSignViewLocationDetecter(currentLocation), {
-            renew: () => newCheckAuthInfoEntryPoint(feature),
+            check: () => newCheckAuthInfoEntryPoint(feature),
 
             password_authenticate: () => newAuthenticatePasswordEntryPoint(feature),
 

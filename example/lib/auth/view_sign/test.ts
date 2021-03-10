@@ -32,7 +32,7 @@ describe("SignView", () => {
                         // work in progress...
                         break
 
-                    case "renew-credential":
+                    case "check-authInfo":
                         terminates.push(state.entryPoint.terminate)
 
                         state.entryPoint.resource.core.ignite()
@@ -41,7 +41,7 @@ describe("SignView", () => {
                     case "password-authenticate":
                         terminates.push(state.entryPoint.terminate)
 
-                        expect(stack[0]).toMatchObject({ type: "renew-credential" })
+                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
                         expect(stack[1]).toMatchObject({ type: "password-authenticate" })
 
                         terminates.forEach((terminate) => terminate())
@@ -83,7 +83,7 @@ describe("SignView", () => {
                         // work in progress...
                         break
 
-                    case "renew-credential":
+                    case "check-authInfo":
                         terminates.push(state.entryPoint.terminate)
 
                         state.entryPoint.resource.core.ignite()
@@ -92,7 +92,7 @@ describe("SignView", () => {
                     case "password-reset-requestToken":
                         terminates.push(state.entryPoint.terminate)
 
-                        expect(stack[0]).toMatchObject({ type: "renew-credential" })
+                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
                         expect(stack[1]).toMatchObject({ type: "password-reset-requestToken" })
 
                         terminates.forEach((terminate) => terminate())
@@ -134,7 +134,7 @@ describe("SignView", () => {
                         // work in progress...
                         break
 
-                    case "renew-credential":
+                    case "check-authInfo":
                         terminates.push(state.entryPoint.terminate)
 
                         state.entryPoint.resource.core.ignite()
@@ -143,7 +143,7 @@ describe("SignView", () => {
                     case "password-reset-checkStatus":
                         terminates.push(state.entryPoint.terminate)
 
-                        expect(stack[0]).toMatchObject({ type: "renew-credential" })
+                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
                         expect(stack[1]).toMatchObject({ type: "password-reset-checkStatus" })
 
                         terminates.forEach((terminate) => terminate())
@@ -185,7 +185,7 @@ describe("SignView", () => {
                         // work in progress...
                         break
 
-                    case "renew-credential":
+                    case "check-authInfo":
                         terminates.push(state.entryPoint.terminate)
 
                         state.entryPoint.resource.core.ignite()
@@ -194,7 +194,7 @@ describe("SignView", () => {
                     case "password-reset":
                         terminates.push(state.entryPoint.terminate)
 
-                        expect(stack[0]).toMatchObject({ type: "renew-credential" })
+                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
                         expect(stack[1]).toMatchObject({ type: "password-reset" })
 
                         terminates.forEach((terminate) => terminate())
@@ -235,7 +235,7 @@ describe("SignView", () => {
                         // work in progress...
                         break
 
-                    case "renew-credential":
+                    case "check-authInfo":
                     case "password-authenticate":
                     case "password-reset-requestToken":
                     case "password-reset-checkStatus":
@@ -303,7 +303,7 @@ function passwordReset_reset() {
 
 function initAction(currentURL: URL): SignAction {
     return initSignAction(mockSignViewLocationDetecter(currentURL), {
-        renew: () => mockCheckAuthInfoEntryPoint(),
+        check: () => mockCheckAuthInfoEntryPoint(),
         password_authenticate: () => mockAuthenticatePasswordEntryPoint(),
         password_reset: () => mockResetPasswordEntryPoint(),
         password_reset_requestToken: () => mockRequestResetTokenEntryPoint(),

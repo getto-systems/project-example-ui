@@ -35,7 +35,7 @@ export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint
     const proxy = initProxy(postForegroundMessage)
 
     const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
-        renew: () => newCheckAuthInfoEntryPoint(feature),
+        check: () => newCheckAuthInfoEntryPoint(feature),
 
         password_authenticate: () => proxy.password.authenticate.entryPoint(feature),
         password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),
