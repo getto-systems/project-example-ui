@@ -1,3 +1,5 @@
+import { ConvertLocationResult } from "./data"
+
 export type LocationTypes<K, T> = {
     detecter: LocationDetecter<T>
     method: LocationDetectMethod<T>
@@ -12,6 +14,6 @@ export interface LocationDetectMethod<T> {
     (currentURL: URL): ConvertLocationResult<T>
 }
 
-export type ConvertLocationResult<T> =
-    | Readonly<{ valid: true; value: T }>
-    | Readonly<{ valid: false }>
+export interface LocationConverter<T, V> {
+    (value: V): ConvertLocationResult<T>
+}

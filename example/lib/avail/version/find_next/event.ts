@@ -1,7 +1,6 @@
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
-
 import { VersionString } from "../common/data"
 import { ApplicationTargetPath, FindNextVersionError } from "./data"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
 
 export type FindNextVersionEvent =
     | Readonly<{ type: "delayed-to-find" }>

@@ -13,7 +13,7 @@ import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remo
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
-import { initGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/test_helper"
+import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
@@ -250,7 +250,7 @@ function newEntryPoint(
     const lastAuth = standard_lastAuth()
     const authz = standard_authz()
 
-    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
+    const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
 
     const entryPoint = toAuthenticatePasswordEntryPoint({
         core: initAuthenticatePasswordCoreAction(

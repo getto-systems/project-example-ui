@@ -1,6 +1,5 @@
 import { appendMenuCategoryPath, toMenuCategory, toMenuItem } from "./convert"
 
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/infra"
 import {
     MenuBadge,
     MenuExpand,
@@ -11,6 +10,7 @@ import {
     MenuTreeNode,
 } from "../infra"
 
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 import { AuthzRoles } from "../../../../common/authz/data"
 import { Menu, MenuCategoryPath, MenuNode, MenuTargetPath } from "../data"
 

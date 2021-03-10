@@ -1,4 +1,4 @@
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
 import { DocsContentPath, docsContentPaths } from "../data"
 
 export function docsContentPathLocationConverter(

@@ -13,7 +13,7 @@ import {
 } from "../../../../../z_vendor/getto-application/infra/clock/mock"
 import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
+import { mockGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/mock"
 import { initResetPasswordLocationDetecter } from "../reset/impl/test_helper"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
@@ -287,7 +287,7 @@ function newEntryPoint(
     const authz = standard_authz()
 
     const detecter = {
-        getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
+        getSecureScriptPath: mockGetScriptPathLocationDetecter(currentURL),
         reset: initResetPasswordLocationDetecter(currentURL),
     }
 

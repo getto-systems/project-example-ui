@@ -7,7 +7,7 @@ import { initInputPasswordAction } from "./core/impl"
 
 describe("InputPassword", () => {
     test("validate; valid input", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -26,7 +26,7 @@ describe("InputPassword", () => {
     })
 
     test("validate; invalid : empty", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -48,7 +48,7 @@ describe("InputPassword", () => {
     })
 
     test("validate; invalid : too-long", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -75,7 +75,7 @@ describe("InputPassword", () => {
     })
 
     test("validate; valid : just max-length", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -94,7 +94,7 @@ describe("InputPassword", () => {
     })
 
     test("validate; invalid : too-long : multi-byte", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -121,7 +121,7 @@ describe("InputPassword", () => {
     })
 
     test("validate; valid : just max-length : multi-byte", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -140,7 +140,7 @@ describe("InputPassword", () => {
     })
 
     test("password character state : single byte", () => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         action.board.input.set(markBoardValue("password"))
 
@@ -148,14 +148,14 @@ describe("InputPassword", () => {
     })
 
     test("password character state : multi byte", () => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         action.board.input.set(markBoardValue("パスワード"))
         expect(action.checkCharacter()).toEqual({ multiByte: true })
     })
 
     test("clear", () => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         action.board.input.set(markBoardValue("valid"))
         action.clear()
@@ -164,7 +164,7 @@ describe("InputPassword", () => {
     })
 
     test("terminate", (done) => {
-        const { resource: action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -185,9 +185,9 @@ describe("InputPassword", () => {
     })
 })
 
-function standardElements() {
-    const resource = initInputPasswordAction()
-    resource.board.input.storeLinker.link(mockBoardValueStore())
+function standard() {
+    const action = initInputPasswordAction()
+    action.board.input.storeLinker.link(mockBoardValueStore())
 
-    return { resource }
+    return { action }
 }

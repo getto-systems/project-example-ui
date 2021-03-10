@@ -6,9 +6,9 @@ import { InputPasswordComponent } from "./InputPassword"
 
 import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/mock"
 
-import { initMockInputPasswordAction } from "../core/mock"
+import { mockInputPasswordAction } from "../core/mock"
 
-import { PASSWORD_MAX_BYTES } from "../../convert"
+import { PASSWORD_MAX_BYTES } from "../../converter"
 
 import { ValidatePasswordState } from "../core/action"
 
@@ -44,7 +44,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(InputPasswordComponent, {
-        field: initMockInputPasswordAction(markBoardValue(props.password), characterState()),
+        field: mockInputPasswordAction(markBoardValue(props.password), characterState()),
         help: [props.help],
         state: validateState(),
     })

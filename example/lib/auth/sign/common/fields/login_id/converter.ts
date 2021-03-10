@@ -6,7 +6,7 @@ import { LoginID, ValidateLoginIDError } from "./data"
 export const LOGIN_ID_MAX_LENGTH = 100
 
 type Converter = BoardFieldValueConverter<LoginID, BoardValue, ValidateLoginIDError>
-export const loginIDBoardFieldConverter: Converter = (value) => {
+export const loginIDBoardConverter: Converter = (value) => {
     if (value.length === 0) {
         return { valid: false, err: EMPTY }
     }

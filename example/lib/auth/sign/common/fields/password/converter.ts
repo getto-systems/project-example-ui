@@ -1,13 +1,12 @@
 import { BoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
-import { ConvertBoardFieldResult } from "../../../../../z_vendor/getto-application/board/validate_field/data"
+import { BoardFieldValueConverter } from "../../../../../z_vendor/getto-application/board/validate_field/infra"
 import { Password, ValidatePasswordError } from "./data"
 
 // bcrypt を想定しているので、72 バイト以上ではいけない
 export const PASSWORD_MAX_BYTES = 72
 
-export function convertPasswordFromBoard(
-    value: BoardValue,
-): ConvertBoardFieldResult<Password, ValidatePasswordError> {
+type Converter = BoardFieldValueConverter<Password, BoardValue, ValidatePasswordError>
+export const passwordBoardConverter: Converter = (value) => {
     if (value.length === 0) {
         return { valid: false, err: EMPTY }
     }

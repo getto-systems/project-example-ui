@@ -1,9 +1,9 @@
-import { ConvertLocationResult } from "../../../../../../z_vendor/getto-application/location/infra"
+import { LocationConverter } from "../../../../../../z_vendor/getto-application/location/infra"
+
 import { ConvertScriptPathResult, LocationPathname, ScriptPath } from "../data"
 
-export function pathnameLocationConverter(
-    currentURL: URL,
-): ConvertLocationResult<LocationPathname> {
+type PathnameConverter = LocationConverter<LocationPathname, URL>
+export const pathnameLocationConverter: PathnameConverter = (currentURL) => {
     const pathname = currentURL.pathname
     if (!pathname.endsWith(".html")) {
         return { valid: false }

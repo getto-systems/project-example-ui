@@ -1,7 +1,13 @@
 import { ApplicationAbstractStateAction } from "../../../action/impl"
 
+import { initValidateBoardStack } from "../../validate_board/infra/stack"
+
 import { updateBoardValidateState } from "../../validate_board/impl"
 
+import { ValidateBoardStore } from "../../validate_board/infra"
+import { BoardConverter } from "../../kernel/infra"
+
+import { ValidateBoardFieldStateHandler } from "../../action_validate_field/core/action"
 import {
     initialValidateBoardState,
     ValidateBoardAction,
@@ -9,10 +15,7 @@ import {
     ValidateBoardActionState,
 } from "./action"
 
-import { BoardConverter, ConvertBoardResult } from "../../kernel/data"
-import { ValidateBoardFieldStateHandler } from "../../action_validate_field/core/action"
-import { ValidateBoardStore } from "../../validate_board/infra"
-import { initValidateBoardStack } from "../../validate_board/infra/stack"
+import { ConvertBoardResult } from "../../kernel/data"
 
 export type ValidateBoardActionParams<N extends string, T> = Readonly<{
     fields: N[]

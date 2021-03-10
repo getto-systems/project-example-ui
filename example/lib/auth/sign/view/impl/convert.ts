@@ -1,6 +1,6 @@
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/infra"
-
 import { SignViewSearch } from "../view"
+
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 
 export function signViewSearchLocationConverter<N extends string>(
     search: SignViewSearch<N>,

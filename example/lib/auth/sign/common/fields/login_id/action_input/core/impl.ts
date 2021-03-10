@@ -3,13 +3,13 @@ import { initValidateBoardFieldAction } from "../../../../../../../z_vendor/gett
 
 import { InputLoginIDAction } from "./action"
 
-import { loginIDBoardFieldConverter } from "../../convert"
+import { loginIDBoardConverter } from "../../converter"
 
 export function initInputLoginIDAction(): InputLoginIDAction {
     const board = initInputBoardValueResource("text")
 
     const validate = initValidateBoardFieldAction({
-        converter: () => loginIDBoardFieldConverter(board.input.get()),
+        converter: () => loginIDBoardConverter(board.input.get()),
     })
 
     board.input.subscribeInputEvent(() => validate.check())

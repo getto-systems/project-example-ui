@@ -4,7 +4,7 @@ import { FindNextVersionCoreState } from "../core/action"
 
 import { applicationPath } from "../../find_next/impl/helper"
 
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/infra"
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 import { ApplicationTargetPath } from "../../find_next/data"
 
 export function MoveToNextVersion(entryPoint: FindNextVersionEntryPoint): void {

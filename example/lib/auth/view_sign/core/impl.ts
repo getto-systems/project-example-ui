@@ -1,10 +1,10 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
-
 import { SignViewLocationDetecter, SignViewType } from "../../sign/view/view"
 
 import { initialSignViewState, SignAction, SignActionState, SignSubEntryPoint } from "./action"
+
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
 
 export function initSignAction(
     detecter: SignViewLocationDetecter,

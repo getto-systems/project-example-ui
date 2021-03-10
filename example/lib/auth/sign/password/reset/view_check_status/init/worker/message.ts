@@ -2,7 +2,7 @@ import { WorkerProxySpec } from "../../../../../../../z_vendor/getto-application
 
 import { CheckResetTokenSendingStatusEvent } from "../../../check_status/event"
 
-import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/infra"
+import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/data"
 import { ResetSessionID } from "../../../kernel/data"
 
 export type CheckPasswordResetSendingStatusProxyMaterial = Readonly<{

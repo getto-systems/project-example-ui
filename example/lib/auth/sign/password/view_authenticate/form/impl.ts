@@ -1,5 +1,5 @@
 import { initInputLoginIDAction } from "../../../common/fields/login_id/action_input/core/impl"
-import { initInputPasswordAction } from "../../../common/fields/password/action/core/impl"
+import { initInputPasswordAction } from "../../../common/fields/password/action_input/core/impl"
 import { initValidateBoardAction } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/impl"
 
 import { AuthenticatePasswordFieldsEnum, AuthenticatePasswordFormAction } from "./action"

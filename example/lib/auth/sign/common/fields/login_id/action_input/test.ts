@@ -7,7 +7,7 @@ import { initInputLoginIDAction } from "./core/impl"
 
 describe("InputLoginID", () => {
     test("validate; valid input", (done) => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -26,7 +26,7 @@ describe("InputLoginID", () => {
     })
 
     test("validate; invalid : empty", (done) => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -48,7 +48,7 @@ describe("InputLoginID", () => {
     })
 
     test("validate; invalid : too-long", (done) => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -72,7 +72,7 @@ describe("InputLoginID", () => {
     })
 
     test("validate; valid : just max-length", (done) => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -91,7 +91,7 @@ describe("InputLoginID", () => {
     })
 
     test("clear", () => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         action.board.input.set(markBoardValue("valid"))
         action.clear()
@@ -100,7 +100,7 @@ describe("InputLoginID", () => {
     })
 
     test("terminate", (done) => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -121,7 +121,7 @@ describe("InputLoginID", () => {
     })
 })
 
-function standardElements() {
+function standard() {
     const action = initInputLoginIDAction()
     action.board.input.storeLinker.link(mockBoardValueStore())
 

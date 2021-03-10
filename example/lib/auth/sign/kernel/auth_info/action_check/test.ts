@@ -11,7 +11,7 @@ import {
 import { mockDB } from "../../../../../z_vendor/getto-application/infra/repository/mock"
 import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
+import { mockGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 import { toCheckAuthInfoEntryPoint } from "./impl"
@@ -327,7 +327,7 @@ function newEntryPoint(
     clock: Clock,
 ): CheckAuthInfoEntryPoint {
     const currentURL = new URL("https://example.com/index.html")
-    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
+    const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
     return toCheckAuthInfoEntryPoint(
         initCheckAuthInfoCoreAction(
             initCheckAuthInfoCoreMaterial(

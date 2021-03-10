@@ -6,7 +6,7 @@ import { InputPasswordAction } from "./action"
 import { BoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { PasswordCharacterState } from "../../data"
 
-export function initMockInputPasswordAction(
+export function mockInputPasswordAction(
     password: BoardValue,
     characterState: PasswordCharacterState,
 ): InputPasswordAction {
