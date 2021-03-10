@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/mock"
@@ -9,7 +9,7 @@ describe("InputLoginID", () => {
     test("validate; valid input", (done) => {
         const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // valid input
@@ -28,7 +28,7 @@ describe("InputLoginID", () => {
     test("validate; invalid : empty", (done) => {
         const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // empty
@@ -50,7 +50,7 @@ describe("InputLoginID", () => {
     test("validate; invalid : too-long", (done) => {
         const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // too-long
@@ -74,7 +74,7 @@ describe("InputLoginID", () => {
     test("validate; valid : just max-length", (done) => {
         const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // just max-length
@@ -102,7 +102,7 @@ describe("InputLoginID", () => {
     test("terminate", (done) => {
         const { action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.terminate()

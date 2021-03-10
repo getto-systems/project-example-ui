@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/mock"
@@ -9,7 +9,7 @@ describe("InputPassword", () => {
     test("validate; valid input", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // valid input
@@ -28,7 +28,7 @@ describe("InputPassword", () => {
     test("validate; invalid : empty", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // empty
@@ -50,7 +50,7 @@ describe("InputPassword", () => {
     test("validate; invalid : too-long", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // too-long
@@ -77,7 +77,7 @@ describe("InputPassword", () => {
     test("validate; valid : just max-length", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // just max-length
@@ -96,7 +96,7 @@ describe("InputPassword", () => {
     test("validate; invalid : too-long : multi-byte", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // too-long : "あ"(UTF8) is 3 bytes character
@@ -123,7 +123,7 @@ describe("InputPassword", () => {
     test("validate; valid : just max-length : multi-byte", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // just max-length : "あ"(UTF8) is 3 bytes character
@@ -166,7 +166,7 @@ describe("InputPassword", () => {
     test("terminate", (done) => {
         const { resource: action } = standardElements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.terminate()

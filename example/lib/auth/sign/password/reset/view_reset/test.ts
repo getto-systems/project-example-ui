@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
@@ -61,7 +61,7 @@ describe("RegisterPassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -103,7 +103,7 @@ describe("RegisterPassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -137,7 +137,7 @@ describe("RegisterPassword", () => {
         const { entryPoint } = standardPasswordResetResource()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to reset without fields
@@ -159,7 +159,7 @@ describe("RegisterPassword", () => {
         const { entryPoint } = emptyResetTokenPasswordResetResource()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -194,7 +194,7 @@ describe("RegisterPassword", () => {
         const { entryPoint } = standardPasswordResetResource()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.loadError({ type: "infra-error", err: "load error" })
@@ -217,7 +217,7 @@ describe("RegisterPassword", () => {
         const { entryPoint } = standardPasswordResetResource()
         const resource = entryPoint.resource.reset
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()

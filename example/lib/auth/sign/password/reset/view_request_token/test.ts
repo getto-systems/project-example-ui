@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
@@ -26,7 +26,7 @@ describe("RequestResetToken", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -50,7 +50,7 @@ describe("RequestResetToken", () => {
         const { entryPoint } = takeLongTime_elements()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -74,7 +74,7 @@ describe("RequestResetToken", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to request token without fields
@@ -105,7 +105,7 @@ describe("RequestResetToken", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     entryPoint.terminate()

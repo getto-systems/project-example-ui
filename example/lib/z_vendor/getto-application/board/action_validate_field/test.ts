@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper"
 
 import { initValidateBoardFieldAction } from "./core/impl"
 
@@ -11,7 +11,7 @@ describe("ValidateBoardField", () => {
         // valid input
         const { action } = standard({ valid: true, value: "valid" })
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.check()
@@ -30,7 +30,7 @@ describe("ValidateBoardField", () => {
         // invalid input
         const { action } = standard({ valid: false, err: ["empty"] })
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.check()

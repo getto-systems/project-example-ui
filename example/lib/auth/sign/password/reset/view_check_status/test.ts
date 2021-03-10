@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
@@ -33,7 +33,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.checkStatus
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.ignite()
@@ -55,7 +55,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { entryPoint } = takeLongTime_elements()
         const resource = entryPoint.resource.checkStatus
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.ignite()
@@ -84,7 +84,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { entryPoint } = noSessionID_elements()
         const resource = entryPoint.resource.checkStatus
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.ignite()
@@ -104,7 +104,7 @@ describe("CheckPasswordResetSendingStatus", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.checkStatus
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()

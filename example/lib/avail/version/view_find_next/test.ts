@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
@@ -25,7 +25,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -53,7 +53,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = takeLongTime_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -82,7 +82,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = found_elements(["/1.1.0/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -110,7 +110,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = found_elements(["/1.0.1/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -138,7 +138,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = found_elements(["/1.1.0/index.html", "/1.2.0/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -166,7 +166,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = found_elements(["/1.0.1/index.html", "/1.0.2/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -194,7 +194,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = found_elements(["/1.1.0/index.html", "/1.1.1/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -226,7 +226,7 @@ describe("FindNextVersion", () => {
         ])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -254,7 +254,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = foundComplex_elements(["/1.1.0/index.html"])
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -282,7 +282,7 @@ describe("FindNextVersion", () => {
         const { entryPoint } = invalidVersion_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.findNext.ignite()
@@ -321,7 +321,7 @@ describe("FindNextVersion", () => {
     test("terminate", (done) => {
         const { entryPoint } = standard_elements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()

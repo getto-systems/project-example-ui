@@ -2,14 +2,14 @@ export interface ActionTestRunner<S> {
     addTestCase(testCase: ActionTestCase<S>): void
     run(done: ActionTestCheckDoneHook): ActionStateHandler<S>
 }
-export function initAsyncActionTestRunner<S>(
+export function setupAsyncActionTestRunner<S>(
     hasDone: ActionHasDone<S>,
     testCases: ActionTestCase<S>[],
 ): ActionTestIgniter<S> {
     return setupActionTestCase(runner(), testCases)
 
     function runner(): ActionTestRunner<S> {
-        const runner = initActionTestBasicRunner<S>()
+        const runner = setupActionTestBasicRunner<S>()
         return {
             addTestCase: runner.enqueue,
             run: (hook) => {
@@ -23,7 +23,7 @@ export function initAsyncActionTestRunner<S>(
                 return (state) => {
                     checker.pushState(state)
 
-                    // 非同期的なアクションの場合、完了状態に到達した時点で試験を開始する
+                    // 非同期的なアクションなので、完了状態に到達した時点で試験を開始する
                     if (hasDone(state)) {
                         checker.examine()
                     }
@@ -32,11 +32,11 @@ export function initAsyncActionTestRunner<S>(
         }
     }
 }
-export function initSyncActionTestRunner<S>(testCases: ActionTestCase<S>[]): ActionTestIgniter<S> {
+export function setupSyncActionTestRunner<S>(testCases: ActionTestCase<S>[]): ActionTestIgniter<S> {
     return setupActionTestCase(runner(), testCases)
 
     function runner(): ActionTestRunner<S> {
-        const runner = initActionTestBasicRunner<S>()
+        const runner = setupActionTestBasicRunner<S>()
         return {
             addTestCase: (testCase) => {
                 runner.enqueue({
@@ -94,14 +94,17 @@ interface ActionTestBasicRunner<S> {
     enqueue(testCase: ActionTestCase<S>): void
     run(done: ActionTestCheckDoneHook): ActionTestCheckState<S>
 }
+
 type ActionTestCheckState<S> =
     | Readonly<{ testCaseExists: false }>
     | Readonly<{ testCaseExists: true; checker: ActionTestChecker<S> }>
+
 interface ActionTestChecker<S> {
     pushState(state: S): void
     examine(): void
 }
-function initActionTestBasicRunner<S>(): ActionTestBasicRunner<S> {
+
+function setupActionTestBasicRunner<S>(): ActionTestBasicRunner<S> {
     let queue: ActionTestCase<S>[] = []
 
     return {
@@ -156,56 +159,6 @@ function initActionTestBasicRunner<S>(): ActionTestBasicRunner<S> {
             stack = []
             current.statement(examineCurrent)
         }
-    }
-}
-
-export interface ActionTester_legacy<S> {
-    (examine: ExamineActionStateStack<S>): ActionStateHandler<S>
-}
-export function initAsyncActionTester_legacy<S>(hasDone: ActionHasDone<S>): ActionTester_legacy<S> {
-    const stack: S[] = []
-
-    return (examine) => (state) => {
-        stack.push(state)
-
-        if (hasDone(state)) {
-            examine(stack)
-        }
-    }
-}
-
-export interface SyncActionChecker_simple<S> {
-    readonly handler: ActionStateHandler<S>
-    check(examine: ExamineActionStateStack<S>): void
-}
-export function initSyncActionChecker_simple<S>(): SyncActionChecker_simple<S> {
-    let stack: S[] = []
-    return {
-        handler: (state: S) => {
-            stack = [...stack, state]
-        },
-        check: (examine) => {
-            examine(stack)
-            stack = []
-        },
-    }
-}
-
-export interface SyncActionChecker_legacy<S> {
-    readonly handler: ActionStateHandler<S>
-    done(): void
-}
-export function initSyncActionChecker_legacy<S>(
-    examine: ExamineActionStateStack<S>,
-): SyncActionChecker_legacy<S> {
-    const stack: S[] = []
-    return {
-        handler: (state: S) => {
-            stack.push(state)
-        },
-        done: () => {
-            examine(stack)
-        },
     }
 }
 

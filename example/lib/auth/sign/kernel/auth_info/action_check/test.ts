@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import {
@@ -51,7 +51,7 @@ describe("CheckAuthInfo", () => {
         const { clock, entryPoint } = instantLoadable_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.ignite()
@@ -92,7 +92,7 @@ describe("CheckAuthInfo", () => {
         const { clock, entryPoint } = instantLoadable_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.ignite()
@@ -147,7 +147,7 @@ describe("CheckAuthInfo", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.ignite()
@@ -186,7 +186,7 @@ describe("CheckAuthInfo", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.ignite()
@@ -218,7 +218,7 @@ describe("CheckAuthInfo", () => {
         const { entryPoint } = noStored_elements()
         const resource = entryPoint.resource
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.ignite()
@@ -236,7 +236,7 @@ describe("CheckAuthInfo", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     resource.core.loadError({ type: "infra-error", err: "load error" })
@@ -258,7 +258,7 @@ describe("CheckAuthInfo", () => {
     test("terminate", (done) => {
         const { entryPoint } = standard_elements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()

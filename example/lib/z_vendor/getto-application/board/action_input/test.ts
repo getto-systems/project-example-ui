@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper"
 
 import { mockBoardValueStore } from "./mock"
 import { markBoardValue } from "../kernel/mock"
@@ -11,7 +11,7 @@ describe("InputBoardValue", () => {
 
         action.storeLinker.link(store)
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.set(markBoardValue("value"))
@@ -39,7 +39,7 @@ describe("InputBoardValue", () => {
 
         // no linked store
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.set(markBoardValue("value"))
@@ -60,7 +60,7 @@ describe("InputBoardValue", () => {
 
         action.storeLinker.link(store)
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.terminate()

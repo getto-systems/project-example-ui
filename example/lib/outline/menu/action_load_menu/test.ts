@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
@@ -30,7 +30,7 @@ describe("Menu", () => {
     test("load menu", (done) => {
         const { resource } = standard_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -78,7 +78,7 @@ describe("Menu", () => {
     test("load menu; empty roles", (done) => {
         const { resource } = empty_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -95,7 +95,7 @@ describe("Menu", () => {
     test("load menu; saved expands", (done) => {
         const { resource } = expand_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -144,7 +144,7 @@ describe("Menu", () => {
         const { resource, repository } = standard_elements()
         const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -224,7 +224,7 @@ describe("Menu", () => {
     test("load menu; dev docs", (done) => {
         const { resource } = devDocs_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -288,7 +288,7 @@ describe("Menu", () => {
     test("terminate", (done) => {
         const { resource } = standard_elements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     resource.menu.terminate()

@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../z_vendor/getto-application/action/test_helper"
 
 import {
@@ -62,7 +62,7 @@ describe("AuthenticatePassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -104,7 +104,7 @@ describe("AuthenticatePassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -138,7 +138,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to login without fields
@@ -172,7 +172,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.loadError({ type: "infra-error", err: "load error" })
@@ -195,7 +195,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     entryPoint.terminate()

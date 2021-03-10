@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 import { initBaseEntryPoint } from "./impl"
 
 import { standard_MockBaseResource } from "./mock"
@@ -7,7 +7,7 @@ describe("Base", () => {
     test("terminate", (done) => {
         const { entryPoint } = standard_elements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()

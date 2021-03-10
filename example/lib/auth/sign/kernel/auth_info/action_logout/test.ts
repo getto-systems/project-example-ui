@@ -1,6 +1,6 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
 import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
@@ -19,7 +19,7 @@ describe("Logout", () => {
     test("clear", (done) => {
         const { resource } = standardResource()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.logout.submit()
@@ -36,7 +36,7 @@ describe("Logout", () => {
     test("terminate", (done) => {
         const { resource } = standardResource()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     resource.logout.terminate()

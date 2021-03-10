@@ -7,7 +7,7 @@ import { initSignViewLocationDetecter } from "../sign/view/impl/test_helper"
 import { SignAction, SignActionState } from "./core/action"
 import { initSignAction } from "./core/impl"
 import { toSignEntryPoint } from "./impl"
-import { initSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 describe("SignView", () => {
     test("redirect login view", (done) => {
@@ -256,7 +256,7 @@ describe("SignView", () => {
         const { action } = standardLoginView()
         const entryPoint = toSignEntryPoint(action)
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     entryPoint.terminate()
