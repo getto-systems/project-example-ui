@@ -11,7 +11,7 @@ export interface SignAction extends ApplicationStateAction<SignActionState> {
 }
 
 export interface SignSubEntryPoint {
-    renew(): CheckAuthInfoEntryPoint
+    check(): CheckAuthInfoEntryPoint
 
     password_authenticate(): AuthenticatePasswordEntryPoint
 
@@ -22,17 +22,13 @@ export interface SignSubEntryPoint {
 
 export type SignActionState =
     | Readonly<{ type: "initial-view" }>
-    | Readonly<{ type: "renew-credential"; entryPoint: CheckAuthInfoEntryPoint }>
-    | Readonly<{ type: "password-authenticate"; entryPoint: AuthenticatePasswordEntryPoint }>
-    | Readonly<{
-          type: "password-reset-requestToken"
-          entryPoint: RequestResetTokenEntryPoint
-      }>
-    | Readonly<{
-          type: "password-reset-checkStatus"
-          entryPoint: CheckResetTokenSendingStatusEntryPoint
-      }>
-    | Readonly<{ type: "password-reset"; entryPoint: ResetPasswordEntryPoint }>
+    | View<"check-authInfo", CheckAuthInfoEntryPoint>
+    | View<"password-authenticate", AuthenticatePasswordEntryPoint>
+    | View<"password-reset-requestToken", RequestResetTokenEntryPoint>
+    | View<"password-reset-checkStatus", CheckResetTokenSendingStatusEntryPoint>
+    | View<"password-reset", ResetPasswordEntryPoint>
     | Readonly<{ type: "error"; err: string }>
+
+type View<T, E> = Readonly<{ type: T; entryPoint: E }>
 
 export const initialSignViewState: SignActionState = { type: "initial-view" }

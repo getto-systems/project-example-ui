@@ -1,4 +1,4 @@
-import { initSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper"
 
 import { initValidateBoardFieldAction } from "./core/impl"
 
@@ -9,9 +9,9 @@ import { ConvertBoardFieldResult } from "../validate_field/data"
 describe("ValidateBoardField", () => {
     test("validate; valid input", (done) => {
         // valid input
-        const { action } = standardElements({ valid: true, value: "valid" })
+        const { action } = standard({ valid: true, value: "valid" })
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.check()
@@ -28,9 +28,9 @@ describe("ValidateBoardField", () => {
 
     test("validate; invalid input", (done) => {
         // invalid input
-        const { action } = standardElements({ valid: false, err: ["empty"] })
+        const { action } = standard({ valid: false, err: ["empty"] })
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.check()
@@ -46,7 +46,7 @@ describe("ValidateBoardField", () => {
     })
 })
 
-function standardElements(result: ConvertBoardFieldResult<FieldValue, ValidateError>) {
+function standard(result: ConvertBoardFieldResult<FieldValue, ValidateError>) {
     const action: ValidateBoardFieldAction<
         FieldValue,
         ValidateError

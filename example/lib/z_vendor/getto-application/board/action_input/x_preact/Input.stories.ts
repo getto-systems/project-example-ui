@@ -4,9 +4,9 @@ import { enumKeys, storyTemplate } from "../../../../storybook/preact/story"
 
 import { InputBoard, InputBoardProps } from "./Input"
 
-import { markBoardValue } from "../../kernel/test_helper"
+import { markBoardValue } from "../../kernel/mock"
 
-import { initMockInputBoardValueAction } from "../core/mock"
+import { mockInputBoardValueAction } from "../core/mock"
 
 import { InputBoardValueType, InputBoardValueTypeEnum } from "../../input/data"
 
@@ -26,7 +26,7 @@ type Props = Readonly<{
 const template = storyTemplate<Props>((props) => {
     return h(InputBoard, <InputBoardProps>{
         type: props.inputType,
-        input: initMockInputBoardValueAction(markBoardValue(props.value)),
+        input: mockInputBoardValueAction(markBoardValue(props.value)),
     })
 })
 

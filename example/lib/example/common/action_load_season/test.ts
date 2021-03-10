@@ -1,24 +1,26 @@
-import {
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../z_vendor/getto-application/infra/clock/simulate"
+import { mockClock, mockClockPubSub } from "../../../z_vendor/getto-application/infra/clock/mock"
+import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
+
+import { markSeason } from "../load_season/impl/test_helper"
+import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 
 import { initLoadSeasonCoreAction } from "./core/impl"
+
+import { seasonRepositoryConverter } from "../load_season/impl/converter"
+
 import { SeasonRepositoryPod } from "../load_season/infra"
-import { initMemoryDB } from "../../../z_vendor/getto-application/infra/repository/memory"
-import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
-import { markSeason } from "../load_season/impl/test_helper"
-import { seasonRepositoryConverter } from "../load_season/impl/convert"
+
+import { LoadSeasonResource } from "./resource"
 
 describe("LoadSeason", () => {
     test("load from repository", () => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         expect(resource.season.load()).toEqual({ success: true, value: { year: 2020 } })
     })
 
     test("not found; use default", () => {
-        const { resource } = empty_elements()
+        const { resource } = empty()
 
         expect(resource.season.load()).toEqual({ success: true, value: { year: 2021 } })
     })
@@ -31,19 +33,19 @@ describe("LoadSeason", () => {
     })
 })
 
-function standard_elements() {
-    const resource = newResource(standard_season())
+function standard() {
+    const resource = initResource(standard_season())
 
     return { resource }
 }
-function empty_elements() {
-    const resource = newResource(empty_season())
+function empty() {
+    const resource = initResource(empty_season())
 
     return { resource }
 }
 
-function newResource(season: SeasonRepositoryPod) {
-    const clock = initStaticClock(new Date("2021-01-01 10:00:00"), staticClockPubSub())
+function initResource(season: SeasonRepositoryPod): LoadSeasonResource {
+    const clock = mockClock(new Date("2021-01-01 10:00:00"), mockClockPubSub())
     return {
         season: initLoadSeasonCoreAction({
             season,
@@ -53,10 +55,10 @@ function newResource(season: SeasonRepositoryPod) {
 }
 
 function standard_season(): SeasonRepositoryPod {
-    const season = initMemoryDB()
+    const season = mockDB()
     season.set({ year: 2020 })
     return wrapRepository(season)
 }
 function empty_season(): SeasonRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }

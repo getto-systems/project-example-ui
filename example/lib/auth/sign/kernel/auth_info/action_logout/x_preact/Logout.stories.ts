@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/pr
 
 import { LogoutComponent } from "./Logout"
 
-import { standard_MockLogoutResource } from "../mock"
+import { mockLogoutResource } from "../mock"
 
 import { LogoutCoreState } from "../core/action"
 
@@ -29,7 +29,7 @@ type Props = Readonly<{
 
 const template = storyTemplate<Props>((props) => {
     return h(LogoutComponent, {
-        ...standard_MockLogoutResource(),
+        ...mockLogoutResource(),
         state: state(),
     })
 

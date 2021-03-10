@@ -1,23 +1,23 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../z_vendor/getto-application/action/test_helper"
 
 import {
     ClockPubSub,
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../../z_vendor/getto-application/infra/clock/simulate"
-import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
-import { standardBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/test_helper"
-import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
+    mockClock,
+    mockClockPubSub,
+} from "../../../../z_vendor/getto-application/infra/clock/mock"
+import { mockDB } from "../../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/test_helper"
-import { initGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/test_helper"
+import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
+import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { toAuthenticatePasswordEntryPoint } from "./impl"
+import { initAuthenticatePasswordEntryPoint } from "./impl"
 import {
     initAuthenticatePasswordCoreAction,
     initAuthenticatePasswordCoreMaterial,
@@ -30,10 +30,7 @@ import { startContinuousRenewEventHasDone } from "../../kernel/auth_info/common/
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
 import { AuthzRepositoryPod } from "../../../../common/authz/infra"
-import {
-    LastAuthRepositoryPod,
-    RenewAuthInfoRemotePod,
-} from "../../kernel/auth_info/kernel/infra"
+import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"
 
@@ -65,7 +62,7 @@ describe("AuthenticatePassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -107,7 +104,7 @@ describe("AuthenticatePassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -141,7 +138,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to login without fields
@@ -175,7 +172,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.loadError({ type: "infra-error", err: "load error" })
@@ -198,7 +195,7 @@ describe("AuthenticatePassword", () => {
         const { entryPoint } = standard_elements()
         const resource = entryPoint.resource.authenticate
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     entryPoint.terminate()
@@ -223,21 +220,21 @@ describe("AuthenticatePassword", () => {
 })
 
 function standard_elements() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         standard_authenticate(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
 function takeLongTime_elements() {
-    const clockPubSub = staticClockPubSub()
+    const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
         takeLongTime_authenticate(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
@@ -253,9 +250,9 @@ function newEntryPoint(
     const lastAuth = standard_lastAuth()
     const authz = standard_authz()
 
-    const getScriptPathDetecter = initGetScriptPathLocationDetecter(currentURL)
+    const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
 
-    const entryPoint = toAuthenticatePasswordEntryPoint({
+    const entryPoint = initAuthenticatePasswordEntryPoint({
         core: initAuthenticatePasswordCoreAction(
             initAuthenticatePasswordCoreMaterial(
                 {
@@ -290,20 +287,20 @@ function newEntryPoint(
     })
 
     entryPoint.resource.authenticate.form.loginID.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
     entryPoint.resource.authenticate.form.password.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
 
     return entryPoint
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
@@ -312,10 +309,10 @@ function standard_authz(): AuthzRepositoryPod {
 }
 
 function standard_authenticate(): AuthenticatePasswordRemotePod {
-    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 0 })
+    return mockRemotePod(simulateAuthenticate, { wait_millisecond: 0 })
 }
 function takeLongTime_authenticate(): AuthenticatePasswordRemotePod {
-    return initRemoteSimulator(simulateAuthenticate, { wait_millisecond: 64 })
+    return mockRemotePod(simulateAuthenticate, { wait_millisecond: 64 })
 }
 function simulateAuthenticate(_fields: AuthenticatePasswordFields): AuthenticatePasswordResult {
     return {
@@ -334,7 +331,7 @@ function simulateAuthenticate(_fields: AuthenticatePasswordFields): Authenticate
 
 function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
-    return initRemoteSimulator(
+    return mockRemotePod(
         () => {
             if (count > 1) {
                 // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket

@@ -1,6 +1,6 @@
-import { newActionIgniteRunner } from "./infra/ignite_runner"
-import { newActionStatePubSub } from "./infra/state_pub_sub"
-import { newActionTerminateRunner } from "./infra/terminate_runner"
+import { initActionIgniteRunner } from "./infra/ignite_runner"
+import { initActionStatePubSub } from "./infra/state_pub_sub"
+import { initActionTerminateRunner } from "./infra/terminate_runner"
 
 import {
     ActionIgniteHook,
@@ -19,11 +19,11 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
     // this.material.doSomething(this.post) できるようにプロパティとして提供
     readonly post: Post<S>
 
-    readonly igniteRunner: ActionIgniteRunner = newActionIgniteRunner()
-    readonly terminateRunner: ActionTerminateRunner = newActionTerminateRunner()
+    readonly igniteRunner: ActionIgniteRunner = initActionIgniteRunner()
+    readonly terminateRunner: ActionTerminateRunner = initActionTerminateRunner()
 
     constructor() {
-        const { pub, sub } = newActionStatePubSub<S>()
+        const { pub, sub } = initActionStatePubSub<S>()
         this.subscriber = sub
 
         this.post = (state: S) => pub.post(state)

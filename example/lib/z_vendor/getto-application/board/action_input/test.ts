@@ -1,16 +1,17 @@
-import { initSyncActionTestRunner } from "../../action/test_helper"
-import { standardBoardValueStore } from "./test_helper"
-import { markBoardValue } from "../kernel/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper"
+
+import { mockBoardValueStore } from "./mock"
+import { markBoardValue } from "../kernel/mock"
 
 import { initInputBoardValueAction } from "./core/impl"
 
 describe("InputBoardValue", () => {
     test("get / set / clear; store linked", (done) => {
-        const { action, store } = standardResource()
+        const { action, store } = standard()
 
         action.storeLinker.link(store)
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.set(markBoardValue("value"))
@@ -34,11 +35,11 @@ describe("InputBoardValue", () => {
     })
 
     test("get / set / clear; no store linked", (done) => {
-        const { action } = standardResource()
+        const { action } = standard()
 
         // no linked store
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.set(markBoardValue("value"))
@@ -55,11 +56,11 @@ describe("InputBoardValue", () => {
     })
 
     test("terminate", (done) => {
-        const { action, store } = standardResource()
+        const { action, store } = standard()
 
         action.storeLinker.link(store)
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     action.terminate()
@@ -77,9 +78,9 @@ describe("InputBoardValue", () => {
     })
 })
 
-function standardResource() {
+function standard() {
     const action = initInputBoardValueAction()
-    const store = standardBoardValueStore()
+    const store = mockBoardValueStore()
 
     return { action, store }
 }

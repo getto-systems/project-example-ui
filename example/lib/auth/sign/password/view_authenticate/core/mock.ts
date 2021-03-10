@@ -5,7 +5,7 @@ import {
     initialAuthenticatePasswordCoreState,
 } from "./action"
 
-export function initMockAuthenticatePasswordCoreAction(): AuthenticatePasswordCoreAction {
+export function mockAuthenticatePasswordCoreAction(): AuthenticatePasswordCoreAction {
     return new Action()
 }
 

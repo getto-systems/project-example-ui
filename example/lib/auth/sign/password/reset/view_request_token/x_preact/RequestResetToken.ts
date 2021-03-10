@@ -28,7 +28,7 @@ import {
 } from "../entry_point"
 
 import { RequestResetTokenError } from "../../request_token/data"
-import { InputLoginID } from "../../../../common/fields/login_id/action/x_preact/InputLoginID"
+import { InputLoginID } from "../../../../common/fields/login_id/action_input/x_preact/InputLoginID"
 
 export function RequestResetToken(entryPoint: RequestResetTokenEntryPoint): VNode {
     const resource = useApplicationEntryPoint(entryPoint)

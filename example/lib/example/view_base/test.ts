@@ -1,13 +1,13 @@
-import { initSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 import { initBaseEntryPoint } from "./impl"
 
-import { standard_MockBaseResource } from "./mock"
+import { mockBaseResource } from "./mock"
 
 describe("Base", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()
@@ -26,12 +26,12 @@ describe("Base", () => {
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint()
+function standard() {
+    const entryPoint = initEntryPoint()
 
     return { entryPoint }
 }
 
-function newEntryPoint() {
-    return initBaseEntryPoint(standard_MockBaseResource(), () => null)
+function initEntryPoint() {
+    return initBaseEntryPoint(mockBaseResource(), () => null)
 }

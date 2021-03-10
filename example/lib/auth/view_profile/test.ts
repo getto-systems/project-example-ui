@@ -1,14 +1,14 @@
-import { initSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { standard_MockAuthProfileResource } from "./mock"
+import { mockAuthProfileResource } from "./mock"
 
 import { initProfileEntryPoint } from "./impl"
 
 describe("Profile", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()
@@ -30,12 +30,12 @@ describe("Profile", () => {
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint()
+function standard() {
+    const entryPoint = initEntryPoint()
 
     return { entryPoint }
 }
 
-function newEntryPoint() {
-    return initProfileEntryPoint(standard_MockAuthProfileResource())
+function initEntryPoint() {
+    return initProfileEntryPoint(mockAuthProfileResource())
 }

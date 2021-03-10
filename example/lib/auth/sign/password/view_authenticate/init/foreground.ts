@@ -1,4 +1,4 @@
-import { initAuthenticatePasswordEntryPoint } from "./worker/foreground"
+import { buildAuthenticatePasswordEntryPoint } from "./worker/foreground"
 
 import { initAuthenticatePasswordCoreAction } from "../core/impl"
 
@@ -19,7 +19,7 @@ export function newAuthenticatePasswordEntryPoint(
     const foreground = newAuthenticatePasswordCoreForegroundMaterial(webStorage, currentLocation)
     const background = newAuthenticatePasswordCoreBackgroundMaterial()
 
-    return initAuthenticatePasswordEntryPoint(
+    return buildAuthenticatePasswordEntryPoint(
         initAuthenticatePasswordCoreAction({
             ...foreground,
             ...background,

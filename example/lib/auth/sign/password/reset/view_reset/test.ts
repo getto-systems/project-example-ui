@@ -1,24 +1,24 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
-import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
+import { mockDB } from "../../../../../z_vendor/getto-application/infra/repository/mock"
 import {
     ClockPubSub,
-    initStaticClock,
-    staticClockPubSub,
-} from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+    mockClock,
+    mockClockPubSub,
+} from "../../../../../z_vendor/getto-application/infra/clock/mock"
+import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
-import { initResetPasswordLocationDetecter } from "../reset/impl/test_helper"
+import { mockGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/mock"
+import { mockResetPasswordLocationDetecter } from "../reset/impl/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { toResetPasswordEntryPoint } from "./impl"
+import { initResetPasswordEntryPoint } from "./impl"
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./core/impl"
 import { initResetPasswordFormAction } from "./form/impl"
 
@@ -50,7 +50,7 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, entryPoint } = standardPasswordResetResource()
+        const { clock, entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
@@ -61,7 +61,7 @@ describe("RegisterPassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -92,7 +92,7 @@ describe("RegisterPassword", () => {
 
     test("submit valid login-id and password; with delayed", (done) => {
         // wait for delayed timeout
-        const { clock, entryPoint } = waitPasswordResetResource()
+        const { clock, entryPoint } = takeLongTime()
         const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
@@ -103,7 +103,7 @@ describe("RegisterPassword", () => {
             }
         })
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -134,10 +134,10 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without fields", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to reset without fields
@@ -156,10 +156,10 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without resetToken", (done) => {
-        const { entryPoint } = emptyResetTokenPasswordResetResource()
+        const { entryPoint } = emptyResetToken()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -179,7 +179,7 @@ describe("RegisterPassword", () => {
     })
 
     test("clear", () => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -191,10 +191,10 @@ describe("RegisterPassword", () => {
     })
 
     test("load error", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.core.loadError({ type: "infra-error", err: "load error" })
@@ -214,10 +214,10 @@ describe("RegisterPassword", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standardPasswordResetResource()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.reset
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     entryPoint.terminate()
@@ -243,41 +243,41 @@ describe("RegisterPassword", () => {
     })
 })
 
-function standardPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
-    const entryPoint = newEntryPoint(
+function standard() {
+    const clockPubSub = mockClockPubSub()
+    const entryPoint = initEntryPoint(
         standard_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
-function waitPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
-    const entryPoint = newEntryPoint(
+function takeLongTime() {
+    const clockPubSub = mockClockPubSub()
+    const entryPoint = initEntryPoint(
         standard_URL(),
         takeLongTime_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { clock: clockPubSub, entryPoint }
 }
-function emptyResetTokenPasswordResetResource() {
-    const clockPubSub = staticClockPubSub()
-    const entryPoint = newEntryPoint(
+function emptyResetToken() {
+    const clockPubSub = mockClockPubSub()
+    const entryPoint = initEntryPoint(
         emptyResetToken_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
-        initStaticClock(START_AT, clockPubSub),
+        mockClock(START_AT, clockPubSub),
     )
 
     return { entryPoint }
 }
 
-function newEntryPoint(
+function initEntryPoint(
     currentURL: URL,
     reset: ResetPasswordRemotePod,
     renew: RenewAuthInfoRemotePod,
@@ -287,11 +287,11 @@ function newEntryPoint(
     const authz = standard_authz()
 
     const detecter = {
-        getSecureScriptPath: initGetScriptPathLocationDetecter(currentURL),
-        reset: initResetPasswordLocationDetecter(currentURL),
+        getSecureScriptPath: mockGetScriptPathLocationDetecter(currentURL),
+        reset: mockResetPasswordLocationDetecter(currentURL),
     }
 
-    const entryPoint = toResetPasswordEntryPoint({
+    const entryPoint = initResetPasswordEntryPoint({
         core: initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {
@@ -325,8 +325,8 @@ function newEntryPoint(
         form: initResetPasswordFormAction(),
     })
 
-    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
-    entryPoint.resource.reset.form.password.board.input.storeLinker.link(standardBoardValueStore())
+    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(mockBoardValueStore())
+    entryPoint.resource.reset.form.password.board.input.storeLinker.link(mockBoardValueStore())
 
     return entryPoint
 }
@@ -339,10 +339,10 @@ function emptyResetToken_URL(): URL {
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({
         nonce: "api-nonce",
         roles: ["role"],
@@ -351,10 +351,10 @@ function standard_authz(): AuthzRepositoryPod {
 }
 
 function standard_reset(): ResetPasswordRemotePod {
-    return initRemoteSimulator(simulateReset, { wait_millisecond: 0 })
+    return mockRemotePod(simulateReset, { wait_millisecond: 0 })
 }
 function takeLongTime_reset(): ResetPasswordRemotePod {
-    return initRemoteSimulator(simulateReset, { wait_millisecond: 64 })
+    return mockRemotePod(simulateReset, { wait_millisecond: 64 })
 }
 function simulateReset(): ResetPasswordResult {
     return {
@@ -373,7 +373,7 @@ function simulateReset(): ResetPasswordResult {
 
 function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     let count = 0
-    return initRemoteSimulator(
+    return mockRemotePod(
         () => {
             if (count > 1) {
                 // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket

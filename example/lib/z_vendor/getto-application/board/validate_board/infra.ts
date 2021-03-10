@@ -1,16 +1,10 @@
-import { ConvertBoardResult } from "../kernel/data"
-
-export type ValidateBoardInfra<N extends string> = Readonly<{
-    fields: N[]
+export type ValidateBoardStore = Readonly<{
     stack: ValidateBoardStack
 }>
-export interface BoardConverter<T> {
-    (): ConvertBoardResult<T>
-}
 
 export interface ValidateBoardStack {
     get(name: string): ValidateBoardStateFound
-    update(name: string, result: boolean): void
+    set(name: string, result: boolean): void
 }
 
 export type ValidateBoardStateFound =

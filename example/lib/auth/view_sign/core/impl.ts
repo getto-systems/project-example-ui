@@ -1,10 +1,10 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
-import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/infra"
-
 import { SignViewLocationDetecter, SignViewType } from "../../sign/view/view"
 
 import { initialSignViewState, SignAction, SignActionState, SignSubEntryPoint } from "./action"
+
+import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
 
 export function initSignAction(
     detecter: SignViewLocationDetecter,
@@ -25,7 +25,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
         this.entryPoints = components
 
         this.igniteHook(() => {
-            const entryPoint = this.entryPoints.renew()
+            const entryPoint = this.entryPoints.check()
 
             entryPoint.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
@@ -35,7 +35,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
                 }
             })
 
-            this.post({ type: "renew-credential", entryPoint })
+            this.post({ type: "check-authInfo", entryPoint })
         })
     }
 

@@ -1,6 +1,6 @@
 import { ActionTerminateHook, ActionTerminateRunner } from "../infra"
 
-export function newActionTerminateRunner(): ActionTerminateRunner {
+export function initActionTerminateRunner(): ActionTerminateRunner {
     return new Runner()
 }
 

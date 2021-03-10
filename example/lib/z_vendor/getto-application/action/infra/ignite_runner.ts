@@ -1,6 +1,6 @@
 import { ActionIgniteHook, ActionIgniteRunner } from "../infra"
 
-export function newActionIgniteRunner(): ActionIgniteRunner {
+export function initActionIgniteRunner(): ActionIgniteRunner {
     return new Runner()
 }
 

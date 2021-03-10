@@ -1,12 +1,12 @@
-import { initSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper"
 
 import { initValidateBoardAction } from "./core/impl"
 
 describe("ValidateBoard", () => {
     test("validate; all valid state", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     // all valid
@@ -23,9 +23,9 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; invalid exists", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     handler.name({ valid: false, err: ["invalid"] }) // invalid
@@ -41,9 +41,9 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; initial exists", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     handler.name({ valid: true })
@@ -59,7 +59,7 @@ describe("ValidateBoard", () => {
     })
 
     test("get", () => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         expect(action.get()).toEqual({
             valid: true,
@@ -68,7 +68,7 @@ describe("ValidateBoard", () => {
     })
 })
 
-function standardElements() {
+function standard() {
     const action = initValidateBoardAction({
         fields: ["name", "description"],
         converter: () => ({ valid: true, value: { name: "valid-name", value: "valid-value" } }),

@@ -1,9 +1,9 @@
 import { WorkerProxySpec } from "../../../../../../../z_vendor/getto-application/action/worker/message"
 
-import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/infra"
 
 import { ResetPasswordEvent } from "../../../reset/event"
 
+import { ConvertLocationResult } from "../../../../../../../z_vendor/getto-application/location/data"
 import { ConvertBoardResult } from "../../../../../../../z_vendor/getto-application/board/kernel/data"
 import { ResetPasswordFields } from "../../../reset/data"
 import { ResetToken } from "../../../kernel/data"

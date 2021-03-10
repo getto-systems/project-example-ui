@@ -1,4 +1,4 @@
-import { authzRepositoryConverter } from "../../../../common/authz/convert"
+import { authzRepositoryConverter } from "../../../../common/authz/converter"
 import { menuBadgeRemoteConverter } from "../../kernel/impl/convert"
 
 import { buildMenu, BuildMenuParams } from "../../kernel/impl/menu"

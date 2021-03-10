@@ -2,7 +2,7 @@ import { ApplicationMockStateAction } from "../../../../../../z_vendor/getto-app
 
 import { CheckAuthInfoCoreAction, CheckAuthInfoCoreState, initialCheckAuthInfoCoreState } from "./action"
 
-export function initMockCheckAuthInfoCoreAction(): CheckAuthInfoCoreAction {
+export function mockCheckAuthInfoCoreAction(): CheckAuthInfoCoreAction {
     return new Action()
 }
 

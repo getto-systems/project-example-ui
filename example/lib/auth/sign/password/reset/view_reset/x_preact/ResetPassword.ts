@@ -23,8 +23,8 @@ import { icon, spinner } from "../../../../../../common/x_preact/design/icon"
 import { appendScript } from "../../../../common/x_preact/script"
 
 import { ApplicationError } from "../../../../../../common/x_preact/ApplicationError"
-import { InputLoginID } from "../../../../common/fields/login_id/action/x_preact/InputLoginID"
-import { InputPassword } from "../../../../common/fields/password/action/x_preact/InputPassword"
+import { InputLoginID } from "../../../../common/fields/login_id/action_input/x_preact/InputLoginID"
+import { InputPassword } from "../../../../common/fields/password/action_input/x_preact/InputPassword"
 
 import {
     ResetPasswordEntryPoint,

@@ -6,7 +6,7 @@ import {
     RequestResetTokenCoreState,
 } from "./action"
 
-export function initMockCoreAction(): RequestResetTokenCoreAction {
+export function mockRequestResetTokenCoreAction(): RequestResetTokenCoreAction {
     return new Action()
 }
 

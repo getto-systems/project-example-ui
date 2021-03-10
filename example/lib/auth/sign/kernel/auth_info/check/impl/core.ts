@@ -8,8 +8,8 @@ import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../method"
 import { CheckAuthInfoEvent, RenewAuthInfoEvent } from "../event"
 
 import { hasExpired, LastAuth, toLastAuth } from "../../kernel/data"
-import { lastAuthRepositoryConverter, authRemoteConverter } from "../../kernel/convert"
-import { authzRepositoryConverter } from "../../../../../../common/authz/convert"
+import { lastAuthRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
+import { authzRepositoryConverter } from "../../../../../../common/authz/converter"
 
 interface CheckAuthInfo {
     (infra: CheckAuthInfoInfra): CheckAuthInfoMethod

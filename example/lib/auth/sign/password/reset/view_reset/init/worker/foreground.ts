@@ -5,7 +5,7 @@ import { newGetSecureScriptPathInfra } from "../../../../../common/secure/get_sc
 
 import { newResetPasswordLocationDetecter } from "../../../reset/impl/init"
 
-import { toResetPasswordEntryPoint } from "../../impl"
+import { initResetPasswordEntryPoint } from "../../impl"
 import { ResetPasswordCoreForegroundInfra, initResetPasswordCoreAction } from "../../core/impl"
 import { initResetPasswordFormAction } from "../../form/impl"
 
@@ -22,7 +22,6 @@ import {
 
 import { ResetPasswordEntryPoint } from "../../entry_point"
 import { ResetPasswordCoreAction } from "../../core/action"
-import { ResetPasswordFormAction } from "../../form/action"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
@@ -52,7 +51,7 @@ class Proxy
         const { webStorage, currentLocation } = feature
         const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
         const detecter = newResetPasswordLocationDetecter(currentLocation)
-        return newEntryPoint(
+        return buildResetPasswordEntryPoint(
             initResetPasswordCoreAction({
                 reset: (fields, post) =>
                     this.material.reset.call({ fields, resetToken: detecter() }, post),
@@ -69,19 +68,19 @@ class Proxy
     }
 }
 
-export function newCoreForegroundInfra(webStorage: Storage): ResetPasswordCoreForegroundInfra {
+export function newResetPasswordCoreForegroundInfra(
+    webStorage: Storage,
+): ResetPasswordCoreForegroundInfra {
     return {
         startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }
 
-export function newEntryPoint(core: ResetPasswordCoreAction): ResetPasswordEntryPoint {
-    return toResetPasswordEntryPoint({ core, form: newFormAction() })
-}
-
-function newFormAction(): ResetPasswordFormAction {
-    return initResetPasswordFormAction()
+export function buildResetPasswordEntryPoint(
+    core: ResetPasswordCoreAction,
+): ResetPasswordEntryPoint {
+    return initResetPasswordEntryPoint({ core, form: initResetPasswordFormAction() })
 }
 
 interface Post<M> {

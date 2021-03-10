@@ -1,13 +1,13 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 
 import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
-import { initRemoteSimulator } from "../../../z_vendor/getto-application/infra/remote/simulate"
-import { initMemoryDB } from "../../../z_vendor/getto-application/infra/repository/memory"
+import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
+import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
 
 import { initLoadMenuLocationDetecter } from "../kernel/init/testHelper"
 
@@ -30,7 +30,7 @@ describe("Menu", () => {
     test("load menu", (done) => {
         const { resource } = standard_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -78,7 +78,7 @@ describe("Menu", () => {
     test("load menu; empty roles", (done) => {
         const { resource } = empty_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -95,7 +95,7 @@ describe("Menu", () => {
     test("load menu; saved expands", (done) => {
         const { resource } = expand_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -144,7 +144,7 @@ describe("Menu", () => {
         const { resource, repository } = standard_elements()
         const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -224,7 +224,7 @@ describe("Menu", () => {
     test("load menu; dev docs", (done) => {
         const { resource } = devDocs_elements()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.menu.ignite()
@@ -288,7 +288,7 @@ describe("Menu", () => {
     test("terminate", (done) => {
         const { resource } = standard_elements()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     resource.menu.terminate()
@@ -426,30 +426,30 @@ function standard_version(): string {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({ nonce: "api-nonce", roles: ["admin"] })
     return wrapRepository(authz)
 }
 function empty_authz(): AuthzRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function devDocs_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB()
+    const authz = mockDB()
     authz.set({ nonce: "api-nonce", roles: ["admin", "dev-docs"] })
     return wrapRepository(authz)
 }
 
 function empty_menuExpand(): MenuExpandRepositoryPod {
-    return wrapRepository(initMemoryDB())
+    return wrapRepository(mockDB())
 }
 function expand_menuExpand(): MenuExpandRepositoryPod {
-    const menuExpand = initMemoryDB()
+    const menuExpand = mockDB()
     menuExpand.set([[markMenuCategoryLabel("DOCUMENT")]])
     return wrapRepository(menuExpand)
 }
 
 function standard_getMenuBadge(): GetMenuBadgeRemotePod {
-    return initRemoteSimulator(
+    return mockRemotePod(
         () => ({
             success: true,
             value: [

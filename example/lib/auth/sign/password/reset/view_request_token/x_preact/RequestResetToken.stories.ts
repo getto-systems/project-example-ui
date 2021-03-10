@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/pr
 
 import { RequestResetTokenComponent } from "./RequestResetToken"
 
-import { initMockRequestResetTokenResource } from "../mock"
+import { mockRequestResetTokenResource } from "../mock"
 
 import { ValidateBoardActionState } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 import { RequestResetTokenCoreState } from "../core/action"
@@ -44,7 +44,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(RequestResetTokenComponent, {
-        ...initMockRequestResetTokenResource(),
+        ...mockRequestResetTokenResource(),
         state: {
             core: state(),
             form: props.form,

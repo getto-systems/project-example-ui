@@ -1,5 +1,5 @@
 import { SignViewLocationDetectMethod, SignViewLocationKeys } from "../view"
-import { signViewSearchLocationConverter } from "./convert"
+import { signViewSearchLocationConverter } from "./converter"
 
 interface Detecter {
     (keys: SignViewLocationKeys): SignViewLocationDetectMethod

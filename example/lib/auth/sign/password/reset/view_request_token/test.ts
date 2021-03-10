@@ -1,18 +1,18 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
-import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
+import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/remote/mock"
 
-import { toRequestResetTokenEntryPoint } from "./impl"
+import { initRequestResetTokenEntryPoint } from "./impl"
 import { initRequestResetTokenCoreMaterial, initRequestResetTokenCoreAction } from "./core/impl"
 import { initRequestResetTokenFormAction } from "./form/impl"
 
 import { requestResetTokenEventHasDone } from "../request_token/impl/core"
-import { resetSessionIDRemoteConverter } from "../kernel/convert"
+import { resetSessionIDRemoteConverter } from "../kernel/converter"
 
 import { RequestResetTokenRemotePod, RequestResetTokenResult } from "../request_token/infra"
 
@@ -23,10 +23,10 @@ const VALID_LOGIN = { loginID: "login-id" } as const
 
 describe("RequestResetToken", () => {
     test("submit valid login-id", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -47,10 +47,10 @@ describe("RequestResetToken", () => {
 
     test("submit valid login-id; with delayed", (done) => {
         // wait for delayed timeout
-        const { entryPoint } = takeLongTime_elements()
+        const { entryPoint } = takeLongTime()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -71,10 +71,10 @@ describe("RequestResetToken", () => {
     })
 
     test("submit without fields", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     // try to request token without fields
@@ -92,7 +92,7 @@ describe("RequestResetToken", () => {
     })
 
     test("clear", () => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.requestToken
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
@@ -102,10 +102,10 @@ describe("RequestResetToken", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
         const resource = entryPoint.resource.requestToken
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
                     entryPoint.terminate()
@@ -126,19 +126,19 @@ describe("RequestResetToken", () => {
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint(standard_requestToken())
+function standard() {
+    const entryPoint = initEntryPoint(standard_requestToken())
 
     return { entryPoint }
 }
-function takeLongTime_elements() {
-    const entryPoint = newEntryPoint(takeLongTime_requestToken())
+function takeLongTime() {
+    const entryPoint = initEntryPoint(takeLongTime_requestToken())
 
     return { entryPoint }
 }
 
-function newEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetTokenEntryPoint {
-    const entryPoint = toRequestResetTokenEntryPoint({
+function initEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetTokenEntryPoint {
+    const entryPoint = initRequestResetTokenEntryPoint({
         core: initRequestResetTokenCoreAction(
             initRequestResetTokenCoreMaterial({
                 requestToken,
@@ -152,17 +152,17 @@ function newEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetTo
     })
 
     entryPoint.resource.requestToken.form.loginID.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
 
     return entryPoint
 }
 
 function standard_requestToken(): RequestResetTokenRemotePod {
-    return initRemoteSimulator(simulateRequestToken, { wait_millisecond: 0 })
+    return mockRemotePod(simulateRequestToken, { wait_millisecond: 0 })
 }
 function takeLongTime_requestToken(): RequestResetTokenRemotePod {
-    return initRemoteSimulator(simulateRequestToken, { wait_millisecond: 64 })
+    return mockRemotePod(simulateRequestToken, { wait_millisecond: 64 })
 }
 function simulateRequestToken(): RequestResetTokenResult {
     return { success: true, value: resetSessionIDRemoteConverter("session-id") }

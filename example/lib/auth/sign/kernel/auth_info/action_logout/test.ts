@@ -1,13 +1,13 @@
 import {
-    initAsyncActionTestRunner,
-    initSyncActionTestRunner,
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
+import { mockDB } from "../../../../../z_vendor/getto-application/infra/repository/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
-import { toLogoutResource } from "./impl"
+import { initLogoutResource } from "./impl"
 
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
 import { LastAuthRepositoryPod } from "../kernel/infra"
@@ -17,9 +17,9 @@ import { LogoutCoreState } from "./core/action"
 
 describe("Logout", () => {
     test("clear", (done) => {
-        const { resource } = standardResource()
+        const { resource } = standard()
 
-        const runner = initAsyncActionTestRunner(actionHasDone, [
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
                 statement: () => {
                     resource.logout.submit()
@@ -34,9 +34,9 @@ describe("Logout", () => {
     })
 
     test("terminate", (done) => {
-        const { resource } = standardResource()
+        const { resource } = standard()
 
-        const runner = initSyncActionTestRunner([
+        const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
                     resource.logout.terminate()
@@ -55,14 +55,14 @@ describe("Logout", () => {
     })
 })
 
-function standardResource() {
-    const resource = newResource(standard_lastAuth(), standard_authz())
+function standard() {
+    const resource = initResource(standard_lastAuth(), standard_authz())
 
     return { resource }
 }
 
-function newResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
-    return toLogoutResource(
+function initResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
+    return initLogoutResource(
         initLogoutCoreAction(
             initLogoutCoreMaterial({
                 lastAuth,
@@ -73,7 +73,7 @@ function newResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod)
 }
 
 function standard_lastAuth(): LastAuthRepositoryPod {
-    const lastAuth = initMemoryDB()
+    const lastAuth = mockDB()
     lastAuth.set({
         nonce: "stored-authn-nonce",
         lastAuthAt: new Date("2020-01-01 09:00:00").toISOString(),
@@ -81,7 +81,7 @@ function standard_lastAuth(): LastAuthRepositoryPod {
     return wrapRepository(lastAuth)
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = initMemoryDB<AuthzRepositoryValue>()
+    const authz = mockDB<AuthzRepositoryValue>()
     authz.set({
         nonce: "nonce",
         roles: ["role"],

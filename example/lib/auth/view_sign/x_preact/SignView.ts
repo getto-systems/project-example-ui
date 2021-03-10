@@ -39,7 +39,7 @@ export function SignComponent(props: SignProps): VNode {
         case "initial-view":
             return EMPTY_CONTENT
 
-        case "renew-credential":
+        case "check-authInfo":
             return h(CheckAuthInfo, props.state.entryPoint)
 
         case "password-authenticate":

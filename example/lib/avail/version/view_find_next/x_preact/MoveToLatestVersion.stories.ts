@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { initMockFindNextVersionCoreAction } from "../core/mock"
+import { mockFindNextVersionCoreAction } from "../core/mock"
 
 import { MoveToLatestVersionComponent } from "./MoveToLatestVersion"
 
@@ -31,7 +31,7 @@ type MockProps = Readonly<{
 }>
 const template = storyTemplate<MockProps>((props) => {
     return h(MoveToLatestVersionComponent, {
-        findNext: initMockFindNextVersionCoreAction(),
+        findNext: mockFindNextVersionCoreAction(),
         state: state(),
     })
 

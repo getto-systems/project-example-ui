@@ -1,16 +1,16 @@
-import { initMockInputLoginIDAction } from "../../../common/fields/login_id/action/core/mock"
-import { initMockInputPasswordAction } from "../../../common/fields/password/action/core/mock"
-import { initMockValidateBoardAction } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/mock"
+import { mockInputLoginIDAction } from "../../../common/fields/login_id/action_input/core/mock"
+import { mockInputPasswordAction } from "../../../common/fields/password/action_input/core/mock"
+import { mockValidateBoardAction } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/mock"
 
 import { AuthenticatePasswordFormAction } from "./action"
 
 import { emptyBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
-export function initMockAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
+export function mockAuthenticatePasswordFormAction(): AuthenticatePasswordFormAction {
     return {
-        loginID: initMockInputLoginIDAction(),
-        password: initMockInputPasswordAction(emptyBoardValue, { multiByte: false }),
-        validate: initMockValidateBoardAction(),
+        loginID: mockInputLoginIDAction(),
+        password: mockInputPasswordAction(emptyBoardValue, { multiByte: false }),
+        validate: mockValidateBoardAction(),
         clear: () => null,
         terminate: () => null,
     }

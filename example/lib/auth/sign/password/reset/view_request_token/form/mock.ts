@@ -1,12 +1,12 @@
-import { initMockInputLoginIDAction } from "../../../../common/fields/login_id/action/core/mock"
-import { initMockValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/mock"
+import { mockInputLoginIDAction } from "../../../../common/fields/login_id/action_input/core/mock"
+import { mockValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/mock"
 
 import { RequestResetTokenFormAction } from "./action"
 
-export function initMockRequestResetTokenFormAction(): RequestResetTokenFormAction {
+export function mockRequestResetTokenFormAction(): RequestResetTokenFormAction {
     return {
-        loginID: initMockInputLoginIDAction(),
-        validate: initMockValidateBoardAction(),
+        loginID: mockInputLoginIDAction(),
+        validate: mockValidateBoardAction(),
         clear: () => null,
         terminate: () => null,
     }

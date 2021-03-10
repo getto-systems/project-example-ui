@@ -1,9 +1,9 @@
-import { initMockNotifyUnexpectedErrorCoreAction } from "./core/mock"
+import { mockNotifyUnexpectedErrorCoreAction } from "./core/mock"
 
 import { NotifyUnexpectedErrorResource } from "./resource"
 
-export function standard_MockNotifyUnexpectedErrorResource(): NotifyUnexpectedErrorResource {
+export function mockNotifyUnexpectedErrorResource(): NotifyUnexpectedErrorResource {
     return {
-        error: initMockNotifyUnexpectedErrorCoreAction(),
+        error: mockNotifyUnexpectedErrorCoreAction(),
     }
 }

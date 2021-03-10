@@ -1,5 +1,5 @@
-import { newCoreForegroundInfra, newEntryPoint } from "./worker/foreground"
-import { newCoreBackgroundInfra } from "./worker/background"
+import { newResetPasswordCoreForegroundInfra, buildResetPasswordEntryPoint } from "./worker/foreground"
+import { newResetPasswordCoreBackgroundInfra } from "./worker/background"
 
 import { newResetPasswordLocationDetecter } from "../../reset/impl/init"
 import { newGetScriptPathLocationDetecter } from "../../../../common/secure/get_script_path/impl/init"
@@ -12,12 +12,12 @@ type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
-export function newResetPassword(feature: OutsideFeature): ResetPasswordEntryPoint {
+export function newResetPasswordEntryPoint(feature: OutsideFeature): ResetPasswordEntryPoint {
     const { webStorage, currentLocation } = feature
-    return newEntryPoint(
+    return buildResetPasswordEntryPoint(
         initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
-                { ...newCoreForegroundInfra(webStorage), ...newCoreBackgroundInfra() },
+                { ...newResetPasswordCoreForegroundInfra(webStorage), ...newResetPasswordCoreBackgroundInfra() },
                 {
                     getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
                     reset: newResetPasswordLocationDetecter(currentLocation),

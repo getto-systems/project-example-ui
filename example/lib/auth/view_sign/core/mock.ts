@@ -1,13 +1,13 @@
 import { ApplicationMockStateAction } from "../../../z_vendor/getto-application/action/mock"
 
-import { SignAction, SignActionState } from "./action"
+import { initialSignViewState, SignAction, SignActionState } from "./action"
 
-export function initMockSignAction(): SignAction {
+export function mockSignAction(): SignAction {
     return new Action()
 }
 
 class Action extends ApplicationMockStateAction<SignActionState> implements SignAction {
-    readonly initialState: SignActionState = { type: "initial-view" }
+    readonly initialState = initialSignViewState
 
     error(): void {
         // mock では特に何もしない

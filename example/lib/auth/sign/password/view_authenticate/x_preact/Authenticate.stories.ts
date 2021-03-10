@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../z_vendor/storybook/preac
 
 import { AuthenticatePasswordComponent } from "./Authenticate"
 
-import { initMockAuthenticatePasswordResource } from "../mock"
+import { mockAuthenticatePasswordResource } from "../mock"
 
 import { AuthenticatePasswordCoreState } from "../core/action"
 import { ValidateBoardActionState } from "../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
@@ -44,7 +44,7 @@ export type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(AuthenticatePasswordComponent, {
-        ...initMockAuthenticatePasswordResource(),
+        ...mockAuthenticatePasswordResource(),
         state: { core: state(), form: props.form },
     })
 

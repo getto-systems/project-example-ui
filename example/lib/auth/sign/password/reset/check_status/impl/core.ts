@@ -11,7 +11,7 @@ import {
 
 import { CheckResetTokenSendingStatusEvent } from "../event"
 
-import { resetSessionIDLocationConverter } from "../../kernel/convert"
+import { resetSessionIDLocationConverter } from "../../kernel/converter"
 
 import { CheckResetTokenSendingStatusError } from "../data"
 

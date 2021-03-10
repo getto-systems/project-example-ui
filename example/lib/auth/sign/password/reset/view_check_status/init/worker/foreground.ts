@@ -1,6 +1,6 @@
 import { newCheckResetTokenSendingStatusLocationDetecter } from "../../../check_status/impl/init"
 
-import { toCheckResetTokenSendingStatusEntryPoint } from "../../impl"
+import { initCheckResetTokenSendingStatusEntryPoint } from "../../impl"
 import { initCheckResetTokenSendingStatusCoreAction } from "../../core/impl"
 
 import {
@@ -50,7 +50,7 @@ class Proxy
     entryPoint(feature: OutsideFeature): CheckResetTokenSendingStatusEntryPoint {
         const { currentLocation } = feature
         const detecter = newCheckResetTokenSendingStatusLocationDetecter(currentLocation)
-        return toCheckResetTokenSendingStatusEntryPoint(
+        return initCheckResetTokenSendingStatusEntryPoint(
             initCheckResetTokenSendingStatusCoreAction({
                 checkStatus: (post) => this.material.checkStatus.call(detecter(), post),
             }),

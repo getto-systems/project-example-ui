@@ -1,6 +1,6 @@
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/infra"
 import { VersionString } from "../../common/data"
 import { ApplicationTargetPath, Version } from "../data"
+import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 
 export function applicationPath(
     version: string,

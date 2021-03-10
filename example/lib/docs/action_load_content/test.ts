@@ -1,25 +1,25 @@
-import { initLoadDocsContentPathLocationDetecter } from "../load_content_path/impl/test_helper"
+import { mockLoadDocsContentPathLocationDetecter } from "../load_content_path/impl/mock"
 
 import { initLoadDocsContentPathCoreAction } from "./core/impl"
 
 describe("LoadDocsContentPath", () => {
     test("load content", () => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         expect(resource.docsContentPath.load()).toEqual("/docs/index.html")
     })
 })
 
-function standard_elements() {
-    const resource = newResource()
+function standard() {
+    const resource = initResource()
 
     return { resource }
 }
 
-function newResource() {
+function initResource() {
     const currentURL = standard_URL()
     const version = standard_version()
-    const detecter = initLoadDocsContentPathLocationDetecter(currentURL, version)
+    const detecter = mockLoadDocsContentPathLocationDetecter(currentURL, version)
     return {
         docsContentPath: initLoadDocsContentPathCoreAction(detecter),
     }

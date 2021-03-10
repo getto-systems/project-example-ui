@@ -4,20 +4,20 @@ import { ResetPasswordAction, ResetPasswordEntryPoint } from "./entry_point"
 import { ResetPasswordCoreAction } from "./core/action"
 import { ResetPasswordFormAction } from "./form/action"
 
-export function toResetPasswordEntryPoint(
+export function initResetPasswordEntryPoint(
     actions: Readonly<{
         core: ResetPasswordCoreAction
         form: ResetPasswordFormAction
     }>,
 ): ResetPasswordEntryPoint {
-    const action = toAction(actions)
+    const action = initAction(actions)
     return {
         resource: { reset: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
 
-function toAction(
+function initAction(
     actions: Readonly<{
         core: ResetPasswordCoreAction
         form: ResetPasswordFormAction

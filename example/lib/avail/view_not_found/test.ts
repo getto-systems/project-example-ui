@@ -6,20 +6,20 @@ import { NotFoundEntryPoint } from "./entry_point"
 
 describe("NotFound", () => {
     test("terminate", () => {
-        const { entryPoint } = standard_elements()
+        const { entryPoint } = standard()
 
         // 特に何もしないのでテストすることもないが、カバレッジのために呼び出しておく
         entryPoint.terminate()
     })
 })
 
-function standard_elements() {
-    const entryPoint = newEntryPoint(standard_version())
+function standard() {
+    const entryPoint = initEntryPoint(standard_version())
 
     return { entryPoint }
 }
 
-function newEntryPoint(version: string): NotFoundEntryPoint {
+function initEntryPoint(version: string): NotFoundEntryPoint {
     return initNotFoundEntryPoint(
         initGetCurrentVersionResource(
             initGetCurrentVersionCoreAction({

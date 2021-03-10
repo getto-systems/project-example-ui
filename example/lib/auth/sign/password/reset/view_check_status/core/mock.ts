@@ -6,7 +6,7 @@ import {
     initialCheckResetTokenSendingStatusCoreState,
 } from "./action"
 
-export function initMockCheckResetTokenSendingStatusCoreAction(): CheckResetTokenSendingStatusCoreAction {
+export function mockCheckResetTokenSendingStatusCoreAction(): CheckResetTokenSendingStatusCoreAction {
     return new Action()
 }
 

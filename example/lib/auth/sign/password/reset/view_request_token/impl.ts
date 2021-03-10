@@ -3,20 +3,20 @@ import { RequestResetTokenAction, RequestResetTokenEntryPoint } from "./entry_po
 import { RequestResetTokenCoreAction } from "./core/action"
 import { RequestResetTokenFormAction } from "./form/action"
 
-export function toRequestResetTokenEntryPoint(
+export function initRequestResetTokenEntryPoint(
     actions: Readonly<{
         core: RequestResetTokenCoreAction
         form: RequestResetTokenFormAction
     }>,
 ): RequestResetTokenEntryPoint {
-    const action = toAction(actions)
+    const action = initAction(actions)
     return {
         resource: { requestToken: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
 
-function toAction(
+function initAction(
     actions: Readonly<{
         core: RequestResetTokenCoreAction
         form: RequestResetTokenFormAction

@@ -6,7 +6,7 @@ import { InputBoardValueAction } from "../core/action"
 
 import { BoardValue, emptyBoardValue } from "../../kernel/data"
 import { InputBoardValueResource } from "../action"
-import { readBoardValue } from "../../kernel/convert"
+import { readBoardValue } from "../../kernel/converter"
 
 export type InputBoardProps = InputBoardValueResource
 export function InputBoard(props: InputBoardProps): VNode {

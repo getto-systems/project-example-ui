@@ -1,6 +1,6 @@
 import { ApplicationAction } from "../../../../../../z_vendor/getto-application/action/action"
 import { ValidateBoardAction } from "../../../../../../z_vendor/getto-application/board/action_validate_board/core/action"
-import { InputLoginIDAction } from "../../../../common/fields/login_id/action/core/action"
+import { InputLoginIDAction } from "../../../../common/fields/login_id/action_input/core/action"
 
 import { RequestResetTokenFields } from "../../request_token/data"
 

@@ -4,20 +4,20 @@ import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./en
 import { AuthenticatePasswordCoreAction } from "./core/action"
 import { AuthenticatePasswordFormAction } from "./form/action"
 
-export function toAuthenticatePasswordEntryPoint(
+export function initAuthenticatePasswordEntryPoint(
     actions: Readonly<{
         core: AuthenticatePasswordCoreAction
         form: AuthenticatePasswordFormAction
     }>,
 ): AuthenticatePasswordEntryPoint {
-    const action = toAction(actions)
+    const action = initAction(actions)
     return {
         resource: { authenticate: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),
     }
 }
 
-function toAction(
+function initAction(
     actions: Readonly<{
         core: AuthenticatePasswordCoreAction
         form: AuthenticatePasswordFormAction

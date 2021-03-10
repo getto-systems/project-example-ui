@@ -33,7 +33,7 @@ export function newResetPasswordHandler(
     }
 }
 
-export function newCoreBackgroundInfra(): ResetPasswordCoreBackgroundInfra {
+export function newResetPasswordCoreBackgroundInfra(): ResetPasswordCoreBackgroundInfra {
     return {
         reset: newResetPasswordInfra(),
     }
