@@ -8,7 +8,7 @@ import { standard_MockNotifyUnexpectedErrorResource } from "../../../avail/actio
 import { standard_MockLoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/mock"
 import { standard_MockLoadMenuResource } from "../../../outline/menu/action_load_menu/mock"
 import { standard_MockLoadSeasonResource } from "../../../example/common/action_load_season/mock"
-import { standard_MockLogoutResource } from "../../sign/kernel/auth_info/action_logout/mock"
+import { mockLogoutResource } from "../../sign/kernel/auth_info/action_logout/mock"
 
 export default {
     title: "main/secure/Auth/Profile",
@@ -26,7 +26,7 @@ const template = storyTemplate<MockProps>(() => {
         ...standard_MockLoadBreadcrumbListResource(),
         ...standard_MockLoadMenuResource(),
         ...standard_MockLoadSeasonResource(),
-        ...standard_MockLogoutResource(),
+        ...mockLogoutResource(),
     })
 })
 

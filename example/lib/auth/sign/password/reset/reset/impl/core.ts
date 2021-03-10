@@ -6,7 +6,7 @@ import { ResetPasswordLocationDetectMethod, ResetPasswordLocationKeys, ResetPass
 
 import { ResetPasswordEvent } from "../event"
 
-import { authRemoteConverter } from "../../../../kernel/auth_info/kernel/convert"
+import { authRemoteConverter } from "../../../../kernel/auth_info/kernel/converter"
 import { resetTokenLocationConverter } from "../../kernel/convert"
 
 interface Detecter {

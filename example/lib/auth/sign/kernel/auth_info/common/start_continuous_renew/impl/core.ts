@@ -1,5 +1,5 @@
 import { authzRepositoryConverter } from "../../../../../../../common/authz/convert"
-import { lastAuthRepositoryConverter, authRemoteConverter } from "../../../kernel/convert"
+import { lastAuthRepositoryConverter, authRemoteConverter } from "../../../kernel/converter"
 
 import { StoreRepositoryResult } from "../../../../../../../z_vendor/getto-application/infra/repository/infra"
 import { StartContinuousRenewInfra } from "../infra"

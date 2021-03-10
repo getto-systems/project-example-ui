@@ -2,7 +2,7 @@ import { newCheckAuthInfoInfra } from "../check/impl/init"
 import { newStartContinuousRenewAuthnInfoInfra } from "../common/start_continuous_renew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../../common/secure/get_script_path/impl/init"
 
-import { toCheckAuthInfoEntryPoint } from "./impl"
+import { initCheckAuthInfoEntryPoint } from "./impl"
 import { initCheckAuthInfoCoreAction, initCheckAuthInfoCoreMaterial } from "./core/impl"
 
 import { CheckAuthInfoEntryPoint } from "./entry_point"
@@ -14,7 +14,7 @@ type OutsideFeature = Readonly<{
 }>
 export function newCheckAuthInfoEntryPoint(feature: OutsideFeature): CheckAuthInfoEntryPoint {
     const { webStorage, currentLocation } = feature
-    return toCheckAuthInfoEntryPoint(
+    return initCheckAuthInfoEntryPoint(
         initCheckAuthInfoCoreAction(
             initCheckAuthInfoCoreMaterial(
                 {

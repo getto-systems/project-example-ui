@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/pr
 
 import { CheckAuthInfoComponent } from "./CheckAuthInfo"
 
-import { initMockCheckAuthInfoResource } from "../mock"
+import { mockCheckAuthInfoResource } from "../mock"
 
 import { CheckAuthInfoCoreState } from "../core/action"
 
@@ -34,7 +34,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(CheckAuthInfoComponent, {
-        ...initMockCheckAuthInfoResource(),
+        ...mockCheckAuthInfoResource(),
         state: state(),
     })
 

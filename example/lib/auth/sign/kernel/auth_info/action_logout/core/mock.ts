@@ -1,7 +1,7 @@
 import { ApplicationMockStateAction } from "../../../../../../z_vendor/getto-application/action/mock"
 import { initialLogoutCoreState, LogoutCoreAction, LogoutCoreState } from "./action"
 
-export function initMockLogoutCoreAction(): LogoutCoreAction {
+export function mockLogoutCoreAction(): LogoutCoreAction {
     return new Action()
 }
 

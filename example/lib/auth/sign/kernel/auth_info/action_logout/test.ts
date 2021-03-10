@@ -7,7 +7,7 @@ import { mockDB } from "../../../../../z_vendor/getto-application/infra/reposito
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
-import { toLogoutResource } from "./impl"
+import { initLogoutResource } from "./impl"
 
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
 import { LastAuthRepositoryPod } from "../kernel/infra"
@@ -17,7 +17,7 @@ import { LogoutCoreState } from "./core/action"
 
 describe("Logout", () => {
     test("clear", (done) => {
-        const { resource } = standardResource()
+        const { resource } = standard()
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -34,7 +34,7 @@ describe("Logout", () => {
     })
 
     test("terminate", (done) => {
-        const { resource } = standardResource()
+        const { resource } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -55,14 +55,14 @@ describe("Logout", () => {
     })
 })
 
-function standardResource() {
-    const resource = newResource(standard_lastAuth(), standard_authz())
+function standard() {
+    const resource = initResource(standard_lastAuth(), standard_authz())
 
     return { resource }
 }
 
-function newResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
-    return toLogoutResource(
+function initResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
+    return initLogoutResource(
         initLogoutCoreAction(
             initLogoutCoreMaterial({
                 lastAuth,

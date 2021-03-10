@@ -1,6 +1,6 @@
 import { authzRepositoryConverter } from "../../../../../../common/authz/convert"
 import { StoreRepositoryResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
-import { lastAuthRepositoryConverter } from "../../kernel/convert"
+import { lastAuthRepositoryConverter } from "../../kernel/converter"
 import { ClearAuthInfoInfra } from "../infra"
 
 import { ClearAuthInfoMethod } from "../method"
