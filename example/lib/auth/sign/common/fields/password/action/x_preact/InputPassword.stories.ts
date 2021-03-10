@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook
 
 import { InputPasswordComponent } from "./InputPassword"
 
-import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/test_helper"
+import { markBoardValue } from "../../../../../../../z_vendor/getto-application/board/kernel/mock"
 
 import { initMockInputPasswordAction } from "../core/mock"
 

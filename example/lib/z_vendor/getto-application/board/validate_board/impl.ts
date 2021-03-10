@@ -1,25 +1,16 @@
-import { initValidateBoardStack } from "./infra/stack"
-
-import { ValidateBoardStateFound, ValidateBoardInfra } from "./infra"
+import { ValidateBoardStateFound, ValidateBoardStore } from "./infra"
 
 import { UpdateBoardValidateStateMethod } from "./method"
 
 import { ValidateBoardState } from "./data"
 
-export function initValidateBoardInfra<N extends string>(fields: N[]): ValidateBoardInfra<N> {
-    return {
-        fields,
-        stack: initValidateBoardStack(),
-    }
+interface Update {
+    <N extends string>(fields: N[], store: ValidateBoardStore): UpdateBoardValidateStateMethod<N>
 }
+export const updateBoardValidateState: Update = (fields, infra) => (name, valid, post) => {
+    const { stack } = infra
 
-interface UpdateValidateState {
-    <N extends string>(infra: ValidateBoardInfra<N>): UpdateBoardValidateStateMethod<N>
-}
-export const updateBoardValidateState: UpdateValidateState = (infra) => (name, valid, post) => {
-    const { fields, stack } = infra
-
-    stack.update(name, valid)
+    stack.set(name, valid)
     post(compose(fields.map((field) => stack.get(field))))
 }
 

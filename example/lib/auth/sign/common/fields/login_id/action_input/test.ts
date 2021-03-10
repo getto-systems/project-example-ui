@@ -1,9 +1,9 @@
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
-import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/test_helper"
+
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/mock"
 
 import { initInputLoginIDAction } from "./core/impl"
-
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/test_helper"
 
 describe("InputLoginID", () => {
     test("validate; valid input", (done) => {
@@ -123,7 +123,7 @@ describe("InputLoginID", () => {
 
 function standardElements() {
     const action = initInputLoginIDAction()
-    action.board.input.storeLinker.link(standardBoardValueStore())
+    action.board.input.storeLinker.link(mockBoardValueStore())
 
     return { action }
 }

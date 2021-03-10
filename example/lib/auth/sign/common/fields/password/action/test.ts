@@ -1,9 +1,9 @@
 import { initSyncActionTestRunner } from "../../../../../../z_vendor/getto-application/action/test_helper"
-import { standardBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/test_helper"
+
+import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../../z_vendor/getto-application/board/action_input/mock"
 
 import { initInputPasswordAction } from "./core/impl"
-
-import { markBoardValue } from "../../../../../../z_vendor/getto-application/board/kernel/test_helper"
 
 describe("InputPassword", () => {
     test("validate; valid input", (done) => {
@@ -187,7 +187,7 @@ describe("InputPassword", () => {
 
 function standardElements() {
     const resource = initInputPasswordAction()
-    resource.board.input.storeLinker.link(standardBoardValueStore())
+    resource.board.input.storeLinker.link(mockBoardValueStore())
 
     return { resource }
 }

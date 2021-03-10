@@ -2,7 +2,7 @@ import { InputBoardValueAction } from "./action"
 
 import { BoardValue } from "../../kernel/data"
 
-export function initMockInputBoardValueAction(value: BoardValue): InputBoardValueAction {
+export function mockInputBoardValueAction(value: BoardValue): InputBoardValueAction {
     return {
         storeLinker: {
             link: () => null,

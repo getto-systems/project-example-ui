@@ -3,14 +3,14 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
 import { initMemoryDB } from "../../../../../z_vendor/getto-application/infra/repository/memory"
 import {
     ClockPubSub,
     initStaticClock,
     staticClockPubSub,
 } from "../../../../../z_vendor/getto-application/infra/clock/simulate"
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { initGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/test_helper"
@@ -325,8 +325,8 @@ function newEntryPoint(
         form: initResetPasswordFormAction(),
     })
 
-    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(standardBoardValueStore())
-    entryPoint.resource.reset.form.password.board.input.storeLinker.link(standardBoardValueStore())
+    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(mockBoardValueStore())
+    entryPoint.resource.reset.form.password.board.input.storeLinker.link(mockBoardValueStore())
 
     return entryPoint
 }

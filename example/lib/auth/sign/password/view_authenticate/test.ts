@@ -9,10 +9,10 @@ import {
     staticClockPubSub,
 } from "../../../../z_vendor/getto-application/infra/clock/simulate"
 import { initMemoryDB } from "../../../../z_vendor/getto-application/infra/repository/memory"
-import { standardBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/test_helper"
 import { initRemoteSimulator } from "../../../../z_vendor/getto-application/infra/remote/simulate"
 
-import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/test_helper"
+import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
 import { initGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/test_helper"
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
@@ -30,10 +30,7 @@ import { startContinuousRenewEventHasDone } from "../../kernel/auth_info/common/
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
 import { AuthzRepositoryPod } from "../../../../common/authz/infra"
-import {
-    LastAuthRepositoryPod,
-    RenewAuthInfoRemotePod,
-} from "../../kernel/auth_info/kernel/infra"
+import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"
 
@@ -290,10 +287,10 @@ function newEntryPoint(
     })
 
     entryPoint.resource.authenticate.form.loginID.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
     entryPoint.resource.authenticate.form.password.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
 
     return entryPoint

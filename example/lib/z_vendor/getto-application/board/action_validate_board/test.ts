@@ -4,7 +4,7 @@ import { initValidateBoardAction } from "./core/impl"
 
 describe("ValidateBoard", () => {
     test("validate; all valid state", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
         const runner = initSyncActionTestRunner([
             {
@@ -23,7 +23,7 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; invalid exists", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
         const runner = initSyncActionTestRunner([
             {
@@ -41,7 +41,7 @@ describe("ValidateBoard", () => {
     })
 
     test("validate; initial exists", (done) => {
-        const { action, handler } = standardElements()
+        const { action, handler } = standard()
 
         const runner = initSyncActionTestRunner([
             {
@@ -59,7 +59,7 @@ describe("ValidateBoard", () => {
     })
 
     test("get", () => {
-        const { action } = standardElements()
+        const { action } = standard()
 
         expect(action.get()).toEqual({
             valid: true,
@@ -68,7 +68,7 @@ describe("ValidateBoard", () => {
     })
 })
 
-function standardElements() {
+function standard() {
     const action = initValidateBoardAction({
         fields: ["name", "description"],
         converter: () => ({ valid: true, value: { name: "valid-name", value: "valid-value" } }),

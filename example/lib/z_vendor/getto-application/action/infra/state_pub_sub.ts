@@ -5,7 +5,7 @@ export type ActionStatePubSub<S> = Readonly<{
     pub: ActionStatePublisher<S>
     sub: ActionStateSubscriber<S>
 }>
-export function newActionStatePubSub<S>(): ActionStatePubSub<S> {
+export function initActionStatePubSub<S>(): ActionStatePubSub<S> {
     return new PubSub<S>()
 }
 

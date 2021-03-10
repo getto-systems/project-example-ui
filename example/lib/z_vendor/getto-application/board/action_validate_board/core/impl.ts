@@ -1,8 +1,6 @@
 import { ApplicationAbstractStateAction } from "../../../action/impl"
 
-import { initValidateBoardInfra, updateBoardValidateState } from "../../validate_board/impl"
-
-import { BoardConverter } from "../../validate_board/infra"
+import { updateBoardValidateState } from "../../validate_board/impl"
 
 import {
     initialValidateBoardState,
@@ -11,8 +9,10 @@ import {
     ValidateBoardActionState,
 } from "./action"
 
-import { ConvertBoardResult } from "../../kernel/data"
+import { BoardConverter, ConvertBoardResult } from "../../kernel/data"
 import { ValidateBoardFieldStateHandler } from "../../action_validate_field/core/action"
+import { ValidateBoardStore } from "../../validate_board/infra"
+import { initValidateBoardStack } from "../../validate_board/infra/stack"
 
 export type ValidateBoardActionParams<N extends string, T> = Readonly<{
     fields: N[]
@@ -22,9 +22,11 @@ export function initValidateBoardAction<N extends string, T>({
     fields,
     converter,
 }: ValidateBoardActionParams<N, T>): ValidateBoardAction<N, T> {
-    const infra = initValidateBoardInfra(fields)
+    const store: ValidateBoardStore = {
+        stack: initValidateBoardStack(),
+    }
     return new Action(converter, {
-        updateValidateState: updateBoardValidateState(infra),
+        updateValidateState: updateBoardValidateState(fields, store),
     })
 }
 

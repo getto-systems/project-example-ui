@@ -4,7 +4,7 @@ import { ValidateBoardFieldAction, ValidateBoardFieldState } from "./action"
 
 import { ConvertBoardFieldResult } from "../../validate_field/data"
 
-export function initMockValidateBoardFieldAction<N extends string, T, E>(
+export function mockValidateBoardFieldAction<N extends string, T, E>(
     name: N,
     value: ConvertBoardFieldResult<T, E>,
 ): ValidateBoardFieldAction<T, E> {

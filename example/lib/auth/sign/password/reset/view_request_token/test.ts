@@ -3,8 +3,8 @@ import {
     initSyncActionTestRunner,
 } from "../../../../../z_vendor/getto-application/action/test_helper"
 
-import { standardBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/test_helper"
-import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/test_helper"
+import { markBoardValue } from "../../../../../z_vendor/getto-application/board/kernel/mock"
+import { mockBoardValueStore } from "../../../../../z_vendor/getto-application/board/action_input/mock"
 import { initRemoteSimulator } from "../../../../../z_vendor/getto-application/infra/remote/simulate"
 
 import { toRequestResetTokenEntryPoint } from "./impl"
@@ -152,7 +152,7 @@ function newEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetTo
     })
 
     entryPoint.resource.requestToken.form.loginID.board.input.storeLinker.link(
-        standardBoardValueStore(),
+        mockBoardValueStore(),
     )
 
     return entryPoint

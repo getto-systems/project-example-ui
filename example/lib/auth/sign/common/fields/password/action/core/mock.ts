@@ -1,5 +1,5 @@
-import { initMockInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/action_input/mock"
-import { initMockValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/action_validate_field/core/mock"
+import { mockInputBoardValueResource } from "../../../../../../../z_vendor/getto-application/board/action_input/mock"
+import { mockValidateBoardFieldAction } from "../../../../../../../z_vendor/getto-application/board/action_validate_field/core/mock"
 
 import { InputPasswordAction } from "./action"
 
@@ -11,8 +11,8 @@ export function initMockInputPasswordAction(
     characterState: PasswordCharacterState,
 ): InputPasswordAction {
     return {
-        board: initMockInputBoardValueResource("password", password),
-        validate: initMockValidateBoardFieldAction("password", { valid: false, err: [] }),
+        board: mockInputBoardValueResource("password", password),
+        validate: mockValidateBoardFieldAction("password", { valid: false, err: [] }),
         clear: () => null,
         checkCharacter: () => characterState,
         terminate: () => null,

@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../../z_vendor/storybook
 
 import { InputLoginIDComponent } from "./InputLoginID"
 
-import { initMockInputLoginIDAction } from "../core/mock"
+import { mockInputLoginIDAction } from "../core/mock"
 
 import { LOGIN_ID_MAX_LENGTH } from "../../convert"
 
@@ -31,7 +31,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(InputLoginIDComponent, {
-        field: initMockInputLoginIDAction(),
+        field: mockInputLoginIDAction(),
         help: [props.help],
         state: state(),
     })

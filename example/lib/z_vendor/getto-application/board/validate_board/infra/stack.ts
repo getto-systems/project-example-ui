@@ -13,7 +13,7 @@ class Stack implements ValidateBoardStack {
         }
         return { found: false }
     }
-    update(name: string, result: boolean): void {
+    set(name: string, result: boolean): void {
         this.stack[name] = result
     }
 }
