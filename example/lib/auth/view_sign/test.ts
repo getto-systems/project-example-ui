@@ -1,17 +1,20 @@
-import { initMockAuthenticatePasswordResource } from "../sign/password/view_authenticate/mock"
-import { mockRequestResetTokenResource } from "../sign/password/reset/view_request_token/mock"
-import { mockResetPasswordResource } from "../sign/password/reset/view_reset/mock"
-import { mockStartPasswordResetSessionResource } from "../sign/password/reset/view_check_status/mock"
-import { mockCheckAuthInfoResource } from "../sign/kernel/auth_info/action_check/mock"
-import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
-import { SignAction, SignActionState } from "./core/action"
-import { initSignAction } from "./core/impl"
-import { toSignEntryPoint } from "./impl"
 import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+
+import { mockAuthenticatePasswordEntryPoint } from "../sign/password/view_authenticate/mock"
+import { mockRequestResetTokenEntryPoint } from "../sign/password/reset/view_request_token/mock"
+import { mockResetPasswordEntryPoint } from "../sign/password/reset/view_reset/mock"
+import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/reset/view_check_status/mock"
+import { mockCheckAuthInfoEntryPoint } from "../sign/kernel/auth_info/action_check/mock"
+import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
+
+import { initSignAction } from "./core/impl"
+import { initSignEntryPoint } from "./impl"
+
+import { SignAction, SignActionState } from "./core/action"
 
 describe("SignView", () => {
     test("redirect login view", (done) => {
-        const { action } = standardLoginView()
+        const { action } = standard()
 
         // TODO runner に変えたい
         action.subscriber.subscribe(stateHandler())
@@ -63,7 +66,7 @@ describe("SignView", () => {
     })
 
     test("password reset request token", (done) => {
-        const { action } = passwordResetSessionLoginView()
+        const { action } = passwordReset_requestToken()
 
         action.subscriber.subscribe(stateHandler())
 
@@ -114,7 +117,7 @@ describe("SignView", () => {
     })
 
     test("password reset check status", (done) => {
-        const { action } = passwordResetCheckStatusLoginView()
+        const { action } = passwordReset_checkStatus()
 
         action.subscriber.subscribe(stateHandler())
 
@@ -165,7 +168,7 @@ describe("SignView", () => {
     })
 
     test("password reset", (done) => {
-        const { action } = passwordResetLoginView()
+        const { action } = passwordReset_reset()
 
         action.subscriber.subscribe(stateHandler())
 
@@ -216,7 +219,7 @@ describe("SignView", () => {
     })
 
     test("error", (done) => {
-        const { action } = standardLoginView()
+        const { action } = standard()
 
         action.subscriber.subscribe(stateHandler())
 
@@ -253,8 +256,8 @@ describe("SignView", () => {
     })
 
     test("terminate", (done) => {
-        const { action } = standardLoginView()
-        const entryPoint = toSignEntryPoint(action)
+        const { action } = standard()
+        const entryPoint = initSignEntryPoint(action)
 
         const runner = setupSyncActionTestRunner([
             {
@@ -273,81 +276,51 @@ describe("SignView", () => {
     })
 })
 
-function standardLoginView() {
-    const currentURL = standardURL()
-    const action = standardSignAction(currentURL)
+function standard() {
+    const currentURL = standard_URL()
+    const action = initAction(currentURL)
 
     return { action }
 }
-function passwordResetSessionLoginView() {
-    const currentURL = passwordResetSessionURL()
-    const action = standardSignAction(currentURL)
+function passwordReset_requestToken() {
+    const currentURL = passwordReset_requestToken_URL()
+    const action = initAction(currentURL)
 
     return { action }
 }
-function passwordResetCheckStatusLoginView() {
-    const currentURL = passwordResetCheckStatusURL()
-    const action = standardSignAction(currentURL)
+function passwordReset_checkStatus() {
+    const currentURL = passwordReset_checkStatus_URL()
+    const action = initAction(currentURL)
 
     return { action }
 }
-function passwordResetLoginView() {
-    const currentURL = passwordResetURL()
-    const action = standardSignAction(currentURL)
+function passwordReset_reset() {
+    const currentURL = passwordReset_reset_URL()
+    const action = initAction(currentURL)
 
     return { action }
 }
-function standardSignAction(currentURL: URL): SignAction {
+
+function initAction(currentURL: URL): SignAction {
     return initSignAction(mockSignViewLocationDetecter(currentURL), {
-        renew: () => standardRenewCredentialEntryPoint(),
-        password_authenticate: () => standardPasswordLoginEntryPoint(),
-        password_reset: () => standardPasswordResetResource(),
-        password_reset_requestToken: () => standardRequestPasswordResetTokenResource(),
-        password_reset_checkStatus: () => standardCheckPasswordResetSendingStatusResource(),
+        renew: () => mockCheckAuthInfoEntryPoint(),
+        password_authenticate: () => mockAuthenticatePasswordEntryPoint(),
+        password_reset: () => mockResetPasswordEntryPoint(),
+        password_reset_requestToken: () => mockRequestResetTokenEntryPoint(),
+        password_reset_checkStatus: () => mockCheckResetTokenSendingStatusEntryPoint(),
     })
 }
 
-function standardPasswordLoginEntryPoint() {
-    return {
-        resource: initMockAuthenticatePasswordResource(),
-        terminate: () => null,
-    }
-}
-function standardPasswordResetResource() {
-    return {
-        resource: mockResetPasswordResource(),
-        terminate: () => null,
-    }
-}
-function standardRequestPasswordResetTokenResource() {
-    return {
-        resource: mockRequestResetTokenResource(),
-        terminate: () => null,
-    }
-}
-function standardCheckPasswordResetSendingStatusResource() {
-    return {
-        resource: mockStartPasswordResetSessionResource(),
-        terminate: () => null,
-    }
-}
-function standardRenewCredentialEntryPoint() {
-    return {
-        resource: mockCheckAuthInfoResource(),
-        terminate: () => null,
-    }
-}
-
-function standardURL(): URL {
+function standard_URL(): URL {
     return new URL("https://example.com/index.html")
 }
-function passwordResetSessionURL(): URL {
+function passwordReset_requestToken_URL(): URL {
     return new URL("https://example.com/index.html?_password_reset=requestToken")
 }
-function passwordResetCheckStatusURL(): URL {
+function passwordReset_checkStatus_URL(): URL {
     return new URL("https://example.com/index.html?_password_reset=checkStatus")
 }
-function passwordResetURL(): URL {
+function passwordReset_reset_URL(): URL {
     return new URL("https://example.com/index.html?_password_reset=reset")
 }
 

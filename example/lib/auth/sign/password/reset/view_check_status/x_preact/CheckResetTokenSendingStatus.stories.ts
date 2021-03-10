@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/pr
 
 import { CheckPasswordResetSendingStatusProps, View } from "./CheckResetTokenSendingStatus"
 
-import { mockStartPasswordResetSessionResource } from "../mock"
+import { mockCheckResetTokenSendingStatusResource } from "../mock"
 
 import { CheckResetTokenSendingStatusCoreState } from "../core/action"
 
@@ -39,7 +39,7 @@ type Props = Readonly<{
     err: string
 }>
 const template = storyTemplate<Props>((props) => {
-    const resource = mockStartPasswordResetSessionResource()
+    const resource = mockCheckResetTokenSendingStatusResource()
     return h(View, <CheckPasswordResetSendingStatusProps>{
         ...resource,
         state: state(),

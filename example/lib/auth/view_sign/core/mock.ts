@@ -2,7 +2,7 @@ import { ApplicationMockStateAction } from "../../../z_vendor/getto-application/
 
 import { SignAction, SignActionState } from "./action"
 
-export function initMockSignAction(): SignAction {
+export function mockSignAction(): SignAction {
     return new Action()
 }
 

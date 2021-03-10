@@ -5,7 +5,7 @@ import { newCheckPasswordResetSendingStatus } from "../../sign/password/reset/vi
 import { newAuthenticatePasswordEntryPoint } from "../../sign/password/view_authenticate/init/foreground"
 import { newSignViewLocationDetecter } from "../../sign/view/impl/init"
 
-import { toSignEntryPoint } from "../impl"
+import { initSignEntryPoint } from "../impl"
 import { initSignAction } from "../core/impl"
 
 import { SignEntryPoint } from "../entry_point"
@@ -16,7 +16,7 @@ type OutsideFeature = Readonly<{
 }>
 export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
     const { currentLocation } = feature
-    return toSignEntryPoint(
+    return initSignEntryPoint(
         initSignAction(newSignViewLocationDetecter(currentLocation), {
             renew: () => newCheckAuthInfoEntryPoint(feature),
 
