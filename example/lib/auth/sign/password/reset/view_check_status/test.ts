@@ -168,11 +168,11 @@ function initEntryPoint(
 
 function standard_URL() {
     return new URL(
-        "https://example.com/index.html?_password_reset=checkStatus&_password_reset_session_id=session-id",
+        "https://example.com/index.html?-password-reset=check-status&-password-reset-session-id=session-id",
     )
 }
 function noSessionID_URL() {
-    return new URL("https://example.com/index.html?_password_reset=checkStatus")
+    return new URL("https://example.com/index.html?-password-reset=check-status")
 }
 
 function standard_sendToken(): SendResetTokenRemotePod {

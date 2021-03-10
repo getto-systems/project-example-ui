@@ -15,6 +15,7 @@ import { CheckPasswordResetSendingStatus } from "../../sign/password/reset/view_
 import { ResetPassword } from "../../sign/password/reset/view_reset/x_preact/ResetPassword"
 
 import { SignEntryPoint, SignResource, SignResourceState } from "../entry_point"
+import { PrivacyPolicyComponent } from "../../sign/action_static/x_preact/PrivacyPolicy"
 
 export function SignView(entryPoint: SignEntryPoint): VNode {
     const resource = useApplicationEntryPoint(entryPoint)
@@ -38,6 +39,9 @@ export function SignComponent(props: SignProps): VNode {
     switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT
+
+        case "static-privacyPolicy":
+            return h(PrivacyPolicyComponent, props.state.resource)
 
         case "check-authInfo":
             return h(CheckAuthInfo, props.state.entryPoint)

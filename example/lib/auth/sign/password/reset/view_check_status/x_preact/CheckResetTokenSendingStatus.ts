@@ -71,7 +71,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
         return loginBox(siteInfo(), {
             title: "リセットトークンを送信しています",
             body: message(),
-            footer: buttons({ right: loginLink() }),
+            footer: footerLinks(),
         })
 
         function message() {
@@ -88,7 +88,7 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
         return loginBox(siteInfo(), {
             title: "リセットトークンを送信しました",
             body: sendTokenMessage(),
-            footer: buttons({ right: loginLink() }),
+            footer: footerLinks(),
         })
     }
     function errorMessage(title: VNodeContent, error: VNodeContent[]): VNode {
@@ -99,10 +99,18 @@ export function View(props: CheckPasswordResetSendingStatusProps): VNode {
                 v_medium(),
                 html`<p>お手数ですが、上記メッセージを管理者にお伝えください</p>`,
             ],
-            footer: buttons({ right: loginLink() }),
+            footer: footerLinks(),
         })
     }
 
+    function footerLinks() {
+        return buttons({ left: privacyPolicyLink(), right: loginLink() })
+    }
+    function privacyPolicyLink() {
+        return html`<a href="${props.href.static_privacy_policy()}">
+            ${icon("key-alt")} プライバシーポリシー
+        </a>`
+    }
     function loginLink(): VNode {
         return html`<a href="${props.href.password_authenticate()}">
             ${icon("user")} ログインIDとパスワードでログインする

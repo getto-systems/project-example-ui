@@ -122,9 +122,9 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
                 body: [
                     h(InputLoginID, { field: props.authenticate.form.loginID, help: [] }),
                     h(InputPassword, { field: props.authenticate.form.password, help: [] }),
-                    buttons({ right: clearButton() }),
+                    buttons({ left: button(), right: clearButton() }),
                 ],
-                footer: [buttons({ left: button(), right: resetLink() }), error()],
+                footer: [buttons({ left: privacyPolicyLink(), right: resetLink() }), error()],
             }),
         )
 
@@ -211,6 +211,11 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
         })
     }
 
+    function privacyPolicyLink() {
+        return html`<a href="${props.href.static_privacy_policy()}">
+            ${icon("key-alt")} プライバシーポリシー
+        </a>`
+    }
     function resetLink() {
         return html`<a href="${props.href.password_reset_requestToken()}">
             ${icon("question-circle")} パスワードがわからない方

@@ -24,6 +24,7 @@ import { initSignAction } from "../../core/impl"
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
 import { SignEntryPoint } from "../../entry_point"
+import { initSignLinkResource } from "../../../sign/common/link/action/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
@@ -35,6 +36,8 @@ export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint
     const proxy = initProxy(postForegroundMessage)
 
     const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
+        link: () => initSignLinkResource(),
+
         check: () => newCheckAuthInfoEntryPoint(feature),
 
         password_authenticate: () => proxy.password.authenticate.entryPoint(feature),

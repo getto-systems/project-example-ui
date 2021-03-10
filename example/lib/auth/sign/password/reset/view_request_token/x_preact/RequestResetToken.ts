@@ -93,9 +93,9 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
                         field: props.requestToken.form.loginID,
                         help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
                     }),
-                    buttons({ right: clearButton() }),
+                    buttons({ left: button(), right: clearButton() }),
                 ],
-                footer: [buttons({ left: button(), right: loginLink() }), error()],
+                footer: [footerLinks(), error()],
             }),
         )
 
@@ -170,10 +170,18 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
                     お手数ですが管理者に連絡お願いします
                 </p>`,
             ],
-            footer: buttons({ right: loginLink() }),
+            footer: footerLinks(),
         })
     }
 
+    function footerLinks() {
+        return buttons({ left: privacyPolicyLink(), right: loginLink() })
+    }
+    function privacyPolicyLink() {
+        return html`<a href="${props.href.static_privacy_policy()}">
+            ${icon("key-alt")} プライバシーポリシー
+        </a>`
+    }
     function loginLink(): VNode {
         return html`<a href="${props.href.password_authenticate()}">
             ${icon("user")} ログインIDとパスワードでログインする

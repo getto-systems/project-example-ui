@@ -54,6 +54,9 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
 
         const type = result.value
         switch (type) {
+            case "static-privacyPolicy":
+                return { type, resource: this.entryPoints.link() }
+
             case "password-reset-requestToken":
                 return { type, entryPoint: this.entryPoints.password_reset_requestToken() }
             case "password-reset-checkStatus":

@@ -332,7 +332,7 @@ function initEntryPoint(
 }
 
 function standard_URL(): URL {
-    return new URL("https://example.com/index.html?_password_reset_token=reset-token")
+    return new URL("https://example.com/index.html?-password-reset-token=reset-token")
 }
 function emptyResetToken_URL(): URL {
     return new URL("https://example.com/index.html")

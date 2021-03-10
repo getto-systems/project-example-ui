@@ -123,9 +123,9 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
                         field: props.reset.form.password,
                         help: ["新しいパスワードを入力してください"],
                     }),
-                    buttons({ right: clearButton() }),
+                    buttons({ left: button(), right: clearButton() }),
                 ],
-                footer: [buttons({ left: button(), right: sendLink() }), error()],
+                footer: [footerLinks(), error()],
             }),
         )
 
@@ -200,10 +200,18 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
                     お手数ですが管理者に連絡お願いします
                 </p>`,
             ],
-            footer: buttons({ right: sendLink() }),
+            footer: footerLinks(),
         })
     }
 
+    function footerLinks() {
+        return buttons({ left: privacyPolicyLink(), right: sendLink() })
+    }
+    function privacyPolicyLink() {
+        return html`<a href="${props.href.static_privacy_policy()}">
+            ${icon("key-alt")} プライバシーポリシー
+        </a>`
+    }
     function sendLink() {
         return html`<a href="${props.href.password_reset_requestToken()}">
             ${icon("question-circle")} リセットトークンをもう一度送信する

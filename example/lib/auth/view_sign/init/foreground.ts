@@ -9,6 +9,7 @@ import { initSignEntryPoint } from "../impl"
 import { initSignAction } from "../core/impl"
 
 import { SignEntryPoint } from "../entry_point"
+import { initSignLinkResource } from "../../sign/common/link/action/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
@@ -18,6 +19,8 @@ export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
     const { currentLocation } = feature
     return initSignEntryPoint(
         initSignAction(newSignViewLocationDetecter(currentLocation), {
+            link: () => initSignLinkResource(),
+
             check: () => newCheckAuthInfoEntryPoint(feature),
 
             password_authenticate: () => newAuthenticatePasswordEntryPoint(feature),
