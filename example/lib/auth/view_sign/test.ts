@@ -1,4 +1,7 @@
-import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
+import {
+    setupAsyncActionTestRunner,
+    setupSyncActionTestRunner,
+} from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockAuthenticatePasswordEntryPoint } from "../sign/password/view_authenticate/mock"
 import { mockRequestResetTokenEntryPoint } from "../sign/password/reset/view_request_token/mock"
@@ -16,243 +19,130 @@ describe("SignView", () => {
     test("redirect login view", (done) => {
         const { action } = standard()
 
-        // TODO runner に変えたい
-        action.subscriber.subscribe(stateHandler())
-
-        action.ignite()
-
-        function stateHandler(): Handler<SignActionState> {
-            const stack: SignActionState[] = []
-            const terminates: Terminate[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-view":
-                        // work in progress...
-                        break
-
-                    case "check-authInfo":
-                        terminates.push(state.entryPoint.terminate)
-
-                        state.entryPoint.resource.core.ignite()
-                        break
-
-                    case "password-authenticate":
-                        terminates.push(state.entryPoint.terminate)
-
-                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
-                        expect(stack[1]).toMatchObject({ type: "password-authenticate" })
-
-                        terminates.forEach((terminate) => terminate())
-                        done()
-                        break
-
-                    case "password-reset-requestToken":
-                    case "password-reset-checkStatus":
-                    case "password-reset":
-                        done(new Error(state.type))
-                        break
-
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        action.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "check-authInfo":
+                    state.entryPoint.resource.core.ignite()
+                    return
             }
-        }
+        })
+
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack.map((state) => state.type)).toEqual([
+                        "check-authInfo",
+                        "password-authenticate",
+                    ])
+                },
+            },
+        ])
+
+        action.subscriber.subscribe(runner(done))
     })
 
     test("password reset request token", (done) => {
         const { action } = passwordReset_requestToken()
 
-        action.subscriber.subscribe(stateHandler())
-
-        action.ignite()
-
-        function stateHandler(): Handler<SignActionState> {
-            const stack: SignActionState[] = []
-            const terminates: Terminate[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-view":
-                        // work in progress...
-                        break
-
-                    case "check-authInfo":
-                        terminates.push(state.entryPoint.terminate)
-
-                        state.entryPoint.resource.core.ignite()
-                        break
-
-                    case "password-reset-requestToken":
-                        terminates.push(state.entryPoint.terminate)
-
-                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
-                        expect(stack[1]).toMatchObject({ type: "password-reset-requestToken" })
-
-                        terminates.forEach((terminate) => terminate())
-                        done()
-                        break
-
-                    case "password-authenticate":
-                    case "password-reset-checkStatus":
-                    case "password-reset":
-                        done(new Error(state.type))
-                        break
-
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        action.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "check-authInfo":
+                    state.entryPoint.resource.core.ignite()
+                    return
             }
-        }
+        })
+
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack.map((state) => state.type)).toEqual([
+                        "check-authInfo",
+                        "password-reset-requestToken",
+                    ])
+                },
+            },
+        ])
+
+        action.subscriber.subscribe(runner(done))
     })
 
     test("password reset check status", (done) => {
         const { action } = passwordReset_checkStatus()
 
-        action.subscriber.subscribe(stateHandler())
-
-        action.ignite()
-
-        function stateHandler(): Handler<SignActionState> {
-            const stack: SignActionState[] = []
-            const terminates: Terminate[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-view":
-                        // work in progress...
-                        break
-
-                    case "check-authInfo":
-                        terminates.push(state.entryPoint.terminate)
-
-                        state.entryPoint.resource.core.ignite()
-                        break
-
-                    case "password-reset-checkStatus":
-                        terminates.push(state.entryPoint.terminate)
-
-                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
-                        expect(stack[1]).toMatchObject({ type: "password-reset-checkStatus" })
-
-                        terminates.forEach((terminate) => terminate())
-                        done()
-                        break
-
-                    case "password-authenticate":
-                    case "password-reset-requestToken":
-                    case "password-reset":
-                        done(new Error(state.type))
-                        break
-
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        action.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "check-authInfo":
+                    state.entryPoint.resource.core.ignite()
+                    return
             }
-        }
+        })
+
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack.map((state) => state.type)).toEqual([
+                        "check-authInfo",
+                        "password-reset-checkStatus",
+                    ])
+                },
+            },
+        ])
+
+        action.subscriber.subscribe(runner(done))
     })
 
     test("password reset", (done) => {
         const { action } = passwordReset_reset()
 
-        action.subscriber.subscribe(stateHandler())
-
-        action.ignite()
-
-        function stateHandler(): Handler<SignActionState> {
-            const stack: SignActionState[] = []
-            const terminates: Terminate[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-view":
-                        // work in progress...
-                        break
-
-                    case "check-authInfo":
-                        terminates.push(state.entryPoint.terminate)
-
-                        state.entryPoint.resource.core.ignite()
-                        break
-
-                    case "password-reset":
-                        terminates.push(state.entryPoint.terminate)
-
-                        expect(stack[0]).toMatchObject({ type: "check-authInfo" })
-                        expect(stack[1]).toMatchObject({ type: "password-reset" })
-
-                        terminates.forEach((terminate) => terminate())
-                        done()
-                        break
-
-                    case "password-authenticate":
-                    case "password-reset-requestToken":
-                    case "password-reset-checkStatus":
-                        done(new Error(state.type))
-                        break
-
-                    case "error":
-                        done(new Error(state.type))
-                        break
-
-                    default:
-                        assertNever(state)
-                }
+        action.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "check-authInfo":
+                    state.entryPoint.resource.core.ignite()
+                    return
             }
-        }
+        })
+
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack.map((state) => state.type)).toEqual([
+                        "check-authInfo",
+                        "password-reset",
+                    ])
+                },
+            },
+        ])
+
+        action.subscriber.subscribe(runner(done))
     })
 
     test("error", (done) => {
         const { action } = standard()
 
-        action.subscriber.subscribe(stateHandler())
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.error("view error")
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([{ type: "error", err: "view error" }])
+                },
+            },
+        ])
 
-        action.error("view error")
-
-        function stateHandler(): Handler<SignActionState> {
-            const stack: SignActionState[] = []
-            return (state) => {
-                stack.push(state)
-
-                switch (state.type) {
-                    case "initial-view":
-                        // work in progress...
-                        break
-
-                    case "check-authInfo":
-                    case "password-authenticate":
-                    case "password-reset-requestToken":
-                    case "password-reset-checkStatus":
-                    case "password-reset":
-                        done(new Error(state.type))
-                        break
-
-                    case "error":
-                        expect(stack).toEqual([{ type: "error", err: "view error" }])
-                        done()
-                        break
-
-                    default:
-                        assertNever(state)
-                }
-            }
-        }
+        action.subscriber.subscribe(runner(done))
     })
 
     test("terminate", (done) => {
@@ -324,13 +214,13 @@ function passwordReset_reset_URL(): URL {
     return new URL("https://example.com/index.html?_password_reset=reset")
 }
 
-interface Handler<T> {
-    (state: T): void
-}
-interface Terminate {
-    (): void
-}
+function actionHasDone(state: SignActionState): boolean {
+    switch (state.type) {
+        case "initial-view":
+        case "check-authInfo":
+            return false
 
-function assertNever(_: never): never {
-    throw new Error("NEVER")
+        default:
+            return true
+    }
 }
