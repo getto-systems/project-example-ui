@@ -1,6 +1,6 @@
 import { StaticMenuPath } from "../../../../y_environment/path"
 
-import { Icon, iconClass } from "../../../../z_external/icon/core"
+import { LineIcon, lniClass } from "../../../../z_external/icon/lineIcon"
 
 import { MenuPermission, MenuTree, MenuTreeNode } from "../infra"
 
@@ -12,6 +12,6 @@ export function category(
     return { type: "category", category: { label, permission }, children }
 }
 
-export function item(label: string, icon: Icon, path: StaticMenuPath): MenuTreeNode {
-    return { type: "item", item: { label, icon: iconClass(icon), path } }
+export function item(label: string, icon: LineIcon, path: StaticMenuPath): MenuTreeNode {
+    return { type: "item", item: { label, icon: lniClass(icon), path } }
 }

@@ -11,7 +11,7 @@ import {
 } from "../../../../z_vendor/getto-css/preact/layout/app"
 
 import { copyright, siteInfo } from "../../../../common/x_preact/site"
-import { iconClass, lnir } from "../../../../z_external/icon/core"
+import { lniClass, lnir } from "../../../../z_external/icon/lineIcon"
 
 import { LoadMenuComponent } from "./LoadMenu"
 
@@ -90,7 +90,7 @@ const template = storyTemplate<MockProps>((props) => {
     }
 
     function menu(): Menu {
-        return initMockMenu(props.label, iconClass(lnir("home")), props.badgeCount)
+        return initMockMenu(props.label, lniClass(lnir("home")), props.badgeCount)
     }
 })
 
