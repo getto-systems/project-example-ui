@@ -6,6 +6,8 @@ import { ResetSessionID } from "../../../password/reset/kernel/data"
 export function initSignLinkResource(): SignLinkResource {
     return {
         href: {
+            static_privacy_policy,
+
             password_authenticate,
             password_reset_requestToken,
             password_reset_checkStatus,
@@ -18,15 +20,19 @@ type Search<K extends string> = Readonly<{
     variant: Record<K, true>
 }>
 
+function static_privacy_policy(): SignHref {
+    return searchQuery(signLinkParams.static, "privacy-policy", [])
+}
+
 function password_authenticate(): SignHref {
     return searchQuery(signLinkParams.password.authenticate, "authenticate", [])
 }
 function password_reset_checkStatus(sessionID: ResetSessionID): SignHref {
     const search = signLinkParams.password.reset
-    return searchQuery(search, "checkStatus", [[search.sessionID, sessionID]])
+    return searchQuery(search, "check-status", [[search.sessionID, sessionID]])
 }
 function password_reset_requestToken(): SignHref {
-    return searchQuery(signLinkParams.password.reset, "requestToken", [])
+    return searchQuery(signLinkParams.password.reset, "request-token", [])
 }
 
 function searchQuery<K extends string>(

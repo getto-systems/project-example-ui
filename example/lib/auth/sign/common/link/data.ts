@@ -1,21 +1,27 @@
 export type SignHref = string & { SignHref: never }
 
-// ログイン前画面ではアンダースコアから始まるクエリを使用する
+// ログイン前画面ではハイフンから始まるクエリを使用する
 export const signLinkParams = {
+    static: {
+        key: "-static",
+        variant: {
+            "privacy-policy": true,
+        }
+    },
     password: {
         authenticate: {
-            key: "_password_authenticate",
+            key: "-password-authenticate",
             variant: {
                 authenticate: true,
             },
         },
         reset: {
-            key: "_password_reset",
-            sessionID: "_password_reset_session_id",
-            token: "_password_reset_token",
+            key: "-password-reset",
+            sessionID: "-password-reset-session-id",
+            token: "-password-reset-token",
             variant: {
-                requestToken: true,
-                checkStatus: true,
+                "request-token": true,
+                "check-status": true,
                 reset: true,
             },
         },

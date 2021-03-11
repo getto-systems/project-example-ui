@@ -6,12 +6,15 @@ describe("SignLink", () => {
     test("link", () => {
         const resource = initSignLinkResource()
 
+        expect(resource.href.static_privacy_policy()).toEqual("?-static=privacy-policy")
         expect(resource.href.password_authenticate()).toEqual(
-            "?_password_authenticate=authenticate",
+            "?-password-authenticate=authenticate",
         )
-        expect(resource.href.password_reset_requestToken()).toEqual("?_password_reset=requestToken")
+        expect(resource.href.password_reset_requestToken()).toEqual(
+            "?-password-reset=request-token",
+        )
         expect(resource.href.password_reset_checkStatus(markResetSessionID("session-id"))).toEqual(
-            "?_password_reset=checkStatus&_password_reset_session_id=session-id",
+            "?-password-reset=check-status&-password-reset-session-id=session-id",
         )
     })
 })

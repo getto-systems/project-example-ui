@@ -10,13 +10,15 @@ import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/res
 import { mockCheckAuthInfoEntryPoint } from "../sign/kernel/auth_info/action_check/mock"
 import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
 
+import { initSignLinkResource } from "../sign/common/link/action/impl"
+
 import { initSignAction } from "./core/impl"
 import { initSignEntryPoint } from "./impl"
 
 import { SignAction, SignActionState } from "./core/action"
 
 describe("SignView", () => {
-    test("redirect login view", (done) => {
+    test("redirect password authenticate", (done) => {
         const { action } = standard()
 
         action.subscriber.subscribe((state) => {
@@ -36,6 +38,34 @@ describe("SignView", () => {
                     expect(stack.map((state) => state.type)).toEqual([
                         "check-authInfo",
                         "password-authenticate",
+                    ])
+                },
+            },
+        ])
+
+        action.subscriber.subscribe(runner(done))
+    })
+
+    test("static privacy policy", (done) => {
+        const { action } = static_privacyPolicy()
+
+        action.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "check-authInfo":
+                    state.entryPoint.resource.core.ignite()
+                    return
+            }
+        })
+
+        const runner = setupAsyncActionTestRunner(actionHasDone, [
+            {
+                statement: () => {
+                    action.ignite()
+                },
+                examine: (stack) => {
+                    expect(stack.map((state) => state.type)).toEqual([
+                        "check-authInfo",
+                        "static-privacyPolicy",
                     ])
                 },
             },
@@ -172,6 +202,12 @@ function standard() {
 
     return { action }
 }
+function static_privacyPolicy() {
+    const currentURL = static_privacyPolicy_URL()
+    const action = initAction(currentURL)
+
+    return { action }
+}
 function passwordReset_requestToken() {
     const currentURL = passwordReset_requestToken_URL()
     const action = initAction(currentURL)
@@ -193,7 +229,10 @@ function passwordReset_reset() {
 
 function initAction(currentURL: URL): SignAction {
     return initSignAction(mockSignViewLocationDetecter(currentURL), {
+        link: () => initSignLinkResource(),
+
         check: () => mockCheckAuthInfoEntryPoint(),
+
         password_authenticate: () => mockAuthenticatePasswordEntryPoint(),
         password_reset: () => mockResetPasswordEntryPoint(),
         password_reset_requestToken: () => mockRequestResetTokenEntryPoint(),
@@ -204,14 +243,17 @@ function initAction(currentURL: URL): SignAction {
 function standard_URL(): URL {
     return new URL("https://example.com/index.html")
 }
+function static_privacyPolicy_URL(): URL {
+    return new URL("https://example.com/index.html?-static=privacy-policy")
+}
 function passwordReset_requestToken_URL(): URL {
-    return new URL("https://example.com/index.html?_password_reset=requestToken")
+    return new URL("https://example.com/index.html?-password-reset=request-token")
 }
 function passwordReset_checkStatus_URL(): URL {
-    return new URL("https://example.com/index.html?_password_reset=checkStatus")
+    return new URL("https://example.com/index.html?-password-reset=check-status")
 }
 function passwordReset_reset_URL(): URL {
-    return new URL("https://example.com/index.html?_password_reset=reset")
+    return new URL("https://example.com/index.html?-password-reset=reset")
 }
 
 function actionHasDone(state: SignActionState): boolean {
