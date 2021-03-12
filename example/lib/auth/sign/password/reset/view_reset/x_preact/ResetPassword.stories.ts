@@ -89,4 +89,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({ reset: "initial", form: "valid", err: "" })
+export const Reset = template({ reset: "initial", form: "valid", err: "" })

@@ -7,7 +7,7 @@ import {
     useApplicationEntryPoint,
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
-import { ApplicationError } from "../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../common/x_preact/ApplicationError"
 import { CheckAuthInfo } from "../../sign/kernel/auth_info/action_check/x_preact/CheckAuthInfo"
 import { AuthenticatePassword } from "../../sign/password/view_authenticate/x_preact/Authenticate"
 import { RequestResetToken } from "../../sign/password/reset/view_request_token/x_preact/RequestResetToken"
@@ -15,7 +15,7 @@ import { CheckPasswordResetSendingStatus } from "../../sign/password/reset/view_
 import { ResetPassword } from "../../sign/password/reset/view_reset/x_preact/ResetPassword"
 
 import { SignEntryPoint, SignResource, SignResourceState } from "../entry_point"
-import { PrivacyPolicyComponent } from "../../sign/action_static/x_preact/PrivacyPolicy"
+import { PrivacyPolicyComponent } from "./PrivacyPolicy"
 
 export function SignView(entryPoint: SignEntryPoint): VNode {
     const resource = useApplicationEntryPoint(entryPoint)
@@ -25,7 +25,7 @@ export function SignView(entryPoint: SignEntryPoint): VNode {
         console.log(err)
     })
     if (err) {
-        return h(ApplicationError, { err: `${err}` })
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
     return h(SignComponent, {
@@ -59,7 +59,7 @@ export function SignComponent(props: SignProps): VNode {
             return h(ResetPassword, props.state.entryPoint)
 
         case "error":
-            return h(ApplicationError, { err: props.state.err })
+            return h(ApplicationErrorComponent, { err: props.state.err })
     }
 }
 

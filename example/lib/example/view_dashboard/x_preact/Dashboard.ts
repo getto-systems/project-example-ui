@@ -14,11 +14,11 @@ import { useDocumentTitle } from "../../../common/x_preact/hooks"
 
 import { copyright, siteInfo } from "../../../common/x_preact/site"
 
-import { ApplicationError } from "../../../common/x_preact/ApplicationError"
-import { LoadSeason } from "../../common/action_load_season/x_preact/LoadSeason"
+import { ApplicationErrorComponent } from "../../../common/x_preact/ApplicationError"
+import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/LoadSeason"
 import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"
-import { LoadBreadcrumbList } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
-import { Example } from "../../common/action_load_season/x_preact/Example"
+import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
+import { ExampleComponent } from "../../common/action_load_season/x_preact/Example"
 
 import { DashboardEntryPoint, DashboardResource } from "../entry_point"
 
@@ -27,7 +27,7 @@ export function Dashboard(entryPoint: DashboardEntryPoint): VNode {
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {
-        return h(ApplicationError, { err: `${err}` })
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
     return h(DashboardComponent, resource)
@@ -37,10 +37,10 @@ export function DashboardComponent(resource: DashboardResource): VNode {
 
     return appLayout({
         siteInfo: siteInfo(),
-        header: [h(LoadSeason, resource)],
+        header: [h(LoadSeasonComponent, resource)],
         main: appMain({
-            header: mainHeader([mainTitle("ホーム"), h(LoadBreadcrumbList, resource)]),
-            body: mainBody(h(Example, resource)),
+            header: mainHeader([mainTitle("ホーム"), h(LoadBreadcrumbListComponent, resource)]),
+            body: mainBody(h(ExampleComponent, resource)),
             copyright: copyright(),
         }),
         menu: h(LoadMenu, resource),

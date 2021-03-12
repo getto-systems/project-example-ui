@@ -33,7 +33,7 @@ enum LoadEnum {
 }
 
 export default {
-    title: "Outline/Menu",
+    title: "library/Outline/LoadMenu",
     parameters: {
         layout: "fullscreen",
     },
@@ -94,4 +94,4 @@ const template = storyTemplate<MockProps>((props) => {
     }
 })
 
-export const Initial = template({ load: "success", label: "ホーム", badgeCount: 99, err: "" })
+export const LoadMenu = template({ load: "success", label: "ホーム", badgeCount: 99, err: "" })

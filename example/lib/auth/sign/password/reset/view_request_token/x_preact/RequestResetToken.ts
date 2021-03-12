@@ -19,7 +19,8 @@ import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/log
 
 import { VNodeContent } from "../../../../../../common/x_preact/design/common"
 import { siteInfo } from "../../../../../../common/x_preact/site"
-import { icon, spinner } from "../../../../../../common/x_preact/design/icon"
+import { spinner } from "../../../../../../common/x_preact/design/icon"
+import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import {
     RequestResetTokenEntryPoint,
@@ -46,7 +47,9 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
     useLayoutEffect(() => {
         switch (props.state.core.type) {
             case "succeed-to-request-token":
-                location.href = props.href.password_reset_checkStatus(props.state.core.sessionID)
+                location.href = props.link.getHref_password_reset_checkStatus(
+                    props.state.core.sessionID,
+                )
                 return
         }
     }, [props.state.core])
@@ -178,14 +181,10 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
         return buttons({ left: privacyPolicyLink(), right: loginLink() })
     }
     function privacyPolicyLink() {
-        return html`<a href="${props.href.static_privacy_policy()}">
-            ${icon("key-alt")} プライバシーポリシー
-        </a>`
+        return signNav(props.link.getNav_static_privacyPolicy())
     }
     function loginLink(): VNode {
-        return html`<a href="${props.href.password_authenticate()}">
-            ${icon("user")} ログインIDとパスワードでログインする
-        </a>`
+        return signNav(props.link.getNav_password_authenticate())
     }
 }
 

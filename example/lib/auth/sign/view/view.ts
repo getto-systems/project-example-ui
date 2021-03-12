@@ -6,17 +6,7 @@ export type SignViewType =
     | "password-reset-checkStatus"
     | "password-reset"
 
-type SignViewLocationTypes = LocationTypes<SignViewLocationKeys, SignViewType>
+type SignViewLocationTypes = LocationTypes<SignViewType>
 export type SignViewLocationDetecter = SignViewLocationTypes["detecter"]
 export type SignViewLocationDetectMethod = SignViewLocationTypes["method"]
 export type SignViewLocationInfo = SignViewLocationTypes["info"]
-export type SignViewLocationKeys = Readonly<{
-    static: SignViewSearch<"privacy-policy">
-    password: Readonly<{
-        reset: SignViewSearch<"request-token" | "check-status" | "reset">
-    }>
-}>
-export type SignViewSearch<N extends string> = Readonly<{
-    key: string
-    variant: Record<N, true>
-}>

@@ -19,11 +19,11 @@ import {
 
 import { VNodeContent } from "../../../../../common/x_preact/design/common"
 import { siteInfo } from "../../../../../common/x_preact/site"
-import { icon, spinner } from "../../../../../common/x_preact/design/icon"
-
+import { spinner } from "../../../../../common/x_preact/design/icon"
 import { appendScript } from "../../../common/x_preact/script"
+import { signNav } from "../../../common/nav/x_preact/nav"
 
-import { ApplicationError } from "../../../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../../../common/x_preact/ApplicationError"
 import { InputLoginID } from "../../../common/fields/login_id/action_input/x_preact/InputLoginID"
 import { InputPassword } from "../../../common/fields/password/action_input/x_preact/InputPassword"
 
@@ -99,7 +99,7 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
 
         case "repository-error":
         case "load-error":
-            return h(ApplicationError, { err: props.state.core.err.err })
+            return h(ApplicationErrorComponent, { err: props.state.core.err.err })
     }
 
     type AuthenticateFormState = "login" | "connecting"
@@ -124,7 +124,7 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
                     h(InputPassword, { field: props.authenticate.form.password, help: [] }),
                     buttons({ left: button(), right: clearButton() }),
                 ],
-                footer: [buttons({ left: privacyPolicyLink(), right: resetLink() }), error()],
+                footer: [footerLinks(), error()],
             }),
         )
 
@@ -207,19 +207,18 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
                     お手数ですが管理者に連絡お願いします
                 </p>`,
             ],
-            footer: buttons({ right: resetLink() }),
+            footer: footerLinks(),
         })
     }
 
+    function footerLinks() {
+        return buttons({ left: privacyPolicyLink(), right: resetLink() })
+    }
     function privacyPolicyLink() {
-        return html`<a href="${props.href.static_privacy_policy()}">
-            ${icon("key-alt")} プライバシーポリシー
-        </a>`
+        return signNav(props.link.getNav_static_privacyPolicy())
     }
     function resetLink() {
-        return html`<a href="${props.href.password_reset_requestToken()}">
-            ${icon("question-circle")} パスワードがわからない方
-        </a>`
+        return signNav(props.link.getNav_password_reset_requestToken())
     }
 }
 

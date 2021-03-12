@@ -1,10 +1,10 @@
 import { h } from "preact"
 
-import { storyTemplate } from "../../../../z_vendor/storybook/preact/story"
+import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
 
 import { PrivacyPolicyComponent } from "./PrivacyPolicy"
 
-import { initSignLinkResource } from "../../common/link/action/impl"
+import { initSignLinkResource } from "../../sign/common/nav/action_nav/impl"
 
 export default {
     title: "main/public/Auth/Sign/PrivacyPolicy",
@@ -20,4 +20,4 @@ const template = storyTemplate<Props>(() => {
     return h(PrivacyPolicyComponent, initSignLinkResource())
 })
 
-export const Box = template({})
+export const PrivacyPolicy = template({})

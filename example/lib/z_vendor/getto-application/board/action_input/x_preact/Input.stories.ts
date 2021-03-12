@@ -30,4 +30,4 @@ const template = storyTemplate<Props>((props) => {
     })
 })
 
-export const Initial = template({ inputType: "text", value: "" })
+export const Input = template({ inputType: "text", value: "" })

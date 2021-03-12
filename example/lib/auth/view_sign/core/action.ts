@@ -5,7 +5,7 @@ import { AuthenticatePasswordEntryPoint } from "../../sign/password/view_authent
 import { CheckResetTokenSendingStatusEntryPoint } from "../../sign/password/reset/view_check_status/entry_point"
 import { RequestResetTokenEntryPoint } from "../../sign/password/reset/view_request_token/entry_point"
 import { ResetPasswordEntryPoint } from "../../sign/password/reset/view_reset/entry_point"
-import { SignLinkResource } from "../../sign/common/link/action/resource"
+import { SignLinkResource } from "../../sign/common/nav/action_nav/resource"
 
 export interface SignAction extends ApplicationStateAction<SignActionState> {
     error(err: string): void

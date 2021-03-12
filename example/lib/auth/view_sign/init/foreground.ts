@@ -9,7 +9,7 @@ import { initSignEntryPoint } from "../impl"
 import { initSignAction } from "../core/impl"
 
 import { SignEntryPoint } from "../entry_point"
-import { initSignLinkResource } from "../../sign/common/link/action/impl"
+import { initSignLinkResource } from "../../sign/common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage

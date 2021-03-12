@@ -5,7 +5,6 @@ import { CheckResetTokenSendingStatusInfra } from "../infra"
 
 import {
     CheckResetTokenSendingStatusLocationDetectMethod,
-    CheckResetTokenSendingStatusLocationKeys,
     CheckResetTokenSendingStatusPod,
 } from "../method"
 
@@ -14,12 +13,12 @@ import { CheckResetTokenSendingStatusEvent } from "../event"
 import { resetSessionIDLocationConverter } from "../../kernel/converter"
 
 import { CheckResetTokenSendingStatusError } from "../data"
+import { SignNav, signNavKey } from "../../../../common/nav/data"
 
-interface Detecter {
-    (keys: CheckResetTokenSendingStatusLocationKeys): CheckResetTokenSendingStatusLocationDetectMethod
-}
-export const detectSessionID: Detecter = (keys) => (currentURL) =>
-    resetSessionIDLocationConverter(currentURL.searchParams.get(keys.sessionID))
+export const detectSessionID: CheckResetTokenSendingStatusLocationDetectMethod = (currentURL) =>
+    resetSessionIDLocationConverter(
+        currentURL.searchParams.get(signNavKey(SignNav.passwordResetSessionID)),
+    )
 
 interface CheckStatus {
     (infra: CheckResetTokenSendingStatusInfra): CheckResetTokenSendingStatusPod

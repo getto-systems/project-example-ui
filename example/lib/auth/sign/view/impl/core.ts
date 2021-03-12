@@ -1,34 +1,48 @@
-import { SignViewLocationDetectMethod, SignViewLocationKeys } from "../view"
-import { signViewSearchLocationConverter } from "./converter"
+import {
+    ResetPasswordVariant,
+    SignNav,
+    signNavKey,
+    StaticSignViewVariant,
+} from "../../common/nav/data"
+import { SignViewLocationDetectMethod, SignViewType } from "../view"
+import {
+    resetPasswordVariantLocationConverter,
+    staticSignViewVariantLocationConverter,
+} from "./converter"
 
-interface Detecter {
-    (keys: SignViewLocationKeys): SignViewLocationDetectMethod
-}
-export const detectSignViewType: Detecter = (keys) => (currentURL) => {
-    const search_static = signViewSearchLocationConverter(keys.static, (key) =>
-        currentURL.searchParams.get(key),
+export const detectSignViewType: SignViewLocationDetectMethod = (currentURL) => {
+    const staticView = staticSignViewVariantLocationConverter(
+        currentURL.searchParams.get(signNavKey(SignNav.static)),
     )
-    if (search_static.valid) {
-        return { valid: true, value: viewTypes.static[search_static.value] }
+    if (staticView.valid) {
+        return { valid: true, value: staticViewType(staticView.value) }
     }
 
-    const password_reset = signViewSearchLocationConverter(keys.password.reset, (key) =>
-        currentURL.searchParams.get(key),
+    const resetPassword = resetPasswordVariantLocationConverter(
+        currentURL.searchParams.get(signNavKey(SignNav.passwordReset)),
     )
-    if (password_reset.valid) {
-        return { valid: true, value: viewTypes.reset[password_reset.value] }
+    if (resetPassword.valid) {
+        return { valid: true, value: resetPasswordViewType(resetPassword.value) }
     }
 
     return { valid: false }
 }
 
-const viewTypes = {
-    static: {
-        "privacy-policy": "static-privacyPolicy",
-    },
-    reset: {
-        "request-token": "password-reset-requestToken",
-        "check-status": "password-reset-checkStatus",
-        reset: "password-reset",
-    },
-} as const
+function staticViewType(variant: StaticSignViewVariant): SignViewType {
+    switch (variant) {
+        case StaticSignViewVariant["privacy-policy"]:
+            return "static-privacyPolicy"
+    }
+}
+function resetPasswordViewType(variant: ResetPasswordVariant): SignViewType {
+    switch (variant) {
+        case ResetPasswordVariant["request-token"]:
+            return "password-reset-requestToken"
+
+        case ResetPasswordVariant["check-status"]:
+            return "password-reset-checkStatus"
+
+        case ResetPasswordVariant["reset"]:
+            return "password-reset"
+    }
+}

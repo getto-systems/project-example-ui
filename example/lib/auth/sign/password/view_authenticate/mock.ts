@@ -2,7 +2,7 @@ import { mockAuthenticatePasswordFormAction } from "./form/mock"
 import { mockAuthenticatePasswordCoreAction } from "./core/mock"
 
 import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "./entry_point"
-import { initSignLinkResource } from "../../common/link/action/impl"
+import { initSignLinkResource } from "../../common/nav/action_nav/impl"
 
 export function mockAuthenticatePasswordEntryPoint(): AuthenticatePasswordEntryPoint {
     return {

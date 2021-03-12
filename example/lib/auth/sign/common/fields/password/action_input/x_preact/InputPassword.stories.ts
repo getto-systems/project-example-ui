@@ -71,7 +71,7 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Field = template({
+export const InputPassword = template({
     password: "",
     validate: "valid",
     character: "singleByte",

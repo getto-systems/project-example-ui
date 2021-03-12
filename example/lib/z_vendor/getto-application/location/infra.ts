@@ -1,10 +1,9 @@
 import { ConvertLocationResult } from "./data"
 
-export type LocationTypes<K, T> = {
+export type LocationTypes<T> = {
     detecter: LocationDetecter<T>
     method: LocationDetectMethod<T>
     info: T
-    keys: K
 }
 
 export interface LocationDetecter<T> {

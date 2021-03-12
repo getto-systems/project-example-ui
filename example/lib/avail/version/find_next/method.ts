@@ -10,11 +10,11 @@ export interface FindNextVersionMethod {
     (post: Post<FindNextVersionEvent>): void
 }
 
-type FindNextVersionLocationTypes = LocationTypes<Readonly<{ version: string }>, ApplicationTargetPath>
+type FindNextVersionLocationTypes = LocationTypes<ApplicationTargetPath>
 export type FindNextVersionLocationDetecter = FindNextVersionLocationTypes["detecter"]
 export type FindNextVersionLocationDetectMethod = FindNextVersionLocationTypes["method"]
 export type FindNextVersionLocationInfo = FindNextVersionLocationTypes["info"]
-export type FindNextVersionLocationKeys = FindNextVersionLocationTypes["keys"]
+export type FindNextVersionLocationKeys = Readonly<{ version: string }>
 
 interface Post<T> {
     (event: T): void

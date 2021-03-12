@@ -7,7 +7,7 @@ import { mockDocsContentResource } from "../mock"
 import { DocsContentComponent } from "./EntryPoint"
 
 export default {
-    title: "Document/Document",
+    title: "main/secure/Docs/Content",
     parameters: {
         layout: "fullscreen",
     },
@@ -20,4 +20,4 @@ const template = storyTemplate<MockProps>(() => {
     return h(DocsContentComponent, mockDocsContentResource())
 })
 
-export const Initial = template({})
+export const Content = template({})

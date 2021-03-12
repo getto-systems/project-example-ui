@@ -18,7 +18,7 @@ import { LoadBreadcrumbListResource } from "../resource"
 import { BreadcrumbList, BreadcrumbNode } from "../../load_breadcrumb_list/data"
 import { MenuCategory, MenuItem } from "../../kernel/data"
 
-export function LoadBreadcrumbList(resource: LoadBreadcrumbListResource): VNode {
+export function LoadBreadcrumbListComponent(resource: LoadBreadcrumbListResource): VNode {
     return mainBreadcrumbList(toContent(resource.breadcrumbList.load()))
 }
 

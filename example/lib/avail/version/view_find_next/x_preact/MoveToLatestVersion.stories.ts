@@ -52,4 +52,4 @@ const template = storyTemplate<MockProps>((props) => {
     }
 })
 
-export const Initial = template({ findNext: "delayed", err: "" })
+export const MoveToLatestVersion = template({ findNext: "delayed", err: "" })

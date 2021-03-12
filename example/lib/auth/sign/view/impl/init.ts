@@ -4,10 +4,6 @@ import { detectSignViewType } from "./core"
 
 import { SignViewLocationDetecter } from "../view"
 
-import { signLinkParams } from "../../common/link/data"
-
-export function newSignViewLocationDetecter(
-    currentLocation: Location,
-): SignViewLocationDetecter {
-    return newLocationDetecter(currentLocation, detectSignViewType(signLinkParams))
+export function newSignViewLocationDetecter(currentLocation: Location): SignViewLocationDetecter {
+    return newLocationDetecter(currentLocation, detectSignViewType)
 }

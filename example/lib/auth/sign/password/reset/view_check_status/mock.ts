@@ -1,6 +1,6 @@
 import { mockCheckResetTokenSendingStatusCoreAction } from "./core/mock"
 
-import { initSignLinkResource } from "../../../common/link/action/impl"
+import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
 import {
     CheckResetTokenSendingStatusEntryPoint,

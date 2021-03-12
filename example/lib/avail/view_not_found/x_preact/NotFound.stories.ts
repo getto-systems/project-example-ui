@@ -28,4 +28,4 @@ const template = storyTemplate<MockProps>((props) => {
     )
 })
 
-export const Initial = template({ version: "1.0.0" })
+export const NotFound = template({ version: "1.0.0" })

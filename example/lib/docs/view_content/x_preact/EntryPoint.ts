@@ -7,7 +7,7 @@ import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { siteInfo } from "../../../common/x_preact/site"
 
-import { ApplicationError } from "../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../common/x_preact/ApplicationError"
 import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/LoadMenu"
 import { LoadDocsContentPathComponent } from "../../action_load_content/x_preact/LoadDocsContentPath"
 
@@ -18,7 +18,7 @@ export function DocsContent(entryPoint: DocsContentEntryPoint): VNode {
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {
-        return h(ApplicationError, { err: `${err}` })
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
     return h(DocsContentComponent, resource)

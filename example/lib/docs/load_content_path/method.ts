@@ -9,11 +9,8 @@ export interface LoadDocsContentPathMethod {
     (): DocsContentPath
 }
 
-type LoadDocsContentPathLocationTypes = LocationTypes<
-    Readonly<{ version: string }>,
-    DocsContentPath
->
+type LoadDocsContentPathLocationTypes = LocationTypes<DocsContentPath>
 export type LoadDocsContentPathLocationDetecter = LoadDocsContentPathLocationTypes["detecter"]
 export type LoadDocsContentPathLocationDetectMethod = LoadDocsContentPathLocationTypes["method"]
 export type LoadDocsContentPathLocationInfo = LoadDocsContentPathLocationTypes["info"]
-export type LoadDocsContentPathLocationKeys = LoadDocsContentPathLocationTypes["keys"]
+export type LoadDocsContentPathLocationKeys = Readonly<{ version: string }>
