@@ -11,7 +11,7 @@ import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
 import { siteInfo } from "../../../../common/x_preact/site"
 import { spinner } from "../../../../common/x_preact/design/icon"
 
-import { ApplicationError } from "../../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../../common/x_preact/ApplicationError"
 
 import { applicationPath } from "../../find_next/impl/helper"
 
@@ -31,7 +31,7 @@ export function MoveToLatestVersion(entryPoint: FindNextVersionEntryPoint): VNod
         console.log(err)
     })
     if (err) {
-        return h(ApplicationError, { err: `${err}` })
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
     return h(MoveToLatestVersionComponent, {
@@ -64,7 +64,7 @@ export function MoveToLatestVersionComponent(props: MoveToLatestVersionProps): V
             return EMPTY_CONTENT
 
         case "failed-to-find":
-            return h(ApplicationError, { err: errorMessage(props.state.err) })
+            return h(ApplicationErrorComponent, { err: errorMessage(props.state.err) })
     }
 
     function delayedMessage() {

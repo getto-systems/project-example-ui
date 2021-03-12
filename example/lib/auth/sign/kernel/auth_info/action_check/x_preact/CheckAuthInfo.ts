@@ -16,7 +16,7 @@ import { spinner } from "../../../../../../common/x_preact/design/icon"
 
 import { appendScript } from "../../../../common/x_preact/script"
 
-import { ApplicationError } from "../../../../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../../../../common/x_preact/ApplicationError"
 
 import {
     CheckAuthInfoEntryPoint,
@@ -107,7 +107,7 @@ export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
 
         case "repository-error":
         case "load-error":
-            return h(ApplicationError, { err: props.state.err.err })
+            return h(ApplicationErrorComponent, { err: props.state.err.err })
     }
 
     function delayedMessage() {

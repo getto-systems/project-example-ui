@@ -10,7 +10,7 @@ import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/res
 import { mockCheckAuthInfoEntryPoint } from "../sign/kernel/auth_info/action_check/mock"
 import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
 
-import { initSignLinkResource } from "../sign/common/link/action/impl"
+import { initSignLinkResource } from "../sign/common/nav/action_nav/impl"
 
 import { initSignAction } from "./core/impl"
 import { initSignEntryPoint } from "./impl"

@@ -1,13 +1,13 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
-import { buttons, field } from "../../../../z_vendor/getto-css/preact/design/form"
+import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
+import { buttons, field } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { siteInfo } from "../../../../common/x_preact/site"
-import { icon } from "../../../../common/x_preact/design/icon"
+import { siteInfo } from "../../../common/x_preact/site"
+import { signNav } from "../../sign/common/nav/x_preact/nav"
 
-import { SignLinkResource } from "../../common/link/action/resource"
+import { SignLinkResource } from "../../sign/common/nav/action_nav/resource"
 
 export function PrivacyPolicyComponent(props: SignLinkResource): VNode {
     return loginBox(siteInfo(), {
@@ -36,10 +36,13 @@ export function PrivacyPolicyComponent(props: SignLinkResource): VNode {
                 `,
             }),
         ],
-        footer: buttons({ right: loginLink() }),
+        footer: buttons({ left: loginLink(), right: resetLink() }),
     })
 
     function loginLink(): VNode {
-        return html`<a href="${props.href.password_authenticate()}"> ${icon("user")} ログイン </a>`
+        return signNav(props.link.getNav_password_authenticate())
+    }
+    function resetLink() {
+        return signNav(props.link.getNav_password_reset_requestToken())
     }
 }

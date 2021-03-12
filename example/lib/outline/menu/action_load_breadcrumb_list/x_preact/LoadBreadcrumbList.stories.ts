@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { LoadBreadcrumbList } from "./LoadBreadcrumbList"
+import { LoadBreadcrumbListComponent } from "./LoadBreadcrumbList"
 
 import { initMockBreadcrumbList, initMockLoadBreadcrumbListCoreAction } from "../core/mock"
 
@@ -25,9 +25,9 @@ type MockProps = Readonly<{
     label: string
 }>
 const template = storyTemplate<MockProps>((props) => {
-    return h(LoadBreadcrumbList, {
+    return h(LoadBreadcrumbListComponent, {
         breadcrumbList: initMockLoadBreadcrumbListCoreAction(initMockBreadcrumbList(props.label)),
     })
 })
 
-export const Initial = template({ load: "home", label: "ホーム" })
+export const LoadBreadcrumbList = template({ load: "home", label: "ホーム" })

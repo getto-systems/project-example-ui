@@ -1,10 +1,10 @@
 import { mockLocationDetecter } from "../../../../z_vendor/getto-application/location/mock"
 
-import { detectMenuTargetPath } from "../impl/detecter"
+import { detectMenuTargetPath } from "./detecter"
 
 import { LoadMenuLocationDetecter } from "../method"
 
-export function initLoadMenuLocationDetecter(
+export function mockLoadMenuLocationDetecter(
     currentURL: URL,
     version: string,
 ): LoadMenuLocationDetecter {

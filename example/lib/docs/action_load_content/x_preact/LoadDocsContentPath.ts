@@ -13,7 +13,7 @@ import { useDocumentTitle } from "../../../common/x_preact/hooks"
 import { VNodeContent } from "../../../common/x_preact/design/common"
 import { copyright } from "../../../common/x_preact/site"
 
-import { LoadBreadcrumbList } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
+import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/LoadBreadcrumbList"
 
 import { LoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/resource"
 import { LoadDocsContentPathResource } from "../resource"
@@ -33,7 +33,7 @@ export function LoadDocsContentPathComponent(resource: Resource): VNode {
     return appMain({
         header: mainHeader([
             mainTitle(documentTitle(docsContentPath)),
-            h(LoadBreadcrumbList, resource),
+            h(LoadBreadcrumbListComponent, resource),
         ]),
         body: mainBody(loadContentState.content),
         copyright: copyright(),

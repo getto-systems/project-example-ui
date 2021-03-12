@@ -101,8 +101,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({
-    request: "initial",
-    form: "valid",
-    err: "",
-})
+export const RequestToken = template({ request: "initial", form: "valid", err: "" })

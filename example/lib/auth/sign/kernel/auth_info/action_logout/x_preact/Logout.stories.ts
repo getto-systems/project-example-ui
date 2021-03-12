@@ -47,4 +47,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({ logout: "initial", err: "" })
+export const Logout = template({ logout: "initial", err: "" })

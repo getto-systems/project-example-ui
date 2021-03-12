@@ -4,10 +4,8 @@ import { detectSessionID } from "./core"
 
 import { CheckResetTokenSendingStatusLocationDetecter } from "../method"
 
-import { signLinkParams } from "../../../../common/link/data"
-
 export function mockCheckResetTokenSendingStatusLocationDetecter(
     currentURL: URL,
 ): CheckResetTokenSendingStatusLocationDetecter {
-    return mockLocationDetecter(currentURL, detectSessionID(signLinkParams.password.reset))
+    return mockLocationDetecter(currentURL, detectSessionID)
 }

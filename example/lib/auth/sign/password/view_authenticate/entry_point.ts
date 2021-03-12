@@ -3,7 +3,7 @@ import {
     ApplicationEntryPoint,
 } from "../../../../z_vendor/getto-application/action/action"
 
-import { SignLinkResource } from "../../common/link/action/resource"
+import { SignLinkResource } from "../../common/nav/action_nav/resource"
 import { ValidateBoardActionState } from "../../../../z_vendor/getto-application/board/action_validate_board/core/action"
 import { AuthenticatePasswordCoreAction, AuthenticatePasswordCoreState } from "./core/action"
 import { AuthenticatePasswordFormAction } from "./form/action"

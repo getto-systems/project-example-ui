@@ -2,8 +2,8 @@ import { LocationTypes } from "../../../z_vendor/getto-application/location/infr
 
 import { MenuTargetPath } from "./data"
 
-type LoadMenuLocationTypes = LocationTypes<Readonly<{ version: string }>, MenuTargetPath>
+type LoadMenuLocationTypes = LocationTypes<MenuTargetPath>
 export type LoadMenuLocationDetecter = LoadMenuLocationTypes["detecter"]
 export type LoadMenuLocationDetectMethod = LoadMenuLocationTypes["method"]
 export type LoadMenuLocationInfo = LoadMenuLocationTypes["info"]
-export type LoadMenuLocationKeys = LoadMenuLocationTypes["keys"]
+export type LoadMenuLocationKeys = Readonly<{ version: string }>

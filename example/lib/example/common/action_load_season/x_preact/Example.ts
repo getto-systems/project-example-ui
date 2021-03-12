@@ -13,7 +13,7 @@ import { LoadSeasonResource } from "../resource"
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import { Season } from "../../load_season/data"
 
-export function Example(resource: LoadSeasonResource): VNode {
+export function ExampleComponent(resource: LoadSeasonResource): VNode {
     const result = resource.season.load()
     if (!result.success) {
         return seasonBox(loadError(result.err))

@@ -5,10 +5,7 @@ export interface GetScriptPathPod {
     (info: GetScriptPathLocationDetecter): GetScriptPathMethod
 }
 
-type GetScriptPathLocationTypes = LocationTypes<NoKeys, LocationPathname>
-type NoKeys = {
-    // no keys
-}
+type GetScriptPathLocationTypes = LocationTypes<LocationPathname>
 export type GetScriptPathLocationDetecter = GetScriptPathLocationTypes["detecter"]
 export type GetScriptPathLocationMethod = GetScriptPathLocationTypes["method"]
 export type GetScriptPathLocationInfo = GetScriptPathLocationTypes["info"]

@@ -28,4 +28,4 @@ const template = storyTemplate<MockProps>(() => {
     })
 })
 
-export const Initial = template({})
+export const Dashboard = template({})

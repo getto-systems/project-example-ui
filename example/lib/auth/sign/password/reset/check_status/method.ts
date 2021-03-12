@@ -8,11 +8,10 @@ export interface CheckResetTokenSendingStatusPod {
     (detecter: CheckResetTokenSendingStatusLocationDetecter): CheckSendingStatusMethod
 }
 
-type CheckStatusLocationTypes = LocationTypes<Readonly<{ sessionID: string }>, ResetSessionID>
+type CheckStatusLocationTypes = LocationTypes<ResetSessionID>
 export type CheckResetTokenSendingStatusLocationDetecter = CheckStatusLocationTypes["detecter"]
 export type CheckResetTokenSendingStatusLocationDetectMethod = CheckStatusLocationTypes["method"]
 export type CheckResetTokenSendingStatusLocationInfo = CheckStatusLocationTypes["info"]
-export type CheckResetTokenSendingStatusLocationKeys = CheckStatusLocationTypes["keys"]
 
 export interface CheckSendingStatusMethod {
     (post: Post<CheckResetTokenSendingStatusEvent>): void

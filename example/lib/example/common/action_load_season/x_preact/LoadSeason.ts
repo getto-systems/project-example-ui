@@ -10,7 +10,7 @@ import { LoadSeasonResource } from "../resource"
 import { Season } from "../../load_season/data"
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 
-export function LoadSeason(resource: LoadSeasonResource): VNode {
+export function LoadSeasonComponent(resource: LoadSeasonResource): VNode {
     const result = resource.season.load()
     if (!result.success) {
         return info(errorContent(result.err))

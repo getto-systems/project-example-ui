@@ -21,4 +21,4 @@ const template = storyTemplate<MockProps>(() => {
     })
 })
 
-export const Success = template({})
+export const LoadDocsContentPath = template({})

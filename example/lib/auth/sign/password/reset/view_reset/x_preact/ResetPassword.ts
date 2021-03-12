@@ -18,11 +18,11 @@ import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/log
 
 import { VNodeContent } from "../../../../../../common/x_preact/design/common"
 import { siteInfo } from "../../../../../../common/x_preact/site"
-import { icon, spinner } from "../../../../../../common/x_preact/design/icon"
-
+import { spinner } from "../../../../../../common/x_preact/design/icon"
 import { appendScript } from "../../../../common/x_preact/script"
+import { signNav } from "../../../../common/nav/x_preact/nav"
 
-import { ApplicationError } from "../../../../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../../../../common/x_preact/ApplicationError"
 import { InputLoginID } from "../../../../common/fields/login_id/action_input/x_preact/InputLoginID"
 import { InputPassword } from "../../../../common/fields/password/action_input/x_preact/InputPassword"
 
@@ -97,7 +97,7 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
 
         case "repository-error":
         case "load-error":
-            return h(ApplicationError, { err: props.state.core.err.err })
+            return h(ApplicationErrorComponent, { err: props.state.core.err.err })
     }
 
     type ResetFormState = "reset" | "connecting"
@@ -208,14 +208,10 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
         return buttons({ left: privacyPolicyLink(), right: sendLink() })
     }
     function privacyPolicyLink() {
-        return html`<a href="${props.href.static_privacy_policy()}">
-            ${icon("key-alt")} プライバシーポリシー
-        </a>`
+        return signNav(props.link.getNav_static_privacyPolicy())
     }
     function sendLink() {
-        return html`<a href="${props.href.password_reset_requestToken()}">
-            ${icon("question-circle")} リセットトークンをもう一度送信する
-        </a>`
+        return signNav(props.link.getNav_password_reset_requestToken_retry())
     }
 }
 

@@ -9,7 +9,7 @@ import { wrapRepository } from "../../../z_vendor/getto-application/infra/reposi
 import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
 
-import { initLoadMenuLocationDetecter } from "../kernel/init/testHelper"
+import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
 import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./core/impl"
 
@@ -416,7 +416,7 @@ function newResource(
 }
 
 function standard_detecter(): LoadMenuLocationDetecter {
-    return initLoadMenuLocationDetecter(
+    return mockLoadMenuLocationDetecter(
         new URL("https://example.com/1.0.0/index.html"),
         standard_version(),
     )

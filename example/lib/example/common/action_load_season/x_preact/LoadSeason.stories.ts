@@ -12,7 +12,7 @@ import {
 } from "../../../../z_vendor/getto-css/preact/layout/app"
 
 import { LoadMenu } from "../../../../outline/menu/action_load_menu/x_preact/LoadMenu"
-import { LoadSeason } from "./LoadSeason"
+import { LoadSeasonComponent } from "./LoadSeason"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
@@ -46,7 +46,7 @@ type MockProps = Readonly<{
 const template = storyTemplate<MockProps>((props) => {
     return appLayout({
         siteInfo: siteInfo(),
-        header: [h(LoadSeason, { season: mockLoadSeasonCoreAction(season()) })],
+        header: [h(LoadSeasonComponent, { season: mockLoadSeasonCoreAction(season()) })],
         main: appMain({
             header: mainHeader([mainTitle("タイトル")]),
             body: mainBody("コンテンツ"),
@@ -66,4 +66,4 @@ const template = storyTemplate<MockProps>((props) => {
     }
 })
 
-export const Initial = template({ load: "success", year: new Date().getFullYear(), err: "" })
+export const LoadSeason = template({ load: "success", year: new Date().getFullYear(), err: "" })

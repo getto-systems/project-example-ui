@@ -5,16 +5,13 @@ import { resetTokenLocationConverter } from "../../kernel/converter"
 
 import { ResetPasswordInfra } from "../infra"
 
-import { ResetPasswordLocationDetectMethod, ResetPasswordLocationKeys, ResetPasswordPod } from "../method"
+import { ResetPasswordLocationDetectMethod, ResetPasswordPod } from "../method"
 
 import { ResetPasswordEvent } from "../event"
+import { SignNav, signNavKey } from "../../../../common/nav/data"
 
-
-interface Detecter {
-    (keys: ResetPasswordLocationKeys): ResetPasswordLocationDetectMethod
-}
-export const detectResetToken: Detecter = (keys) => (currentURL) =>
-    resetTokenLocationConverter(currentURL.searchParams.get(keys.token))
+export const detectResetToken: ResetPasswordLocationDetectMethod = (currentURL) =>
+    resetTokenLocationConverter(currentURL.searchParams.get(signNavKey(SignNav.passwordResetToken)))
 
 interface Reset {
     (infra: ResetPasswordInfra): ResetPasswordPod

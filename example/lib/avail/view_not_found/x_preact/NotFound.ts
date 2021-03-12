@@ -11,7 +11,7 @@ import { useDocumentTitle } from "../../../common/x_preact/hooks"
 import { siteInfo } from "../../../common/x_preact/site"
 import { icon } from "../../../common/x_preact/design/icon"
 
-import { ApplicationError } from "../../../common/x_preact/ApplicationError"
+import { ApplicationErrorComponent } from "../../../common/x_preact/ApplicationError"
 
 import { NotFoundEntryPoint, NotFoundResource } from "../entry_point"
 
@@ -23,7 +23,7 @@ export function NotFound(entryPoint: NotFoundEntryPoint): VNode {
         console.log(err)
     })
     if (err) {
-        return h(ApplicationError, { err: `${err}` })
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
     return h(NotFoundComponent, resource)

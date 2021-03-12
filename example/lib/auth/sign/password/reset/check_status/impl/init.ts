@@ -10,12 +10,10 @@ import { CheckResetTokenSendingStatusInfra } from "../infra"
 
 import { CheckResetTokenSendingStatusLocationDetecter } from "../method"
 
-import { signLinkParams } from "../../../../common/link/data"
-
 export function newCheckResetTokenSendingStatusLocationDetecter(
     currentLocation: Location,
 ): CheckResetTokenSendingStatusLocationDetecter {
-    return newLocationDetecter(currentLocation, detectSessionID(signLinkParams.password.reset))
+    return newLocationDetecter(currentLocation, detectSessionID)
 }
 
 export function newCheckResetTokenSendingStatusInfra(): CheckResetTokenSendingStatusInfra {

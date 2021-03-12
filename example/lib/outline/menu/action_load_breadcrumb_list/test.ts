@@ -1,5 +1,5 @@
 import { standard_MenuTree } from "../kernel/impl/test_helper"
-import { initLoadMenuLocationDetecter } from "../kernel/init/testHelper"
+import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
 import { initLoadBreadcrumbListCoreAction, initLoadBreadcrumbListCoreMaterial } from "./core/impl"
 
@@ -49,7 +49,7 @@ function newResource(currentURL: URL): LoadBreadcrumbListResource {
                     version,
                     menuTree: standard_MenuTree(),
                 },
-                initLoadMenuLocationDetecter(currentURL, version),
+                mockLoadMenuLocationDetecter(currentURL, version),
             ),
         ),
     }

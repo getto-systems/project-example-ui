@@ -1,17 +1,32 @@
-import { SignViewSearch } from "../view"
+import { LocationConverter } from "../../../../z_vendor/getto-application/location/infra"
 
-import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
+import {
+    ResetPasswordVariant,
+    ResetPasswordVariantKey,
+    StaticSignViewVariant,
+    StaticSignViewVariantKey,
+} from "../../common/nav/data"
 
-export function signViewSearchLocationConverter<N extends string>(
-    search: SignViewSearch<N>,
-    getter: { (key: string): string | null },
-): ConvertLocationResult<N> {
-    const key = getter(search.key)
-    if (!key) {
+type StaticSignViewVariantConverter = LocationConverter<StaticSignViewVariant, string | null>
+export const staticSignViewVariantLocationConverter: StaticSignViewVariantConverter = (search) => {
+    if (!search) {
         return { valid: false }
     }
-    if (key in search.variant) {
-        return { valid: true, value: key as N }
+    if (search in StaticSignViewVariant) {
+        // search が StaticSignViewVariant のメンバーなら、string は StaticSignViewVariantKey である
+        return { valid: true, value: StaticSignViewVariant[search as StaticSignViewVariantKey] }
+    }
+    return { valid: false }
+}
+
+type ResetPasswordVariantConverter = LocationConverter<ResetPasswordVariant, string | null>
+export const resetPasswordVariantLocationConverter: ResetPasswordVariantConverter = (search) => {
+    if (!search) {
+        return { valid: false }
+    }
+    if (search in ResetPasswordVariant) {
+        // search が ResetPasswordVariant のメンバーなら、string は ResetPasswordVariantKey である
+        return { valid: true, value: ResetPasswordVariant[search as ResetPasswordVariantKey] }
     }
     return { valid: false }
 }

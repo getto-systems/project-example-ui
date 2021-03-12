@@ -64,4 +64,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Box = template({ check: "delayed", err: "" })
+export const Check = template({ check: "delayed", err: "" })
