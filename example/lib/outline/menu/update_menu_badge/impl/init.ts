@@ -1,7 +1,7 @@
 import { env } from "../../../../y_environment/env"
 
 import { newAuthzRepository } from "../../../../common/authz/infra/repository/authz"
-import { newGetMenuBadgeRemote } from "../../kernel/infra/remote/getMenuBadge/core"
+import { newGetMenuBadgeRemote } from "../../kernel/infra/remote/get_menu_badge/core"
 
 import { UpdateMenuBadgeInfra } from "../infra"
 import { MenuContent } from "../../kernel/infra"
