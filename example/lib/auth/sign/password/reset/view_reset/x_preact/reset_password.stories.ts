@@ -13,7 +13,7 @@ import { ValidateBoardStateEnum } from "../../../../../../z_vendor/getto-applica
 enum ResetEnum {
     "initial",
     "try",
-    "delayed",
+    "takeLongtime",
     "validation-error",
     "bad-request",
     "invalid",
@@ -56,8 +56,8 @@ const template = storyTemplate<Props>((props) => {
             case "try":
                 return { type: "try-to-reset" }
 
-            case "delayed":
-                return { type: "delayed-to-reset" }
+            case "takeLongtime":
+                return { type: "take-longtime-to-reset" }
 
             case "validation-error":
                 return { type: "failed-to-reset", err: { type: "validation-error" } }

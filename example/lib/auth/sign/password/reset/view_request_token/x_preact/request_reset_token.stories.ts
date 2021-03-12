@@ -13,7 +13,7 @@ import { ValidateBoardStateEnum } from "../../../../../../z_vendor/getto-applica
 enum RequestEnum {
     "initial",
     "try",
-    "delayed",
+    "takeLongtime",
     "validation-error",
     "bad-request",
     "invalid",
@@ -59,8 +59,8 @@ const template = storyTemplate<Props>((props) => {
             case "try":
                 return { type: "try-to-request-token" }
 
-            case "delayed":
-                return { type: "delayed-to-request-token" }
+            case "takeLongtime":
+                return { type: "take-longtime-to-request-token" }
 
             case "validation-error":
                 return {

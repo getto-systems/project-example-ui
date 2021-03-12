@@ -6,7 +6,7 @@ export type CheckAuthInfoEvent = Readonly<{ type: "try-to-instant-load" }> | Ren
 export type RenewAuthInfoEvent =
     | Readonly<{ type: "required-to-login" }>
     | Readonly<{ type: "try-to-renew" }>
-    | Readonly<{ type: "delayed-to-renew" }>
+    | Readonly<{ type: "take-longtime-to-renew" }>
     | Readonly<{ type: "failed-to-renew"; err: RenewAuthInfoError }>
     | Readonly<{ type: "repository-error"; err: RepositoryError }>
     | Readonly<{ type: "succeed-to-renew"; auth: AuthInfo }>

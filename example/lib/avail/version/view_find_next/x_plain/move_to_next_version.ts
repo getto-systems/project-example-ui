@@ -20,7 +20,7 @@ export function MoveToNextVersion(entryPoint: FindNextVersionEntryPoint): void {
     function handleState(state: FindNextVersionCoreState) {
         switch (state.type) {
             case "initial-next-version":
-            case "delayed-to-find":
+            case "take-longtime-to-find":
                 // work in progress...
                 return
 

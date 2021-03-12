@@ -92,8 +92,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("submit valid login-id and password; take long time", (done) => {
-        // wait for delayed timeout
-        const { clock, entryPoint } = takeLongTime_elements()
+        // wait for take longtime timeout
+        const { clock, entryPoint } = takeLongtime_elements()
         const resource = entryPoint.resource.authenticate
 
         resource.core.subscriber.subscribe((state) => {
@@ -115,7 +115,7 @@ describe("AuthenticatePassword", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([
                         { type: "try-to-login" },
-                        { type: "delayed-to-login" }, // delayed event
+                        { type: "take-longtime-to-login" },
                         {
                             type: "try-to-load",
                             scriptPath: {
@@ -229,10 +229,10 @@ function standard_elements() {
 
     return { clock: clockPubSub, entryPoint }
 }
-function takeLongTime_elements() {
+function takeLongtime_elements() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = newEntryPoint(
-        takeLongTime_authenticate(),
+        takeLongtime_authenticate(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
@@ -274,7 +274,7 @@ function newEntryPoint(
                     authenticate: {
                         authenticate,
                         config: {
-                            takeLongTimeThreshold: { delay_millisecond: 32 },
+                            takeLongtimeThreshold: { delay_millisecond: 32 },
                         },
                         clock,
                     },
@@ -311,7 +311,7 @@ function standard_authz(): AuthzRepositoryPod {
 function standard_authenticate(): AuthenticatePasswordRemotePod {
     return mockRemotePod(simulateAuthenticate, { wait_millisecond: 0 })
 }
-function takeLongTime_authenticate(): AuthenticatePasswordRemotePod {
+function takeLongtime_authenticate(): AuthenticatePasswordRemotePod {
     return mockRemotePod(simulateAuthenticate, { wait_millisecond: 64 })
 }
 function simulateAuthenticate(_fields: AuthenticatePasswordFields): AuthenticatePasswordResult {

@@ -33,11 +33,11 @@ export const resetPassword: Reset = (infra) => (detecter) => async (fields, post
     const { clock, config } = infra
     const reset = infra.reset(authRemoteConverter(clock))
 
-    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
     const response = await delayedChecker(
         reset({ resetToken: resetToken.value, fields: fields.value }),
         config.delay,
-        () => post({ type: "delayed-to-reset" }),
+        () => post({ type: "take-longtime-to-reset" }),
     )
     if (!response.success) {
         post({ type: "failed-to-reset", err: response.err })
@@ -54,7 +54,7 @@ export function resetPasswordEventHasDone(event: ResetPasswordEvent): boolean {
             return true
 
         case "try-to-reset":
-        case "delayed-to-reset":
+        case "take-longtime-to-reset":
             return false
     }
 }

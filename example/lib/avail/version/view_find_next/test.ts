@@ -50,8 +50,8 @@ describe("FindNextVersion", () => {
         resource.findNext.subscriber.subscribe(runner(done))
     })
 
-    test("up to date; delayed", (done) => {
-        const { entryPoint } = takeLongTime()
+    test("up to date; take longtime", (done) => {
+        const { entryPoint } = takeLongtime()
         const resource = entryPoint.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -61,7 +61,7 @@ describe("FindNextVersion", () => {
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([
-                        { type: "delayed-to-find" },
+                        { type: "take-longtime-to-find" },
                         {
                             type: "succeed-to-find",
                             upToDate: true,
@@ -361,8 +361,8 @@ function invalidVersion() {
 
     return { entryPoint }
 }
-function takeLongTime() {
-    const entryPoint = initEntryPoint(standard_URL(), standard_version(), takeLongTime_check())
+function takeLongtime() {
+    const entryPoint = initEntryPoint(standard_URL(), standard_version(), takeLongtime_check())
 
     return { entryPoint }
 }
@@ -418,7 +418,7 @@ function found_check(versions: string[]): CheckDeployExistsRemotePod {
         { wait_millisecond: 0 },
     )
 }
-function takeLongTime_check(): CheckDeployExistsRemotePod {
+function takeLongtime_check(): CheckDeployExistsRemotePod {
     return mockRemotePod(() => ({ success: true, value: { found: false } }), {
         wait_millisecond: 2,
     })

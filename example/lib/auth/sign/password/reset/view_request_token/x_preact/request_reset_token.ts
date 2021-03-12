@@ -67,8 +67,8 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
         case "try-to-request-token":
             return startSessionForm({ state: "connecting" })
 
-        case "delayed-to-request-token":
-            return delayedMessage()
+        case "take-longtime-to-request-token":
+            return takeLongtimeMessage()
 
         case "succeed-to-request-token":
             // useLayoutEffect で check status にリダイレクトする
@@ -162,7 +162,7 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
             return ""
         }
     }
-    function delayedMessage() {
+    function takeLongtimeMessage() {
         return loginBox(siteInfo(), {
             title: startSessionTitle(),
             body: [

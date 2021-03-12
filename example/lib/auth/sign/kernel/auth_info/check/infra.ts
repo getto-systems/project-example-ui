@@ -10,6 +10,6 @@ export type CheckAuthInfoInfra = Readonly<{
     clock: Clock
     config: Readonly<{
         instantLoadExpire: ExpireTime
-        takeLongTimeThreshold: DelayTime
+        takeLongtimeThreshold: DelayTime
     }>
 }>
