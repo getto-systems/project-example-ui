@@ -15,7 +15,7 @@ export function standard_MenuTree(): MenuTree {
             category("DETAIL", allow, [item("詳細", "detail", "/docs/auth.html")]),
         ]),
         category("DEVELOPMENT", dev, [
-            item("配備構成", "deployment", "/docs/z_dev/deployment.html"),
+            item("配備構成", "deployment", "/docs/z-dev/deployment.html"),
         ]),
     ]
 }

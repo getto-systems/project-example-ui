@@ -248,7 +248,7 @@ describe("Menu", () => {
                                     item(
                                         "配備構成",
                                         "deployment",
-                                        "/1.0.0/docs/z_dev/deployment.html",
+                                        "/1.0.0/docs/z-dev/deployment.html",
                                         0,
                                     ),
                                 ]),
@@ -271,7 +271,7 @@ describe("Menu", () => {
                                     item(
                                         "配備構成",
                                         "deployment",
-                                        "/1.0.0/docs/z_dev/deployment.html",
+                                        "/1.0.0/docs/z-dev/deployment.html",
                                         0,
                                     ),
                                 ]),

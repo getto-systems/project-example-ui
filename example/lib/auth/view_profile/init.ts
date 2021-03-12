@@ -3,7 +3,7 @@ import { newLogoutResource } from "../sign/kernel/auth_info/action_logout/init"
 
 import { initProfileEntryPoint } from "./impl"
 
-import { ProfileEntryPoint } from "./entryPoint"
+import { ProfileEntryPoint } from "./entry_point"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage

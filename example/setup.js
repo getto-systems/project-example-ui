@@ -2,7 +2,7 @@
 const fs = require("fs")
 const path = require("path")
 
-const entryPoint = require("./entryPoint")
+const entryPoint = require("./entry_point")
 
 const environmentRoot = path.join(__dirname, "./lib/y_environment")
 dump(path.join(environmentRoot, "env.ts"), envContent())

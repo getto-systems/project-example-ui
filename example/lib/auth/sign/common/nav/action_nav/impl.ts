@@ -1,4 +1,4 @@
-import { LineIcon, lniClass, lnir } from "../../../../../z_external/icon/lineIcon"
+import { LineIcon, lniClass, lnir } from "../../../../../z_external/icon/line_icon"
 
 import {
     encodeLocationSearchQuery,
