@@ -5,9 +5,9 @@ import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error
 
 import { appLayout } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { siteInfo } from "../../../common/x_preact/site"
+import { siteInfo } from "../../../x_preact/common/site"
 
-import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadDocsContentPathComponent } from "../../action_load_content/x_preact/load_docs_content_path"
 

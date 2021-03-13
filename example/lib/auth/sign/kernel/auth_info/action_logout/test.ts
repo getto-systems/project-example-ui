@@ -9,7 +9,7 @@ import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
 import { initLogoutResource } from "./impl"
 
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../../common/authz/infra"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../../../common/authz/infra"
 import { LastAuthRepositoryPod } from "../kernel/infra"
 
 import { LogoutResource } from "./resource"

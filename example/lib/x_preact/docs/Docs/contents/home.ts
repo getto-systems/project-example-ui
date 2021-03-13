@@ -1,32 +1,21 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { box, container } from "../../../../z_vendor/getto-css/preact/design/box"
 import { notice_info } from "../../../../z_vendor/getto-css/preact/design/highlight"
-import { v_medium, v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
+import { v_medium } from "../../../../z_vendor/getto-css/preact/design/alignment"
 
 import { items } from "../box"
 
+import { DocsComponent } from "../../../../docs/kernel/x_preact/docs"
+
+import { docs_docs } from "../../../../docs/docs"
+import { docs_example } from "../../../../example/docs"
+import { docs_avail } from "../../../../avail/docs"
+import { docs_auth } from "../../../../auth/docs"
+
 export const content_index = (): VNode[] => [
-    container([
-        box({
-            title: "GETTO Example",
-            body: html`
-                <p>業務アプリケーションのひな型</p>
-                <p>このコードをコピーして始める</p>
-            `,
-        }),
-        box({
-            title: "業務アプリケーション",
-            body: [
-                notice_info("業務の目標を達成する"),
-                notice_info("業務で必要な時に使用できる"),
-                notice_info("業務に合ったコストで運用できる"),
-                notice_info("業務内容をプライベートに保つ"),
-            ],
-        }),
-    ]),
-    v_small(),
+    h(DocsComponent, { contents: [docs_example, [...docs_docs, ...docs_auth, ...docs_avail]] }),
     container([
         content_index_document(),
         content_index_available(),
@@ -34,20 +23,18 @@ export const content_index = (): VNode[] => [
         content_index_deployment(),
     ]),
 ]
+
 export function content_index_document(): VNode {
     return box({
         title: "ドキュメント",
         body: [
             notice_info("業務の目標を達成する"),
-            html`
-                <p>重要な点を明文化する</p>
-                <p>重要な指標を見える化する</p>
-            `,
+            html` <p>重要な点を明文化する</p> `,
             v_medium(),
             items([
                 "重要な点が推測できる",
                 "重要でない点が推測できる",
-                "可能な限り多くの関係者が読める",
+                "すべての関係者が読める",
                 "書きやすい",
             ]),
         ],

@@ -10,13 +10,13 @@ import {
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { VNodeContent } from "../../../../../../common/x_preact/design/common"
-import { siteInfo } from "../../../../../../common/x_preact/site"
-import { spinner } from "../../../../../../common/x_preact/design/icon"
+import { VNodeContent } from "../../../../../../x_preact/common/design/common"
+import { siteInfo } from "../../../../../../x_preact/common/site"
+import { spinner } from "../../../../../../x_preact/common/design/icon"
 
 import { appendScript } from "../../../../common/x_preact/script"
 
-import { ApplicationErrorComponent } from "../../../../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../../../../../avail/common/x_preact/application_error"
 
 import {
     CheckAuthInfoEntryPoint,

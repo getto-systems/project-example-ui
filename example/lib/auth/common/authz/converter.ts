@@ -1,4 +1,4 @@
-import { RepositoryConverter } from "../../z_vendor/getto-application/infra/repository/infra"
+import { RepositoryConverter } from "../../../z_vendor/getto-application/infra/repository/infra"
 import { AuthzRemoteValue, AuthzRepositoryValue } from "./infra"
 
 import { Authz, AuthzNonce, AuthzRoles } from "./data"

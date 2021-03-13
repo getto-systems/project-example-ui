@@ -16,13 +16,13 @@ import {
 } from "../../../../../../z_vendor/getto-css/preact/design/form"
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 
-import { VNodeContent } from "../../../../../../common/x_preact/design/common"
-import { siteInfo } from "../../../../../../common/x_preact/site"
-import { spinner } from "../../../../../../common/x_preact/design/icon"
+import { VNodeContent } from "../../../../../../x_preact/common/design/common"
+import { siteInfo } from "../../../../../../x_preact/common/site"
+import { spinner } from "../../../../../../x_preact/common/design/icon"
 import { appendScript } from "../../../../common/x_preact/script"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
-import { ApplicationErrorComponent } from "../../../../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../../../../../avail/common/x_preact/application_error"
 import { InputLoginID } from "../../../../common/fields/login_id/action_input/x_preact/input_login_id"
 import { InputPassword } from "../../../../common/fields/password/action_input/x_preact/input_password"
 

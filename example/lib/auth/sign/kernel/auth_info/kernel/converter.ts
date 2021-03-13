@@ -5,7 +5,7 @@ import { LastAuthRepositoryValue, AuthRemoteValue } from "./infra"
 
 import { AuthAt, AuthInfo, AuthnNonce, LastAuth } from "./data"
 import { RemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/infra"
-import { authzRemoteConverter } from "../../../../../common/authz/converter"
+import { authzRemoteConverter } from "../../../../common/authz/converter"
 
 export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuthRepositoryValue> = {
     toRepository: (value) => ({

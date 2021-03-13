@@ -1,4 +1,4 @@
-import { newAuthzRepository } from "../../../../../../../common/authz/infra/repository/authz"
+import { newAuthzRepository } from "../../../../../../common/authz/infra/repository/authz"
 import { newRenewAuthInfoRemote } from "../../../kernel/infra/remote/renew"
 import { newLastAuthRepository } from "../../../kernel/infra/repository/last_auth"
 

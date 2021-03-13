@@ -1,4 +1,4 @@
-import { newAuthzRepository } from "../../../../../../common/authz/infra/repository/authz"
+import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
 import { newLastAuthRepository } from "../../kernel/infra/repository/last_auth"
 
 import { ClearAuthInfoInfra } from "../infra"

@@ -2,7 +2,7 @@ import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/rem
 import { RepositoryPod } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 
 import { RenewAuthInfoRemoteError, AuthnNonce, LastAuth, AuthInfo } from "./data"
-import { AuthzRemoteValue } from "../../../../../common/authz/infra"
+import { AuthzRemoteValue } from "../../../../common/authz/infra"
 
 export type LastAuthRepositoryPod = RepositoryPod<LastAuth, LastAuthRepositoryValue>
 export type LastAuthRepositoryValue = Readonly<{
