@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
-import { box, container } from "../../../../z_vendor/getto-css/preact/design/box"
+import { box } from "../../../../z_vendor/getto-css/preact/design/box"
 import { notice_info } from "../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_medium } from "../../../../z_vendor/getto-css/preact/design/alignment"
 
@@ -15,13 +15,7 @@ import { docs_avail } from "../../../../avail/docs"
 import { docs_auth } from "../../../../auth/docs"
 
 export const content_index = (): VNode[] => [
-    h(DocsComponent, { contents: [docs_example, [...docs_docs, ...docs_auth, ...docs_avail]] }),
-    container([
-        content_index_document(),
-        content_index_available(),
-        content_index_auth(),
-        content_index_deployment(),
-    ]),
+    h(DocsComponent, { contents: [docs_example, [...docs_docs, ...docs_avail, ...docs_auth]] }),
 ]
 
 export function content_index_document(): VNode {
