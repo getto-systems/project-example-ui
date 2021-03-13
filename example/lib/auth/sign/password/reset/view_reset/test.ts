@@ -27,7 +27,7 @@ import { startContinuousRenewEventHasDone } from "../../../kernel/auth_info/comm
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
-import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../../../common/authz/infra"
 import {
     LastAuthRepositoryPod,
     RenewAuthInfoRemotePod,

@@ -10,9 +10,9 @@ import { buttons } from "../../../../../../z_vendor/getto-css/preact/design/form
 import { loginBox } from "../../../../../../z_vendor/getto-css/preact/layout/login"
 import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/alignment"
 
-import { VNodeContent } from "../../../../../../common/x_preact/design/common"
-import { siteInfo } from "../../../../../../common/x_preact/site"
-import { spinner } from "../../../../../../common/x_preact/design/icon"
+import { VNodeContent } from "../../../../../../x_preact/common/design/common"
+import { siteInfo } from "../../../../../../x_preact/common/site"
+import { spinner } from "../../../../../../x_preact/common/design/icon"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import {

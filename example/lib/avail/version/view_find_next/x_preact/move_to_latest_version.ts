@@ -8,10 +8,10 @@ import {
 } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
-import { siteInfo } from "../../../../common/x_preact/site"
-import { spinner } from "../../../../common/x_preact/design/icon"
+import { siteInfo } from "../../../../x_preact/common/site"
+import { spinner } from "../../../../x_preact/common/design/icon"
 
-import { ApplicationErrorComponent } from "../../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"
 
 import { applicationPath } from "../../find_next/impl/helper"
 

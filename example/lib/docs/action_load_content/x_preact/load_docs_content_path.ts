@@ -9,9 +9,9 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useDocumentTitle } from "../../../common/x_preact/hooks"
-import { VNodeContent } from "../../../common/x_preact/design/common"
-import { copyright } from "../../../common/x_preact/site"
+import { useDocumentTitle } from "../../../x_preact/common/hooks"
+import { VNodeContent } from "../../../x_preact/common/design/common"
+import { copyright } from "../../../x_preact/common/site"
 
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
 

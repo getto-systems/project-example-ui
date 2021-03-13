@@ -1,4 +1,4 @@
-import { Authz } from "../../../../../common/authz/data"
+import { Authz } from "../../../../common/authz/data"
 
 export type AuthInfo = Readonly<{
     authn: Authn

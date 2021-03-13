@@ -1,21 +1,64 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { itemsSection } from "../box"
 
-import { content_index_auth } from "./home"
-import { box, container } from "../../../../z_vendor/getto-css/preact/design/box"
+import { box } from "../../../../z_vendor/getto-css/preact/design/box"
 import { notice_info } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
+import { DocsComponent } from "../../../../docs/kernel/x_preact/docs"
+
+import { docs_auth_sign } from "../../../../auth/sign/docs"
+import { docs_auth } from "../../../../auth/docs"
+import { docs_auth_sign_checkAuthInfo } from "../../../../auth/sign/kernel/auth_info/action_check/docs"
+import { docs_auth_sign_logout } from "../../../../auth/sign/kernel/auth_info/action_logout/docs"
+import { docs_auth_sign_authenticatePassword } from "../../../../auth/sign/password/view_authenticate/docs"
+import { docs_auth_sign_resetPassword } from "../../../../auth/sign/password/reset/docs"
+import { docsModule, docsSection_pending } from "../../../../z_vendor/getto-application/docs/helper"
+
+import { DocsSection } from "../../../../z_vendor/getto-application/docs/data"
+
 export const content_auth = (): VNode[] => [
-    container(content_index_auth()),
-    container([
-        content_auth_login(),
-        content_auth_permission(),
-        content_auth_user(),
-        content_auth_profile(),
+    h(DocsComponent, {
+        contents: [
+            [...docs_auth, ...docs_auth_sign, ...docs_auth_profile, ...docs_auth_user],
+            [
+                ...docs_auth_sign_checkAuthInfo,
+                ...docs_auth_sign_logout,
+                ...docs_auth_sign_authenticatePassword,
+                ...docs_auth_sign_resetPassword,
+
+                ...docs_auth_sign_authenticateWebAuthn,
+            ],
+        ],
+    }),
+]
+
+const docs_auth_sign_authenticateWebAuthn: DocsSection[] = [
+    docsSection_pending("web 証明書ログイン", [
+        docsModule(["web 証明書で認証", "認証成功でトークンを発行"]),
     ]),
 ]
+
+const docs_auth_profile: DocsSection[] = [
+    docsSection_pending("認証情報管理", [
+        docsModule(["パスワード変更", "パスワードリセット", "web 証明書再登録"]),
+    ]),
+]
+const docs_auth_user: DocsSection[] = [
+    docsSection_pending("ユーザー管理", [
+        docsModule([
+            "ユーザーの登録",
+            "ユーザーの無効化",
+            "ユーザーの削除",
+            "ログインID 変更",
+            "アクセス権限変更",
+            "パスワード変更",
+            "web 証明書変更",
+        ]),
+    ]),
+]
+
 export function content_auth_login(): VNode {
     return box({
         title: "ログイン",

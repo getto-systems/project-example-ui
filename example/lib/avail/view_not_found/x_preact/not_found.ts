@@ -7,11 +7,11 @@ import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/ac
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { useDocumentTitle } from "../../../common/x_preact/hooks"
-import { siteInfo } from "../../../common/x_preact/site"
-import { icon } from "../../../common/x_preact/design/icon"
+import { useDocumentTitle } from "../../../x_preact/common/hooks"
+import { siteInfo } from "../../../x_preact/common/site"
+import { icon } from "../../../x_preact/common/design/icon"
 
-import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../common/x_preact/application_error"
 
 import { NotFoundEntryPoint, NotFoundResource } from "../entry_point"
 

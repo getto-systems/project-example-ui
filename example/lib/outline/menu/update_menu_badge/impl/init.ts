@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { newAuthzRepository } from "../../../../common/authz/infra/repository/authz"
+import { newAuthzRepository } from "../../../../auth/common/authz/infra/repository/authz"
 import { newGetMenuBadgeRemote } from "../../kernel/infra/remote/get_menu_badge/core"
 
 import { UpdateMenuBadgeInfra } from "../infra"

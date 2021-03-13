@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../../auth/common/authz/infra"
 import { MenuExpandRepositoryPod, MenuExpandStore, MenuTree } from "../kernel/infra"
 
 export type LoadMenuInfra = Readonly<{

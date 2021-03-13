@@ -7,7 +7,7 @@ import {
     useApplicationEntryPoint,
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
-import { ApplicationErrorComponent } from "../../../common/x_preact/application_error"
+import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { CheckAuthInfo } from "../../sign/kernel/auth_info/action_check/x_preact/check_auth_info"
 import { AuthenticatePassword } from "../../sign/password/view_authenticate/x_preact/authenticate_password"
 import { RequestResetToken } from "../../sign/password/reset/view_request_token/x_preact/request_reset_token"
