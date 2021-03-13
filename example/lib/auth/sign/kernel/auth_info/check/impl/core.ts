@@ -77,9 +77,9 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
 
     post({ type: "try-to-renew" })
 
-    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayedChecker(renew(info.nonce), config.takeLongTimeThreshold, () =>
-        post({ type: "delayed-to-renew" }),
+    // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
+    const response = await delayedChecker(renew(info.nonce), config.takeLongtimeThreshold, () =>
+        post({ type: "take-longtime-to-renew" }),
     )
     if (!response.success) {
         if (response.err.type === "invalid-ticket") {
@@ -121,7 +121,7 @@ export function renewAuthInfoEventHasDone(event: RenewAuthInfoEvent): boolean {
             return true
 
         case "try-to-renew":
-        case "delayed-to-renew":
+        case "take-longtime-to-renew":
             return false
     }
 }

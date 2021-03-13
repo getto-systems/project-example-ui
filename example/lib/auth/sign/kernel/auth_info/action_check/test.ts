@@ -174,8 +174,8 @@ describe("CheckAuthInfo", () => {
     })
 
     test("renew stored credential; take long time", (done) => {
-        // wait for delayed timeout
-        const { clock, entryPoint } = takeLongTime()
+        // wait for take longtime timeout
+        const { clock, entryPoint } = takeLongtime()
         const resource = entryPoint.resource
 
         resource.core.subscriber.subscribe((state) => {
@@ -194,7 +194,7 @@ describe("CheckAuthInfo", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([
                         { type: "try-to-renew" },
-                        { type: "delayed-to-renew" }, // delayed event
+                        { type: "take-longtime-to-renew" },
                         {
                             type: "try-to-load",
                             scriptPath: {
@@ -299,7 +299,7 @@ function instantLoadable() {
 
     return { clock: clockPubSub, entryPoint }
 }
-function takeLongTime() {
+function takeLongtime() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
         standard_lastAuth(),
@@ -338,7 +338,7 @@ function initEntryPoint(
                         renew,
                         config: {
                             instantLoadExpire: { expire_millisecond: 20 * 1000 },
-                            takeLongTimeThreshold: { delay_millisecond: 32 },
+                            takeLongtimeThreshold: { delay_millisecond: 32 },
                         },
                         clock,
                     },
@@ -392,7 +392,7 @@ function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
     return renewPod(clock, { wait_millisecond: 0 })
 }
 function wait_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
-    // wait for delayed timeout
+    // wait for take longtime timeout
     return renewPod(clock, { wait_millisecond: 64 })
 }
 function renewPod(clock: ClockPubSub, waitTime: WaitTime): RenewAuthInfoRemotePod {
@@ -434,7 +434,7 @@ function actionHasDone(state: CheckAuthInfoCoreState): boolean {
 
         case "try-to-instant-load":
         case "try-to-renew":
-        case "delayed-to-renew":
+        case "take-longtime-to-renew":
         case "required-to-login":
         case "failed-to-renew":
         case "repository-error":

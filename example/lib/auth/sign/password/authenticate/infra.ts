@@ -11,7 +11,7 @@ export type AuthenticatePasswordInfra = Readonly<{
     authenticate: AuthenticatePasswordRemotePod
     clock: Clock
     config: Readonly<{
-        takeLongTimeThreshold: DelayTime
+        takeLongtimeThreshold: DelayTime
     }>
 }>
 

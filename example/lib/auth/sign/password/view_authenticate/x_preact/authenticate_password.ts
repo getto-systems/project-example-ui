@@ -82,8 +82,8 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
         case "try-to-login":
             return authenticateForm({ state: "connecting" })
 
-        case "delayed-to-login":
-            return delayedMessage()
+        case "take-longtime-to-login":
+            return takeLongtimeMessage()
 
         case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
@@ -196,7 +196,7 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
             }
         }
     }
-    function delayedMessage() {
+    function takeLongtimeMessage() {
         return loginBox(siteInfo(), {
             title: authenticateTitle(),
             body: [

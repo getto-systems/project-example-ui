@@ -18,7 +18,7 @@ export function newCheckAuthInfoInfra(webStorage: Storage): CheckAuthInfoInfra {
         clock: newClock(),
         config: {
             instantLoadExpire: expireMinute(3),
-            takeLongTimeThreshold: delaySecond(0.5),
+            takeLongtimeThreshold: delaySecond(0.5),
         },
     }
 }

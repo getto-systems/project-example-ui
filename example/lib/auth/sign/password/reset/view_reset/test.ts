@@ -90,9 +90,9 @@ describe("RegisterPassword", () => {
         resource.core.subscriber.subscribe(runner(done))
     })
 
-    test("submit valid login-id and password; with delayed", (done) => {
-        // wait for delayed timeout
-        const { clock, entryPoint } = takeLongTime()
+    test("submit valid login-id and password; with take longtime", (done) => {
+        // wait for take longtime timeout
+        const { clock, entryPoint } = takeLongtime()
         const resource = entryPoint.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
@@ -114,7 +114,7 @@ describe("RegisterPassword", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([
                         { type: "try-to-reset" },
-                        { type: "delayed-to-reset" }, // delayed event
+                        { type: "take-longtime-to-reset" },
                         {
                             type: "try-to-load",
                             scriptPath: {
@@ -254,11 +254,11 @@ function standard() {
 
     return { clock: clockPubSub, entryPoint }
 }
-function takeLongTime() {
+function takeLongtime() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
         standard_URL(),
-        takeLongTime_reset(),
+        takeLongtime_reset(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
@@ -353,7 +353,7 @@ function standard_authz(): AuthzRepositoryPod {
 function standard_reset(): ResetPasswordRemotePod {
     return mockRemotePod(simulateReset, { wait_millisecond: 0 })
 }
-function takeLongTime_reset(): ResetPasswordRemotePod {
+function takeLongtime_reset(): ResetPasswordRemotePod {
     return mockRemotePod(simulateReset, { wait_millisecond: 64 })
 }
 function simulateReset(): ResetPasswordResult {

@@ -56,8 +56,8 @@ export function MoveToLatestVersionComponent(props: MoveToLatestVersionProps): V
         case "initial-next-version":
             return EMPTY_CONTENT
 
-        case "delayed-to-find":
-            return delayedMessage()
+        case "take-longtime-to-find":
+            return takeLongtimeMessage()
 
         case "succeed-to-find":
             // location の変更は useLayoutEffect で行うので中身は空
@@ -67,7 +67,7 @@ export function MoveToLatestVersionComponent(props: MoveToLatestVersionProps): V
             return h(ApplicationErrorComponent, { err: errorMessage(props.state.err) })
     }
 
-    function delayedMessage() {
+    function takeLongtimeMessage() {
         return loginBox(siteInfo(), {
             title: "アプリケーション読み込み中",
             body: [

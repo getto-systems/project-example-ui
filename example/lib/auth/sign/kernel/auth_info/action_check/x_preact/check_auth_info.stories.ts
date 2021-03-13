@@ -9,7 +9,7 @@ import { mockCheckAuthInfoResource } from "../mock"
 import { CheckAuthInfoCoreState } from "../core/action"
 
 enum CheckEnum {
-    "delayed",
+    "takeLongtime",
     "bad-request",
     "server-error",
     "bad-response",
@@ -40,8 +40,8 @@ const template = storyTemplate<Props>((props) => {
 
     function state(): CheckAuthInfoCoreState {
         switch (props.check) {
-            case "delayed":
-                return { type: "delayed-to-renew" }
+            case "takeLongtime":
+                return { type: "take-longtime-to-renew" }
 
             case "bad-request":
                 return { type: "failed-to-renew", err: { type: "bad-request" } }
@@ -64,4 +64,4 @@ const template = storyTemplate<Props>((props) => {
     }
 })
 
-export const Check = template({ check: "delayed", err: "" })
+export const Check = template({ check: "takeLongtime", err: "" })

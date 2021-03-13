@@ -52,7 +52,7 @@ describe("CheckPasswordResetSendingStatus", () => {
 
     test("submit valid login-id; with long sending", (done) => {
         // wait for send token check limit
-        const { entryPoint } = takeLongTime()
+        const { entryPoint } = takeLongtime()
         const resource = entryPoint.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -128,11 +128,11 @@ function standard() {
 
     return { entryPoint }
 }
-function takeLongTime() {
+function takeLongtime() {
     const entryPoint = initEntryPoint(
         standard_URL(),
-        takeLongTime_sendToken(),
-        takeLongTime_getStatus(),
+        takeLongtime_sendToken(),
+        takeLongtime_getStatus(),
     )
 
     return { entryPoint }
@@ -178,14 +178,14 @@ function noSessionID_URL() {
 function standard_sendToken(): SendResetTokenRemotePod {
     return mockRemotePod(simulateSendToken, { wait_millisecond: 0 })
 }
-function takeLongTime_sendToken(): SendResetTokenRemotePod {
+function takeLongtime_sendToken(): SendResetTokenRemotePod {
     return mockRemotePod(simulateSendToken, { wait_millisecond: 64 })
 }
 
 function standard_getStatus(): GetResetTokenSendingStatusRemotePod {
     return getStatusRemoteAccess([{ done: true, send: true }])
 }
-function takeLongTime_getStatus(): GetResetTokenSendingStatusRemotePod {
+function takeLongtime_getStatus(): GetResetTokenSendingStatusRemotePod {
     // 完了するまでに 5回以上かかる
     return getStatusRemoteAccess([
         { done: false, status: { sending: true } },

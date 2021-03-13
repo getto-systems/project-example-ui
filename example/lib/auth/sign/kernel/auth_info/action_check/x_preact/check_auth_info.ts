@@ -96,11 +96,10 @@ export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
 
         case "try-to-renew":
             // すぐに帰ってくることを想定
-            // 時間がかかると delayed-to-renew が発行される
             return EMPTY_CONTENT
 
-        case "delayed-to-renew":
-            return delayedMessage()
+        case "take-longtime-to-renew":
+            return takeLongtimeMessage()
 
         case "failed-to-renew":
             return errorMessage(props.state.err)
@@ -110,7 +109,7 @@ export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
             return h(ApplicationErrorComponent, { err: props.state.err.err })
     }
 
-    function delayedMessage() {
+    function takeLongtimeMessage() {
         return loginBox(siteInfo(), {
             title: "認証に時間がかかっています",
             body: [

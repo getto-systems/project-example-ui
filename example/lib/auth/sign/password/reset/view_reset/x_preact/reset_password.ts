@@ -80,8 +80,8 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
         case "try-to-reset":
             return resetForm({ state: "connecting" })
 
-        case "delayed-to-reset":
-            return delayedMessage()
+        case "take-longtime-to-reset":
+            return takeLongtimeMessage()
 
         case "try-to-load":
             // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
@@ -189,7 +189,7 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
             return ""
         }
     }
-    function delayedMessage() {
+    function takeLongtimeMessage() {
         return loginBox(siteInfo(), {
             title: resetTitle(),
             body: [

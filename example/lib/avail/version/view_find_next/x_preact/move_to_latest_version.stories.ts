@@ -9,7 +9,7 @@ import { MoveToLatestVersionComponent } from "./move_to_latest_version"
 import { FindNextVersionCoreState } from "../core/action"
 
 enum FindNextEnum {
-    "delayed",
+    "takeLongtime",
     "failed",
 }
 
@@ -37,8 +37,8 @@ const template = storyTemplate<MockProps>((props) => {
 
     function state(): FindNextVersionCoreState {
         switch (props.findNext) {
-            case "delayed":
-                return { type: "delayed-to-find" }
+            case "takeLongtime":
+                return { type: "take-longtime-to-find" }
 
             case "failed":
                 return {
@@ -52,4 +52,4 @@ const template = storyTemplate<MockProps>((props) => {
     }
 })
 
-export const MoveToLatestVersion = template({ findNext: "delayed", err: "" })
+export const MoveToLatestVersion = template({ findNext: "takeLongtime", err: "" })

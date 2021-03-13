@@ -41,9 +41,9 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
         return
     }
 
-    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
     const next = await delayedChecker(findNext(check, currentVersion.value), config.delay, () =>
-        post({ type: "delayed-to-find" }),
+        post({ type: "take-longtime-to-find" }),
     )
     if (!next.success) {
         post({ type: "failed-to-find", err: { type: "failed-to-check", err: next.err } })
@@ -69,7 +69,7 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
 
 export function findNextVersionEventHasDone(event: FindNextVersionEvent): boolean {
     switch (event.type) {
-        case "delayed-to-find":
+        case "take-longtime-to-find":
             return false
 
         case "succeed-to-find":

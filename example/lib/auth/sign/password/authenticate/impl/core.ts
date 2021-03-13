@@ -20,9 +20,9 @@ export const authenticatePassword: Authenticate = (infra) => async (fields, post
     const { clock, config } = infra
     const authenticate = infra.authenticate(authRemoteConverter(clock))
 
-    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
-    const response = await delayedChecker(authenticate(fields.value), config.takeLongTimeThreshold, () =>
-        post({ type: "delayed-to-login" }),
+    // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
+    const response = await delayedChecker(authenticate(fields.value), config.takeLongtimeThreshold, () =>
+        post({ type: "take-longtime-to-login" }),
     )
     if (!response.success) {
         post({ type: "failed-to-login", err: response.err })
@@ -39,7 +39,7 @@ export function authenticatePasswordEventHasDone(event: AuthenticatePasswordEven
             return true
 
         case "try-to-login":
-        case "delayed-to-login":
+        case "take-longtime-to-login":
             return false
     }
 }

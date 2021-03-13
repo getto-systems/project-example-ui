@@ -22,9 +22,9 @@ export const requestResetToken: RequestToken = (infra) => async (fields, post) =
     const { config } = infra
     const requestToken = infra.requestToken(resetSessionIDRemoteConverter)
 
-    // ネットワークの状態が悪い可能性があるので、一定時間後に delayed イベントを発行
+    // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
     const response = await delayedChecker(requestToken(fields.value), config.delay, () =>
-        post({ type: "delayed-to-request-token" }),
+        post({ type: "take-longtime-to-request-token" }),
     )
     if (!response.success) {
         post({ type: "failed-to-request-token", err: response.err })
@@ -41,7 +41,7 @@ export function requestResetTokenEventHasDone(event: RequestResetTokenEvent): bo
             return true
 
         case "try-to-request-token":
-        case "delayed-to-request-token":
+        case "take-longtime-to-request-token":
             return false
     }
 }

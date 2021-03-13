@@ -45,9 +45,9 @@ describe("RequestResetToken", () => {
         resource.core.subscriber.subscribe(runner(done))
     })
 
-    test("submit valid login-id; with delayed", (done) => {
-        // wait for delayed timeout
-        const { entryPoint } = takeLongTime()
+    test("submit valid login-id; with take longtime", (done) => {
+        // wait for take longtime timeout
+        const { entryPoint } = takeLongtime()
         const resource = entryPoint.resource.requestToken
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -60,7 +60,7 @@ describe("RequestResetToken", () => {
                 examine: (stack) => {
                     expect(stack).toEqual([
                         { type: "try-to-request-token" },
-                        { type: "delayed-to-request-token" }, // delayed event
+                        { type: "take-longtime-to-request-token" },
                         { type: "succeed-to-request-token", sessionID: "session-id" },
                     ])
                 },
@@ -131,8 +131,8 @@ function standard() {
 
     return { entryPoint }
 }
-function takeLongTime() {
-    const entryPoint = initEntryPoint(takeLongTime_requestToken())
+function takeLongtime() {
+    const entryPoint = initEntryPoint(takeLongtime_requestToken())
 
     return { entryPoint }
 }
@@ -161,7 +161,7 @@ function initEntryPoint(requestToken: RequestResetTokenRemotePod): RequestResetT
 function standard_requestToken(): RequestResetTokenRemotePod {
     return mockRemotePod(simulateRequestToken, { wait_millisecond: 0 })
 }
-function takeLongTime_requestToken(): RequestResetTokenRemotePod {
+function takeLongtime_requestToken(): RequestResetTokenRemotePod {
     return mockRemotePod(simulateRequestToken, { wait_millisecond: 64 })
 }
 function simulateRequestToken(): RequestResetTokenResult {
