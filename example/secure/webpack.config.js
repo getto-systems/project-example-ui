@@ -41,7 +41,7 @@ module.exports = {
 
         hot: true,
         sockPort: "443",
-        sockHost: process.env.SECURE_SERVER_HOST,
+        sockHost: new URL(process.env.SECURE_SERVER_URL).host,
 
         disableHostCheck: true,
         headers: {
