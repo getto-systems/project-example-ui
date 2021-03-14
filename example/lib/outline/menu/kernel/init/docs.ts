@@ -1,7 +1,10 @@
 import { env } from "../../../../y_environment/env"
+
 import { lnir } from "../../../../z_external/icon/line_icon"
-import { MenuContent, MenuPermission } from "../infra"
+
 import { category, item } from "./common"
+
+import { MenuContent, MenuPermission } from "../infra"
 
 export function docsMenuContent(): MenuContent {
     return {
@@ -14,9 +17,7 @@ export function docsMenuContent(): MenuContent {
             category("ドキュメント", allow, [
                 item("認証・認可", lnir("files-alt"), "/docs/auth.html"),
             ]),
-            category("開発向け", dev, [
-                item("Storybook", lnir("files-alt"), "/storybook/index.html"),
-                item("coverage", lnir("files-alt"), "/coverage/lcov-report/index.html"),
+            category("詳細設計", dev, [
                 item("配備構成", lnir("files-alt"), "/docs/z-dev/deployment.html"),
                 category("認証・認可", dev, [
                     item("ログイン", lnir("files-alt"), "/docs/z-dev/auth/login.html"),
@@ -26,6 +27,14 @@ export function docsMenuContent(): MenuContent {
                     item("API 詳細設計", lnir("files-alt"), "/docs/z-dev/auth/api.html"),
                 ]),
             ]),
+            ...(env.isProduction
+                ? []
+                : [
+                      category("開発用", dev, [
+                          item("Storybook", lnir("files-alt"), "/storybook/index.html"),
+                          item("coverage", lnir("files-alt"), "/coverage/lcov-report/index.html"),
+                      ]),
+                  ]),
         ],
     }
 }

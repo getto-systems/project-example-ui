@@ -20,6 +20,7 @@ function envContent() {
 
     const env = {
         version,
+        isProduction,
 
         secureServerURL: process.env.SECURE_SERVER_URL,
         apiServerURL: process.env.API_SERVER_URL,
