@@ -90,7 +90,7 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
             return EMPTY_CONTENT
 
         case "succeed-to-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "required-to-login":
         case "failed-to-continuous-renew":
             // これらはスクリプトがロードされた後に発行される

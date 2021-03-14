@@ -88,7 +88,7 @@ export function CheckAuthInfoComponent(props: CheckAuthInfoProps): VNode {
 
         case "succeed-to-start-continuous-renew":
         case "succeed-to-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "failed-to-continuous-renew":
             // これらはスクリプトがロードされた後に発行される
             // したがって、un-mount されているのでここには来ない

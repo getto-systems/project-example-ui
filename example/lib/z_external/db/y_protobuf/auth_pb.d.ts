@@ -1,4 +1,100 @@
 import * as $protobuf from "protobufjs";
+/** Properties of an AuthnMessage. */
+export interface IAuthnMessage {
+
+    /** AuthnMessage nonce */
+    nonce?: (string|null);
+
+    /** AuthnMessage authAt */
+    authAt?: (string|null);
+}
+
+/** Represents an AuthnMessage. */
+export class AuthnMessage implements IAuthnMessage {
+
+    /**
+     * Constructs a new AuthnMessage.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IAuthnMessage);
+
+    /** AuthnMessage nonce. */
+    public nonce: string;
+
+    /** AuthnMessage authAt. */
+    public authAt: string;
+
+    /**
+     * Creates a new AuthnMessage instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns AuthnMessage instance
+     */
+    public static create(properties?: IAuthnMessage): AuthnMessage;
+
+    /**
+     * Encodes the specified AuthnMessage message. Does not implicitly {@link AuthnMessage.verify|verify} messages.
+     * @param message AuthnMessage message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IAuthnMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified AuthnMessage message, length delimited. Does not implicitly {@link AuthnMessage.verify|verify} messages.
+     * @param message AuthnMessage message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IAuthnMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes an AuthnMessage message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns AuthnMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): AuthnMessage;
+
+    /**
+     * Decodes an AuthnMessage message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns AuthnMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): AuthnMessage;
+
+    /**
+     * Verifies an AuthnMessage message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates an AuthnMessage message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns AuthnMessage
+     */
+    public static fromObject(object: { [k: string]: any }): AuthnMessage;
+
+    /**
+     * Creates a plain object from an AuthnMessage message. Also converts values to other types if specified.
+     * @param message AuthnMessage
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: AuthnMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this AuthnMessage to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+}
+
 /** Properties of an AuthzMessage. */
 export interface IAuthzMessage {
 
@@ -95,193 +191,97 @@ export class AuthzMessage implements IAuthzMessage {
     public toJSON(): { [k: string]: any };
 }
 
-/** Properties of a LastAuthMessage. */
-export interface ILastAuthMessage {
+/** Properties of a MenuExpandMessage. */
+export interface IMenuExpandMessage {
 
-    /** LastAuthMessage nonce */
-    nonce?: (string|null);
-
-    /** LastAuthMessage lastAuthAt */
-    lastAuthAt?: (string|null);
+    /** MenuExpandMessage paths */
+    paths?: (MenuExpandMessage.IPath[]|null);
 }
 
-/** Represents a LastAuthMessage. */
-export class LastAuthMessage implements ILastAuthMessage {
+/** Represents a MenuExpandMessage. */
+export class MenuExpandMessage implements IMenuExpandMessage {
 
     /**
-     * Constructs a new LastAuthMessage.
+     * Constructs a new MenuExpandMessage.
      * @param [properties] Properties to set
      */
-    constructor(properties?: ILastAuthMessage);
+    constructor(properties?: IMenuExpandMessage);
 
-    /** LastAuthMessage nonce. */
-    public nonce: string;
-
-    /** LastAuthMessage lastAuthAt. */
-    public lastAuthAt: string;
+    /** MenuExpandMessage paths. */
+    public paths: MenuExpandMessage.IPath[];
 
     /**
-     * Creates a new LastAuthMessage instance using the specified properties.
+     * Creates a new MenuExpandMessage instance using the specified properties.
      * @param [properties] Properties to set
-     * @returns LastAuthMessage instance
+     * @returns MenuExpandMessage instance
      */
-    public static create(properties?: ILastAuthMessage): LastAuthMessage;
+    public static create(properties?: IMenuExpandMessage): MenuExpandMessage;
 
     /**
-     * Encodes the specified LastAuthMessage message. Does not implicitly {@link LastAuthMessage.verify|verify} messages.
-     * @param message LastAuthMessage message or plain object to encode
+     * Encodes the specified MenuExpandMessage message. Does not implicitly {@link MenuExpandMessage.verify|verify} messages.
+     * @param message MenuExpandMessage message or plain object to encode
      * @param [writer] Writer to encode to
      * @returns Writer
      */
-    public static encode(message: ILastAuthMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+    public static encode(message: IMenuExpandMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
     /**
-     * Encodes the specified LastAuthMessage message, length delimited. Does not implicitly {@link LastAuthMessage.verify|verify} messages.
-     * @param message LastAuthMessage message or plain object to encode
+     * Encodes the specified MenuExpandMessage message, length delimited. Does not implicitly {@link MenuExpandMessage.verify|verify} messages.
+     * @param message MenuExpandMessage message or plain object to encode
      * @param [writer] Writer to encode to
      * @returns Writer
      */
-    public static encodeDelimited(message: ILastAuthMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+    public static encodeDelimited(message: IMenuExpandMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
     /**
-     * Decodes a LastAuthMessage message from the specified reader or buffer.
+     * Decodes a MenuExpandMessage message from the specified reader or buffer.
      * @param reader Reader or buffer to decode from
      * @param [length] Message length if known beforehand
-     * @returns LastAuthMessage
+     * @returns MenuExpandMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): LastAuthMessage;
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): MenuExpandMessage;
 
     /**
-     * Decodes a LastAuthMessage message from the specified reader or buffer, length delimited.
+     * Decodes a MenuExpandMessage message from the specified reader or buffer, length delimited.
      * @param reader Reader or buffer to decode from
-     * @returns LastAuthMessage
+     * @returns MenuExpandMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): LastAuthMessage;
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): MenuExpandMessage;
 
     /**
-     * Verifies a LastAuthMessage message.
+     * Verifies a MenuExpandMessage message.
      * @param message Plain object to verify
      * @returns `null` if valid, otherwise the reason why it is not
      */
     public static verify(message: { [k: string]: any }): (string|null);
 
     /**
-     * Creates a LastAuthMessage message from a plain object. Also converts values to their respective internal types.
+     * Creates a MenuExpandMessage message from a plain object. Also converts values to their respective internal types.
      * @param object Plain object
-     * @returns LastAuthMessage
+     * @returns MenuExpandMessage
      */
-    public static fromObject(object: { [k: string]: any }): LastAuthMessage;
+    public static fromObject(object: { [k: string]: any }): MenuExpandMessage;
 
     /**
-     * Creates a plain object from a LastAuthMessage message. Also converts values to other types if specified.
-     * @param message LastAuthMessage
+     * Creates a plain object from a MenuExpandMessage message. Also converts values to other types if specified.
+     * @param message MenuExpandMessage
      * @param [options] Conversion options
      * @returns Plain object
      */
-    public static toObject(message: LastAuthMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+    public static toObject(message: MenuExpandMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
     /**
-     * Converts this LastAuthMessage to JSON.
+     * Converts this MenuExpandMessage to JSON.
      * @returns JSON object
      */
     public toJSON(): { [k: string]: any };
 }
 
-/** Properties of an OutlineMenuExpandMessage. */
-export interface IOutlineMenuExpandMessage {
-
-    /** OutlineMenuExpandMessage paths */
-    paths?: (OutlineMenuExpandMessage.IPath[]|null);
-}
-
-/** Represents an OutlineMenuExpandMessage. */
-export class OutlineMenuExpandMessage implements IOutlineMenuExpandMessage {
-
-    /**
-     * Constructs a new OutlineMenuExpandMessage.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: IOutlineMenuExpandMessage);
-
-    /** OutlineMenuExpandMessage paths. */
-    public paths: OutlineMenuExpandMessage.IPath[];
-
-    /**
-     * Creates a new OutlineMenuExpandMessage instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns OutlineMenuExpandMessage instance
-     */
-    public static create(properties?: IOutlineMenuExpandMessage): OutlineMenuExpandMessage;
-
-    /**
-     * Encodes the specified OutlineMenuExpandMessage message. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
-     * @param message OutlineMenuExpandMessage message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: IOutlineMenuExpandMessage, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified OutlineMenuExpandMessage message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
-     * @param message OutlineMenuExpandMessage message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: IOutlineMenuExpandMessage, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns OutlineMenuExpandMessage
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): OutlineMenuExpandMessage;
-
-    /**
-     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns OutlineMenuExpandMessage
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): OutlineMenuExpandMessage;
-
-    /**
-     * Verifies an OutlineMenuExpandMessage message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates an OutlineMenuExpandMessage message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns OutlineMenuExpandMessage
-     */
-    public static fromObject(object: { [k: string]: any }): OutlineMenuExpandMessage;
-
-    /**
-     * Creates a plain object from an OutlineMenuExpandMessage message. Also converts values to other types if specified.
-     * @param message OutlineMenuExpandMessage
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: OutlineMenuExpandMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this OutlineMenuExpandMessage to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-}
-
-export namespace OutlineMenuExpandMessage {
+export namespace MenuExpandMessage {
 
     /** Properties of a Path. */
     interface IPath {
@@ -297,7 +297,7 @@ export namespace OutlineMenuExpandMessage {
          * Constructs a new Path.
          * @param [properties] Properties to set
          */
-        constructor(properties?: OutlineMenuExpandMessage.IPath);
+        constructor(properties?: MenuExpandMessage.IPath);
 
         /** Path labels. */
         public labels: string[];
@@ -307,23 +307,23 @@ export namespace OutlineMenuExpandMessage {
          * @param [properties] Properties to set
          * @returns Path instance
          */
-        public static create(properties?: OutlineMenuExpandMessage.IPath): OutlineMenuExpandMessage.Path;
+        public static create(properties?: MenuExpandMessage.IPath): MenuExpandMessage.Path;
 
         /**
-         * Encodes the specified Path message. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * Encodes the specified Path message. Does not implicitly {@link MenuExpandMessage.Path.verify|verify} messages.
          * @param message Path message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: OutlineMenuExpandMessage.IPath, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: MenuExpandMessage.IPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Path message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * Encodes the specified Path message, length delimited. Does not implicitly {@link MenuExpandMessage.Path.verify|verify} messages.
          * @param message Path message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: OutlineMenuExpandMessage.IPath, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: MenuExpandMessage.IPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
          * Decodes a Path message from the specified reader or buffer.
@@ -333,7 +333,7 @@ export namespace OutlineMenuExpandMessage {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): OutlineMenuExpandMessage.Path;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): MenuExpandMessage.Path;
 
         /**
          * Decodes a Path message from the specified reader or buffer, length delimited.
@@ -342,7 +342,7 @@ export namespace OutlineMenuExpandMessage {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): OutlineMenuExpandMessage.Path;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): MenuExpandMessage.Path;
 
         /**
          * Verifies a Path message.
@@ -356,7 +356,7 @@ export namespace OutlineMenuExpandMessage {
          * @param object Plain object
          * @returns Path
          */
-        public static fromObject(object: { [k: string]: any }): OutlineMenuExpandMessage.Path;
+        public static fromObject(object: { [k: string]: any }): MenuExpandMessage.Path;
 
         /**
          * Creates a plain object from a Path message. Also converts values to other types if specified.
@@ -364,7 +364,7 @@ export namespace OutlineMenuExpandMessage {
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: OutlineMenuExpandMessage.Path, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: MenuExpandMessage.Path, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
          * Converts this Path to JSON.

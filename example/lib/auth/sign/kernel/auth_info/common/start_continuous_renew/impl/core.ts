@@ -1,24 +1,24 @@
 import { authzRepositoryConverter } from "../../../kernel/converter"
-import { lastAuthRepositoryConverter, authRemoteConverter } from "../../../kernel/converter"
+import { authnRepositoryConverter, authRemoteConverter } from "../../../kernel/converter"
 
 import { StoreRepositoryResult } from "../../../../../../../z_vendor/getto-application/infra/repository/infra"
 import { StartContinuousRenewInfra } from "../infra"
 
 import { SaveAuthInfoMethod, StartContinuousRenewMethod } from "../method"
 
-import { hasExpired, toLastAuth } from "../../../kernel/data"
+import { hasExpired } from "../../../kernel/data"
 import { StartContinuousRenewEvent } from "../event"
 
 interface Save {
     (infra: StartContinuousRenewInfra): SaveAuthInfoMethod
 }
 export const saveAuthInfo: Save = (infra) => (info) => {
-    const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+    const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
 
-    const lastAuthResult = lastAuth.set(toLastAuth(info.authn))
-    if (!lastAuthResult.success) {
-        return lastAuthResult
+    const authnResult = authn.set(info.authn)
+    if (!authnResult.success) {
+        return authnResult
     }
     const authzResult = authz.set(info.authz)
     if (!authzResult.success) {
@@ -47,34 +47,34 @@ export const startContinuousRenew: Start = (infra) => (post) => {
     async function continuousRenew(): Promise<{ next: boolean }> {
         const { clock, config } = infra
         const authz = infra.authz(authzRepositoryConverter)
-        const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+        const authn = infra.authn(authnRepositoryConverter)
         const renew = infra.renew(authRemoteConverter(clock))
 
         const CANCEL = { next: false }
         const NEXT = { next: true }
 
-        const result = lastAuth.get()
+        const result = authn.get()
         if (!result.success) {
             post({ type: "repository-error", err: result.err })
             return CANCEL
         }
         if (!result.found) {
-            handleStoreResult(lastAuth.remove())
+            handleStoreResult(authn.remove())
             handleStoreResult(authz.remove())
             return CANCEL
         }
 
         // 前回の更新時刻が新しければ今回は通信しない
-        const time = { now: clock.now(), ...config.lastAuthExpire }
-        if (!hasExpired(result.value.lastAuthAt, time)) {
-            post({ type: "lastAuth-not-expired" })
+        const time = { now: clock.now(), ...config.authnExpire }
+        if (!hasExpired(result.value.authAt, time)) {
+            post({ type: "authn-not-expired" })
             return NEXT
         }
 
         const response = await renew(result.value.nonce)
         if (!response.success) {
             if (response.err.type === "invalid-ticket") {
-                handleStoreResult(lastAuth.remove())
+                handleStoreResult(authn.remove())
                 handleStoreResult(authz.remove())
                 post({ type: "required-to-login" })
             } else {
@@ -83,7 +83,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
             return CANCEL
         }
 
-        if (!handleStoreResult(lastAuth.set(toLastAuth(response.value.authn)))) {
+        if (!handleStoreResult(authn.set(response.value.authn))) {
             return CANCEL
         }
         if (!handleStoreResult(authz.set(response.value.authz))) {
@@ -105,7 +105,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
 export function startContinuousRenewEventHasDone(event: StartContinuousRenewEvent): boolean {
     switch (event.type) {
         case "succeed-to-start-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "succeed-to-continuous-renew":
             return false
 

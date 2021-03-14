@@ -7,8 +7,8 @@ import { RenewAuthInfoMethod, CheckAuthInfoMethod } from "../method"
 
 import { CheckAuthInfoEvent, RenewAuthInfoEvent } from "../event"
 
-import { hasExpired, LastAuth, toLastAuth } from "../../kernel/data"
-import { lastAuthRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
+import { Authn, hasExpired } from "../../kernel/data"
+import { authnRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
 import { authzRepositoryConverter } from "../../kernel/converter"
 
 interface CheckAuthInfo {
@@ -17,13 +17,13 @@ interface CheckAuthInfo {
 export const checkAuthInfo: CheckAuthInfo = (infra) => async (post) => {
     const { clock, config } = infra
 
-    loadLastAuth(infra, post, (lastAuth) => {
+    loadAuthn(infra, post, (authn) => {
         const time = {
             now: clock.now(),
             expire_millisecond: config.instantLoadExpire.expire_millisecond,
         }
-        if (hasExpired(lastAuth.lastAuthAt, time)) {
-            renew(infra, lastAuth, post)
+        if (hasExpired(authn.authAt, time)) {
+            renew(infra, authn, post)
             return
         }
 
@@ -45,19 +45,19 @@ interface RenewAuthInfo {
     (infra: CheckAuthInfoInfra): RenewAuthInfoMethod
 }
 export const renewAuthInfo: RenewAuthInfo = (infra) => async (post) => {
-    loadLastAuth(infra, post, (lastAuth) => {
-        renew(infra, lastAuth, post)
+    loadAuthn(infra, post, (authn) => {
+        renew(infra, authn, post)
     })
 }
 
-function loadLastAuth(
+function loadAuthn(
     infra: CheckAuthInfoInfra,
     post: Post<RenewAuthInfoEvent>,
-    hook: { (lastAuth: LastAuth): void },
+    hook: { (authn: Authn): void },
 ) {
-    const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+    const authn = infra.authn(authnRepositoryConverter)
 
-    const findResult = lastAuth.get()
+    const findResult = authn.get()
     if (!findResult.success) {
         post({ type: "repository-error", err: findResult.err })
         return
@@ -69,9 +69,9 @@ function loadLastAuth(
 
     hook(findResult.value)
 }
-async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<RenewAuthInfoEvent>) {
+async function renew(infra: CheckAuthInfoInfra, info: Authn, post: Post<RenewAuthInfoEvent>) {
     const { clock, config } = infra
-    const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+    const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
     const renew = infra.renew(authRemoteConverter(clock))
 
@@ -83,7 +83,7 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
     )
     if (!response.success) {
         if (response.err.type === "invalid-ticket") {
-            const removeResult = lastAuth.remove()
+            const removeResult = authn.remove()
             if (!removeResult.success) {
                 post({ type: "repository-error", err: removeResult.err })
                 return
@@ -95,7 +95,7 @@ async function renew(infra: CheckAuthInfoInfra, info: LastAuth, post: Post<Renew
         return
     }
 
-    if (!checkRepositoryError(lastAuth.set(toLastAuth(response.value.authn)))) {
+    if (!checkRepositoryError(authn.set(response.value.authn))) {
         return
     }
     if (!checkRepositoryError(authz.set(response.value.authz))) {

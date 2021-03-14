@@ -7,6 +7,216 @@ const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.
 // Exported root namespace
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
+export const AuthnMessage = $root.AuthnMessage = (() => {
+
+    /**
+     * Properties of an AuthnMessage.
+     * @exports IAuthnMessage
+     * @interface IAuthnMessage
+     * @property {string|null} [nonce] AuthnMessage nonce
+     * @property {string|null} [authAt] AuthnMessage authAt
+     */
+
+    /**
+     * Constructs a new AuthnMessage.
+     * @exports AuthnMessage
+     * @classdesc Represents an AuthnMessage.
+     * @implements IAuthnMessage
+     * @constructor
+     * @param {IAuthnMessage=} [properties] Properties to set
+     */
+    function AuthnMessage(properties) {
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * AuthnMessage nonce.
+     * @member {string} nonce
+     * @memberof AuthnMessage
+     * @instance
+     */
+    AuthnMessage.prototype.nonce = "";
+
+    /**
+     * AuthnMessage authAt.
+     * @member {string} authAt
+     * @memberof AuthnMessage
+     * @instance
+     */
+    AuthnMessage.prototype.authAt = "";
+
+    /**
+     * Creates a new AuthnMessage instance using the specified properties.
+     * @function create
+     * @memberof AuthnMessage
+     * @static
+     * @param {IAuthnMessage=} [properties] Properties to set
+     * @returns {AuthnMessage} AuthnMessage instance
+     */
+    AuthnMessage.create = function create(properties) {
+        return new AuthnMessage(properties);
+    };
+
+    /**
+     * Encodes the specified AuthnMessage message. Does not implicitly {@link AuthnMessage.verify|verify} messages.
+     * @function encode
+     * @memberof AuthnMessage
+     * @static
+     * @param {IAuthnMessage} message AuthnMessage message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    AuthnMessage.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.nonce != null && Object.hasOwnProperty.call(message, "nonce"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.nonce);
+        if (message.authAt != null && Object.hasOwnProperty.call(message, "authAt"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.authAt);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified AuthnMessage message, length delimited. Does not implicitly {@link AuthnMessage.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof AuthnMessage
+     * @static
+     * @param {IAuthnMessage} message AuthnMessage message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    AuthnMessage.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes an AuthnMessage message from the specified reader or buffer.
+     * @function decode
+     * @memberof AuthnMessage
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {AuthnMessage} AuthnMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    AuthnMessage.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.AuthnMessage();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                message.nonce = reader.string();
+                break;
+            case 2:
+                message.authAt = reader.string();
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes an AuthnMessage message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof AuthnMessage
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {AuthnMessage} AuthnMessage
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    AuthnMessage.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies an AuthnMessage message.
+     * @function verify
+     * @memberof AuthnMessage
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    AuthnMessage.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.nonce != null && message.hasOwnProperty("nonce"))
+            if (!$util.isString(message.nonce))
+                return "nonce: string expected";
+        if (message.authAt != null && message.hasOwnProperty("authAt"))
+            if (!$util.isString(message.authAt))
+                return "authAt: string expected";
+        return null;
+    };
+
+    /**
+     * Creates an AuthnMessage message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof AuthnMessage
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {AuthnMessage} AuthnMessage
+     */
+    AuthnMessage.fromObject = function fromObject(object) {
+        if (object instanceof $root.AuthnMessage)
+            return object;
+        let message = new $root.AuthnMessage();
+        if (object.nonce != null)
+            message.nonce = String(object.nonce);
+        if (object.authAt != null)
+            message.authAt = String(object.authAt);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from an AuthnMessage message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof AuthnMessage
+     * @static
+     * @param {AuthnMessage} message AuthnMessage
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    AuthnMessage.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.defaults) {
+            object.nonce = "";
+            object.authAt = "";
+        }
+        if (message.nonce != null && message.hasOwnProperty("nonce"))
+            object.nonce = message.nonce;
+        if (message.authAt != null && message.hasOwnProperty("authAt"))
+            object.authAt = message.authAt;
+        return object;
+    };
+
+    /**
+     * Converts this AuthnMessage to JSON.
+     * @function toJSON
+     * @memberof AuthnMessage
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    AuthnMessage.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    return AuthnMessage;
+})();
+
 export const AuthzMessage = $root.AuthzMessage = (() => {
 
     /**
@@ -233,234 +443,24 @@ export const AuthzMessage = $root.AuthzMessage = (() => {
     return AuthzMessage;
 })();
 
-export const LastAuthMessage = $root.LastAuthMessage = (() => {
+export const MenuExpandMessage = $root.MenuExpandMessage = (() => {
 
     /**
-     * Properties of a LastAuthMessage.
-     * @exports ILastAuthMessage
-     * @interface ILastAuthMessage
-     * @property {string|null} [nonce] LastAuthMessage nonce
-     * @property {string|null} [lastAuthAt] LastAuthMessage lastAuthAt
+     * Properties of a MenuExpandMessage.
+     * @exports IMenuExpandMessage
+     * @interface IMenuExpandMessage
+     * @property {Array.<MenuExpandMessage.IPath>|null} [paths] MenuExpandMessage paths
      */
 
     /**
-     * Constructs a new LastAuthMessage.
-     * @exports LastAuthMessage
-     * @classdesc Represents a LastAuthMessage.
-     * @implements ILastAuthMessage
+     * Constructs a new MenuExpandMessage.
+     * @exports MenuExpandMessage
+     * @classdesc Represents a MenuExpandMessage.
+     * @implements IMenuExpandMessage
      * @constructor
-     * @param {ILastAuthMessage=} [properties] Properties to set
+     * @param {IMenuExpandMessage=} [properties] Properties to set
      */
-    function LastAuthMessage(properties) {
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * LastAuthMessage nonce.
-     * @member {string} nonce
-     * @memberof LastAuthMessage
-     * @instance
-     */
-    LastAuthMessage.prototype.nonce = "";
-
-    /**
-     * LastAuthMessage lastAuthAt.
-     * @member {string} lastAuthAt
-     * @memberof LastAuthMessage
-     * @instance
-     */
-    LastAuthMessage.prototype.lastAuthAt = "";
-
-    /**
-     * Creates a new LastAuthMessage instance using the specified properties.
-     * @function create
-     * @memberof LastAuthMessage
-     * @static
-     * @param {ILastAuthMessage=} [properties] Properties to set
-     * @returns {LastAuthMessage} LastAuthMessage instance
-     */
-    LastAuthMessage.create = function create(properties) {
-        return new LastAuthMessage(properties);
-    };
-
-    /**
-     * Encodes the specified LastAuthMessage message. Does not implicitly {@link LastAuthMessage.verify|verify} messages.
-     * @function encode
-     * @memberof LastAuthMessage
-     * @static
-     * @param {ILastAuthMessage} message LastAuthMessage message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    LastAuthMessage.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.nonce != null && Object.hasOwnProperty.call(message, "nonce"))
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.nonce);
-        if (message.lastAuthAt != null && Object.hasOwnProperty.call(message, "lastAuthAt"))
-            writer.uint32(/* id 2, wireType 2 =*/18).string(message.lastAuthAt);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified LastAuthMessage message, length delimited. Does not implicitly {@link LastAuthMessage.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof LastAuthMessage
-     * @static
-     * @param {ILastAuthMessage} message LastAuthMessage message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    LastAuthMessage.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a LastAuthMessage message from the specified reader or buffer.
-     * @function decode
-     * @memberof LastAuthMessage
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {LastAuthMessage} LastAuthMessage
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    LastAuthMessage.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.LastAuthMessage();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1:
-                message.nonce = reader.string();
-                break;
-            case 2:
-                message.lastAuthAt = reader.string();
-                break;
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a LastAuthMessage message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof LastAuthMessage
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {LastAuthMessage} LastAuthMessage
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    LastAuthMessage.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a LastAuthMessage message.
-     * @function verify
-     * @memberof LastAuthMessage
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    LastAuthMessage.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.nonce != null && message.hasOwnProperty("nonce"))
-            if (!$util.isString(message.nonce))
-                return "nonce: string expected";
-        if (message.lastAuthAt != null && message.hasOwnProperty("lastAuthAt"))
-            if (!$util.isString(message.lastAuthAt))
-                return "lastAuthAt: string expected";
-        return null;
-    };
-
-    /**
-     * Creates a LastAuthMessage message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof LastAuthMessage
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {LastAuthMessage} LastAuthMessage
-     */
-    LastAuthMessage.fromObject = function fromObject(object) {
-        if (object instanceof $root.LastAuthMessage)
-            return object;
-        let message = new $root.LastAuthMessage();
-        if (object.nonce != null)
-            message.nonce = String(object.nonce);
-        if (object.lastAuthAt != null)
-            message.lastAuthAt = String(object.lastAuthAt);
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a LastAuthMessage message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof LastAuthMessage
-     * @static
-     * @param {LastAuthMessage} message LastAuthMessage
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    LastAuthMessage.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.defaults) {
-            object.nonce = "";
-            object.lastAuthAt = "";
-        }
-        if (message.nonce != null && message.hasOwnProperty("nonce"))
-            object.nonce = message.nonce;
-        if (message.lastAuthAt != null && message.hasOwnProperty("lastAuthAt"))
-            object.lastAuthAt = message.lastAuthAt;
-        return object;
-    };
-
-    /**
-     * Converts this LastAuthMessage to JSON.
-     * @function toJSON
-     * @memberof LastAuthMessage
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    LastAuthMessage.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    return LastAuthMessage;
-})();
-
-export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => {
-
-    /**
-     * Properties of an OutlineMenuExpandMessage.
-     * @exports IOutlineMenuExpandMessage
-     * @interface IOutlineMenuExpandMessage
-     * @property {Array.<OutlineMenuExpandMessage.IPath>|null} [paths] OutlineMenuExpandMessage paths
-     */
-
-    /**
-     * Constructs a new OutlineMenuExpandMessage.
-     * @exports OutlineMenuExpandMessage
-     * @classdesc Represents an OutlineMenuExpandMessage.
-     * @implements IOutlineMenuExpandMessage
-     * @constructor
-     * @param {IOutlineMenuExpandMessage=} [properties] Properties to set
-     */
-    function OutlineMenuExpandMessage(properties) {
+    function MenuExpandMessage(properties) {
         this.paths = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
@@ -469,78 +469,78 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
     }
 
     /**
-     * OutlineMenuExpandMessage paths.
-     * @member {Array.<OutlineMenuExpandMessage.IPath>} paths
-     * @memberof OutlineMenuExpandMessage
+     * MenuExpandMessage paths.
+     * @member {Array.<MenuExpandMessage.IPath>} paths
+     * @memberof MenuExpandMessage
      * @instance
      */
-    OutlineMenuExpandMessage.prototype.paths = $util.emptyArray;
+    MenuExpandMessage.prototype.paths = $util.emptyArray;
 
     /**
-     * Creates a new OutlineMenuExpandMessage instance using the specified properties.
+     * Creates a new MenuExpandMessage instance using the specified properties.
      * @function create
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
-     * @param {IOutlineMenuExpandMessage=} [properties] Properties to set
-     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage instance
+     * @param {IMenuExpandMessage=} [properties] Properties to set
+     * @returns {MenuExpandMessage} MenuExpandMessage instance
      */
-    OutlineMenuExpandMessage.create = function create(properties) {
-        return new OutlineMenuExpandMessage(properties);
+    MenuExpandMessage.create = function create(properties) {
+        return new MenuExpandMessage(properties);
     };
 
     /**
-     * Encodes the specified OutlineMenuExpandMessage message. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
+     * Encodes the specified MenuExpandMessage message. Does not implicitly {@link MenuExpandMessage.verify|verify} messages.
      * @function encode
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
-     * @param {IOutlineMenuExpandMessage} message OutlineMenuExpandMessage message or plain object to encode
+     * @param {IMenuExpandMessage} message MenuExpandMessage message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    OutlineMenuExpandMessage.encode = function encode(message, writer) {
+    MenuExpandMessage.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
         if (message.paths != null && message.paths.length)
             for (let i = 0; i < message.paths.length; ++i)
-                $root.OutlineMenuExpandMessage.Path.encode(message.paths[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                $root.MenuExpandMessage.Path.encode(message.paths[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
         return writer;
     };
 
     /**
-     * Encodes the specified OutlineMenuExpandMessage message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.verify|verify} messages.
+     * Encodes the specified MenuExpandMessage message, length delimited. Does not implicitly {@link MenuExpandMessage.verify|verify} messages.
      * @function encodeDelimited
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
-     * @param {IOutlineMenuExpandMessage} message OutlineMenuExpandMessage message or plain object to encode
+     * @param {IMenuExpandMessage} message MenuExpandMessage message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    OutlineMenuExpandMessage.encodeDelimited = function encodeDelimited(message, writer) {
+    MenuExpandMessage.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer).ldelim();
     };
 
     /**
-     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer.
+     * Decodes a MenuExpandMessage message from the specified reader or buffer.
      * @function decode
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
      * @param {number} [length] Message length if known beforehand
-     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     * @returns {MenuExpandMessage} MenuExpandMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    OutlineMenuExpandMessage.decode = function decode(reader, length) {
+    MenuExpandMessage.decode = function decode(reader, length) {
         if (!(reader instanceof $Reader))
             reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.OutlineMenuExpandMessage();
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.MenuExpandMessage();
         while (reader.pos < end) {
             let tag = reader.uint32();
             switch (tag >>> 3) {
             case 1:
                 if (!(message.paths && message.paths.length))
                     message.paths = [];
-                message.paths.push($root.OutlineMenuExpandMessage.Path.decode(reader, reader.uint32()));
+                message.paths.push($root.MenuExpandMessage.Path.decode(reader, reader.uint32()));
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -551,37 +551,37 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
     };
 
     /**
-     * Decodes an OutlineMenuExpandMessage message from the specified reader or buffer, length delimited.
+     * Decodes a MenuExpandMessage message from the specified reader or buffer, length delimited.
      * @function decodeDelimited
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     * @returns {MenuExpandMessage} MenuExpandMessage
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    OutlineMenuExpandMessage.decodeDelimited = function decodeDelimited(reader) {
+    MenuExpandMessage.decodeDelimited = function decodeDelimited(reader) {
         if (!(reader instanceof $Reader))
             reader = new $Reader(reader);
         return this.decode(reader, reader.uint32());
     };
 
     /**
-     * Verifies an OutlineMenuExpandMessage message.
+     * Verifies a MenuExpandMessage message.
      * @function verify
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
      * @param {Object.<string,*>} message Plain object to verify
      * @returns {string|null} `null` if valid, otherwise the reason why it is not
      */
-    OutlineMenuExpandMessage.verify = function verify(message) {
+    MenuExpandMessage.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
         if (message.paths != null && message.hasOwnProperty("paths")) {
             if (!Array.isArray(message.paths))
                 return "paths: array expected";
             for (let i = 0; i < message.paths.length; ++i) {
-                let error = $root.OutlineMenuExpandMessage.Path.verify(message.paths[i]);
+                let error = $root.MenuExpandMessage.Path.verify(message.paths[i]);
                 if (error)
                     return "paths." + error;
             }
@@ -590,40 +590,40 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
     };
 
     /**
-     * Creates an OutlineMenuExpandMessage message from a plain object. Also converts values to their respective internal types.
+     * Creates a MenuExpandMessage message from a plain object. Also converts values to their respective internal types.
      * @function fromObject
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
      * @param {Object.<string,*>} object Plain object
-     * @returns {OutlineMenuExpandMessage} OutlineMenuExpandMessage
+     * @returns {MenuExpandMessage} MenuExpandMessage
      */
-    OutlineMenuExpandMessage.fromObject = function fromObject(object) {
-        if (object instanceof $root.OutlineMenuExpandMessage)
+    MenuExpandMessage.fromObject = function fromObject(object) {
+        if (object instanceof $root.MenuExpandMessage)
             return object;
-        let message = new $root.OutlineMenuExpandMessage();
+        let message = new $root.MenuExpandMessage();
         if (object.paths) {
             if (!Array.isArray(object.paths))
-                throw TypeError(".OutlineMenuExpandMessage.paths: array expected");
+                throw TypeError(".MenuExpandMessage.paths: array expected");
             message.paths = [];
             for (let i = 0; i < object.paths.length; ++i) {
                 if (typeof object.paths[i] !== "object")
-                    throw TypeError(".OutlineMenuExpandMessage.paths: object expected");
-                message.paths[i] = $root.OutlineMenuExpandMessage.Path.fromObject(object.paths[i]);
+                    throw TypeError(".MenuExpandMessage.paths: object expected");
+                message.paths[i] = $root.MenuExpandMessage.Path.fromObject(object.paths[i]);
             }
         }
         return message;
     };
 
     /**
-     * Creates a plain object from an OutlineMenuExpandMessage message. Also converts values to other types if specified.
+     * Creates a plain object from a MenuExpandMessage message. Also converts values to other types if specified.
      * @function toObject
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @static
-     * @param {OutlineMenuExpandMessage} message OutlineMenuExpandMessage
+     * @param {MenuExpandMessage} message MenuExpandMessage
      * @param {$protobuf.IConversionOptions} [options] Conversion options
      * @returns {Object.<string,*>} Plain object
      */
-    OutlineMenuExpandMessage.toObject = function toObject(message, options) {
+    MenuExpandMessage.toObject = function toObject(message, options) {
         if (!options)
             options = {};
         let object = {};
@@ -632,38 +632,38 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         if (message.paths && message.paths.length) {
             object.paths = [];
             for (let j = 0; j < message.paths.length; ++j)
-                object.paths[j] = $root.OutlineMenuExpandMessage.Path.toObject(message.paths[j], options);
+                object.paths[j] = $root.MenuExpandMessage.Path.toObject(message.paths[j], options);
         }
         return object;
     };
 
     /**
-     * Converts this OutlineMenuExpandMessage to JSON.
+     * Converts this MenuExpandMessage to JSON.
      * @function toJSON
-     * @memberof OutlineMenuExpandMessage
+     * @memberof MenuExpandMessage
      * @instance
      * @returns {Object.<string,*>} JSON object
      */
-    OutlineMenuExpandMessage.prototype.toJSON = function toJSON() {
+    MenuExpandMessage.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
 
-    OutlineMenuExpandMessage.Path = (function() {
+    MenuExpandMessage.Path = (function() {
 
         /**
          * Properties of a Path.
-         * @memberof OutlineMenuExpandMessage
+         * @memberof MenuExpandMessage
          * @interface IPath
          * @property {Array.<string>|null} [labels] Path labels
          */
 
         /**
          * Constructs a new Path.
-         * @memberof OutlineMenuExpandMessage
+         * @memberof MenuExpandMessage
          * @classdesc Represents a Path.
          * @implements IPath
          * @constructor
-         * @param {OutlineMenuExpandMessage.IPath=} [properties] Properties to set
+         * @param {MenuExpandMessage.IPath=} [properties] Properties to set
          */
         function Path(properties) {
             this.labels = [];
@@ -676,7 +676,7 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Path labels.
          * @member {Array.<string>} labels
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @instance
          */
         Path.prototype.labels = $util.emptyArray;
@@ -684,21 +684,21 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Creates a new Path instance using the specified properties.
          * @function create
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
-         * @param {OutlineMenuExpandMessage.IPath=} [properties] Properties to set
-         * @returns {OutlineMenuExpandMessage.Path} Path instance
+         * @param {MenuExpandMessage.IPath=} [properties] Properties to set
+         * @returns {MenuExpandMessage.Path} Path instance
          */
         Path.create = function create(properties) {
             return new Path(properties);
         };
 
         /**
-         * Encodes the specified Path message. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * Encodes the specified Path message. Does not implicitly {@link MenuExpandMessage.Path.verify|verify} messages.
          * @function encode
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
-         * @param {OutlineMenuExpandMessage.IPath} message Path message or plain object to encode
+         * @param {MenuExpandMessage.IPath} message Path message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -712,11 +712,11 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         };
 
         /**
-         * Encodes the specified Path message, length delimited. Does not implicitly {@link OutlineMenuExpandMessage.Path.verify|verify} messages.
+         * Encodes the specified Path message, length delimited. Does not implicitly {@link MenuExpandMessage.Path.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
-         * @param {OutlineMenuExpandMessage.IPath} message Path message or plain object to encode
+         * @param {MenuExpandMessage.IPath} message Path message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
@@ -727,18 +727,18 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Decodes a Path message from the specified reader or buffer.
          * @function decode
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {OutlineMenuExpandMessage.Path} Path
+         * @returns {MenuExpandMessage.Path} Path
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
         Path.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.OutlineMenuExpandMessage.Path();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.MenuExpandMessage.Path();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -758,10 +758,10 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Decodes a Path message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {OutlineMenuExpandMessage.Path} Path
+         * @returns {MenuExpandMessage.Path} Path
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
@@ -774,7 +774,7 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Verifies a Path message.
          * @function verify
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
@@ -795,18 +795,18 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Creates a Path message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {OutlineMenuExpandMessage.Path} Path
+         * @returns {MenuExpandMessage.Path} Path
          */
         Path.fromObject = function fromObject(object) {
-            if (object instanceof $root.OutlineMenuExpandMessage.Path)
+            if (object instanceof $root.MenuExpandMessage.Path)
                 return object;
-            let message = new $root.OutlineMenuExpandMessage.Path();
+            let message = new $root.MenuExpandMessage.Path();
             if (object.labels) {
                 if (!Array.isArray(object.labels))
-                    throw TypeError(".OutlineMenuExpandMessage.Path.labels: array expected");
+                    throw TypeError(".MenuExpandMessage.Path.labels: array expected");
                 message.labels = [];
                 for (let i = 0; i < object.labels.length; ++i)
                     message.labels[i] = String(object.labels[i]);
@@ -817,9 +817,9 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Creates a plain object from a Path message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @static
-         * @param {OutlineMenuExpandMessage.Path} message Path
+         * @param {MenuExpandMessage.Path} message Path
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
@@ -840,7 +840,7 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         /**
          * Converts this Path to JSON.
          * @function toJSON
-         * @memberof OutlineMenuExpandMessage.Path
+         * @memberof MenuExpandMessage.Path
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
@@ -851,7 +851,7 @@ export const OutlineMenuExpandMessage = $root.OutlineMenuExpandMessage = (() => 
         return Path;
     })();
 
-    return OutlineMenuExpandMessage;
+    return MenuExpandMessage;
 })();
 
 export { $root as default };

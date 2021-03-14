@@ -30,7 +30,7 @@ import { startContinuousRenewEventHasDone } from "../../kernel/auth_info/common/
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
 import { AuthzRepositoryPod } from "../../kernel/auth_info/kernel/infra"
-import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
+import { AuthnRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"
 
@@ -221,7 +221,7 @@ describe("AuthenticatePassword", () => {
 
 function standard_elements() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = newEntryPoint(
+    const entryPoint = initEntryPoint(
         standard_authenticate(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
@@ -231,7 +231,7 @@ function standard_elements() {
 }
 function takeLongtime_elements() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = newEntryPoint(
+    const entryPoint = initEntryPoint(
         takeLongtime_authenticate(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
@@ -240,14 +240,14 @@ function takeLongtime_elements() {
     return { clock: clockPubSub, entryPoint }
 }
 
-function newEntryPoint(
+function initEntryPoint(
     authenticate: AuthenticatePasswordRemotePod,
     renew: RenewAuthInfoRemotePod,
     clock: Clock,
 ): AuthenticatePasswordEntryPoint {
     const currentURL = new URL("https://example.com/index.html")
 
-    const lastAuth = standard_lastAuth()
+    const authn = standard_authn()
     const authz = standard_authz()
 
     const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
@@ -257,12 +257,12 @@ function newEntryPoint(
             initAuthenticatePasswordCoreMaterial(
                 {
                     startContinuousRenew: {
-                        lastAuth,
+                        authn,
                         authz,
                         renew,
                         config: {
                             interval: { interval_millisecond: 128 },
-                            lastAuthExpire: { expire_millisecond: 500 },
+                            authnExpire: { expire_millisecond: 500 },
                         },
                         clock,
                     },
@@ -296,16 +296,16 @@ function newEntryPoint(
     return entryPoint
 }
 
-function standard_lastAuth(): LastAuthRepositoryPod {
+function standard_authn(): AuthnRepositoryPod {
     return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
-    authz.set({
+    const db = mockDB()
+    db.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-    return wrapRepository(authz)
+    return wrapRepository(db)
 }
 
 function standard_authenticate(): AuthenticatePasswordRemotePod {
@@ -371,7 +371,7 @@ function actionHasDone(state: AuthenticatePasswordCoreState): boolean {
             return true
 
         case "succeed-to-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "required-to-login":
         case "failed-to-continuous-renew":
             return startContinuousRenewEventHasDone(state)

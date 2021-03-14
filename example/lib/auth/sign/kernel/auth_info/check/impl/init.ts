@@ -8,12 +8,12 @@ import {
     expireMinute,
 } from "../../../../../../z_vendor/getto-application/infra/config/infra"
 import { CheckAuthInfoInfra } from "../infra"
-import { newLastAuthRepository } from "../../kernel/infra/repository/last_auth"
+import { newAuthnRepository } from "../../kernel/infra/repository/last_auth"
 
 export function newCheckAuthInfoInfra(webStorage: Storage): CheckAuthInfoInfra {
     return {
         authz: newAuthzRepository(webStorage),
-        lastAuth: newLastAuthRepository(webStorage),
+        authn: newAuthnRepository(webStorage),
         renew: newRenewAuthInfoRemote(),
         clock: newClock(),
         config: {

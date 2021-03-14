@@ -1,6 +1,6 @@
 import { authzRepositoryConverter } from "../../kernel/converter"
 import { StoreRepositoryResult } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
-import { lastAuthRepositoryConverter } from "../../kernel/converter"
+import { authnRepositoryConverter } from "../../kernel/converter"
 import { ClearAuthInfoInfra } from "../infra"
 
 import { ClearAuthInfoMethod } from "../method"
@@ -9,10 +9,10 @@ interface Clear {
     (infra: ClearAuthInfoInfra): ClearAuthInfoMethod
 }
 export const clearAuthInfo: Clear = (infra) => async (post) => {
-    const lastAuth = infra.lastAuth(lastAuthRepositoryConverter)
+    const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
 
-    if (!handleResult(lastAuth.remove()) || !handleResult(authz.remove())) {
+    if (!handleResult(authn.remove()) || !handleResult(authz.remove())) {
         return
     }
 

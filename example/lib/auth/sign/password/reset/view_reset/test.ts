@@ -29,7 +29,7 @@ import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/inf
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
 import { AuthzRepositoryPod } from "../../../kernel/auth_info/kernel/infra"
 import {
-    LastAuthRepositoryPod,
+    AuthnRepositoryPod,
     RenewAuthInfoRemotePod,
 } from "../../../kernel/auth_info/kernel/infra"
 
@@ -283,7 +283,7 @@ function initEntryPoint(
     renew: RenewAuthInfoRemotePod,
     clock: Clock,
 ): ResetPasswordEntryPoint {
-    const lastAuth = standard_lastAuth()
+    const authn = standard_authn()
     const authz = standard_authz()
 
     const detecter = {
@@ -296,12 +296,12 @@ function initEntryPoint(
             initResetPasswordCoreMaterial(
                 {
                     startContinuousRenew: {
-                        lastAuth,
+                        authn: authn,
                         authz,
                         renew,
                         config: {
                             interval: { interval_millisecond: 64 },
-                            lastAuthExpire: { expire_millisecond: 500 },
+                            authnExpire: { expire_millisecond: 500 },
                         },
                         clock,
                     },
@@ -338,16 +338,16 @@ function emptyResetToken_URL(): URL {
     return new URL("https://example.com/index.html")
 }
 
-function standard_lastAuth(): LastAuthRepositoryPod {
+function standard_authn(): AuthnRepositoryPod {
     return wrapRepository(mockDB())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
-    authz.set({
+    const db = mockDB()
+    db.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-    return wrapRepository(authz)
+    return wrapRepository(db)
 }
 
 function standard_reset(): ResetPasswordRemotePod {
@@ -413,7 +413,7 @@ function actionHasDone(state: ResetPasswordCoreState): boolean {
             return true
 
         case "succeed-to-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "required-to-login":
         case "failed-to-continuous-renew":
             return startContinuousRenewEventHasDone(state)

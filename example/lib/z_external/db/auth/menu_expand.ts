@@ -1,4 +1,4 @@
-import { OutlineMenuExpandMessage } from "../y_protobuf/auth_pb.js"
+import { MenuExpandMessage } from "../y_protobuf/auth_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
@@ -13,11 +13,11 @@ type Expand = string[][]
 export function newDB_MenuExpand(storage: Storage, key: string): DB<Expand> {
     return initDB(storage, key, {
         toString: (value: Expand) => {
-            const f = OutlineMenuExpandMessage
+            const f = MenuExpandMessage
             const message = new f()
 
             message.paths = value.map((labels) => {
-                const f = OutlineMenuExpandMessage.Path
+                const f = MenuExpandMessage.Path
                 const message = new f()
 
                 message.labels = labels
@@ -29,7 +29,7 @@ export function newDB_MenuExpand(storage: Storage, key: string): DB<Expand> {
             return encodeUint8ArrayToBase64String(arr)
         },
         fromString: (value: string) => {
-            const message = OutlineMenuExpandMessage.decode(decodeBase64StringToUint8Array(value))
+            const message = MenuExpandMessage.decode(decodeBase64StringToUint8Array(value))
             return (message.paths || []).map((path) => path.labels || [])
         },
     })

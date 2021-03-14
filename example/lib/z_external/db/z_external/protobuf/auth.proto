@@ -1,16 +1,16 @@
 syntax = "proto3";
 
+message AuthnMessage {
+  string nonce = 1;
+  string authAt = 2;
+}
+
 message AuthzMessage {
   string nonce = 1;
   repeated string roles = 2;
 }
 
-message LastAuthMessage {
-  string nonce = 1;
-  string lastAuthAt = 2;
-}
-
-message OutlineMenuExpandMessage {
+message MenuExpandMessage {
   message Path { repeated string labels = 1; }
 
   repeated Path paths = 1;

@@ -1,4 +1,4 @@
-import { LastAuthMessage } from "../y_protobuf/auth_pb.js"
+import { AuthnMessage } from "../y_protobuf/auth_pb.js"
 
 import { initDB } from "../base"
 
@@ -8,27 +8,27 @@ import {
     encodeUint8ArrayToBase64String,
 } from "../../../z_vendor/base64/transform"
 
-type LastAuth = Readonly<{
+type Authn = Readonly<{
     nonce: string
-    lastAuthAt: string
+    authAt: string
 }>
-export function newDB_LastAuth(storage: Storage, key: string): DB<LastAuth> {
+export function newDB_Authn(storage: Storage, key: string): DB<Authn> {
     return initDB(storage, key, {
-        toString: (value: LastAuth) => {
-            const f = LastAuthMessage
+        toString: (value: Authn) => {
+            const f = AuthnMessage
             const message = new f()
 
             message.nonce = value.nonce
-            message.lastAuthAt = value.lastAuthAt
+            message.authAt = value.authAt
 
             const arr = f.encode(message).finish()
             return encodeUint8ArrayToBase64String(arr)
         },
         fromString: (raw: string) => {
-            const message = LastAuthMessage.decode(decodeBase64StringToUint8Array(raw))
+            const message = AuthnMessage.decode(decodeBase64StringToUint8Array(raw))
             return {
                 nonce: message.nonce || "",
-                lastAuthAt: message.lastAuthAt || "",
+                authAt: message.authAt || "",
             }
         },
     })
