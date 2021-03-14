@@ -14,7 +14,11 @@ import { docs_auth_sign_checkAuthInfo } from "../../../../auth/sign/kernel/auth_
 import { docs_auth_sign_logout } from "../../../../auth/sign/kernel/auth_info/action_logout/docs"
 import { docs_auth_sign_authenticatePassword } from "../../../../auth/sign/password/view_authenticate/docs"
 import { docs_auth_sign_resetPassword } from "../../../../auth/sign/password/reset/docs"
-import { docsModule, docsSection_pending } from "../../../../z_vendor/getto-application/docs/helper"
+import {
+    docsModule,
+    docsPurpose,
+    docsSection_pending,
+} from "../../../../z_vendor/getto-application/docs/helper"
 
 import { DocsSection } from "../../../../z_vendor/getto-application/docs/data"
 
@@ -41,12 +45,14 @@ const docs_auth_sign_authenticateWebAuthn: DocsSection[] = [
 ]
 
 const docs_auth_profile: DocsSection[] = [
-    docsSection_pending("認証情報管理", [
-        docsModule(["パスワード変更", "パスワードリセット", "web 証明書再登録"]),
+    docsSection_pending("プロフィール", [
+        docsPurpose(["業務で必要な時に使用できる", "業務内容をプライベートに保つ"]),
+        docsModule(["パスワード変更", "web 証明書再登録"]),
     ]),
 ]
 const docs_auth_user: DocsSection[] = [
     docsSection_pending("ユーザー管理", [
+        docsPurpose(["業務で必要な時に使用できる", "業務内容をプライベートに保つ"]),
         docsModule([
             "ユーザーの登録",
             "ユーザーの無効化",

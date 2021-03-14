@@ -1,11 +1,11 @@
 import {
     DocsAction,
     DocsActionContent,
+    DocsActionTargetType,
     DocsAction_action,
     DocsAction_request,
     DocsContent,
     DocsDescription,
-    DocsExplanation,
     DocsNegativeNote,
     DocsSection,
 } from "./data"
@@ -15,6 +15,9 @@ export function docsSection(title: string, body: DocsContent[]): DocsSection {
 }
 export function docsSection_pending(title: string, body: DocsContent[]): DocsSection {
     return { type: "pending", title, body }
+}
+export function docsSection_double(title: string, body: DocsContent[]): DocsSection {
+    return { type: "double", title, body }
 }
 
 export function docsPurpose(content: string[]): DocsContent {
@@ -29,8 +32,8 @@ export function docsItem(title: string, content: string[]): DocsContent {
 export function docsDescription(content: DocsDescription[]): DocsContent {
     return { type: "description", content }
 }
-export function docsExplanation(content: DocsExplanation[]): DocsContent {
-    return { type: "explanation", content }
+export function docsExplanation(target: DocsActionTargetType[]): DocsContent {
+    return { type: "explanation", target }
 }
 export function docsNegativeNote(content: DocsNegativeNote[]): DocsContent {
     return { type: "negativeNote", content }
