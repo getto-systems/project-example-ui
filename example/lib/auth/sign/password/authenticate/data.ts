@@ -1,5 +1,5 @@
-import { LoginID } from "../../common/fields/login_id/data"
-import { Password } from "../../common/fields/password/data"
+import { LoginID } from "../../login_id/data"
+import { Password } from "../data"
 
 export type AuthenticatePasswordFields = Readonly<{
     loginID: LoginID

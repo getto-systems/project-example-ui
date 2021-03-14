@@ -2,7 +2,7 @@ import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/rem
 import { DelayTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { RequestResetTokenFields, RequestResetTokenRemoteError } from "./data"
-import { ResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../data"
 
 export type RequestResetTokenInfra = Readonly<{
     requestToken: RequestResetTokenRemotePod

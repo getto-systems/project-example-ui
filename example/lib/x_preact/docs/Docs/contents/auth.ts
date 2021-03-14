@@ -12,7 +12,7 @@ import { docs_auth_sign } from "../../../../auth/sign/docs"
 import { docs_auth } from "../../../../auth/docs"
 import { docs_auth_sign_checkAuthTicket } from "../../../../auth/sign/auth_ticket/action_check/docs"
 import { docs_auth_sign_logout } from "../../../../auth/sign/auth_ticket/action_logout/docs"
-import { docs_auth_sign_authenticatePassword } from "../../../../auth/sign/password/view_authenticate/docs"
+import { docs_auth_sign_authenticatePassword } from "../../../../auth/sign/password/action_authenticate/docs"
 import { docs_auth_sign_resetPassword } from "../../../../auth/sign/password/reset/docs"
 import {
     docsModule,
@@ -21,11 +21,14 @@ import {
 } from "../../../../z_vendor/getto-application/docs/helper"
 
 import { DocsSection } from "../../../../z_vendor/getto-application/docs/data"
+import { docs_auth_sign_authTicket } from "../../../../auth/sign/auth_ticket/docs"
+import { docs_auth_sign_loginID } from "../../../../auth/sign/login_id/docs"
 
 export const content_auth = (): VNode[] => [
     h(DocsComponent, {
         contents: [
             [...docs_auth, ...docs_auth_sign, ...docs_auth_profile, ...docs_auth_user],
+            [...docs_auth_sign_authTicket, ...docs_auth_sign_loginID],
             [
                 ...docs_auth_sign_checkAuthTicket,
                 ...docs_auth_sign_logout,

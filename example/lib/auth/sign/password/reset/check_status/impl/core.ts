@@ -10,7 +10,7 @@ import {
 
 import { CheckResetTokenSendingStatusEvent } from "../event"
 
-import { resetSessionIDLocationConverter } from "../../kernel/converter"
+import { resetSessionIDLocationConverter } from "../../converter"
 
 import { CheckResetTokenSendingStatusError } from "../data"
 import { SignNav, signNavKey } from "../../../../common/nav/data"

@@ -1,7 +1,7 @@
 import { delayedChecker } from "../../../../../../z_vendor/getto-application/infra/timer/helper"
 
 import { authRemoteConverter } from "../../../../auth_ticket/kernel/converter"
-import { resetTokenLocationConverter } from "../../kernel/converter"
+import { resetTokenLocationConverter } from "../../converter"
 
 import { ResetPasswordInfra } from "../infra"
 

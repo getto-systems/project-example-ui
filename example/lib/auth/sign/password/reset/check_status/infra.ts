@@ -2,7 +2,7 @@ import { RemoteTypes } from "../../../../../z_vendor/getto-application/infra/rem
 import { Limit, WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 
 import { CheckResetTokenSendingStatusRemoteError, ResetTokenSendingResult } from "./data"
-import { ResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../data"
 
 export type CheckResetTokenSendingStatusInfra = Readonly<{
     sendToken: SendResetTokenRemotePod
