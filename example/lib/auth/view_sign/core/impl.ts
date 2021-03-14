@@ -35,7 +35,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
                 }
             })
 
-            this.post({ type: "check-authInfo", entryPoint })
+            this.post({ type: "check-authTicket", entryPoint })
         })
     }
 

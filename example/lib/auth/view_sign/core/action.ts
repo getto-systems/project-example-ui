@@ -1,6 +1,6 @@
 import { ApplicationStateAction } from "../../../z_vendor/getto-application/action/action"
 
-import { CheckAuthInfoEntryPoint } from "../../sign/kernel/auth_info/action_check/entry_point"
+import { CheckAuthTicketEntryPoint } from "../../sign/auth_info/action_check/entry_point"
 import { AuthenticatePasswordEntryPoint } from "../../sign/password/view_authenticate/entry_point"
 import { CheckResetTokenSendingStatusEntryPoint } from "../../sign/password/reset/view_check_status/entry_point"
 import { RequestResetTokenEntryPoint } from "../../sign/password/reset/view_request_token/entry_point"
@@ -14,7 +14,7 @@ export interface SignAction extends ApplicationStateAction<SignActionState> {
 export interface SignSubEntryPoint {
     link(): SignLinkResource
 
-    check(): CheckAuthInfoEntryPoint
+    check(): CheckAuthTicketEntryPoint
 
     password_authenticate(): AuthenticatePasswordEntryPoint
 
@@ -26,7 +26,7 @@ export interface SignSubEntryPoint {
 export type SignActionState =
     | Readonly<{ type: "initial-view" }>
     | Static<"privacyPolicy">
-    | View<"check-authInfo", CheckAuthInfoEntryPoint>
+    | View<"check-authTicket", CheckAuthTicketEntryPoint>
     | View<"password-authenticate", AuthenticatePasswordEntryPoint>
     | View<"password-reset-requestToken", RequestResetTokenEntryPoint>
     | View<"password-reset-checkStatus", CheckResetTokenSendingStatusEntryPoint>

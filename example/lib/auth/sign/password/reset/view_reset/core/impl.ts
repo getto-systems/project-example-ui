@@ -3,11 +3,11 @@ import { ApplicationAbstractStateAction } from "../../../../../../z_vendor/getto
 import { resetPassword } from "../../reset/impl/core"
 import { getScriptPath } from "../../../../common/secure/get_script_path/impl/core"
 import {
-    saveAuthInfo,
+    saveAuthTicket,
     startContinuousRenew,
-} from "../../../../kernel/auth_info/common/start_continuous_renew/impl/core"
+} from "../../../../auth_info/start_continuous_renew/impl/core"
 
-import { StartContinuousRenewInfra } from "../../../../kernel/auth_info/common/start_continuous_renew/infra"
+import { StartContinuousRenewInfra } from "../../../../auth_info/start_continuous_renew/infra"
 import { GetScriptPathInfra } from "../../../../common/secure/get_script_path/infra"
 import { ResetPasswordInfra } from "../../reset/infra"
 
@@ -26,7 +26,7 @@ import { ResetPasswordLocationDetecter } from "../../reset/method"
 
 import { LoadScriptError } from "../../../../common/secure/get_script_path/data"
 import { ResetPasswordFields } from "../../reset/data"
-import { AuthInfo } from "../../../../kernel/auth_info/kernel/data"
+import { AuthTicket } from "../../../../auth_info/kernel/data"
 import { ConvertBoardResult } from "../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type ResetPasswordCoreInfra = ResetPasswordCoreForegroundInfra &
@@ -61,7 +61,7 @@ export function initResetPasswordCoreForegroundMaterial(
     detecter: ResetPasswordCoreForegroundDetecter,
 ): ResetPasswordCoreForegroundMaterial {
     return {
-        saveAuthInfo: saveAuthInfo(infra.startContinuousRenew),
+        save: saveAuthTicket(infra.startContinuousRenew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(detecter.getSecureScriptPath),
     }
@@ -114,8 +114,8 @@ class Action
             }
         })
     }
-    startContinuousRenew(info: AuthInfo): void {
-        const result = this.material.saveAuthInfo(info)
+    startContinuousRenew(info: AuthTicket): void {
+        const result = this.material.save(info)
         if (!result.success) {
             this.post({ type: "repository-error", err: result.err })
         }

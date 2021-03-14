@@ -1,6 +1,6 @@
 import { newAuthenticatePasswordCoreForegroundMaterial } from "../common"
 
-import { newStartContinuousRenewAuthnInfoInfra } from "../../../../kernel/auth_info/common/start_continuous_renew/impl/init"
+import { newStartContinuousRenewAuthnInfoInfra } from "../../../../auth_info/start_continuous_renew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../../../common/secure/get_script_path/impl/init"
 
 import { initAuthenticatePasswordEntryPoint } from "../../impl"

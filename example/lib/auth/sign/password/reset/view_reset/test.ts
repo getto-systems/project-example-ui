@@ -23,15 +23,15 @@ import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./co
 import { initResetPasswordFormAction } from "./form/impl"
 
 import { resetPasswordEventHasDone } from "../reset/impl/core"
-import { startContinuousRenewEventHasDone } from "../../../kernel/auth_info/common/start_continuous_renew/impl/core"
+import { startContinuousRenewEventHasDone } from "../../../auth_info/start_continuous_renew/impl/core"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
-import { AuthzRepositoryPod } from "../../../kernel/auth_info/kernel/infra"
+import { AuthzRepositoryPod } from "../../../auth_info/kernel/infra"
 import {
     AuthnRepositoryPod,
-    RenewAuthInfoRemotePod,
-} from "../../../kernel/auth_info/kernel/infra"
+    RenewAuthTicketRemotePod,
+} from "../../../auth_info/kernel/infra"
 
 import { ResetPasswordEntryPoint } from "./entry_point"
 
@@ -280,7 +280,7 @@ function emptyResetToken() {
 function initEntryPoint(
     currentURL: URL,
     reset: ResetPasswordRemotePod,
-    renew: RenewAuthInfoRemotePod,
+    renew: RenewAuthTicketRemotePod,
     clock: Clock,
 ): ResetPasswordEntryPoint {
     const authn = standard_authn()
@@ -371,7 +371,7 @@ function simulateReset(): ResetPasswordResult {
     }
 }
 
-function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
     let count = 0
     return mockRemotePod(
         () => {

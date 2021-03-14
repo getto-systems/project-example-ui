@@ -7,7 +7,7 @@ import { mockAuthenticatePasswordEntryPoint } from "../sign/password/view_authen
 import { mockRequestResetTokenEntryPoint } from "../sign/password/reset/view_request_token/mock"
 import { mockResetPasswordEntryPoint } from "../sign/password/reset/view_reset/mock"
 import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/reset/view_check_status/mock"
-import { mockCheckAuthInfoEntryPoint } from "../sign/kernel/auth_info/action_check/mock"
+import { mockCheckAuthTicketEntryPoint } from "../sign/auth_info/action_check/mock"
 import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
 
 import { initSignLinkResource } from "../sign/common/nav/action_nav/impl"
@@ -23,7 +23,7 @@ describe("SignView", () => {
 
         action.subscriber.subscribe((state) => {
             switch (state.type) {
-                case "check-authInfo":
+                case "check-authTicket":
                     state.entryPoint.resource.core.ignite()
                     return
             }
@@ -36,7 +36,7 @@ describe("SignView", () => {
                 },
                 examine: (stack) => {
                     expect(stack.map((state) => state.type)).toEqual([
-                        "check-authInfo",
+                        "check-authTicket",
                         "password-authenticate",
                     ])
                 },
@@ -51,7 +51,7 @@ describe("SignView", () => {
 
         action.subscriber.subscribe((state) => {
             switch (state.type) {
-                case "check-authInfo":
+                case "check-authTicket":
                     state.entryPoint.resource.core.ignite()
                     return
             }
@@ -64,7 +64,7 @@ describe("SignView", () => {
                 },
                 examine: (stack) => {
                     expect(stack.map((state) => state.type)).toEqual([
-                        "check-authInfo",
+                        "check-authTicket",
                         "static-privacyPolicy",
                     ])
                 },
@@ -79,7 +79,7 @@ describe("SignView", () => {
 
         action.subscriber.subscribe((state) => {
             switch (state.type) {
-                case "check-authInfo":
+                case "check-authTicket":
                     state.entryPoint.resource.core.ignite()
                     return
             }
@@ -92,7 +92,7 @@ describe("SignView", () => {
                 },
                 examine: (stack) => {
                     expect(stack.map((state) => state.type)).toEqual([
-                        "check-authInfo",
+                        "check-authTicket",
                         "password-reset-requestToken",
                     ])
                 },
@@ -107,7 +107,7 @@ describe("SignView", () => {
 
         action.subscriber.subscribe((state) => {
             switch (state.type) {
-                case "check-authInfo":
+                case "check-authTicket":
                     state.entryPoint.resource.core.ignite()
                     return
             }
@@ -120,7 +120,7 @@ describe("SignView", () => {
                 },
                 examine: (stack) => {
                     expect(stack.map((state) => state.type)).toEqual([
-                        "check-authInfo",
+                        "check-authTicket",
                         "password-reset-checkStatus",
                     ])
                 },
@@ -135,7 +135,7 @@ describe("SignView", () => {
 
         action.subscriber.subscribe((state) => {
             switch (state.type) {
-                case "check-authInfo":
+                case "check-authTicket":
                     state.entryPoint.resource.core.ignite()
                     return
             }
@@ -148,7 +148,7 @@ describe("SignView", () => {
                 },
                 examine: (stack) => {
                     expect(stack.map((state) => state.type)).toEqual([
-                        "check-authInfo",
+                        "check-authTicket",
                         "password-reset",
                     ])
                 },
@@ -231,7 +231,7 @@ function initAction(currentURL: URL): SignAction {
     return initSignAction(mockSignViewLocationDetecter(currentURL), {
         link: () => initSignLinkResource(),
 
-        check: () => mockCheckAuthInfoEntryPoint(),
+        check: () => mockCheckAuthTicketEntryPoint(),
 
         password_authenticate: () => mockAuthenticatePasswordEntryPoint(),
         password_reset: () => mockResetPasswordEntryPoint(),
@@ -259,7 +259,7 @@ function passwordReset_reset_URL(): URL {
 function actionHasDone(state: SignActionState): boolean {
     switch (state.type) {
         case "initial-view":
-        case "check-authInfo":
+        case "check-authTicket":
             return false
 
         default:

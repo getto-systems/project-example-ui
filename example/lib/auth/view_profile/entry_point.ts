@@ -1,5 +1,5 @@
 import { BaseTypes } from "../../example/view_base/entry_point"
-import { LogoutResource } from "../sign/kernel/auth_info/action_logout/resource"
+import { LogoutResource } from "../sign/auth_info/action_logout/resource"
 
 type ProfileTypes = BaseTypes<Resource>
 type Resource = LogoutResource

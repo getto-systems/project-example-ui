@@ -1,14 +1,14 @@
 import { ApplicationAbstractStateAction } from "../../../../../z_vendor/getto-application/action/impl"
 
 import {
-    saveAuthInfo,
+    saveAuthTicket,
     startContinuousRenew,
-} from "../../../kernel/auth_info/common/start_continuous_renew/impl/core"
+} from "../../../auth_info/start_continuous_renew/impl/core"
 import { getScriptPath } from "../../../common/secure/get_script_path/impl/core"
 import { authenticatePassword } from "../../authenticate/impl/core"
 
 import { AuthenticatePasswordInfra } from "../../authenticate/infra"
-import { StartContinuousRenewInfra } from "../../../kernel/auth_info/common/start_continuous_renew/infra"
+import { StartContinuousRenewInfra } from "../../../auth_info/start_continuous_renew/infra"
 import { GetScriptPathInfra } from "../../../common/secure/get_script_path/infra"
 
 import {
@@ -24,7 +24,7 @@ import { GetScriptPathLocationDetecter } from "../../../common/secure/get_script
 
 import { LoadScriptError } from "../../../common/secure/get_script_path/data"
 import { AuthenticatePasswordFields } from "../../authenticate/data"
-import { AuthInfo } from "../../../kernel/auth_info/kernel/data"
+import { AuthTicket } from "../../../auth_info/kernel/data"
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type AuthenticatePasswordCoreInfra = AuthenticatePasswordCoreForegroundInfra &
@@ -52,7 +52,7 @@ export function initAuthenticatePasswordCoreForegroundMaterial(
     locationInfo: GetScriptPathLocationDetecter,
 ): AuthenticatePasswordCoreForegroundMaterial {
     return {
-        saveAuthInfo: saveAuthInfo(infra.startContinuousRenew),
+        save: saveAuthTicket(infra.startContinuousRenew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),
     }
@@ -96,8 +96,8 @@ class Action
             }
         })
     }
-    startContinuousRenew(info: AuthInfo): void {
-        const result = this.material.saveAuthInfo(info)
+    startContinuousRenew(info: AuthTicket): void {
+        const result = this.material.save(info)
         if (!result.success) {
             this.post({ type: "repository-error", err: result.err })
         }

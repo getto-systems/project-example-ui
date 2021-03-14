@@ -1,4 +1,4 @@
-import { mockLogoutResource } from "../sign/kernel/auth_info/action_logout/mock"
+import { mockLogoutResource } from "../sign/auth_info/action_logout/mock"
 
 import { ProfileResource } from "./entry_point"
 import { mockBaseResource } from "../../example/view_base/mock"

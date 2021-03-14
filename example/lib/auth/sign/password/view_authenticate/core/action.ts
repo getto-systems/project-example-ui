@@ -3,12 +3,12 @@ import { ApplicationStateAction } from "../../../../../z_vendor/getto-applicatio
 import { AuthenticatePasswordMethod } from "../../authenticate/method"
 import { GetScriptPathMethod } from "../../../common/secure/get_script_path/method"
 import {
-    SaveAuthInfoMethod,
+    SaveAuthTicketMethod,
     StartContinuousRenewMethod,
-} from "../../../kernel/auth_info/common/start_continuous_renew/method"
+} from "../../../auth_info/start_continuous_renew/method"
 
 import { AuthenticatePasswordEvent } from "../../authenticate/event"
-import { StartContinuousRenewEvent } from "../../../kernel/auth_info/common/start_continuous_renew/event"
+import { StartContinuousRenewEvent } from "../../../auth_info/start_continuous_renew/event"
 
 import {
     LoadScriptError,
@@ -27,7 +27,7 @@ export type AuthenticatePasswordCoreMaterial = AuthenticatePasswordCoreForegroun
     AuthenticatePasswordCoreBackgroundMaterial
 
 export type AuthenticatePasswordCoreForegroundMaterial = Readonly<{
-    saveAuthInfo: SaveAuthInfoMethod
+    save: SaveAuthTicketMethod
     startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
 }>

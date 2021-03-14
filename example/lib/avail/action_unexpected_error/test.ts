@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../auth/sign/kernel/auth_info/kernel/infra"
+import { AuthzRepositoryPod } from "../../auth/sign/auth_info/kernel/infra"
 import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
 import { wrapRepository } from "../../z_vendor/getto-application/infra/repository/helper"
 import { mockDB } from "../../z_vendor/getto-application/infra/repository/mock"
