@@ -8,7 +8,7 @@ import {
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { CheckAuthInfo } from "../../sign/kernel/auth_info/action_check/x_preact/check_auth_info"
+import { CheckAuthTicket } from "../../sign/auth_ticket/action_check/x_preact/check_auth_info"
 import { AuthenticatePassword } from "../../sign/password/view_authenticate/x_preact/authenticate_password"
 import { RequestResetToken } from "../../sign/password/reset/view_request_token/x_preact/request_reset_token"
 import { CheckPasswordResetSendingStatus } from "../../sign/password/reset/view_check_status/x_preact/check_reset_token_sending_status"
@@ -43,8 +43,8 @@ export function SignComponent(props: SignProps): VNode {
         case "static-privacyPolicy":
             return h(PrivacyPolicyComponent, props.state.resource)
 
-        case "check-authInfo":
-            return h(CheckAuthInfo, props.state.entryPoint)
+        case "check-authTicket":
+            return h(CheckAuthTicket, props.state.entryPoint)
 
         case "password-authenticate":
             return h(AuthenticatePassword, props.state.entryPoint)

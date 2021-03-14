@@ -10,8 +10,8 @@ import { DocsComponent } from "../../../../docs/kernel/x_preact/docs"
 
 import { docs_auth_sign } from "../../../../auth/sign/docs"
 import { docs_auth } from "../../../../auth/docs"
-import { docs_auth_sign_checkAuthInfo } from "../../../../auth/sign/kernel/auth_info/action_check/docs"
-import { docs_auth_sign_logout } from "../../../../auth/sign/kernel/auth_info/action_logout/docs"
+import { docs_auth_sign_checkAuthTicket } from "../../../../auth/sign/auth_ticket/action_check/docs"
+import { docs_auth_sign_logout } from "../../../../auth/sign/auth_ticket/action_logout/docs"
 import { docs_auth_sign_authenticatePassword } from "../../../../auth/sign/password/view_authenticate/docs"
 import { docs_auth_sign_resetPassword } from "../../../../auth/sign/password/reset/docs"
 import {
@@ -27,7 +27,7 @@ export const content_auth = (): VNode[] => [
         contents: [
             [...docs_auth, ...docs_auth_sign, ...docs_auth_profile, ...docs_auth_user],
             [
-                ...docs_auth_sign_checkAuthInfo,
+                ...docs_auth_sign_checkAuthTicket,
                 ...docs_auth_sign_logout,
                 ...docs_auth_sign_authenticatePassword,
                 ...docs_auth_sign_resetPassword,

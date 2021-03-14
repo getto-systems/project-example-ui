@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { newAuthzRepository } from "../../../../auth/sign/kernel/auth_info/kernel/infra/repository/authz"
+import { newAuthzRepository } from "../../../../auth/sign/auth_ticket/kernel/infra/repository/authz"
 import { newMenuExpandRepository } from "../../kernel/infra/repository/menu_expand"
 
 import { MenuContent } from "../../kernel/infra"

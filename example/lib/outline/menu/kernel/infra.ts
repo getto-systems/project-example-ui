@@ -1,7 +1,7 @@
 import { RemoteTypes } from "../../../z_vendor/getto-application/infra/remote/infra"
 import { RepositoryPod } from "../../../z_vendor/getto-application/infra/repository/infra"
 
-import { AuthzNonce } from "../../../auth/sign/kernel/auth_info/kernel/data"
+import { AuthzNonce } from "../../../auth/sign/auth_ticket/kernel/data"
 import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{

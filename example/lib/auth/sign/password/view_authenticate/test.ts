@@ -25,12 +25,12 @@ import {
 import { initAuthenticatePasswordFormAction } from "./form/impl"
 
 import { authenticatePasswordEventHasDone } from "../authenticate/impl/core"
-import { startContinuousRenewEventHasDone } from "../../kernel/auth_info/common/start_continuous_renew/impl/core"
+import { startContinuousRenewEventHasDone } from "../../auth_ticket/start_continuous_renew/impl/core"
 
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
-import { AuthzRepositoryPod } from "../../kernel/auth_info/kernel/infra"
-import { AuthnRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
+import { AuthzRepositoryPod } from "../../auth_ticket/kernel/infra"
+import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../auth_ticket/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"
 
@@ -242,7 +242,7 @@ function takeLongtime_elements() {
 
 function initEntryPoint(
     authenticate: AuthenticatePasswordRemotePod,
-    renew: RenewAuthInfoRemotePod,
+    renew: RenewAuthTicketRemotePod,
     clock: Clock,
 ): AuthenticatePasswordEntryPoint {
     const currentURL = new URL("https://example.com/index.html")
@@ -329,7 +329,7 @@ function simulateAuthenticate(_fields: AuthenticatePasswordFields): Authenticate
     }
 }
 
-function standard_renew(clock: ClockPubSub): RenewAuthInfoRemotePod {
+function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
     let count = 0
     return mockRemotePod(
         () => {

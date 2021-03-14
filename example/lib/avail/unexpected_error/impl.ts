@@ -1,5 +1,5 @@
 import { passThroughRemoteValue } from "../../z_vendor/getto-application/infra/remote/helper"
-import { authzRepositoryConverter } from "../../auth/sign/kernel/auth_info/kernel/converter"
+import { authzRepositoryConverter } from "../../auth/sign/auth_ticket/kernel/converter"
 
 import { NotifyUnexpectedErrorInfra } from "./infra"
 

@@ -1,4 +1,4 @@
-import { newCheckAuthInfoEntryPoint } from "../../../sign/kernel/auth_info/action_check/init"
+import { newCheckAuthTicketEntryPoint } from "../../../sign/auth_ticket/action_check/init"
 import { newSignViewLocationDetecter } from "../../../sign/view/impl/init"
 
 import {
@@ -38,7 +38,7 @@ export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint
     const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
         link: () => initSignLinkResource(),
 
-        check: () => newCheckAuthInfoEntryPoint(feature),
+        check: () => newCheckAuthTicketEntryPoint(feature),
 
         password_authenticate: () => proxy.password.authenticate.entryPoint(feature),
         password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),

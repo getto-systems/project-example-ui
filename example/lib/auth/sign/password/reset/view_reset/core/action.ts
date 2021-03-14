@@ -3,12 +3,12 @@ import { ApplicationStateAction } from "../../../../../../z_vendor/getto-applica
 import { ResetPasswordMethod, ResetPasswordPod } from "../../reset/method"
 import { GetScriptPathMethod } from "../../../../common/secure/get_script_path/method"
 import {
-    SaveAuthInfoMethod,
+    SaveAuthTicketMethod,
     StartContinuousRenewMethod,
-} from "../../../../kernel/auth_info/common/start_continuous_renew/method"
+} from "../../../../auth_ticket/start_continuous_renew/method"
 
 import { ResetPasswordEvent } from "../../reset/event"
-import { StartContinuousRenewEvent } from "../../../../kernel/auth_info/common/start_continuous_renew/event"
+import { StartContinuousRenewEvent } from "../../../../auth_ticket/start_continuous_renew/event"
 
 import { ResetPasswordFields } from "../../reset/data"
 import {
@@ -26,7 +26,7 @@ export type ResetPasswordCoreMaterial = ResetPasswordCoreForegroundMaterial &
     ResetPasswordCoreBackgroundMaterial
 
 export type ResetPasswordCoreForegroundMaterial = Readonly<{
-    saveAuthInfo: SaveAuthInfoMethod
+    save: SaveAuthTicketMethod
     startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
 }>
