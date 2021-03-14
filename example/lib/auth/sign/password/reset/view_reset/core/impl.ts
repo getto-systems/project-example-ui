@@ -5,9 +5,9 @@ import { getScriptPath } from "../../../../common/secure/get_script_path/impl/co
 import {
     saveAuthTicket,
     startContinuousRenew,
-} from "../../../../auth_info/start_continuous_renew/impl/core"
+} from "../../../../auth_ticket/start_continuous_renew/impl/core"
 
-import { StartContinuousRenewInfra } from "../../../../auth_info/start_continuous_renew/infra"
+import { StartContinuousRenewInfra } from "../../../../auth_ticket/start_continuous_renew/infra"
 import { GetScriptPathInfra } from "../../../../common/secure/get_script_path/infra"
 import { ResetPasswordInfra } from "../../reset/infra"
 
@@ -26,7 +26,7 @@ import { ResetPasswordLocationDetecter } from "../../reset/method"
 
 import { LoadScriptError } from "../../../../common/secure/get_script_path/data"
 import { ResetPasswordFields } from "../../reset/data"
-import { AuthTicket } from "../../../../auth_info/kernel/data"
+import { AuthTicket } from "../../../../auth_ticket/kernel/data"
 import { ConvertBoardResult } from "../../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type ResetPasswordCoreInfra = ResetPasswordCoreForegroundInfra &

@@ -7,7 +7,7 @@ import { mockAuthenticatePasswordEntryPoint } from "../sign/password/view_authen
 import { mockRequestResetTokenEntryPoint } from "../sign/password/reset/view_request_token/mock"
 import { mockResetPasswordEntryPoint } from "../sign/password/reset/view_reset/mock"
 import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/reset/view_check_status/mock"
-import { mockCheckAuthTicketEntryPoint } from "../sign/auth_info/action_check/mock"
+import { mockCheckAuthTicketEntryPoint } from "../sign/auth_ticket/action_check/mock"
 import { mockSignViewLocationDetecter } from "../sign/view/impl/mock"
 
 import { initSignLinkResource } from "../sign/common/nav/action_nav/impl"

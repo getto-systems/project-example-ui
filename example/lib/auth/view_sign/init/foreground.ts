@@ -1,4 +1,4 @@
-import { newCheckAuthTicketEntryPoint } from "../../sign/auth_info/action_check/init"
+import { newCheckAuthTicketEntryPoint } from "../../sign/auth_ticket/action_check/init"
 import { newRequestResetTokenEntryPoint } from "../../sign/password/reset/view_request_token/init/foreground"
 import { newResetPasswordEntryPoint } from "../../sign/password/reset/view_reset/init/foreground"
 import { newCheckPasswordResetSendingStatus } from "../../sign/password/reset/view_check_status/init/foreground"

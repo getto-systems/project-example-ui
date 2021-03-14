@@ -5,10 +5,10 @@ import { GetScriptPathMethod } from "../../../../common/secure/get_script_path/m
 import {
     SaveAuthTicketMethod,
     StartContinuousRenewMethod,
-} from "../../../../auth_info/start_continuous_renew/method"
+} from "../../../../auth_ticket/start_continuous_renew/method"
 
 import { ResetPasswordEvent } from "../../reset/event"
-import { StartContinuousRenewEvent } from "../../../../auth_info/start_continuous_renew/event"
+import { StartContinuousRenewEvent } from "../../../../auth_ticket/start_continuous_renew/event"
 
 import { ResetPasswordFields } from "../../reset/data"
 import {

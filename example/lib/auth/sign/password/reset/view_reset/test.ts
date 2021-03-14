@@ -23,15 +23,15 @@ import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./co
 import { initResetPasswordFormAction } from "./form/impl"
 
 import { resetPasswordEventHasDone } from "../reset/impl/core"
-import { startContinuousRenewEventHasDone } from "../../../auth_info/start_continuous_renew/impl/core"
+import { startContinuousRenewEventHasDone } from "../../../auth_ticket/start_continuous_renew/impl/core"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
-import { AuthzRepositoryPod } from "../../../auth_info/kernel/infra"
+import { AuthzRepositoryPod } from "../../../auth_ticket/kernel/infra"
 import {
     AuthnRepositoryPod,
     RenewAuthTicketRemotePod,
-} from "../../../auth_info/kernel/infra"
+} from "../../../auth_ticket/kernel/infra"
 
 import { ResetPasswordEntryPoint } from "./entry_point"
 

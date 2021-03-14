@@ -4,7 +4,7 @@ import { AuthenticatePasswordInfra } from "../infra"
 
 import { AuthenticatePasswordMethod } from "../method"
 import { AuthenticatePasswordEvent } from "../event"
-import { authRemoteConverter } from "../../../auth_info/kernel/converter"
+import { authRemoteConverter } from "../../../auth_ticket/kernel/converter"
 
 interface Authenticate {
     (infra: AuthenticatePasswordInfra): AuthenticatePasswordMethod

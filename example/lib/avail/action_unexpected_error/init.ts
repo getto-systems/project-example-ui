@@ -1,4 +1,4 @@
-import { newAuthzRepository } from "../../auth/sign/auth_info/kernel/infra/repository/authz"
+import { newAuthzRepository } from "../../auth/sign/auth_ticket/kernel/infra/repository/authz"
 import { newNotifyUnexpectedErrorRemote } from "../unexpected_error/infra/remote/notify"
 
 import { initNotifyUnexpectedErrorCoreAction } from "./core/impl"

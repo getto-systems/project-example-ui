@@ -1,4 +1,4 @@
-import { newCheckAuthTicketEntryPoint } from "../../../sign/auth_info/action_check/init"
+import { newCheckAuthTicketEntryPoint } from "../../../sign/auth_ticket/action_check/init"
 import { newSignViewLocationDetecter } from "../../../sign/view/impl/init"
 
 import {

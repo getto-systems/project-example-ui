@@ -3,12 +3,12 @@ import { ApplicationAbstractStateAction } from "../../../../../z_vendor/getto-ap
 import {
     saveAuthTicket,
     startContinuousRenew,
-} from "../../../auth_info/start_continuous_renew/impl/core"
+} from "../../../auth_ticket/start_continuous_renew/impl/core"
 import { getScriptPath } from "../../../common/secure/get_script_path/impl/core"
 import { authenticatePassword } from "../../authenticate/impl/core"
 
 import { AuthenticatePasswordInfra } from "../../authenticate/infra"
-import { StartContinuousRenewInfra } from "../../../auth_info/start_continuous_renew/infra"
+import { StartContinuousRenewInfra } from "../../../auth_ticket/start_continuous_renew/infra"
 import { GetScriptPathInfra } from "../../../common/secure/get_script_path/infra"
 
 import {
@@ -24,7 +24,7 @@ import { GetScriptPathLocationDetecter } from "../../../common/secure/get_script
 
 import { LoadScriptError } from "../../../common/secure/get_script_path/data"
 import { AuthenticatePasswordFields } from "../../authenticate/data"
-import { AuthTicket } from "../../../auth_info/kernel/data"
+import { AuthTicket } from "../../../auth_ticket/kernel/data"
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
 export type AuthenticatePasswordCoreInfra = AuthenticatePasswordCoreForegroundInfra &

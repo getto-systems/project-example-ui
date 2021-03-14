@@ -25,12 +25,12 @@ import {
 import { initAuthenticatePasswordFormAction } from "./form/impl"
 
 import { authenticatePasswordEventHasDone } from "../authenticate/impl/core"
-import { startContinuousRenewEventHasDone } from "../../auth_info/start_continuous_renew/impl/core"
+import { startContinuousRenewEventHasDone } from "../../auth_ticket/start_continuous_renew/impl/core"
 
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
-import { AuthzRepositoryPod } from "../../auth_info/kernel/infra"
-import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../auth_info/kernel/infra"
+import { AuthzRepositoryPod } from "../../auth_ticket/kernel/infra"
+import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../auth_ticket/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"
 

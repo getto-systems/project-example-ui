@@ -1,5 +1,5 @@
 import { newBaseResource } from "../../example/view_base/init"
-import { newLogoutResource } from "../sign/auth_info/action_logout/init"
+import { newLogoutResource } from "../sign/auth_ticket/action_logout/init"
 
 import { initProfileEntryPoint } from "./impl"
 
