@@ -23,7 +23,7 @@ import { checkAuthInfoEventHasDone } from "../check/impl/core"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
 import { AuthzRepositoryPod } from "../kernel/infra"
-import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../kernel/infra"
+import { AuthnRepositoryPod, RenewAuthInfoRemotePod } from "../kernel/infra"
 
 import { CheckAuthInfoEntryPoint } from "./entry_point"
 
@@ -280,7 +280,7 @@ describe("CheckAuthInfo", () => {
 function standard() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
-        standard_lastAuth(),
+        standard_authn(),
         standard_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
@@ -291,7 +291,7 @@ function standard() {
 function instantLoadable() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
-        standard_lastAuth(),
+        standard_authn(),
         standard_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT_INSTANT_LOAD_AVAILABLE, clockPubSub),
@@ -302,7 +302,7 @@ function instantLoadable() {
 function takeLongtime() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
-        standard_lastAuth(),
+        standard_authn(),
         standard_authz(),
         wait_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
@@ -312,7 +312,7 @@ function takeLongtime() {
 function noStored() {
     const clockPubSub = mockClockPubSub()
     const entryPoint = initEntryPoint(
-        noStored_lastAuth(),
+        noStored_authn(),
         noStored_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
@@ -321,7 +321,7 @@ function noStored() {
 }
 
 function initEntryPoint(
-    lastAuth: LastAuthRepositoryPod,
+    authn: AuthnRepositoryPod,
     authz: AuthzRepositoryPod,
     renew: RenewAuthInfoRemotePod,
     clock: Clock,
@@ -333,7 +333,7 @@ function initEntryPoint(
             initCheckAuthInfoCoreMaterial(
                 {
                     check: {
-                        lastAuth,
+                        authn,
                         authz,
                         renew,
                         config: {
@@ -343,12 +343,12 @@ function initEntryPoint(
                         clock,
                     },
                     startContinuousRenew: {
-                        lastAuth,
+                        authn,
                         authz,
                         renew,
                         config: {
                             interval: { interval_millisecond: 128 },
-                            lastAuthExpire: { expire_millisecond: 1 * 1000 },
+                            authnExpire: { expire_millisecond: 1 * 1000 },
                         },
                         clock,
                     },
@@ -364,25 +364,25 @@ function initEntryPoint(
     )
 }
 
-function standard_lastAuth(): LastAuthRepositoryPod {
-    const lastAuth = mockDB()
-    lastAuth.set({
+function standard_authn(): AuthnRepositoryPod {
+    const db = mockDB()
+    db.set({
         nonce: "stored-authn-nonce",
-        lastAuthAt: STORED_LAST_AUTH_AT,
+        authAt: STORED_LAST_AUTH_AT,
     })
-    return wrapRepository(lastAuth)
+    return wrapRepository(db)
 }
-function noStored_lastAuth(): LastAuthRepositoryPod {
+function noStored_authn(): AuthnRepositoryPod {
     return wrapRepository(mockDB())
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const lastAuth = mockDB()
-    lastAuth.set({
+    const db = mockDB()
+    db.set({
         nonce: "api-nonce",
         roles: ["role"],
     })
-    return wrapRepository(lastAuth)
+    return wrapRepository(db)
 }
 function noStored_authz(): AuthzRepositoryPod {
     return wrapRepository(mockDB())
@@ -442,7 +442,7 @@ function actionHasDone(state: CheckAuthInfoCoreState): boolean {
 
         case "succeed-to-start-continuous-renew":
         case "succeed-to-continuous-renew":
-        case "lastAuth-not-expired":
+        case "authn-not-expired":
         case "failed-to-continuous-renew":
             return startContinuousRenewEventHasDone(state)
     }

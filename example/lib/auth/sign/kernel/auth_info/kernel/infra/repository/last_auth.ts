@@ -1,11 +1,11 @@
 import { env } from "../../../../../../../y_environment/env"
 
-import { newDB_LastAuth } from "../../../../../../../z_external/db/auth/last_auth"
+import { newDB_Authn } from "../../../../../../../z_external/db/auth/authn"
 
 import { wrapRepository } from "../../../../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { LastAuthRepositoryPod } from "../../../kernel/infra"
+import { AuthnRepositoryPod } from "../../../kernel/infra"
 
-export function newLastAuthRepository(storage: Storage): LastAuthRepositoryPod {
-    return wrapRepository(newDB_LastAuth(storage, env.storageKey.authn))
+export function newAuthnRepository(storage: Storage): AuthnRepositoryPod {
+    return wrapRepository(newDB_Authn(storage, env.storageKey.authn))
 }

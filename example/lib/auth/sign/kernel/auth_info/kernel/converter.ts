@@ -3,21 +3,21 @@ import { RepositoryConverter } from "../../../../../z_vendor/getto-application/i
 import { AuthzRemoteValue, AuthzRepositoryValue } from "./infra"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { RemoteConverter } from "../../../../../z_vendor/getto-application/infra/remote/infra"
-import { AuthRemoteValue, LastAuthRepositoryValue } from "./infra"
+import { AuthRemoteValue, AuthnRepositoryValue } from "./infra"
 
-import { Authz, AuthzNonce, AuthzRoles } from "./data"
-import { AuthAt, AuthInfo, AuthnNonce, LastAuth } from "./data"
+import { Authn, Authz, AuthzNonce, AuthzRoles } from "./data"
+import { AuthAt, AuthInfo, AuthnNonce } from "./data"
 
-export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuthRepositoryValue> = {
+export const authnRepositoryConverter: RepositoryConverter<Authn, AuthnRepositoryValue> = {
     toRepository: (value) => ({
         nonce: value.nonce,
-        lastAuthAt: value.lastAuthAt.toISOString(),
+        authAt: value.authAt.toISOString(),
     }),
     fromRepository: (value) => {
         const nonce = value.nonce
-        const lastAuthAt = new Date(value.lastAuthAt)
+        const authAt = new Date(value.authAt)
 
-        if (!nonce || !lastAuthAt) {
+        if (!nonce || !authAt) {
             return { valid: false }
         }
 
@@ -25,7 +25,7 @@ export const lastAuthRepositoryConverter: RepositoryConverter<LastAuth, LastAuth
             valid: true,
             value: {
                 nonce: markAuthnNonce(nonce),
-                lastAuthAt: markAuthAt(lastAuthAt),
+                authAt: markAuthAt(authAt),
             },
         }
     },

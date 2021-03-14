@@ -1,4 +1,3 @@
-
 export type AuthInfo = Readonly<{
     authn: Authn
     authz: Authz
@@ -8,16 +7,6 @@ export type Authn = Readonly<{
     nonce: AuthnNonce
     authAt: AuthAt
 }>
-export type LastAuth = Readonly<{
-    nonce: AuthnNonce
-    lastAuthAt: AuthAt
-}>
-export function toLastAuth(info: Authn): LastAuth {
-    return {
-        nonce: info.nonce,
-        lastAuthAt: info.authAt,
-    }
-}
 
 export type AuthnNonce = string & { AuthnNonce: never }
 export type AuthAt = Date & { AuthAt: never }

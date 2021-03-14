@@ -10,7 +10,7 @@ import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
 import { initLogoutResource } from "./impl"
 
 import { AuthzRepositoryPod, AuthzRepositoryValue } from "../kernel/infra"
-import { LastAuthRepositoryPod } from "../kernel/infra"
+import { AuthnRepositoryPod } from "../kernel/infra"
 
 import { LogoutResource } from "./resource"
 import { LogoutCoreState } from "./core/action"
@@ -56,37 +56,37 @@ describe("Logout", () => {
 })
 
 function standard() {
-    const resource = initResource(standard_lastAuth(), standard_authz())
+    const resource = initResource(standard_authn(), standard_authz())
 
     return { resource }
 }
 
-function initResource(lastAuth: LastAuthRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
+function initResource(authn: AuthnRepositoryPod, authz: AuthzRepositoryPod): LogoutResource {
     return initLogoutResource(
         initLogoutCoreAction(
             initLogoutCoreMaterial({
-                lastAuth,
+                authn,
                 authz,
             }),
         ),
     )
 }
 
-function standard_lastAuth(): LastAuthRepositoryPod {
-    const lastAuth = mockDB()
-    lastAuth.set({
+function standard_authn(): AuthnRepositoryPod {
+    const db = mockDB()
+    db.set({
         nonce: "stored-authn-nonce",
-        lastAuthAt: new Date("2020-01-01 09:00:00").toISOString(),
+        authAt: new Date("2020-01-01 09:00:00").toISOString(),
     })
-    return wrapRepository(lastAuth)
+    return wrapRepository(db)
 }
 function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB<AuthzRepositoryValue>()
-    authz.set({
+    const db = mockDB<AuthzRepositoryValue>()
+    db.set({
         nonce: "nonce",
         roles: ["role"],
     })
-    return wrapRepository(authz)
+    return wrapRepository(db)
 }
 
 function actionHasDone(state: LogoutCoreState): boolean {
