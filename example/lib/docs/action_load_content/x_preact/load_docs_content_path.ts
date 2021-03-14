@@ -87,7 +87,7 @@ const contentMap: Record<DocsContentPath, ContentEntry> = {
 
     "/docs/z-dev/deployment.html": entry("配備構成", async () =>
         (
-            await import("../../../x_preact/docs/Docs/contents/z_dev/deployment")
+            await import("../../../x_preact/docs/Docs/contents/avail")
         ).content_development_deployment(),
     ),
     "/docs/z-dev/auth/login.html": entry("ログイン", async () =>

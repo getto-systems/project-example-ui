@@ -1,4 +1,4 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { box, box_double, container } from "../../../../../../z_vendor/getto-css/preact/design/box"
@@ -21,8 +21,19 @@ import {
 } from "../../../box"
 
 import { content_auth_login } from "../../auth"
+import { DocsComponent } from "../../../../../../docs/kernel/x_preact/docs"
+import {
+    docs_auth_sign,
+    docs_auth_sign_explanation,
+    docs_auth_sign_negativeNote,
+} from "../../../../../../auth/sign/docs"
 
 export const content_development_auth_login = (): VNode[] => [
+    h(DocsComponent, {
+        contents: [
+            [...docs_auth_sign, ...docs_auth_sign_explanation, ...docs_auth_sign_negativeNote],
+        ],
+    }),
     container([
         content_auth_login(),
         box({
@@ -63,19 +74,19 @@ function general(): VNode[] {
             body: [
                 negativeNote(
                     "チケットの有効期限切れの前にチケットを無効化できない",
-                    "（最大延長期間を操作することで再認証を促すことは可能）"
+                    "（最大延長期間を操作することで再認証を促すことは可能）",
                 ),
                 negativeNote(
                     "チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能",
-                    "（これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）"
+                    "（これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能としていいかな）",
                 ),
                 negativeNote(
                     "http を使用することを想定",
-                    "（http 以外の方式で通信する必要が出たときに考える）"
+                    "（http 以外の方式で通信する必要が出たときに考える）",
                 ),
                 negativeNote(
                     "cookie を使用するため別なタブで別ユーザーとしてログインできない",
-                    "（アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）"
+                    "（アプリケーションを別ユーザーでログインする必要がある設計にしないことで対応）",
                 ),
             ],
         }),
@@ -113,7 +124,7 @@ const renewCredential = () => [
                     "API トークン発行",
                     "コンテンツトークン発行",
                 ]),
-                []
+                [],
             ),
             fromApiServer("認証トークン", [
                 "チケットトークン",
@@ -165,7 +176,7 @@ const passwordLogin = () => [
                     "API トークン発行",
                     "コンテンツトークン発行",
                 ]),
-                []
+                [],
             ),
             fromApiServer("認証トークン", [
                 "チケットトークン",

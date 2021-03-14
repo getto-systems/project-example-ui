@@ -4,7 +4,7 @@ import { VNode } from "preact"
 import { VNodeContent } from "../../../z_vendor/getto-css/preact/common"
 
 import { v_small } from "../../../z_vendor/getto-css/preact/design/alignment"
-import { box, container } from "../../../z_vendor/getto-css/preact/design/box"
+import { box, box_double, container } from "../../../z_vendor/getto-css/preact/design/box"
 import {
     label_alert,
     label_pending,
@@ -18,9 +18,9 @@ import {
     DocsAction,
     DocsActionContent,
     DocsActionTarget,
+    DocsActionTargetType,
     DocsContent,
     DocsDescription,
-    DocsExplanation,
     DocsNegativeNote,
     DocsSection,
 } from "../../../z_vendor/getto-application/docs/data"
@@ -32,12 +32,21 @@ export function DocsComponent(props: Props): VNode {
     return paddingVSpace(
         props.contents.map((sections) =>
             container(
-                sections.map((section) =>
-                    box({
+                sections.map((section) => {
+                    const content = {
                         title: sectionTitle(section),
                         body: paddingVSpace(section.body.map(sectionBody), v_small()),
-                    }),
-                ),
+                    }
+
+                    switch (section.type) {
+                        case "normal":
+                        case "pending":
+                            return box(content)
+
+                        case "double":
+                            return box_double(content)
+                    }
+                }),
             ),
         ),
         v_small(),
@@ -61,6 +70,7 @@ export function DocsComponent(props: Props): VNode {
 function sectionTitle(section: DocsSection): VNodeContent {
     switch (section.type) {
         case "normal":
+        case "double":
             return section.title
 
         case "pending":
@@ -82,7 +92,7 @@ function sectionBody(content: DocsContent): VNodeContent {
             return description(content.content)
 
         case "explanation":
-            return explanation(content.content)
+            return explanation(content.target)
 
         case "negativeNote":
             return negativeNote(content.content)
@@ -133,19 +143,20 @@ function description(contents: DocsDescription[]): VNodeContent {
         }
     }
 }
-function explanation(contents: DocsExplanation[]): VNodeContent {
-    return contents.map(
-        (content) => html`<p>
-            ${icon(content.icon)} ${content.label}<br />
-            （${content.help}）
-        </p>`,
-    )
+function explanation(targets: DocsActionTargetType[]): VNodeContent {
+    return targets.map((action) => {
+        const content = target(DocsActionTarget[action])
+        return html`<p>
+            ${content.icon} ${content.label}<br />
+            <small>（${content.help}）</small>
+        </p>`
+    })
 }
 function negativeNote(contents: DocsNegativeNote[]): VNodeContent {
     return contents.map(
         (content) => html`<p>
             ${icon("close")} ${content.message}<br />
-            （${content.help}）
+            <small>（${content.help}）</small>
         </p>`,
     )
 }
@@ -162,27 +173,11 @@ function action(contents: DocsAction[]): VNodeContent {
         function title(): VNodeContent {
             switch (action.type) {
                 case "request":
-                    return html`${target(action.content.from)} ${icon("arrow-right")}
-                    ${target(action.content.to)}`
+                    return html`${target(action.content.from).icon} ${icon("arrow-right")}
+                    ${target(action.content.to).icon}`
 
                 case "action":
-                    return target(action.content.on)
-            }
-
-            function target(target: DocsActionTarget): VNode {
-                switch (target) {
-                    case DocsActionTarget["content-server"]:
-                        return icon("database")
-
-                    case DocsActionTarget["api-server"]:
-                        return icon("cogs")
-
-                    case DocsActionTarget["http-client"]:
-                        return icon("display")
-
-                    case DocsActionTarget["text-client"]:
-                        return icon("envelope")
-                }
+                    return target(action.content.on).icon
             }
         }
         function body(contents: DocsActionContent[]): VNodeContent {
@@ -204,5 +199,42 @@ function note(contents: string[]): VNodeContent {
 
     function li(content: string): VNode {
         return html`<li>${content}</li>`
+    }
+}
+
+type Explanation = Readonly<{
+    label: string
+    icon: VNode
+    help: string
+}>
+function target(target: DocsActionTarget): Explanation {
+    switch (target) {
+        case DocsActionTarget["content-server"]:
+            return {
+                label: "コンテンツサーバー",
+                icon: icon("database"),
+                help: "CDN : CloudFront など",
+            }
+
+        case DocsActionTarget["api-server"]:
+            return {
+                label: "API サーバー",
+                icon: icon("cogs"),
+                help: "アプリケーションサーバー",
+            }
+
+        case DocsActionTarget["http-client"]:
+            return {
+                label: "http クライアント",
+                icon: icon("display"),
+                help: "ブラウザ、スマホアプリ",
+            }
+
+        case DocsActionTarget["text-client"]:
+            return {
+                label: "テキストクライアント",
+                icon: icon("display"),
+                help: "メール、slack",
+            }
     }
 }
