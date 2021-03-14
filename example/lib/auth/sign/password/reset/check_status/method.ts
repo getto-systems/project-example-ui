@@ -2,7 +2,7 @@ import { LocationTypes } from "../../../../../z_vendor/getto-application/locatio
 
 import { CheckResetTokenSendingStatusEvent } from "./event"
 
-import { ResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../data"
 
 export interface CheckResetTokenSendingStatusPod {
     (detecter: CheckResetTokenSendingStatusLocationDetecter): CheckSendingStatusMethod

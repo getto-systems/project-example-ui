@@ -1,0 +1,39 @@
+import { ApplicationStateAction } from "../../../z_vendor/getto-application/action/action"
+
+import { CheckAuthTicketEntryPoint } from "../../sign/auth_ticket/action_check/entry_point"
+import { AuthenticatePasswordEntryPoint } from "../../sign/password/action_authenticate/entry_point"
+import { CheckResetTokenSendingStatusEntryPoint } from "../../sign/password/reset/action_check_status/entry_point"
+import { RequestResetTokenEntryPoint } from "../../sign/password/reset/action_request_token/entry_point"
+import { ResetPasswordEntryPoint } from "../../sign/password/reset/action_reset/entry_point"
+import { SignLinkResource } from "../../sign/common/nav/action_nav/resource"
+
+export interface SignAction extends ApplicationStateAction<SignActionState> {
+    error(err: string): void
+}
+
+export interface SignSubEntryPoint {
+    link(): SignLinkResource
+
+    check(): CheckAuthTicketEntryPoint
+
+    password_authenticate(): AuthenticatePasswordEntryPoint
+
+    password_reset_requestToken(): RequestResetTokenEntryPoint
+    password_reset_checkStatus(): CheckResetTokenSendingStatusEntryPoint
+    password_reset(): ResetPasswordEntryPoint
+}
+
+export type SignActionState =
+    | Readonly<{ type: "initial-view" }>
+    | Static<"privacyPolicy">
+    | View<"check-authTicket", CheckAuthTicketEntryPoint>
+    | View<"password-authenticate", AuthenticatePasswordEntryPoint>
+    | View<"password-reset-requestToken", RequestResetTokenEntryPoint>
+    | View<"password-reset-checkStatus", CheckResetTokenSendingStatusEntryPoint>
+    | View<"password-reset", ResetPasswordEntryPoint>
+    | Readonly<{ type: "error"; err: string }>
+
+type Static<T extends string> = Readonly<{ type: `static-${T}`; resource: SignLinkResource }>
+type View<T, E> = Readonly<{ type: T; entryPoint: E }>
+
+export const initialSignViewState: SignActionState = { type: "initial-view" }

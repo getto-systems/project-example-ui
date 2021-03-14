@@ -113,7 +113,7 @@ function module(content: string[]): VNodeContent {
     return html`<p><ul>${content.map(li)}</ul></p>`
 
     function li(message: string): VNode {
-        return html`<li>${message}</li>`
+        return html`<li>${icon("angle-double-right")} ${message}</li>`
     }
 }
 function item(title: string, content: string[]): VNodeContent {

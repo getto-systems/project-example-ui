@@ -3,7 +3,7 @@ import { DelayTime } from "../../../../../z_vendor/getto-application/infra/confi
 import { AuthTicket } from "../../../auth_ticket/kernel/data"
 
 import { ResetPasswordFields, ResetPasswordRemoteError } from "./data"
-import { ResetToken } from "../kernel/data"
+import { ResetToken } from "../data"
 import { AuthRemoteValue } from "../../../auth_ticket/kernel/infra"
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 

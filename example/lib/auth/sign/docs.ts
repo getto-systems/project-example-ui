@@ -13,7 +13,7 @@ export const docs_auth_sign: DocsSection[] = [
     docsSection("認証", [
         docsPurpose(["業務で必要な時に使用できる", "業務内容をプライベートに保つ"]),
         docsModule([
-            "アクセスチケット更新",
+            "認証チケット更新",
             "ログアウト",
             "パスワードログイン",
             "パスワードリセット",

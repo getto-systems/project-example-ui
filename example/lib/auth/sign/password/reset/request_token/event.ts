@@ -1,4 +1,4 @@
-import { ResetSessionID } from "../kernel/data"
+import { ResetSessionID } from "../data"
 import { RequestResetTokenError } from "./data"
 
 export type RequestResetTokenEvent =
