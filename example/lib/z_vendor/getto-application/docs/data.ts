@@ -21,13 +21,13 @@ export type DocsAction =
     | Readonly<{ type: "action"; content: DocsAction_action }>
 
 export type DocsAction_request = Readonly<{
-    from: DocsActionTarget
-    to: DocsActionTarget
+    from: DocsActionTargetType
+    to: DocsActionTargetType
     body: DocsActionContent[]
     help: string[]
 }>
 export type DocsAction_action = Readonly<{
-    on: DocsActionTarget
+    on: DocsActionTargetType
     body: DocsActionContent[]
     help: string[]
 }>

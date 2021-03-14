@@ -1,4 +1,4 @@
-import { LocationTypes } from "../../../z_vendor/getto-application/location/infra"
+import { LocationTypes } from "../../../../z_vendor/getto-application/location/infra"
 
 export type SignViewType =
     | "static-privacyPolicy"

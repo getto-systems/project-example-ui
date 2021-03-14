@@ -6,8 +6,8 @@ export const docs_auth_sign_authTicket: DocsSection[] = [
         docsDescription([
             {
                 title: "認証チケット",
-                body: ["有効期限付きのチケット", "認証・認可のためのトークン"],
-                help: ["サーバーアクセスに必要", "認証トークンは http only な cookie で配信"],
+                body: ["有効期限付きのチケット", "認証・認可のため発行するトークン"],
+                help: ["サーバーアクセスに必要", "適切な方法で署名", "セキュアな方法で送信"],
             },
         ]),
         docsDescription([
@@ -31,6 +31,45 @@ export const docs_auth_sign_authTicket: DocsSection[] = [
             },
         ]),
     ]),
+    docsSection("認証チケット有効期限", [
+        docsDescription([
+            {
+                title: "認証トークン有効期限",
+                body: ["認証チケット更新の期限"],
+                help: ["認証方法によらず一定の期間が設定される"],
+            },
+        ]),
+        docsDescription([
+            {
+                title: "認可トークン有効期限",
+                body: ["APIサーバーアクセスの期限"],
+                help: ["認証方法によらず一定の期間が設定される"],
+            },
+        ]),
+        docsDescription([
+            {
+                title: "コンテンツトークン有効期限",
+                body: ["コンテンツサーバーアクセスの期限"],
+                help: ["認証方法によらず一定の期間が設定される"],
+            },
+        ]),
+        docsDescription([
+            {
+                title: "最大延長期限",
+                body: ["有効期限更新リクエストの期限"],
+                help: ["パスワード認証なら短め", "web 証明書認証なら長めを想定"],
+            },
+        ]),
+    ]),
+    docsSection("認証チケットデータ", [
+        docsDescription([
+            {
+                title: "保存するデータ",
+                body: ["ログインID", "有効期限", "最大延長期限"],
+                help: ["有効期限が切れたものは無効として扱う"],
+            },
+        ]),
+    ]),
     docsSection("コンテンツサーバー", [
         docsDescription([
             {
@@ -41,7 +80,7 @@ export const docs_auth_sign_authTicket: DocsSection[] = [
             {
                 title: "secure",
                 body: ["認証情報の必要なコンテンツ"],
-                help: ["認証トークン送信でアクセス可能", "アプリケーション本体"],
+                help: ["コンテンツトークン送信でアクセス可能", "アプリケーション本体"],
             },
         ]),
     ]),
@@ -50,13 +89,16 @@ export const docs_auth_sign_authTicket: DocsSection[] = [
             {
                 title: "public",
                 body: ["認証情報に関する手続きを行う"],
-                help: ["認証 nonce 送信でアクセス可能", "認証情報のチェック・更新・破棄など"],
+                help: [
+                    "認証トークン・nonce 送信でアクセス可能",
+                    "認証情報のチェック・更新・破棄など",
+                ],
             },
             {
                 title: "secure",
                 body: ["認証が必要な手続きを行う"],
                 help: [
-                    "認可 nonce 送信でアクセス可能",
+                    "認可トークン・nonce 送信でアクセス可能",
                     "アプリケーション本体の手続き",
                     "ログインユーザーの認証プロフィール変更",
                     "認証ユーザーの管理",

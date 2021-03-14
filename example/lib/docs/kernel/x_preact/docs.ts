@@ -17,7 +17,6 @@ import { icon } from "../../../x_preact/common/design/icon"
 import {
     DocsAction,
     DocsActionContent,
-    DocsActionTarget,
     DocsActionTargetType,
     DocsContent,
     DocsDescription,
@@ -26,27 +25,29 @@ import {
 } from "../../../z_vendor/getto-application/docs/data"
 
 type Props = Readonly<{
-    contents: DocsSection[][]
+    contents: DocsSection[][][]
 }>
 export function DocsComponent(props: Props): VNode {
     return paddingVSpace(
-        props.contents.map((sections) =>
-            container(
-                sections.map((section) => {
-                    const content = {
-                        title: sectionTitle(section),
-                        body: paddingVSpace(section.body.map(sectionBody), v_small()),
-                    }
+        props.contents.map((sectionsArr) =>
+            sectionsArr.map((sections) =>
+                container(
+                    sections.map((section) => {
+                        const content = {
+                            title: sectionTitle(section),
+                            body: paddingVSpace(section.body.map(sectionBody), v_small()),
+                        }
 
-                    switch (section.type) {
-                        case "normal":
-                        case "pending":
-                            return box(content)
+                        switch (section.type) {
+                            case "normal":
+                            case "pending":
+                                return box(content)
 
-                        case "double":
-                            return box_double(content)
-                    }
-                }),
+                            case "double":
+                                return box_double(content)
+                        }
+                    }),
+                ),
             ),
         ),
         v_small(),
@@ -145,7 +146,7 @@ function description(contents: DocsDescription[]): VNodeContent {
 }
 function explanation(targets: DocsActionTargetType[]): VNodeContent {
     return targets.map((action) => {
-        const content = target(DocsActionTarget[action])
+        const content = target(action)
         return html`<p>
             ${content.icon} ${content.label}<br />
             <small>（${content.help}）</small>
@@ -173,15 +174,25 @@ function action(contents: DocsAction[]): VNodeContent {
         function title(): VNodeContent {
             switch (action.type) {
                 case "request":
-                    return html`${target(action.content.from).icon} ${icon("arrow-right")}
-                    ${target(action.content.to).icon}`
+                    return html`${label(action.content.from)} ${" "} ${icon("arrow-right")} ${" "}
+                    ${label(action.content.to)}`
 
                 case "action":
-                    return target(action.content.on).icon
+                    return label(action.content.on)
+            }
+
+            function label(type: DocsActionTargetType): VNode {
+                const content = target(type)
+                return html`${content.icon} ${content.label}`
             }
         }
         function body(contents: DocsActionContent[]): VNodeContent {
-            return contents.map((content) => {
+            return html`<ul>${contents.map((content) => li(message(content)))}</ul>`
+
+            function li(message: VNodeContent): VNode {
+                return html`<li>${message}</li>`
+            }
+            function message(content: DocsActionContent): VNodeContent {
                 switch (content.type) {
                     case "normal":
                         return content.message
@@ -189,7 +200,7 @@ function action(contents: DocsAction[]): VNodeContent {
                     case "validate":
                         return html`${label_alert("検証")} ${content.message}`
                 }
-            })
+            }
         }
     }
 }
@@ -207,33 +218,33 @@ type Explanation = Readonly<{
     icon: VNode
     help: string
 }>
-function target(target: DocsActionTarget): Explanation {
+function target(target: DocsActionTargetType): Explanation {
     switch (target) {
-        case DocsActionTarget["content-server"]:
+        case "content-server":
             return {
                 label: "コンテンツサーバー",
                 icon: icon("database"),
                 help: "CDN : CloudFront など",
             }
 
-        case DocsActionTarget["api-server"]:
+        case "api-server":
             return {
-                label: "API サーバー",
+                label: "APIサーバー",
                 icon: icon("cogs"),
                 help: "アプリケーションサーバー",
             }
 
-        case DocsActionTarget["http-client"]:
+        case "http-client":
             return {
-                label: "http クライアント",
+                label: "ブラウザ",
                 icon: icon("display"),
                 help: "ブラウザ、スマホアプリ",
             }
 
-        case DocsActionTarget["text-client"]:
+        case "text-client":
             return {
-                label: "テキストクライアント",
-                icon: icon("display"),
+                label: "メール",
+                icon: icon("envelope"),
                 help: "メール、slack",
             }
     }

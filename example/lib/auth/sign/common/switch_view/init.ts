@@ -1,4 +1,4 @@
-import { newLocationDetecter } from "../../../z_vendor/getto-application/location/init"
+import { newLocationDetecter } from "../../../../z_vendor/getto-application/location/init"
 
 import { detectSignViewType } from "./core"
 

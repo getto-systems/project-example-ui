@@ -1,11 +1,11 @@
-import { LocationConverter } from "../../../z_vendor/getto-application/location/infra"
+import { LocationConverter } from "../../../../z_vendor/getto-application/location/infra"
 
 import {
     ResetPasswordVariant,
     ResetPasswordVariantKey,
     StaticSignViewVariant,
     StaticSignViewVariantKey,
-} from "../common/nav/data"
+} from "../nav/data"
 
 type StaticSignViewVariantConverter = LocationConverter<StaticSignViewVariant, string | null>
 export const staticSignViewVariantLocationConverter: StaticSignViewVariantConverter = (search) => {

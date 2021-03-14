@@ -3,7 +3,7 @@ import { newRequestResetTokenEntryPoint } from "../../sign/password/reset/action
 import { newResetPasswordEntryPoint } from "../../sign/password/reset/action_reset/init/foreground"
 import { newCheckPasswordResetSendingStatus } from "../../sign/password/reset/action_check_status/init/foreground"
 import { newAuthenticatePasswordEntryPoint } from "../../sign/password/action_authenticate/init/foreground"
-import { newSignViewLocationDetecter } from "../../sign/switch_view/init"
+import { newSignViewLocationDetecter } from "../../sign/common/switch_view/init"
 
 import { initSignEntryPoint } from "../impl"
 import { initSignAction } from "../core/impl"

@@ -15,7 +15,7 @@ import { docs_avail } from "../../../../avail/docs"
 import { docs_auth } from "../../../../auth/docs"
 
 export const content_index = (): VNode[] => [
-    h(DocsComponent, { contents: [docs_example, [...docs_docs, ...docs_avail, ...docs_auth]] }),
+    h(DocsComponent, { contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]] }),
 ]
 
 export function content_index_document(): VNode {
