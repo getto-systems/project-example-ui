@@ -1,4 +1,3 @@
-import { Authz } from "../../../../common/authz/data"
 
 export type AuthInfo = Readonly<{
     authn: Authn
@@ -22,6 +21,14 @@ export function toLastAuth(info: Authn): LastAuth {
 
 export type AuthnNonce = string & { AuthnNonce: never }
 export type AuthAt = Date & { AuthAt: never }
+
+export type Authz = Readonly<{
+    nonce: AuthzNonce
+    roles: AuthzRoles
+}>
+
+export type AuthzNonce = string & { AuthzNonce: never }
+export type AuthzRoles = string[] & { AuthzRoles: never }
 
 export function hasExpired(
     authAt: AuthAt,

@@ -29,7 +29,7 @@ import { startContinuousRenewEventHasDone } from "../../kernel/auth_info/common/
 
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
-import { AuthzRepositoryPod } from "../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../kernel/auth_info/kernel/infra"
 import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../../kernel/auth_info/kernel/infra"
 
 import { AuthenticatePasswordEntryPoint } from "./entry_point"

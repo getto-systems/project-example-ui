@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../kernel/infra"
 import { LastAuthRepositoryPod } from "../kernel/infra"
 
 export type ClearAuthInfoInfra = Readonly<{

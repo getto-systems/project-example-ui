@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../../kernel/infra"
 import { Clock } from "../../../../../../z_vendor/getto-application/infra/clock/infra"
 import {
     ExpireTime,
