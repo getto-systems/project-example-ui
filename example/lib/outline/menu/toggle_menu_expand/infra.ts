@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../../auth/common/authz/infra"
+import { AuthzRepositoryPod } from "../../../auth/sign/kernel/auth_info/kernel/infra"
 import { MenuBadgeStore, MenuExpandRepositoryPod, MenuExpandStore, MenuTree } from "../kernel/infra"
 
 export type ToggleMenuExpandInfra = Readonly<{

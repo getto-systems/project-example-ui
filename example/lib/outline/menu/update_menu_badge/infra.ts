@@ -1,4 +1,4 @@
-import { AuthzRepositoryPod } from "../../../auth/common/authz/infra"
+import { AuthzRepositoryPod } from "../../../auth/sign/kernel/auth_info/kernel/infra"
 import { GetMenuBadgeRemotePod, MenuBadgeStore, MenuExpandStore, MenuTree } from "../kernel/infra"
 
 export type UpdateMenuBadgeInfra = Readonly<{

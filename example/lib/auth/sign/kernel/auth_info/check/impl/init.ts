@@ -1,4 +1,4 @@
-import { newAuthzRepository } from "../../../../../common/authz/infra/repository/authz"
+import { newAuthzRepository } from "../../kernel/infra/repository/authz"
 import { newRenewAuthInfoRemote } from "../../kernel/infra/remote/renew"
 
 import { newClock } from "../../../../../../z_vendor/getto-application/infra/clock/init"

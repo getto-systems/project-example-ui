@@ -22,7 +22,7 @@ import { checkAuthInfoEventHasDone } from "../check/impl/core"
 
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { WaitTime } from "../../../../../z_vendor/getto-application/infra/config/infra"
-import { AuthzRepositoryPod } from "../../../../common/authz/infra"
+import { AuthzRepositoryPod } from "../kernel/infra"
 import { LastAuthRepositoryPod, RenewAuthInfoRemotePod } from "../kernel/infra"
 
 import { CheckAuthInfoEntryPoint } from "./entry_point"
