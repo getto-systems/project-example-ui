@@ -3,7 +3,7 @@ import {
     SignNav,
     signNavKey,
     StaticSignViewVariant,
-} from "../common/nav/data"
+} from "../nav/data"
 import { SignViewLocationDetectMethod, SignViewType } from "./data"
 import {
     resetPasswordVariantLocationConverter,

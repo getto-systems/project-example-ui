@@ -5,7 +5,30 @@ import {
     docsPurpose,
     docsSection,
     docsSection_double,
+    docsSection_pending,
 } from "../../z_vendor/getto-application/docs/helper"
+
+import {
+    docs_auth_sign_checkAuthTicket,
+    docs_auth_sign_checkAuthTicket_description,
+} from "./auth_ticket/action_check/docs"
+import {
+    docs_auth_sign_logout,
+    docs_auth_sign_logout_description,
+} from "./auth_ticket/action_logout/docs"
+import {
+    docs_auth_sign_authenticatePassword,
+    docs_auth_sign_authenticatePassword_description,
+} from "./password/action_authenticate/docs"
+import {
+    docs_auth_sign_resetPassword,
+    docs_auth_sign_resetPassword_data,
+    docs_auth_sign_resetPassword_description,
+} from "./password/reset/docs"
+
+import { docs_auth_sign_authTicket } from "./auth_ticket/docs"
+import { docs_auth_sign_loginID } from "./login_id/docs"
+import { docs_auth_sign_password } from "./password/docs"
 
 import { DocsSection } from "../../z_vendor/getto-application/docs/data"
 
@@ -20,6 +43,27 @@ export const docs_auth_sign: DocsSection[] = [
             "web 証明書ログイン",
         ]),
     ]),
+]
+
+const docs_auth_sign_authenticateWebAuthn: DocsSection[] = [
+    docsSection_pending("web 証明書ログイン", [
+        docsModule(["web 証明書で認証", "認証成功でトークンを発行"]),
+    ]),
+]
+
+export const docs_auth_sign_action: DocsSection[][] = [
+    [...docs_auth_sign_checkAuthTicket, ...docs_auth_sign_logout],
+
+    [
+        ...docs_auth_sign_authenticatePassword,
+        ...docs_auth_sign_resetPassword,
+        ...docs_auth_sign_authenticateWebAuthn,
+    ],
+]
+
+export const docs_auth_sign_data: DocsSection[][] = [
+    docs_auth_sign_authTicket,
+    [...docs_auth_sign_loginID, ...docs_auth_sign_password, ...docs_auth_sign_resetPassword_data],
 ]
 
 export const docs_auth_sign_explanation: DocsSection[] = [
@@ -37,7 +81,8 @@ export const docs_auth_sign_negativeNote: DocsSection[] = [
             },
             {
                 message: "チケットが漏れた場合、有効期限延長を続けることで最大期間アクセス可能",
-                help: "これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能",
+                help:
+                    "これをするためには cookie の奪取とメモリの解析を行う必要があるので、事実上不可能",
             },
             {
                 message: "http を使用することを想定",
@@ -49,4 +94,11 @@ export const docs_auth_sign_negativeNote: DocsSection[] = [
             },
         ]),
     ]),
+]
+
+export const docs_auth_sign_description: DocsSection[][][] = [
+    [docs_auth_sign_checkAuthTicket_description],
+    [docs_auth_sign_logout_description],
+    [docs_auth_sign_authenticatePassword_description],
+    [docs_auth_sign_resetPassword_description],
 ]

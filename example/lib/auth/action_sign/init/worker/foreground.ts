@@ -1,5 +1,5 @@
 import { newCheckAuthTicketEntryPoint } from "../../../sign/auth_ticket/action_check/init"
-import { newSignViewLocationDetecter } from "../../../sign/switch_view/init"
+import { newSignViewLocationDetecter } from "../../../sign/common/switch_view/init"
 
 import {
     AuthenticatePasswordProxy,

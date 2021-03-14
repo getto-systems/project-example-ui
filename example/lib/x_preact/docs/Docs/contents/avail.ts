@@ -13,8 +13,8 @@ import {
 export const content_development_deployment = (): VNode[] => [
     h(DocsComponent, {
         contents: [
-            [...docs_avail],
-            [...docs_avail_access, ...docs_avail_cost, ...docs_avail_update, ...docs_avail_error],
+            [[...docs_avail]],
+            [[...docs_avail_access, ...docs_avail_cost, ...docs_avail_update, ...docs_avail_error]],
         ],
     }),
 ]
