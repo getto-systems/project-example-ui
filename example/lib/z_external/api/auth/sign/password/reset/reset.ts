@@ -1,6 +1,6 @@
 import { parseAuthResponse, parseErrorMessage } from "../../common"
 
-import { ApiError, ApiResult } from "../../../../data"
+import { ApiCommonError, ApiResult } from "../../../../data"
 import { AuthResponse, ParseErrorResult } from "../../data"
 
 type SendMessage = Readonly<{
@@ -15,10 +15,9 @@ type SendLoginID = string
 type SendPassword = string
 type RawResetResult = ApiResult<AuthResponse, RemoteError>
 type RemoteError =
-    | ApiError
+    | ApiCommonError
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "already-reset" }>
-    | Readonly<{ type: "bad-request" }>
 
 interface Reset {
     (message: SendMessage): Promise<RawResetResult>

@@ -29,6 +29,7 @@ import { InputPasswordEntry } from "../../../action_input/x_preact/input_passwor
 import { ResetPasswordView, ResetPasswordResource, ResetPasswordResourceState } from "../resource"
 
 import { ResetPasswordError } from "../../reset/data"
+import { remoteCommonError } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function ResetPasswordEntry(view: ResetPasswordView): VNode {
     const resource = useApplicationView(view)
@@ -219,9 +220,6 @@ function resetError(err: ResetPasswordError): VNodeContent[] {
         case "empty-reset-token":
             return ["リセットトークンが見つかりませんでした"]
 
-        case "bad-request":
-            return ["アプリケーションエラーにより認証に失敗しました"]
-
         case "invalid-password-reset":
             return ["ログインIDが最初に入力したものと違うか、有効期限が切れています"]
 
@@ -231,22 +229,12 @@ function resetError(err: ResetPasswordError): VNodeContent[] {
                 "もう一度リセットする場合はトークンの送信からやり直してください",
             ]
 
+        case "bad-request":
         case "server-error":
-            return ["サーバーエラーにより認証に失敗しました"]
-
         case "bad-response":
-            return ["レスポンスエラーにより認証に失敗しました", ...detail(err.err)]
-
         case "infra-error":
-            return ["ネットワークエラーにより認証に失敗しました", ...detail(err.err)]
+            return remoteCommonError(err, (reason) => `${reason}によりリセットに失敗しました`)
     }
-}
-
-function detail(err: string): string[] {
-    if (err.length === 0) {
-        return []
-    }
-    return [`(詳細: ${err})`]
 }
 
 function form(content: VNodeContent) {

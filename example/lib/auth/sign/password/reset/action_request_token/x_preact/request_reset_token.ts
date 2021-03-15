@@ -30,6 +30,7 @@ import {
 
 import { RequestResetTokenError } from "../../request_token/data"
 import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
+import { remoteCommonError } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function RequestResetTokenEntry(view: RequestResetTokenView): VNode {
     const resource = useApplicationView(view)
@@ -193,28 +194,15 @@ function requestTokenError(err: RequestResetTokenError): VNodeContent[] {
         case "validation-error":
             return ["正しく入力してください"]
 
-        case "bad-request":
-            return ["アプリケーションエラーによりトークンの送信に失敗しました"]
-
         case "invalid-password-reset":
             return ["ログインIDが登録されていないか、トークンの送信先が登録されていません"]
 
+        case "bad-request":
         case "server-error":
-            return ["サーバーエラーによりトークンの送信に失敗しました"]
-
         case "bad-response":
-            return ["レスポンスエラーによりトークンの送信に失敗しました", ...detail(err.err)]
-
         case "infra-error":
-            return ["ネットワークエラーによりトークンの送信に失敗しました", ...detail(err.err)]
+            return remoteCommonError(err, (reason) => `${reason}によりトークンの送信に失敗しました`)
     }
-}
-
-function detail(err: string): string[] {
-    if (err.length === 0) {
-        return []
-    }
-    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT = html``

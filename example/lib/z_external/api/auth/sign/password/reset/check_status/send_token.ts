@@ -1,14 +1,9 @@
-import { ApiResult } from "../../../../../data"
+import { ApiCommonError, ApiResult } from "../../../../../data"
 import { parseErrorMessage } from "../../../common"
 import { ParseErrorResult } from "../../../data"
 
 type RawSendTokenResult = ApiResult<true, RemoteError>
-type RemoteError =
-    | Readonly<{ type: "bad-request" }>
-    | Readonly<{ type: "invalid-password-reset" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
+type RemoteError = ApiCommonError
 
 interface SendToken {
     (): Promise<RawSendTokenResult>
@@ -37,7 +32,6 @@ export function newApi_SendResetToken(apiServerURL: string): SendToken {
         }
         switch (result.message) {
             case "bad-request":
-            case "invalid-password-reset":
                 return { type: result.message }
 
             default:

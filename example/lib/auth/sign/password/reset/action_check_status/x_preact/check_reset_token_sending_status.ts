@@ -26,6 +26,7 @@ import {
     CheckResetTokenSendingStatusError,
     SendResetTokenError,
 } from "../../check_status/data"
+import { remoteCommonError } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function CheckPasswordResetSendingStatusEntry(
     view: CheckResetTokenSendingStatusView,
@@ -129,37 +130,33 @@ function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[
         case "empty-session-id":
             return ["パスワードリセットのためのセッションIDが取得できませんでした"]
 
-        case "bad-request":
-            return ["アプリケーションエラーによりステータスの取得に失敗しました"]
-
         case "invalid-password-reset":
             return ["セッションエラーによりステータスの取得に失敗しました"]
 
         case "already-reset":
             return ["すでにリセット済みです"]
 
+        case "bad-request":
         case "server-error":
-            return ["サーバーエラーによりステータスの取得に失敗しました"]
-
         case "bad-response":
-            return ["レスポンスエラーによりステータスの取得に失敗しました", ...detail(err.err)]
-
         case "infra-error":
-            return ["ネットワークエラーによりステータスの取得に失敗しました", ...detail(err.err)]
+            return remoteCommonError(
+                err,
+                (reason) => `${reason}によりステータスの取得に失敗しました`,
+            )
     }
 }
 function sendTokenError(err: SendResetTokenError): VNodeContent[] {
     switch (err.type) {
+        case "bad-request":
+        case "server-error":
+        case "bad-response":
         case "infra-error":
-            return ["サーバーエラーによりリセットトークンの送信に失敗しました", ...detail(err.err)]
+            return remoteCommonError(
+                err,
+                (reason) => `${reason}によりリセットトークンの送信に失敗しました`,
+            )
     }
-}
-
-function detail(err: string): string[] {
-    if (err.length === 0) {
-        return []
-    }
-    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT = html``

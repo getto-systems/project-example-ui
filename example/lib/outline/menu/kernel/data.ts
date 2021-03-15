@@ -1,3 +1,5 @@
+import { RemoteCommonError } from "../../../z_vendor/getto-application/infra/remote/data"
+
 export type MenuTargetPath = string & { MenuTarget: never }
 
 export type Menu = MenuNode[]
@@ -32,8 +34,4 @@ type MenuItem_data = Readonly<{
 }>
 
 export type GetMenuBadgeError = GetMenuBadgeRemoteError
-export type GetMenuBadgeRemoteError =
-    | Readonly<{ type: "bad-request" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
+export type GetMenuBadgeRemoteError = RemoteCommonError

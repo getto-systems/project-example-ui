@@ -1,4 +1,4 @@
-import { ApiResult } from "../../../../data"
+import { ApiCommonError, ApiResult } from "../../../../data"
 import { parseErrorMessage } from "../../common"
 import { ParseErrorResult } from "../../data"
 
@@ -7,12 +7,7 @@ type SendFields = Readonly<{
 }>
 type SendLoginID = string
 type RemoteResult = ApiResult<string, RemoteError>
-type RemoteError =
-    | Readonly<{ type: "bad-request" }>
-    | Readonly<{ type: "invalid-password-reset" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
+type RemoteError = ApiCommonError | Readonly<{ type: "invalid-password-reset" }>
 
 interface RequestToken {
     (fields: SendFields): Promise<RemoteResult>

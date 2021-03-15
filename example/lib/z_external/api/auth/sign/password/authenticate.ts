@@ -5,14 +5,11 @@ import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/base64/t
 import { parseAuthResponse, parseErrorMessage } from "../common"
 
 import { AuthResponse, ParseErrorResult } from "../data"
-import { ApiError, ApiResult } from "../../../data"
+import { ApiCommonError, ApiResult } from "../../../data"
 
 type LoginFields = Readonly<{ loginID: string; password: string }>
 type LoginResult = ApiResult<AuthResponse, RemoteError>
-type RemoteError =
-    | ApiError
-    | Readonly<{ type: "invalid-password-login" }>
-    | Readonly<{ type: "bad-request" }>
+type RemoteError = ApiCommonError | Readonly<{ type: "invalid-password-login" }>
 
 interface Authenticate {
     (fields: LoginFields): Promise<LoginResult>
