@@ -1,7 +1,7 @@
 import { h, VNode } from "preact"
 
 import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
-import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
 import {

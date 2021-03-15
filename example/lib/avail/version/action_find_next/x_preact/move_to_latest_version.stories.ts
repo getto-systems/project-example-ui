@@ -14,7 +14,7 @@ enum FindNextEnum {
 }
 
 export default {
-    title: "main/public/Avail/MoveToLatestVersion",
+    title: "main/public/Avail/Move To Latest Version",
     parameters: {
         layout: "fullscreen",
     },

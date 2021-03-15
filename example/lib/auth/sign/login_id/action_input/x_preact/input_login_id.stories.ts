@@ -17,7 +17,7 @@ enum ValidateEnum {
 }
 
 export default {
-    title: "library/Auth/Common/Fields/InputLoginID",
+    title: "library/Auth/Common/Fields/Input Login ID",
     argTypes: {
         validate: {
             control: { type: "select", options: enumKeys(ValidateEnum) },

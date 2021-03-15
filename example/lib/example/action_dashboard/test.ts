@@ -1,6 +1,6 @@
 import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockBaseResource } from "../view_base/mock"
+import { mockBaseResource } from "../action_base/mock"
 
 import { initDashboardEntryPoint } from "./impl"
 

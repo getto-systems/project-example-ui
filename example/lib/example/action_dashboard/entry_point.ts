@@ -1,4 +1,4 @@
-import { BaseTypes } from "../view_base/entry_point"
+import { BaseTypes } from "../action_base/entry_point"
 
 type DashboardTypes = BaseTypes<EmptyResource>
 type EmptyResource = {

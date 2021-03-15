@@ -27,7 +27,7 @@ enum LoadEnum {
 }
 
 export default {
-    title: "library/Example/Common/LoadSeason",
+    title: "library/Example/Common/Load Season",
     parameters: {
         layout: "fullscreen",
     },

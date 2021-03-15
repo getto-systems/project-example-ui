@@ -33,7 +33,7 @@ enum LoadEnum {
 }
 
 export default {
-    title: "library/Outline/LoadMenu",
+    title: "library/Outline/Load Menu",
     parameters: {
         layout: "fullscreen",
     },

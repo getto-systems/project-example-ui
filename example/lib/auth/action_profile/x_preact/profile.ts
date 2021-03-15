@@ -10,7 +10,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useNotifyUnexpectedError } from "../../../avail/action_unexpected_error/x_preact/hooks"
+import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
 import { copyright, siteInfo } from "../../../x_preact/common/site"

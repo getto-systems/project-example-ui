@@ -1,4 +1,4 @@
-import { VersionString } from "../../common/data"
+import { VersionString } from "../../data"
 import { ApplicationTargetPath, Version } from "../data"
 import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 
