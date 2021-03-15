@@ -24,18 +24,15 @@ import {
     DocsSection,
 } from "../../../z_vendor/getto-application/docs/data"
 
-type Props = Readonly<{
-    contents: DocsSection[][][]
-}>
-export function DocsContentComponent(props: Props): VNode {
+export function docsArticle(contents: DocsSection[][][]): VNode {
     return paddingVSpace(
-        props.contents.map((sectionsArr) =>
+        contents.map((sectionsArr) =>
             sectionsArr.map((sections) =>
                 container(
                     sections.map((section) => {
                         const content = {
-                            title: sectionTitle(section),
-                            body: paddingVSpace(section.body.map(sectionBody), v_small()),
+                            title: docsSectionTitle(section),
+                            body: paddingVSpace(section.body.map(docsSectionBody), v_small()),
                         }
 
                         switch (section.type) {
@@ -68,7 +65,7 @@ export function DocsContentComponent(props: Props): VNode {
     }
 }
 
-function sectionTitle(section: DocsSection): VNodeContent {
+export function docsSectionTitle(section: DocsSection): VNodeContent {
     switch (section.type) {
         case "normal":
         case "double":
@@ -78,7 +75,7 @@ function sectionTitle(section: DocsSection): VNodeContent {
             return html`${section.title} ${label_pending("あとで")}`
     }
 }
-function sectionBody(content: DocsContent): VNodeContent {
+export function docsSectionBody(content: DocsContent): VNodeContent {
     switch (content.type) {
         case "purpose":
             return purpose(content.content)

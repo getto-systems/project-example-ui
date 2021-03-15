@@ -17,7 +17,7 @@ import { copyright, siteInfo } from "../../../x_preact/common/site"
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadMenuEntry } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
-import { DocsContentComponent } from "./content"
+import { docsArticle } from "./content"
 
 import { DocsView, DocsResource } from "../resource"
 
@@ -43,7 +43,7 @@ export function DocsComponent(resource: DocsResource): VNode {
                 mainTitle(resource.docs.title),
                 h(LoadBreadcrumbListComponent, resource),
             ]),
-            body: mainBody(h(DocsContentComponent, resource.docs)),
+            body: mainBody(docsArticle(resource.docs.contents)),
             copyright: copyright(),
         }),
         menu: h(LoadMenuEntry, resource),
