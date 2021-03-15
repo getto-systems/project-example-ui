@@ -135,6 +135,9 @@ function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[
         case "invalid-password-reset":
             return ["セッションエラーによりステータスの取得に失敗しました"]
 
+        case "already-reset":
+            return ["すでにリセット済みです"]
+
         case "server-error":
             return ["サーバーエラーによりステータスの取得に失敗しました"]
 
