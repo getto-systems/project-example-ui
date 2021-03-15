@@ -3,7 +3,7 @@ import { mockLoadBreadcrumbListResource } from "../../outline/menu/action_load_b
 import { mockLoadMenuResource } from "../../outline/menu/action_load_menu/mock"
 import { mockLoadSeasonResource } from "../common/action_load_season/mock"
 
-import { BaseResource } from "./entry_point"
+import { BaseResource } from "./resource"
 
 export function mockBaseResource(): BaseResource {
     return {

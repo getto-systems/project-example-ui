@@ -1,8 +1,8 @@
-import { buildAuthenticatePasswordEntryPoint } from "./worker/foreground"
+import { buildAuthenticatePasswordView } from "./worker/foreground"
 
 import { initAuthenticatePasswordCoreAction } from "../core/impl"
 
-import { AuthenticatePasswordEntryPoint } from "../entry_point"
+import { AuthenticatePasswordView } from "../resource"
 import {
     newAuthenticatePasswordCoreBackgroundMaterial,
     newAuthenticatePasswordCoreForegroundMaterial,
@@ -12,14 +12,14 @@ type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
-export function newAuthenticatePasswordEntryPoint(
+export function newAuthenticatePasswordView(
     feature: OutsideFeature,
-): AuthenticatePasswordEntryPoint {
+): AuthenticatePasswordView {
     const { webStorage, currentLocation } = feature
     const foreground = newAuthenticatePasswordCoreForegroundMaterial(webStorage, currentLocation)
     const background = newAuthenticatePasswordCoreBackgroundMaterial()
 
-    return buildAuthenticatePasswordEntryPoint(
+    return buildAuthenticatePasswordView(
         initAuthenticatePasswordCoreAction({
             ...foreground,
             ...background,

@@ -3,18 +3,18 @@ import { newNotifyUnexpectedErrorResource } from "../../avail/action_notify_unex
 import { newLoadBreadcrumbListResource } from "../../outline/menu/action_load_breadcrumb_list/init"
 import { newLoadMenuResource } from "../../outline/menu/action_load_menu/init"
 
-import { initDocsEntryPoint } from "./impl"
+import { initDocsView } from "./impl"
 
-import { DocsContent, DocsEntryPoint } from "./entry_point"
+import { DocsContent, DocsView } from "./resource"
 
 type OutsideFeature = DocsContent &
     Readonly<{
         webStorage: Storage
         currentLocation: Location
     }>
-export function newDocsEntryPoint(feature: OutsideFeature): DocsEntryPoint {
+export function newDocsView(feature: OutsideFeature): DocsView {
     const menu = docsMenuContent()
-    return initDocsEntryPoint({
+    return initDocsView({
         ...newLoadBreadcrumbListResource(feature, menu),
         ...newLoadMenuResource(feature, menu),
         ...newNotifyUnexpectedErrorResource(feature),

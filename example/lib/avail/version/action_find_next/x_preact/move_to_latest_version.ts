@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../z_vendor/getto-css/preact/layout/login"
@@ -16,15 +16,15 @@ import { ApplicationErrorComponent } from "../../../common/x_preact/application_
 import { applicationPath } from "../../find_next/impl/helper"
 
 import {
-    FindNextVersionEntryPoint,
+    FindNextVersionView,
     FindNextVersionResource,
     FindNextVersionResourceState,
-} from "../entry_point"
+} from "../resource"
 
 import { FindNextVersionError } from "../../find_next/data"
 
-export function MoveToLatestVersion(entryPoint: FindNextVersionEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function MoveToLatestVersionEntry(view: FindNextVersionView): VNode {
+    const resource = useApplicationView(view)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
@@ -40,8 +40,8 @@ export function MoveToLatestVersion(entryPoint: FindNextVersionEntryPoint): VNod
     })
 }
 
-export type MoveToLatestVersionProps = FindNextVersionResource & FindNextVersionResourceState
-export function MoveToLatestVersionComponent(props: MoveToLatestVersionProps): VNode {
+type Props = FindNextVersionResource & FindNextVersionResourceState
+export function MoveToLatestVersionComponent(props: Props): VNode {
     useLayoutEffect(() => {
         switch (props.state.type) {
             case "succeed-to-find":

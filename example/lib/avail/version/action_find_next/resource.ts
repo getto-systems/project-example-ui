@@ -1,8 +1,8 @@
-import { ApplicationEntryPoint } from "../../../z_vendor/getto-application/action/action"
+import { ApplicationView } from "../../../z_vendor/getto-application/action/action"
 
 import { FindNextVersionCoreAction, FindNextVersionCoreState } from "./core/action"
 
-export type FindNextVersionEntryPoint = ApplicationEntryPoint<FindNextVersionResource>
+export type FindNextVersionView = ApplicationView<FindNextVersionResource>
 
 export type FindNextVersionResource = Readonly<{
     findNext: FindNextVersionCoreAction

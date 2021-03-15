@@ -2,17 +2,17 @@ import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/acti
 
 import { mockDocsContentResource } from "./mock"
 
-import { initDocsEntryPoint } from "./impl"
+import { initDocsView } from "./impl"
 
 describe("DocsContent", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
+        const { view } = standard_elements()
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
-                    entryPoint.resource.menu.ignite()
+                    view.terminate()
+                    view.resource.menu.ignite()
 
                     setTimeout(check, 256) // wait for events.
                 },
@@ -23,16 +23,16 @@ describe("DocsContent", () => {
             },
         ])
 
-        entryPoint.resource.menu.subscriber.subscribe(runner(done))
+        view.resource.menu.subscriber.subscribe(runner(done))
     })
 })
 
 function standard_elements() {
-    const entryPoint = newEntryPoint()
+    const view = initView()
 
-    return { entryPoint }
+    return { view }
 }
 
-function newEntryPoint() {
-    return initDocsEntryPoint(mockDocsContentResource())
+function initView() {
+    return initDocsView(mockDocsContentResource())
 }

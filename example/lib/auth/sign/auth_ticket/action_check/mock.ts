@@ -1,8 +1,8 @@
 import { mockCheckAuthTicketCoreAction } from "./core/mock"
 
-import { CheckAuthTicketEntryPoint, CheckAuthTicketResource } from "./entry_point"
+import { CheckAuthTicketView, CheckAuthTicketResource } from "./resource"
 
-export function mockCheckAuthTicketEntryPoint(): CheckAuthTicketEntryPoint {
+export function mockCheckAuthTicketView(): CheckAuthTicketView {
     return {
         resource: mockCheckAuthTicketResource(),
         terminate: () => null,

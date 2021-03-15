@@ -3,9 +3,9 @@ import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 import { mockResetPasswordFormAction } from "./form/mock"
 import { mockResetPasswordCoreAction } from "./core/mock"
 
-import { ResetPasswordEntryPoint, ResetPasswordResource } from "./entry_point"
+import { ResetPasswordView, ResetPasswordResource } from "./resource"
 
-export function mockResetPasswordEntryPoint(): ResetPasswordEntryPoint {
+export function mockResetPasswordView(): ResetPasswordView {
     return {
         resource: mockResetPasswordResource(),
         terminate: () => null,

@@ -4,21 +4,21 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { CheckAuthTicket } from "../../sign/auth_ticket/action_check/x_preact/check_auth_info"
-import { AuthenticatePassword } from "../../sign/password/action_authenticate/x_preact/authenticate_password"
-import { RequestResetToken } from "../../sign/password/reset/action_request_token/x_preact/request_reset_token"
-import { CheckPasswordResetSendingStatus } from "../../sign/password/reset/action_check_status/x_preact/check_reset_token_sending_status"
-import { ResetPassword } from "../../sign/password/reset/action_reset/x_preact/reset_password"
+import { CheckAuthTicketEntry } from "../../sign/auth_ticket/action_check/x_preact/check_auth_info"
+import { AuthenticatePasswordEntry } from "../../sign/password/action_authenticate/x_preact/authenticate_password"
+import { RequestResetTokenEntry } from "../../sign/password/reset/action_request_token/x_preact/request_reset_token"
+import { CheckPasswordResetSendingStatusEntry } from "../../sign/password/reset/action_check_status/x_preact/check_reset_token_sending_status"
+import { ResetPasswordEntry } from "../../sign/password/reset/action_reset/x_preact/reset_password"
 
-import { SignEntryPoint, SignResource, SignResourceState } from "../entry_point"
+import { SignView, SignResource, SignResourceState } from "../resource"
 import { PrivacyPolicyComponent } from "./privacy_policy"
 
-export function Sign(entryPoint: SignEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function SignEntry(view: SignView): VNode {
+    const resource = useApplicationView(view)
 
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
@@ -29,13 +29,13 @@ export function Sign(entryPoint: SignEntryPoint): VNode {
     }
 
     return h(SignComponent, {
-        state: useApplicationAction(resource.view),
+        state: useApplicationAction(resource.sign),
         ...resource,
     })
 }
 
-export type SignProps = SignResource & SignResourceState
-export function SignComponent(props: SignProps): VNode {
+type Props = SignResource & SignResourceState
+export function SignComponent(props: Props): VNode {
     switch (props.state.type) {
         case "initial-view":
             return EMPTY_CONTENT
@@ -44,19 +44,19 @@ export function SignComponent(props: SignProps): VNode {
             return h(PrivacyPolicyComponent, props.state.resource)
 
         case "check-authTicket":
-            return h(CheckAuthTicket, props.state.entryPoint)
+            return h(CheckAuthTicketEntry, props.state.view)
 
         case "password-authenticate":
-            return h(AuthenticatePassword, props.state.entryPoint)
+            return h(AuthenticatePasswordEntry, props.state.view)
 
         case "password-reset-requestToken":
-            return h(RequestResetToken, props.state.entryPoint)
+            return h(RequestResetTokenEntry, props.state.view)
 
         case "password-reset-checkStatus":
-            return h(CheckPasswordResetSendingStatus, props.state.entryPoint)
+            return h(CheckPasswordResetSendingStatusEntry, props.state.view)
 
         case "password-reset":
-            return h(ResetPassword, props.state.entryPoint)
+            return h(ResetPasswordEntry, props.state.view)
 
         case "error":
             return h(ApplicationErrorComponent, { err: props.state.err })

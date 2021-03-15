@@ -5,7 +5,7 @@ import { newGetSecureScriptPathInfra } from "../../../../../common/secure/get_sc
 
 import { newResetPasswordLocationDetecter } from "../../../reset/impl/init"
 
-import { initResetPasswordEntryPoint } from "../../impl"
+import { initResetPasswordView } from "../../impl"
 import { ResetPasswordCoreForegroundInfra, initResetPasswordCoreAction } from "../../core/impl"
 import { initResetPasswordFormAction } from "../../form/impl"
 
@@ -20,7 +20,7 @@ import {
     ResetPasswordProxyResponse,
 } from "./message"
 
-import { ResetPasswordEntryPoint } from "../../entry_point"
+import { ResetPasswordView } from "../../resource"
 import { ResetPasswordCoreAction } from "../../core/action"
 
 type OutsideFeature = Readonly<{
@@ -29,7 +29,7 @@ type OutsideFeature = Readonly<{
 }>
 export interface ResetPasswordProxy
     extends WorkerProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse> {
-    entryPoint(feature: OutsideFeature): ResetPasswordEntryPoint
+    view(feature: OutsideFeature): ResetPasswordView
 }
 export function newResetPasswordProxy(post: Post<ResetPasswordProxyMessage>): ResetPasswordProxy {
     return new Proxy(post)
@@ -47,11 +47,11 @@ class Proxy
         }
     }
 
-    entryPoint(feature: OutsideFeature): ResetPasswordEntryPoint {
+    view(feature: OutsideFeature): ResetPasswordView {
         const { webStorage, currentLocation } = feature
         const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
         const detecter = newResetPasswordLocationDetecter(currentLocation)
-        return buildResetPasswordEntryPoint(
+        return buildResetPasswordView(
             initResetPasswordCoreAction({
                 reset: (fields, post) =>
                     this.material.reset.call({ fields, resetToken: detecter() }, post),
@@ -77,10 +77,10 @@ export function newResetPasswordCoreForegroundInfra(
     }
 }
 
-export function buildResetPasswordEntryPoint(
+export function buildResetPasswordView(
     core: ResetPasswordCoreAction,
-): ResetPasswordEntryPoint {
-    return initResetPasswordEntryPoint({ core, form: initResetPasswordFormAction() })
+): ResetPasswordView {
+    return initResetPasswordView({ core, form: initResetPasswordFormAction() })
 }
 
 interface Post<M> {

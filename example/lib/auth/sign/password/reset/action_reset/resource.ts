@@ -1,6 +1,6 @@
 import {
     ApplicationAction,
-    ApplicationEntryPoint,
+    ApplicationView,
 } from "../../../../../z_vendor/getto-application/action/action"
 
 import { SignLinkResource } from "../../../common/nav/action_nav/resource"
@@ -8,7 +8,7 @@ import { ValidateBoardActionState } from "../../../../../z_vendor/getto-applicat
 import { ResetPasswordCoreAction, ResetPasswordCoreState } from "./core/action"
 import { ResetPasswordFormAction } from "./form/action"
 
-export type ResetPasswordEntryPoint = ApplicationEntryPoint<ResetPasswordResource>
+export type ResetPasswordView = ApplicationView<ResetPasswordResource>
 
 export type ResetPasswordResource = SignLinkResource & Readonly<{ reset: ResetPasswordAction }>
 

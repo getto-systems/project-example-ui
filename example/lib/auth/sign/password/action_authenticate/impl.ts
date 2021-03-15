@@ -1,15 +1,15 @@
 import { initSignLinkResource } from "../../common/nav/action_nav/impl"
 
-import { AuthenticatePasswordAction, AuthenticatePasswordEntryPoint } from "./entry_point"
+import { AuthenticatePasswordAction, AuthenticatePasswordView } from "./resource"
 import { AuthenticatePasswordCoreAction } from "./core/action"
 import { AuthenticatePasswordFormAction } from "./form/action"
 
-export function initAuthenticatePasswordEntryPoint(
+export function initAuthenticatePasswordView(
     actions: Readonly<{
         core: AuthenticatePasswordCoreAction
         form: AuthenticatePasswordFormAction
     }>,
-): AuthenticatePasswordEntryPoint {
+): AuthenticatePasswordView {
     const action = initAction(actions)
     return {
         resource: { authenticate: action, ...initSignLinkResource() },

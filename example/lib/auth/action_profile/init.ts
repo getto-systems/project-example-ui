@@ -1,16 +1,16 @@
 import { newBaseResource } from "../../example/action_base/init"
 import { newLogoutResource } from "../sign/auth_ticket/action_logout/init"
 
-import { initProfileEntryPoint } from "./impl"
+import { initProfileView } from "./impl"
 
-import { ProfileEntryPoint } from "./entry_point"
+import { ProfileView } from "./resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
-export function newProfileEntryPoint(feature: OutsideFeature): ProfileEntryPoint {
-    return initProfileEntryPoint({
+export function newProfileView(feature: OutsideFeature): ProfileView {
+    return initProfileView({
         ...newBaseResource(feature),
         ...newLogoutResource(feature),
     })

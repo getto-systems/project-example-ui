@@ -1,6 +1,6 @@
-import { DocsEntryPoint, DocsResource } from "./entry_point"
+import { DocsView, DocsResource } from "./resource"
 
-export function initDocsEntryPoint(resource: DocsResource): DocsEntryPoint {
+export function initDocsView(resource: DocsResource): DocsView {
     return {
         resource,
         terminate: () => {

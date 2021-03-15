@@ -17,7 +17,7 @@ import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_scrip
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { initAuthenticatePasswordEntryPoint } from "./impl"
+import { initAuthenticatePasswordView } from "./impl"
 import {
     initAuthenticatePasswordCoreAction,
     initAuthenticatePasswordCoreMaterial,
@@ -32,7 +32,7 @@ import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../au
 import { AuthzRepositoryPod } from "../../auth_ticket/kernel/infra"
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../auth_ticket/kernel/infra"
 
-import { AuthenticatePasswordEntryPoint } from "./entry_point"
+import { AuthenticatePasswordView } from "./resource"
 
 import { AuthenticatePasswordCoreState } from "./core/action"
 
@@ -51,8 +51,8 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("AuthenticatePassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, entryPoint } = standard_elements()
-        const resource = entryPoint.resource.authenticate
+        const { clock, view } = standard()
+        const resource = view.resource.authenticate
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -93,8 +93,8 @@ describe("AuthenticatePassword", () => {
 
     test("submit valid login-id and password; take long time", (done) => {
         // wait for take longtime timeout
-        const { clock, entryPoint } = takeLongtime_elements()
-        const resource = entryPoint.resource.authenticate
+        const { clock, view } = takeLongtime_elements()
+        const resource = view.resource.authenticate
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -135,8 +135,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("submit without fields", (done) => {
-        const { entryPoint } = standard_elements()
-        const resource = entryPoint.resource.authenticate
+        const { view } = standard()
+        const resource = view.resource.authenticate
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -157,8 +157,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("clear", () => {
-        const { entryPoint } = standard_elements()
-        const resource = entryPoint.resource.authenticate
+        const { view } = standard()
+        const resource = view.resource.authenticate
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
@@ -169,8 +169,8 @@ describe("AuthenticatePassword", () => {
     })
 
     test("load error", (done) => {
-        const { entryPoint } = standard_elements()
-        const resource = entryPoint.resource.authenticate
+        const { view } = standard()
+        const resource = view.resource.authenticate
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -192,13 +192,13 @@ describe("AuthenticatePassword", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard_elements()
-        const resource = entryPoint.resource.authenticate
+        const { view } = standard()
+        const resource = view.resource.authenticate
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
-                    entryPoint.terminate()
+                    view.terminate()
                     resource.form.loginID.board.input.set(markBoardValue("login-id"))
                     resource.form.password.board.input.set(markBoardValue("password"))
                 },
@@ -219,32 +219,32 @@ describe("AuthenticatePassword", () => {
     })
 })
 
-function standard_elements() {
+function standard() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_authenticate(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function takeLongtime_elements() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         takeLongtime_authenticate(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 
-function initEntryPoint(
+function initView(
     authenticate: AuthenticatePasswordRemotePod,
     renew: RenewAuthTicketRemotePod,
     clock: Clock,
-): AuthenticatePasswordEntryPoint {
+): AuthenticatePasswordView {
     const currentURL = new URL("https://example.com/index.html")
 
     const authn = standard_authn()
@@ -252,7 +252,7 @@ function initEntryPoint(
 
     const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
 
-    const entryPoint = initAuthenticatePasswordEntryPoint({
+    const view = initAuthenticatePasswordView({
         core: initAuthenticatePasswordCoreAction(
             initAuthenticatePasswordCoreMaterial(
                 {
@@ -286,14 +286,10 @@ function initEntryPoint(
         form: initAuthenticatePasswordFormAction(),
     })
 
-    entryPoint.resource.authenticate.form.loginID.board.input.storeLinker.link(
-        mockBoardValueStore(),
-    )
-    entryPoint.resource.authenticate.form.password.board.input.storeLinker.link(
-        mockBoardValueStore(),
-    )
+    view.resource.authenticate.form.loginID.board.input.storeLinker.link(mockBoardValueStore())
+    view.resource.authenticate.form.password.board.input.storeLinker.link(mockBoardValueStore())
 
-    return entryPoint
+    return view
 }
 
 function standard_authn(): AuthnRepositoryPod {

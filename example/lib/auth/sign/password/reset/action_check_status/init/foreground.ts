@@ -2,9 +2,9 @@ import { newCheckSendingStatusMaterial } from "./common"
 
 import { newCheckResetTokenSendingStatusLocationDetecter } from "../../check_status/impl/init"
 
-import { initCheckResetTokenSendingStatusEntryPoint } from "../impl"
+import { initCheckResetTokenSendingStatusView } from "../impl"
 
-import { CheckResetTokenSendingStatusEntryPoint } from "../entry_point"
+import { CheckResetTokenSendingStatusView } from "../resource"
 import { initCheckResetTokenSendingStatusCoreAction } from "../core/impl"
 
 type OutsideFeature = Readonly<{
@@ -12,9 +12,9 @@ type OutsideFeature = Readonly<{
 }>
 export function newCheckPasswordResetSendingStatus(
     feature: OutsideFeature,
-): CheckResetTokenSendingStatusEntryPoint {
+): CheckResetTokenSendingStatusView {
     const { currentLocation } = feature
-    return initCheckResetTokenSendingStatusEntryPoint(
+    return initCheckResetTokenSendingStatusView(
         initCheckResetTokenSendingStatusCoreAction(
             newCheckSendingStatusMaterial(
                 newCheckResetTokenSendingStatusLocationDetecter(currentLocation),

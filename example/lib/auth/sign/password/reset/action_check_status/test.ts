@@ -7,7 +7,7 @@ import { mockRemotePod } from "../../../../../z_vendor/getto-application/infra/r
 
 import { mockCheckResetTokenSendingStatusLocationDetecter } from "../check_status/impl/mock"
 
-import { initCheckResetTokenSendingStatusEntryPoint } from "./impl"
+import { initCheckResetTokenSendingStatusView } from "./impl"
 import {
     initCheckResetTokenSendingStatusCoreAction,
     initCheckResetTokenSendingStatusCoreMaterial,
@@ -22,7 +22,7 @@ import {
     SendResetTokenResult,
 } from "../check_status/infra"
 
-import { CheckResetTokenSendingStatusEntryPoint } from "./entry_point"
+import { CheckResetTokenSendingStatusView } from "./resource"
 
 import { CheckResetTokenSendingStatusCoreState } from "./core/action"
 
@@ -30,8 +30,8 @@ import { ResetTokenSendingResult } from "../check_status/data"
 
 describe("CheckPasswordResetSendingStatus", () => {
     test("valid session-id", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.checkStatus
+        const { view } = standard()
+        const resource = view.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -52,8 +52,8 @@ describe("CheckPasswordResetSendingStatus", () => {
 
     test("submit valid login-id; with long sending", (done) => {
         // wait for send token check limit
-        const { entryPoint } = takeLongtime()
-        const resource = entryPoint.resource.checkStatus
+        const { view } = takeLongtime()
+        const resource = view.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -81,8 +81,8 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("check without session id", (done) => {
-        const { entryPoint } = noSessionID()
-        const resource = entryPoint.resource.checkStatus
+        const { view } = noSessionID()
+        const resource = view.resource.checkStatus
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -101,13 +101,13 @@ describe("CheckPasswordResetSendingStatus", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.checkStatus
+        const { view } = standard()
+        const resource = view.resource.checkStatus
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
+                    view.terminate()
                     resource.ignite()
 
                     setTimeout(check, 256) // wait for events...
@@ -124,32 +124,28 @@ describe("CheckPasswordResetSendingStatus", () => {
 })
 
 function standard() {
-    const entryPoint = initEntryPoint(standard_URL(), standard_sendToken(), standard_getStatus())
+    const view = initView(standard_URL(), standard_sendToken(), standard_getStatus())
 
-    return { entryPoint }
+    return { view }
 }
 function takeLongtime() {
-    const entryPoint = initEntryPoint(
-        standard_URL(),
-        takeLongtime_sendToken(),
-        takeLongtime_getStatus(),
-    )
+    const view = initView(standard_URL(), takeLongtime_sendToken(), takeLongtime_getStatus())
 
-    return { entryPoint }
+    return { view }
 }
 function noSessionID() {
-    const entryPoint = initEntryPoint(noSessionID_URL(), standard_sendToken(), standard_getStatus())
+    const view = initView(noSessionID_URL(), standard_sendToken(), standard_getStatus())
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint(
+function initView(
     currentURL: URL,
     sendToken: SendResetTokenRemotePod,
     getStatus: GetResetTokenSendingStatusRemotePod,
-): CheckResetTokenSendingStatusEntryPoint {
+): CheckResetTokenSendingStatusView {
     const checkStatusDetecter = mockCheckResetTokenSendingStatusLocationDetecter(currentURL)
-    return initCheckResetTokenSendingStatusEntryPoint(
+    return initCheckResetTokenSendingStatusView(
         initCheckResetTokenSendingStatusCoreAction(
             initCheckResetTokenSendingStatusCoreMaterial(
                 {

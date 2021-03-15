@@ -3,7 +3,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { buttons } from "../../../../../../z_vendor/getto-css/preact/design/form"
@@ -16,10 +16,10 @@ import { spinner } from "../../../../../../x_preact/common/design/icon"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import {
-    CheckResetTokenSendingStatusEntryPoint,
+    CheckResetTokenSendingStatusView,
     CheckResetTokenSendingStatusResource,
     CheckResetTokenSendingStatusResourceState,
-} from "../entry_point"
+} from "../resource"
 
 import {
     ResetTokenSendingStatus,
@@ -27,19 +27,18 @@ import {
     SendResetTokenError,
 } from "../../check_status/data"
 
-export function CheckPasswordResetSendingStatus(
-    entryPoint: CheckResetTokenSendingStatusEntryPoint,
+export function CheckPasswordResetSendingStatusEntry(
+    view: CheckResetTokenSendingStatusView,
 ): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
-    return h(View, <CheckPasswordResetSendingStatusProps>{
+    const resource = useApplicationView(view)
+    return h(CheckPasswordResetSendingStatusComponent, {
         ...resource,
         state: useApplicationAction(resource.checkStatus),
     })
 }
 
-export type CheckPasswordResetSendingStatusProps = CheckResetTokenSendingStatusResource &
-    CheckResetTokenSendingStatusResourceState
-export function View(props: CheckPasswordResetSendingStatusProps): VNode {
+type Props = CheckResetTokenSendingStatusResource & CheckResetTokenSendingStatusResourceState
+export function CheckPasswordResetSendingStatusComponent(props: Props): VNode {
     switch (props.state.type) {
         case "initial-check-status":
         case "try-to-check-status":

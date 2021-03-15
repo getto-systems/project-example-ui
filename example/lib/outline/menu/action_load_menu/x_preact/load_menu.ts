@@ -22,15 +22,15 @@ import { GetMenuBadgeError, Menu, MenuCategoryNode, MenuItemNode } from "../../k
 
 export const MENU_ID = "menu"
 
-export function LoadMenu(resource: LoadMenuResource): VNode {
+export function LoadMenuEntry(resource: LoadMenuResource): VNode {
     return h(LoadMenuComponent, {
         ...resource,
         state: useApplicationAction(resource.menu),
     })
 }
 
-export type LoadMenuComponentProps = LoadMenuResource & LoadMenuResourceState
-export function LoadMenuComponent(props: LoadMenuComponentProps): VNode {
+type Props = LoadMenuResource & LoadMenuResourceState
+export function LoadMenuComponent(props: Props): VNode {
     switch (props.state.type) {
         case "initial-menu":
             return EMPTY_CONTENT

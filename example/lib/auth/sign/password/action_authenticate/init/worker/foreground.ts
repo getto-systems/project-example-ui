@@ -3,7 +3,7 @@ import { newAuthenticatePasswordCoreForegroundMaterial } from "../common"
 import { newStartContinuousRenewAuthnInfoInfra } from "../../../../auth_ticket/start_continuous_renew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../../../common/secure/get_script_path/impl/init"
 
-import { initAuthenticatePasswordEntryPoint } from "../../impl"
+import { initAuthenticatePasswordView } from "../../impl"
 
 import {
     AuthenticatePasswordCoreForegroundInfra,
@@ -22,7 +22,7 @@ import {
     AuthenticatePasswordProxyResponse,
 } from "./message"
 
-import { AuthenticatePasswordEntryPoint } from "../../entry_point"
+import { AuthenticatePasswordView } from "../../resource"
 import { AuthenticatePasswordCoreAction } from "../../core/action"
 
 type OutsideFeature = Readonly<{
@@ -31,7 +31,7 @@ type OutsideFeature = Readonly<{
 }>
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
-    entryPoint(feature: OutsideFeature): AuthenticatePasswordEntryPoint
+    view(feature: OutsideFeature): AuthenticatePasswordView
 }
 export function newAuthenticatePasswordProxy(
     post: Post<AuthenticatePasswordProxyMessage>,
@@ -51,13 +51,13 @@ class Proxy
         }
     }
 
-    entryPoint(feature: OutsideFeature): AuthenticatePasswordEntryPoint {
+    view(feature: OutsideFeature): AuthenticatePasswordView {
         const { webStorage, currentLocation } = feature
         const foreground = newAuthenticatePasswordCoreForegroundMaterial(
             webStorage,
             currentLocation,
         )
-        return buildAuthenticatePasswordEntryPoint(
+        return buildAuthenticatePasswordView(
             initAuthenticatePasswordCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
                 ...foreground,
@@ -82,10 +82,10 @@ export function newAuthenticatePasswordCoreForegroundInfra(
     }
 }
 
-export function buildAuthenticatePasswordEntryPoint(
+export function buildAuthenticatePasswordView(
     core: AuthenticatePasswordCoreAction,
-): AuthenticatePasswordEntryPoint {
-    return initAuthenticatePasswordEntryPoint({ core, form: initAuthenticatePasswordFormAction() })
+): AuthenticatePasswordView {
+    return initAuthenticatePasswordView({ core, form: initAuthenticatePasswordFormAction() })
 }
 
 interface Post<M> {

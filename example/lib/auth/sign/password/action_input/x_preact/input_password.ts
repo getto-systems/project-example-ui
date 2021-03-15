@@ -10,7 +10,7 @@ import {
 
 import { VNodeContent } from "../../../../../x_preact/common/design/common"
 
-import { InputBoard } from "../../../../../z_vendor/getto-application/board/action_input/x_preact/input"
+import { InputBoardComponent } from "../../../../../z_vendor/getto-application/board/action_input/x_preact/input"
 
 import { ValidateBoardFieldState } from "../../../../../z_vendor/getto-application/board/action_validate_field/core/action"
 import { InputPasswordResource, InputPasswordResourceState } from "../resource"
@@ -18,21 +18,21 @@ import { InputPasswordResource, InputPasswordResourceState } from "../resource"
 import { ValidatePasswordError } from "../../data"
 
 type Resource = InputPasswordResource & Readonly<{ help: VNodeContent[] }>
-export function InputPassword(resource: Resource): VNode {
+export function InputPasswordEntry(resource: Resource): VNode {
     return h(InputPasswordComponent, {
         ...resource,
         state: useApplicationAction(resource.field.validate),
     })
 }
 
-export type InputPasswordProps = Resource & InputPasswordResourceState
-export function InputPasswordComponent(props: InputPasswordProps): VNode {
+type Props = Resource & InputPasswordResourceState
+export function InputPasswordComponent(props: Props): VNode {
     return label_password_fill(content())
 
     function content() {
         const content = {
             title: "パスワード",
-            body: h(InputBoard, props.field.board),
+            body: h(InputBoardComponent, props.field.board),
             help: [...props.help, characterHelp()],
         }
 

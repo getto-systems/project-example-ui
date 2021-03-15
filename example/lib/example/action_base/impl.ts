@@ -1,9 +1,6 @@
-import { BaseEntryPoint, BaseResource } from "./entry_point"
+import { BaseView, BaseResource } from "./resource"
 
-export function initBaseEntryPoint<R>(
-    resource: R & BaseResource,
-    terminate: { (): void },
-): BaseEntryPoint<R> {
+export function initBaseView<R>(resource: R & BaseResource, terminate: { (): void }): BaseView<R> {
     return {
         resource,
         terminate: () => {

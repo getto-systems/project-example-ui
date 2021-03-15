@@ -8,8 +8,8 @@ import { BoardValue, emptyBoardValue } from "../../kernel/data"
 import { InputBoardValueResource } from "../action"
 import { readBoardValue } from "../../kernel/converter"
 
-export type InputBoardProps = InputBoardValueResource
-export function InputBoard(props: InputBoardProps): VNode {
+type Props = InputBoardValueResource
+export function InputBoardComponent(props: Props): VNode {
     return html`<input
         ref=${useBoardValueStore(props.input)}
         type=${props.type}

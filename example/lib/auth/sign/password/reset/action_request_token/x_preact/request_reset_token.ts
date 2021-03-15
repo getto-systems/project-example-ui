@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
@@ -23,16 +23,16 @@ import { spinner } from "../../../../../../x_preact/common/design/icon"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import {
-    RequestResetTokenEntryPoint,
+    RequestResetTokenView,
     RequestResetTokenResource,
     RequestResetTokenResourceState,
-} from "../entry_point"
+} from "../resource"
 
 import { RequestResetTokenError } from "../../request_token/data"
-import { InputLoginID } from "../../../../login_id/action_input/x_preact/input_login_id"
+import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
 
-export function RequestResetToken(entryPoint: RequestResetTokenEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function RequestResetTokenEntry(view: RequestResetTokenView): VNode {
+    const resource = useApplicationView(view)
     return h(RequestResetTokenComponent, {
         ...resource,
         state: {
@@ -42,8 +42,8 @@ export function RequestResetToken(entryPoint: RequestResetTokenEntryPoint): VNod
     })
 }
 
-export type RequestResetTokenProps = RequestResetTokenResource & RequestResetTokenResourceState
-export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode {
+type Props = RequestResetTokenResource & RequestResetTokenResourceState
+export function RequestResetTokenComponent(props: Props): VNode {
     useLayoutEffect(() => {
         switch (props.state.core.type) {
             case "succeed-to-request-token":
@@ -92,7 +92,7 @@ export function RequestResetTokenComponent(props: RequestResetTokenProps): VNode
             loginBox(siteInfo(), {
                 title: startSessionTitle(),
                 body: [
-                    h(InputLoginID, {
+                    h(InputLoginIDEntry, {
                         field: props.requestToken.form.loginID,
                         help: ["このログインIDに設定された送信先にリセットトークンを送信します"],
                     }),

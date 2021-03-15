@@ -14,7 +14,7 @@ import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remo
 import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
 
 import { wrapRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
-import { initCheckAuthTicketEntryPoint } from "./impl"
+import { initCheckAuthTicketView } from "./impl"
 import { initCheckAuthTicketCoreAction, initCheckAuthTicketCoreMaterial } from "./core/impl"
 
 import { startContinuousRenewEventHasDone } from "../start_continuous_renew/impl/core"
@@ -25,7 +25,7 @@ import { WaitTime } from "../../../../z_vendor/getto-application/infra/config/in
 import { AuthzRepositoryPod } from "../kernel/infra"
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../kernel/infra"
 
-import { CheckAuthTicketEntryPoint } from "./entry_point"
+import { CheckAuthTicketView } from "./resource"
 
 import { CheckAuthTicketCoreState } from "./core/action"
 
@@ -48,8 +48,8 @@ const CONTINUOUS_RENEW_AT = [
 
 describe("CheckAuthTicket", () => {
     test("instant load", (done) => {
-        const { clock, entryPoint } = instantLoadable()
-        const resource = entryPoint.resource
+        const { clock, view } = instantLoadable()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -89,8 +89,8 @@ describe("CheckAuthTicket", () => {
     })
 
     test("instant load failed", (done) => {
-        const { clock, entryPoint } = instantLoadable()
-        const resource = entryPoint.resource
+        const { clock, view } = instantLoadable()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -136,8 +136,8 @@ describe("CheckAuthTicket", () => {
     })
 
     test("renew stored credential", (done) => {
-        const { clock, entryPoint } = standard()
-        const resource = entryPoint.resource
+        const { clock, view } = standard()
+        const resource = view.resource
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -175,8 +175,8 @@ describe("CheckAuthTicket", () => {
 
     test("renew stored credential; take long time", (done) => {
         // wait for take longtime timeout
-        const { clock, entryPoint } = takeLongtime()
-        const resource = entryPoint.resource
+        const { clock, view } = takeLongtime()
+        const resource = view.resource
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -215,8 +215,8 @@ describe("CheckAuthTicket", () => {
 
     test("renew without stored credential", (done) => {
         // empty credential
-        const { entryPoint } = noStored()
-        const resource = entryPoint.resource
+        const { view } = noStored()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -233,8 +233,8 @@ describe("CheckAuthTicket", () => {
     })
 
     test("load error", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource
+        const { view } = standard()
+        const resource = view.resource
 
         const runner = setupSyncActionTestRunner([
             {
@@ -256,13 +256,13 @@ describe("CheckAuthTicket", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard()
+        const { view } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
-                    entryPoint.resource.core.ignite()
+                    view.terminate()
+                    view.resource.core.ignite()
 
                     setTimeout(check, 256) // wait for event...
                 },
@@ -273,62 +273,62 @@ describe("CheckAuthTicket", () => {
             },
         ])
 
-        entryPoint.resource.core.subscriber.subscribe(runner(done))
+        view.resource.core.subscriber.subscribe(runner(done))
     })
 })
 
 function standard() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_authn(),
         standard_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function instantLoadable() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_authn(),
         standard_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT_INSTANT_LOAD_AVAILABLE, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function takeLongtime() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_authn(),
         standard_authz(),
         wait_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function noStored() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         noStored_authn(),
         noStored_authz(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint(
+function initView(
     authn: AuthnRepositoryPod,
     authz: AuthzRepositoryPod,
     renew: RenewAuthTicketRemotePod,
     clock: Clock,
-): CheckAuthTicketEntryPoint {
+): CheckAuthTicketView {
     const currentURL = new URL("https://example.com/index.html")
     const getScriptPathDetecter = mockGetScriptPathLocationDetecter(currentURL)
-    return initCheckAuthTicketEntryPoint(
+    return initCheckAuthTicketView(
         initCheckAuthTicketCoreAction(
             initCheckAuthTicketCoreMaterial(
                 {

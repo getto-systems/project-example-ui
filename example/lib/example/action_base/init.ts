@@ -4,7 +4,7 @@ import { newLoadBreadcrumbListResource } from "../../outline/menu/action_load_br
 import { newLoadMenuResource } from "../../outline/menu/action_load_menu/init"
 import { newLoadSeasonResource } from "../common/action_load_season/init"
 
-import { BaseResource } from "./entry_point"
+import { BaseResource } from "./resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage

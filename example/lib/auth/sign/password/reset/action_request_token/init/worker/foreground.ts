@@ -1,4 +1,4 @@
-import { initRequestResetTokenEntryPoint } from "../../impl"
+import { initRequestResetTokenView } from "../../impl"
 import { initRequestResetTokenCoreAction } from "../../core/impl"
 import { initRequestResetTokenFormAction } from "../../form/impl"
 
@@ -15,14 +15,14 @@ import {
 
 import { RequestResetTokenCoreAction } from "../../core/action"
 
-import { RequestResetTokenEntryPoint } from "../../entry_point"
+import { RequestResetTokenView } from "../../resource"
 
 export interface RequestPasswordResetTokenProxy
     extends WorkerProxy<
         RequestPasswordResetTokenProxyMessage,
         RequestPasswordResetTokenProxyResponse
     > {
-    entryPoint(): RequestResetTokenEntryPoint
+    view(): RequestResetTokenView
 }
 export function newRequestPasswordResetTokenProxy(
     post: Post<RequestPasswordResetTokenProxyMessage>,
@@ -45,8 +45,8 @@ class Proxy
         }
     }
 
-    entryPoint(): RequestResetTokenEntryPoint {
-        return buildRequestResetTokenEntryPoint(
+    view(): RequestResetTokenView {
+        return buildRequestResetTokenView(
             initRequestResetTokenCoreAction({
                 requestToken: (fields, post) => this.material.requestToken.call({ fields }, post),
             }),
@@ -61,10 +61,10 @@ class Proxy
     }
 }
 
-export function buildRequestResetTokenEntryPoint(
+export function buildRequestResetTokenView(
     action: RequestResetTokenCoreAction,
-): RequestResetTokenEntryPoint {
-    return initRequestResetTokenEntryPoint({
+): RequestResetTokenView {
+    return initRequestResetTokenView({
         core: action,
         form: initRequestResetTokenFormAction(),
     })

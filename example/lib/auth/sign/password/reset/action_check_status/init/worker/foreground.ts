@@ -1,6 +1,6 @@
 import { newCheckResetTokenSendingStatusLocationDetecter } from "../../../check_status/impl/init"
 
-import { initCheckResetTokenSendingStatusEntryPoint } from "../../impl"
+import { initCheckResetTokenSendingStatusView } from "../../impl"
 import { initCheckResetTokenSendingStatusCoreAction } from "../../core/impl"
 
 import {
@@ -14,7 +14,7 @@ import {
     CheckPasswordResetSendingStatusProxyResponse,
 } from "./message"
 
-import { CheckResetTokenSendingStatusEntryPoint } from "../../entry_point"
+import { CheckResetTokenSendingStatusView } from "../../resource"
 
 type OutsideFeature = Readonly<{
     currentLocation: Location
@@ -24,7 +24,7 @@ export interface CheckPasswordResetSendingStatusProxy
         CheckPasswordResetSendingStatusProxyMessage,
         CheckPasswordResetSendingStatusProxyResponse
     > {
-    entryPoint(feature: OutsideFeature): CheckResetTokenSendingStatusEntryPoint
+    view(feature: OutsideFeature): CheckResetTokenSendingStatusView
 }
 export function newCheckPasswordResetSendingStatusProxy(
     post: Post<CheckPasswordResetSendingStatusProxyMessage>,
@@ -47,10 +47,10 @@ class Proxy
         }
     }
 
-    entryPoint(feature: OutsideFeature): CheckResetTokenSendingStatusEntryPoint {
+    view(feature: OutsideFeature): CheckResetTokenSendingStatusView {
         const { currentLocation } = feature
         const detecter = newCheckResetTokenSendingStatusLocationDetecter(currentLocation)
-        return initCheckResetTokenSendingStatusEntryPoint(
+        return initCheckResetTokenSendingStatusView(
             initCheckResetTokenSendingStatusCoreAction({
                 checkStatus: (post) => this.material.checkStatus.call(detecter(), post),
             }),

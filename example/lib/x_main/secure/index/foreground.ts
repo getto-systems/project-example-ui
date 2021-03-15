@@ -1,13 +1,13 @@
 import { render, h } from "preact"
 
-import { newDashboardEntryPoint } from "../../../example/action_dashboard/init"
+import { newDashboardView } from "../../../example/action_dashboard/init"
 
-import { Dashboard } from "../../../example/action_dashboard/x_preact/dashboard"
+import { DashboardEntry } from "../../../example/action_dashboard/x_preact/dashboard"
 
 render(
     h(
-        Dashboard,
-        newDashboardEntryPoint({
+        DashboardEntry,
+        newDashboardView({
             webStorage: localStorage,
             currentLocation: location,
         }),

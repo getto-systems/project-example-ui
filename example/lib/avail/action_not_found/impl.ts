@@ -1,6 +1,6 @@
-import { NotFoundEntryPoint, NotFoundResource } from "./entry_point"
+import { NotFoundView, NotFoundResource } from "./resource"
 
-export function initNotFoundEntryPoint(resource: NotFoundResource): NotFoundEntryPoint {
+export function initNotFoundView(resource: NotFoundResource): NotFoundView {
     return {
         resource,
         terminate: () => {

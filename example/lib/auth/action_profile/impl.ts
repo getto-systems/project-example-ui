@@ -1,8 +1,8 @@
-import { initBaseEntryPoint } from "../../example/action_base/impl"
-import { ProfileResource, ProfileEntryPoint } from "./entry_point"
+import { initBaseView } from "../../example/action_base/impl"
+import { ProfileResource, ProfileView } from "./resource"
 
-export function initProfileEntryPoint(resource: ProfileResource): ProfileEntryPoint {
-    return initBaseEntryPoint(resource, () => {
+export function initProfileView(resource: ProfileResource): ProfileView {
+    return initBaseView(resource, () => {
         resource.logout.terminate()
     })
 }

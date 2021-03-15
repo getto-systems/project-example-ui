@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
@@ -23,19 +23,19 @@ import { appendScript } from "../../../../common/x_preact/script"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import { ApplicationErrorComponent } from "../../../../../../avail/common/x_preact/application_error"
-import { InputLoginID } from "../../../../login_id/action_input/x_preact/input_login_id"
-import { InputPassword } from "../../../action_input/x_preact/input_password"
+import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
+import { InputPasswordEntry } from "../../../action_input/x_preact/input_password"
 
 import {
-    ResetPasswordEntryPoint,
+    ResetPasswordView,
     ResetPasswordResource,
     ResetPasswordResourceState,
-} from "../entry_point"
+} from "../resource"
 
 import { ResetPasswordError } from "../../reset/data"
 
-export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function ResetPasswordEntry(view: ResetPasswordView): VNode {
+    const resource = useApplicationView(view)
     return h(ResetPasswordComponent, {
         ...resource,
         state: {
@@ -45,8 +45,8 @@ export function ResetPassword(entryPoint: ResetPasswordEntryPoint): VNode {
     })
 }
 
-export type ResetPasswordProps = ResetPasswordResource & ResetPasswordResourceState
-export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
+type Props = ResetPasswordResource & ResetPasswordResourceState
+export function ResetPasswordComponent(props: Props): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.core.type) {
@@ -115,11 +115,11 @@ export function ResetPasswordComponent(props: ResetPasswordProps): VNode {
             loginBox(siteInfo(), {
                 title: resetTitle(),
                 body: [
-                    h(InputLoginID, {
+                    h(InputLoginIDEntry, {
                         field: props.reset.form.loginID,
                         help: ["最初に入力したログインIDを入力してください"],
                     }),
-                    h(InputPassword, {
+                    h(InputPasswordEntry, {
                         field: props.reset.form.password,
                         help: ["新しいパスワードを入力してください"],
                     }),

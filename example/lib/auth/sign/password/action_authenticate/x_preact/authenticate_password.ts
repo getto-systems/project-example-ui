@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
@@ -24,19 +24,19 @@ import { appendScript } from "../../../common/x_preact/script"
 import { signNav } from "../../../common/nav/x_preact/nav"
 
 import { ApplicationErrorComponent } from "../../../../../avail/common/x_preact/application_error"
-import { InputLoginID } from "../../../login_id/action_input/x_preact/input_login_id"
-import { InputPassword } from "../../action_input/x_preact/input_password"
+import { InputLoginIDEntry } from "../../../login_id/action_input/x_preact/input_login_id"
+import { InputPasswordEntry } from "../../action_input/x_preact/input_password"
 
 import {
-    AuthenticatePasswordEntryPoint,
+    AuthenticatePasswordView,
     AuthenticatePasswordResource,
     AuthenticatePasswordResourceState,
-} from "../entry_point"
+} from "../resource"
 
 import { AuthenticatePasswordError } from "../../authenticate/data"
 
-export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function AuthenticatePasswordEntry(view: AuthenticatePasswordView): VNode {
+    const resource = useApplicationView(view)
     return h(AuthenticatePasswordComponent, {
         ...resource,
         state: {
@@ -46,9 +46,8 @@ export function AuthenticatePassword(entryPoint: AuthenticatePasswordEntryPoint)
     })
 }
 
-export type AuthenticatePasswordProps = AuthenticatePasswordResource &
-    AuthenticatePasswordResourceState
-export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps): VNode {
+type Props = AuthenticatePasswordResource & AuthenticatePasswordResourceState
+export function AuthenticatePasswordComponent(props: Props): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.core.type) {
@@ -120,8 +119,8 @@ export function AuthenticatePasswordComponent(props: AuthenticatePasswordProps):
             loginBox(siteInfo(), {
                 title: authenticateTitle(),
                 body: [
-                    h(InputLoginID, { field: props.authenticate.form.loginID, help: [] }),
-                    h(InputPassword, { field: props.authenticate.form.password, help: [] }),
+                    h(InputLoginIDEntry, { field: props.authenticate.form.loginID, help: [] }),
+                    h(InputPasswordEntry, { field: props.authenticate.form.password, help: [] }),
                     buttons({ left: button(), right: clearButton() }),
                 ],
                 footer: [footerLinks(), error()],
