@@ -1,8 +1,8 @@
-import { FindNextVersionEntryPoint, FindNextVersionResource } from "./entry_point"
+import { FindNextVersionView, FindNextVersionResource } from "./resource"
 
-export function initFindNextVersionEntryPoint(
+export function initFindNextVersionView(
     resource: FindNextVersionResource,
-): FindNextVersionEntryPoint {
+): FindNextVersionView {
     return {
         resource,
         terminate: () => {

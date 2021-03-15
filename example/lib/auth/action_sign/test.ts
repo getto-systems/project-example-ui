@@ -3,17 +3,17 @@ import {
     setupSyncActionTestRunner,
 } from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockAuthenticatePasswordEntryPoint } from "../sign/password/action_authenticate/mock"
-import { mockRequestResetTokenEntryPoint } from "../sign/password/reset/action_request_token/mock"
-import { mockResetPasswordEntryPoint } from "../sign/password/reset/action_reset/mock"
-import { mockCheckResetTokenSendingStatusEntryPoint } from "../sign/password/reset/action_check_status/mock"
-import { mockCheckAuthTicketEntryPoint } from "../sign/auth_ticket/action_check/mock"
+import { mockAuthenticatePasswordView } from "../sign/password/action_authenticate/mock"
+import { mockRequestResetTokenView } from "../sign/password/reset/action_request_token/mock"
+import { mockResetPasswordView } from "../sign/password/reset/action_reset/mock"
+import { mockCheckResetTokenSendingStatusView } from "../sign/password/reset/action_check_status/mock"
+import { mockCheckAuthTicketView } from "../sign/auth_ticket/action_check/mock"
 import { mockSignViewLocationDetecter } from "../sign/common/switch_view/mock"
 
 import { initSignLinkResource } from "../sign/common/nav/action_nav/impl"
 
 import { initSignAction } from "./core/impl"
-import { initSignEntryPoint } from "./impl"
+import { initSignView } from "./impl"
 
 import { SignAction, SignActionState } from "./core/action"
 
@@ -24,7 +24,7 @@ describe("SignView", () => {
         action.subscriber.subscribe((state) => {
             switch (state.type) {
                 case "check-authTicket":
-                    state.entryPoint.resource.core.ignite()
+                    state.view.resource.core.ignite()
                     return
             }
         })
@@ -52,7 +52,7 @@ describe("SignView", () => {
         action.subscriber.subscribe((state) => {
             switch (state.type) {
                 case "check-authTicket":
-                    state.entryPoint.resource.core.ignite()
+                    state.view.resource.core.ignite()
                     return
             }
         })
@@ -80,7 +80,7 @@ describe("SignView", () => {
         action.subscriber.subscribe((state) => {
             switch (state.type) {
                 case "check-authTicket":
-                    state.entryPoint.resource.core.ignite()
+                    state.view.resource.core.ignite()
                     return
             }
         })
@@ -108,7 +108,7 @@ describe("SignView", () => {
         action.subscriber.subscribe((state) => {
             switch (state.type) {
                 case "check-authTicket":
-                    state.entryPoint.resource.core.ignite()
+                    state.view.resource.core.ignite()
                     return
             }
         })
@@ -136,7 +136,7 @@ describe("SignView", () => {
         action.subscriber.subscribe((state) => {
             switch (state.type) {
                 case "check-authTicket":
-                    state.entryPoint.resource.core.ignite()
+                    state.view.resource.core.ignite()
                     return
             }
         })
@@ -177,13 +177,13 @@ describe("SignView", () => {
 
     test("terminate", (done) => {
         const { action } = standard()
-        const entryPoint = initSignEntryPoint(action)
+        const view = initSignView(action)
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: () => {
-                    entryPoint.terminate()
-                    entryPoint.resource.view.error("view error")
+                    view.terminate()
+                    view.resource.sign.error("view error")
                 },
                 examine: (stack) => {
                     // no input/validate event after terminate
@@ -192,7 +192,7 @@ describe("SignView", () => {
             },
         ])
 
-        entryPoint.resource.view.subscriber.subscribe(runner(done))
+        view.resource.sign.subscriber.subscribe(runner(done))
     })
 })
 
@@ -231,12 +231,12 @@ function initAction(currentURL: URL): SignAction {
     return initSignAction(mockSignViewLocationDetecter(currentURL), {
         link: () => initSignLinkResource(),
 
-        check: () => mockCheckAuthTicketEntryPoint(),
+        check: () => mockCheckAuthTicketView(),
 
-        password_authenticate: () => mockAuthenticatePasswordEntryPoint(),
-        password_reset: () => mockResetPasswordEntryPoint(),
-        password_reset_requestToken: () => mockRequestResetTokenEntryPoint(),
-        password_reset_checkStatus: () => mockCheckResetTokenSendingStatusEntryPoint(),
+        password_authenticate: () => mockAuthenticatePasswordView(),
+        password_reset: () => mockResetPasswordView(),
+        password_reset_requestToken: () => mockRequestResetTokenView(),
+        password_reset_checkStatus: () => mockCheckResetTokenSendingStatusView(),
     })
 }
 

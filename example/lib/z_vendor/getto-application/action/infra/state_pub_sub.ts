@@ -1,16 +1,16 @@
-import { ActionStateHandler, ActionStateSubscriber } from "../action"
+import { ApplicationActionStateHandler, ApplicationActionStateSubscriber } from "../action"
 import { ActionStatePublisher } from "../infra"
 
 export type ActionStatePubSub<S> = Readonly<{
     pub: ActionStatePublisher<S>
-    sub: ActionStateSubscriber<S>
+    sub: ApplicationActionStateSubscriber<S>
 }>
 export function initActionStatePubSub<S>(): ActionStatePubSub<S> {
     return new PubSub<S>()
 }
 
 class PubSub<S> {
-    handlers: ActionStateHandler<S>[] = []
+    handlers: ApplicationActionStateHandler<S>[] = []
 
     pub: ActionStatePublisher<S> = {
         post: (state) => {
@@ -20,7 +20,7 @@ class PubSub<S> {
             this.handlers = []
         },
     }
-    sub: ActionStateSubscriber<S> = {
+    sub: ApplicationActionStateSubscriber<S> = {
         subscribe: (handler) => {
             this.handlers = [...this.handlers, handler]
         },

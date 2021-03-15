@@ -1,10 +1,10 @@
 import { mockAuthenticatePasswordFormAction } from "./form/mock"
 import { mockAuthenticatePasswordCoreAction } from "./core/mock"
 
-import { AuthenticatePasswordEntryPoint, AuthenticatePasswordResource } from "./entry_point"
+import { AuthenticatePasswordView, AuthenticatePasswordResource } from "./resource"
 import { initSignLinkResource } from "../../common/nav/action_nav/impl"
 
-export function mockAuthenticatePasswordEntryPoint(): AuthenticatePasswordEntryPoint {
+export function mockAuthenticatePasswordView(): AuthenticatePasswordView {
     return {
         resource: mockAuthenticatePasswordResource(),
         terminate: () => null,

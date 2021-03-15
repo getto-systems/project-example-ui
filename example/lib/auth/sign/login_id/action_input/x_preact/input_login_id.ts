@@ -10,7 +10,7 @@ import {
 
 import { VNodeContent } from "../../../../../x_preact/common/design/common"
 
-import { InputBoard } from "../../../../../z_vendor/getto-application/board/action_input/x_preact/input"
+import { InputBoardComponent } from "../../../../../z_vendor/getto-application/board/action_input/x_preact/input"
 
 import { InputLoginIDResource, InputLoginIDResourceState } from "../resource"
 
@@ -19,21 +19,21 @@ import { ValidateBoardFieldState } from "../../../../../z_vendor/getto-applicati
 import { ValidateLoginIDError } from "../../data"
 
 type Resource = InputLoginIDResource & Readonly<{ help: VNodeContent[] }>
-export function InputLoginID(resource: Resource): VNode {
+export function InputLoginIDEntry(resource: Resource): VNode {
     return h(InputLoginIDComponent, {
         ...resource,
         state: useApplicationAction(resource.field.validate),
     })
 }
 
-export type InputLoginIDProps = Resource & InputLoginIDResourceState
-export function InputLoginIDComponent(props: InputLoginIDProps): VNode {
+type Props = Resource & InputLoginIDResourceState
+export function InputLoginIDComponent(props: Props): VNode {
     return label_text_fill(content())
 
     function content() {
         const content = {
             title: "ログインID",
-            body: h(InputBoard, props.field.board),
+            body: h(InputBoardComponent, props.field.board),
             help: props.help,
         }
 

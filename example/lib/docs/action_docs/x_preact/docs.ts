@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
@@ -15,14 +15,14 @@ import {
 import { copyright, siteInfo } from "../../../x_preact/common/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
+import { LoadMenuEntry } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
 import { DocsContentComponent } from "./content"
 
-import { DocsEntryPoint, DocsResource } from "../entry_point"
+import { DocsView, DocsResource } from "../resource"
 
-export function Docs(entryPoint: DocsEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function DocsEntry(view: DocsView): VNode {
+    const resource = useApplicationView(view)
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {
@@ -46,6 +46,6 @@ export function DocsComponent(resource: DocsResource): VNode {
             body: mainBody(h(DocsContentComponent, resource.docs)),
             copyright: copyright(),
         }),
-        menu: h(LoadMenu, resource),
+        menu: h(LoadMenuEntry, resource),
     })
 }

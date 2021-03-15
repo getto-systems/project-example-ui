@@ -2,19 +2,19 @@ import { newCheckAuthTicketInfra } from "../check/impl/init"
 import { newStartContinuousRenewAuthnInfoInfra } from "../start_continuous_renew/impl/init"
 import { newGetSecureScriptPathInfra } from "../../common/secure/get_script_path/impl/init"
 
-import { initCheckAuthTicketEntryPoint } from "./impl"
+import { initCheckAuthTicketView } from "./impl"
 import { initCheckAuthTicketCoreAction, initCheckAuthTicketCoreMaterial } from "./core/impl"
 
-import { CheckAuthTicketEntryPoint } from "./entry_point"
+import { CheckAuthTicketView } from "./resource"
 import { newGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/init"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
-export function newCheckAuthTicketEntryPoint(feature: OutsideFeature): CheckAuthTicketEntryPoint {
+export function newCheckAuthTicketView(feature: OutsideFeature): CheckAuthTicketView {
     const { webStorage, currentLocation } = feature
-    return initCheckAuthTicketEntryPoint(
+    return initCheckAuthTicketView(
         initCheckAuthTicketCoreAction(
             initCheckAuthTicketCoreMaterial(
                 {

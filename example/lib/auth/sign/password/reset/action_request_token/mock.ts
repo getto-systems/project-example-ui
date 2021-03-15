@@ -3,9 +3,9 @@ import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 import { mockRequestResetTokenCoreAction } from "./core/mock"
 import { mockRequestResetTokenFormAction } from "./form/mock"
 
-import { RequestResetTokenEntryPoint, RequestResetTokenResource } from "./entry_point"
+import { RequestResetTokenView, RequestResetTokenResource } from "./resource"
 
-export function mockRequestResetTokenEntryPoint(): RequestResetTokenEntryPoint {
+export function mockRequestResetTokenView(): RequestResetTokenView {
     return {
         resource: mockRequestResetTokenResource(),
         terminate: () => null,

@@ -4,7 +4,7 @@ import { mockLoadMenuResource } from "../../outline/menu/action_load_menu/mock"
 
 import { docs_example } from "../../example/docs"
 
-import { DocsResource } from "./entry_point"
+import { DocsResource } from "./resource"
 
 export function mockDocsContentResource(): DocsResource {
     return {

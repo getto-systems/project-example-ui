@@ -1,26 +1,26 @@
-import { initNotFoundEntryPoint } from "./impl"
+import { initNotFoundView } from "./impl"
 import { initGetCurrentVersionResource } from "../version/action_get_current/impl"
 import { initGetCurrentVersionCoreAction } from "../version/action_get_current/core/impl"
 
-import { NotFoundEntryPoint } from "./entry_point"
+import { NotFoundView } from "./resource"
 
 describe("NotFound", () => {
     test("terminate", () => {
-        const { entryPoint } = standard()
+        const { view } = standard()
 
         // 特に何もしないのでテストすることもないが、カバレッジのために呼び出しておく
-        entryPoint.terminate()
+        view.terminate()
     })
 })
 
 function standard() {
-    const entryPoint = initEntryPoint(standard_version())
+    const view = initView(standard_version())
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint(version: string): NotFoundEntryPoint {
-    return initNotFoundEntryPoint(
+function initView(version: string): NotFoundView {
+    return initNotFoundView(
         initGetCurrentVersionResource(
             initGetCurrentVersionCoreAction({
                 version,

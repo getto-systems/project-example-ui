@@ -1,16 +1,16 @@
 import { newFindNextVersionInfra, newFindNextVersionLocationDetecter } from "../find_next/impl/init"
 
-import { initFindNextVersionEntryPoint } from "./impl"
+import { initFindNextVersionView } from "./impl"
 import { initFindNextVersionCoreAction, initFindNextVersionCoreMaterial } from "./core/impl"
 
-import { FindNextVersionEntryPoint } from "./entry_point"
+import { FindNextVersionView } from "./resource"
 
 type OutsideFeature = Readonly<{
     currentLocation: Location
 }>
-export function newFindNextVersionEntryPoint(feature: OutsideFeature): FindNextVersionEntryPoint {
+export function newFindNextVersionView(feature: OutsideFeature): FindNextVersionView {
     const { currentLocation } = feature
-    return initFindNextVersionEntryPoint({
+    return initFindNextVersionView({
         findNext: initFindNextVersionCoreAction(
             initFindNextVersionCoreMaterial(
                 newFindNextVersionInfra(),

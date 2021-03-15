@@ -3,11 +3,11 @@ import { mockCheckResetTokenSendingStatusCoreAction } from "./core/mock"
 import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
 import {
-    CheckResetTokenSendingStatusEntryPoint,
+    CheckResetTokenSendingStatusView,
     CheckResetTokenSendingStatusResource,
-} from "./entry_point"
+} from "./resource"
 
-export function mockCheckResetTokenSendingStatusEntryPoint(): CheckResetTokenSendingStatusEntryPoint {
+export function mockCheckResetTokenSendingStatusView(): CheckResetTokenSendingStatusView {
     return {
         resource: mockCheckResetTokenSendingStatusResource(),
         terminate: () => null,

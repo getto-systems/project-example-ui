@@ -1,6 +1,6 @@
 import { h, VNode } from "preact"
 
-import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import {
     appLayout,
@@ -17,14 +17,14 @@ import { copyright, siteInfo } from "../../../x_preact/common/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadSeasonComponent } from "../../../example/common/action_load_season/x_preact/load_season"
-import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
+import { LoadMenuEntry } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
-import { Logout } from "../../sign/auth_ticket/action_logout/x_preact/logout"
+import { LogoutEntry } from "../../sign/auth_ticket/action_logout/x_preact/logout"
 
-import { ProfileEntryPoint, ProfileResource } from "../entry_point"
+import { ProfileView, ProfileResource } from "../resource"
 
-export function Profile(entryPoint: ProfileEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function ProfileEntry(view: ProfileView): VNode {
+    const resource = useApplicationView(view)
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {
@@ -41,9 +41,9 @@ export function ProfileComponent(props: ProfileResource): VNode {
         header: [h(LoadSeasonComponent, props)],
         main: appMain({
             header: mainHeader([mainTitle("プロフィール"), h(LoadBreadcrumbListComponent, props)]),
-            body: mainBody(h(Logout, props)),
+            body: mainBody(h(LogoutEntry, props)),
             copyright: copyright(),
         }),
-        menu: h(LoadMenu, props),
+        menu: h(LoadMenuEntry, props),
     })
 }

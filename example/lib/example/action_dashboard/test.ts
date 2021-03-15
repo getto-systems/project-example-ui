@@ -2,17 +2,17 @@ import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/acti
 
 import { mockBaseResource } from "../action_base/mock"
 
-import { initDashboardEntryPoint } from "./impl"
+import { initDashboardView } from "./impl"
 
 describe("Dashboard", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard()
+        const { view } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
-                    entryPoint.resource.menu.ignite()
+                    view.terminate()
+                    view.resource.menu.ignite()
 
                     setTimeout(check, 256) // wait for events.
                 },
@@ -23,16 +23,16 @@ describe("Dashboard", () => {
             },
         ])
 
-        entryPoint.resource.menu.subscriber.subscribe(runner(done))
+        view.resource.menu.subscriber.subscribe(runner(done))
     })
 })
 
 function standard() {
-    const entryPoint = initEntryPoint()
+    const view = initView()
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint() {
-    return initDashboardEntryPoint(mockBaseResource())
+function initView() {
+    return initDashboardView(mockBaseResource())
 }

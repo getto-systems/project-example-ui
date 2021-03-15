@@ -2,18 +2,18 @@ import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/acti
 
 import { mockAuthProfileResource } from "./mock"
 
-import { initProfileEntryPoint } from "./impl"
+import { initProfileView } from "./impl"
 
 describe("Profile", () => {
     test("terminate", (done) => {
-        const { entryPoint } = standard()
+        const { view } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
-                    entryPoint.resource.menu.ignite()
-                    entryPoint.resource.logout.submit()
+                    view.terminate()
+                    view.resource.menu.ignite()
+                    view.resource.logout.submit()
 
                     setTimeout(check, 256) // wait for events.
                 },
@@ -25,17 +25,17 @@ describe("Profile", () => {
         ])
 
         const handler = runner(done)
-        entryPoint.resource.menu.subscriber.subscribe(handler)
-        entryPoint.resource.logout.subscriber.subscribe(handler)
+        view.resource.menu.subscriber.subscribe(handler)
+        view.resource.logout.subscriber.subscribe(handler)
     })
 })
 
 function standard() {
-    const entryPoint = initEntryPoint()
+    const view = initView()
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint() {
-    return initProfileEntryPoint(mockAuthProfileResource())
+function initView() {
+    return initProfileView(mockAuthProfileResource())
 }

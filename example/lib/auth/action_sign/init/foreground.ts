@@ -1,33 +1,33 @@
-import { newCheckAuthTicketEntryPoint } from "../../sign/auth_ticket/action_check/init"
-import { newRequestResetTokenEntryPoint } from "../../sign/password/reset/action_request_token/init/foreground"
-import { newResetPasswordEntryPoint } from "../../sign/password/reset/action_reset/init/foreground"
+import { newCheckAuthTicketView } from "../../sign/auth_ticket/action_check/init"
+import { newRequestResetTokenView } from "../../sign/password/reset/action_request_token/init/foreground"
+import { newResetPasswordView } from "../../sign/password/reset/action_reset/init/foreground"
 import { newCheckPasswordResetSendingStatus } from "../../sign/password/reset/action_check_status/init/foreground"
-import { newAuthenticatePasswordEntryPoint } from "../../sign/password/action_authenticate/init/foreground"
+import { newAuthenticatePasswordView } from "../../sign/password/action_authenticate/init/foreground"
 import { newSignViewLocationDetecter } from "../../sign/common/switch_view/init"
 
-import { initSignEntryPoint } from "../impl"
+import { initSignView } from "../impl"
 import { initSignAction } from "../core/impl"
 
-import { SignEntryPoint } from "../entry_point"
+import { SignView } from "../resource"
 import { initSignLinkResource } from "../../sign/common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
     currentLocation: Location
 }>
-export function newSignForeground(feature: OutsideFeature): SignEntryPoint {
+export function newSignForeground(feature: OutsideFeature): SignView {
     const { currentLocation } = feature
-    return initSignEntryPoint(
+    return initSignView(
         initSignAction(newSignViewLocationDetecter(currentLocation), {
             link: () => initSignLinkResource(),
 
-            check: () => newCheckAuthTicketEntryPoint(feature),
+            check: () => newCheckAuthTicketView(feature),
 
-            password_authenticate: () => newAuthenticatePasswordEntryPoint(feature),
+            password_authenticate: () => newAuthenticatePasswordView(feature),
 
-            password_reset_requestToken: () => newRequestResetTokenEntryPoint(),
+            password_reset_requestToken: () => newRequestResetTokenView(),
             password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(feature),
-            password_reset: () => newResetPasswordEntryPoint(feature),
+            password_reset: () => newResetPasswordView(feature),
         }),
     )
 }

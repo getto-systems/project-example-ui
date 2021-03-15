@@ -1,9 +1,9 @@
-import { CheckAuthTicketEntryPoint } from "./entry_point"
+import { CheckAuthTicketView } from "./resource"
 import { CheckAuthTicketCoreAction } from "./core/action"
 
-export function initCheckAuthTicketEntryPoint(
+export function initCheckAuthTicketView(
     action: CheckAuthTicketCoreAction,
-): CheckAuthTicketEntryPoint {
+): CheckAuthTicketView {
     return {
         resource: { core: action },
         terminate: () => action.terminate(),

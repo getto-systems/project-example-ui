@@ -1,4 +1,4 @@
-export type ApplicationEntryPoint<R> = Readonly<{
+export type ApplicationView<R> = Readonly<{
     resource: R
     terminate: { (): void }
 }>
@@ -8,14 +8,14 @@ export interface ApplicationAction {
 }
 export interface ApplicationStateAction<S> extends ApplicationAction {
     readonly initialState: S
-    readonly subscriber: ActionStateSubscriber<S>
+    readonly subscriber: ApplicationActionStateSubscriber<S>
     ignite(): void
 }
 
-export interface ActionStateSubscriber<S> {
-    subscribe(handler: ActionStateHandler<S>): void
-    unsubscribe(target: ActionStateHandler<S>): void
+export interface ApplicationActionStateSubscriber<S> {
+    subscribe(handler: ApplicationActionStateHandler<S>): void
+    unsubscribe(target: ApplicationActionStateHandler<S>): void
 }
-export interface ActionStateHandler<S> {
+export interface ApplicationActionStateHandler<S> {
     (state: S): void
 }

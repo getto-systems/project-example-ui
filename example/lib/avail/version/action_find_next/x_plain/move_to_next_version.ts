@@ -1,4 +1,4 @@
-import { FindNextVersionEntryPoint } from "../entry_point"
+import { FindNextVersionView } from "../resource"
 
 import { FindNextVersionCoreState } from "../core/action"
 
@@ -7,9 +7,9 @@ import { applicationPath } from "../../find_next/impl/helper"
 import { ConvertLocationResult } from "../../../../z_vendor/getto-application/location/data"
 import { ApplicationTargetPath } from "../../find_next/data"
 
-export function MoveToNextVersion(entryPoint: FindNextVersionEntryPoint): void {
+export function MoveToNextVersionEntry(view: FindNextVersionView): void {
     // /${version}/index.html とかで実行する
-    const { findNext } = entryPoint.resource
+    const { findNext } = view.resource
     try {
         findNext.subscriber.subscribe(handleState)
         findNext.ignite()
@@ -47,13 +47,13 @@ export function MoveToNextVersion(entryPoint: FindNextVersionEntryPoint): void {
         }
 
         location.href = applicationPath(version, target)
-        entryPoint.terminate()
+        view.terminate()
     }
 
     function handleError(err: unknown) {
         // エラーはどうしようもないので console.log でお茶を濁す
         console.log(err)
-        entryPoint.terminate()
+        view.terminate()
     }
 }
 

@@ -8,7 +8,7 @@ import { markApplicationTargetPath } from "../find_next/impl/test_helper"
 import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 import { mockFindNextVersionLocationDetecter } from "../find_next/impl/mock"
 
-import { initFindNextVersionEntryPoint } from "./impl"
+import { initFindNextVersionView } from "./impl"
 import { initFindNextVersionCoreAction, initFindNextVersionCoreMaterial } from "./core/impl"
 
 import { findNextVersionEventHasDone } from "../find_next/impl/core"
@@ -17,14 +17,14 @@ import { applicationPath } from "../find_next/impl/helper"
 
 import { CheckDeployExistsRemotePod } from "../find_next/infra"
 
-import { FindNextVersionEntryPoint } from "./entry_point"
+import { FindNextVersionView } from "./resource"
 
 import { FindNextVersionCoreState } from "./core/action"
 
 describe("FindNextVersion", () => {
     test("up to date", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource
+        const { view } = standard()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -51,8 +51,8 @@ describe("FindNextVersion", () => {
     })
 
     test("up to date; take longtime", (done) => {
-        const { entryPoint } = takeLongtime()
-        const resource = entryPoint.resource
+        const { view } = takeLongtime()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -80,8 +80,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next minor version", (done) => {
-        const { entryPoint } = found(["/1.1.0/index.html"])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.1.0/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -108,8 +108,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next patch version", (done) => {
-        const { entryPoint } = found(["/1.0.1/index.html"])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.0.1/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -136,8 +136,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next minor version; recursive", (done) => {
-        const { entryPoint } = found(["/1.1.0/index.html", "/1.2.0/index.html"])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.1.0/index.html", "/1.2.0/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -164,8 +164,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next patch version; recursive", (done) => {
-        const { entryPoint } = found(["/1.0.1/index.html", "/1.0.2/index.html"])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.0.1/index.html", "/1.0.2/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -192,8 +192,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next patch version; complex", (done) => {
-        const { entryPoint } = found(["/1.1.0/index.html", "/1.1.1/index.html"])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -220,12 +220,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next patch version; complex skipped", (done) => {
-        const { entryPoint } = found([
-            "/1.1.0/index.html",
-            "/1.1.1/index.html",
-            "/1.1.3/index.html",
-        ])
-        const resource = entryPoint.resource
+        const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html", "/1.1.3/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -252,8 +248,8 @@ describe("FindNextVersion", () => {
     })
 
     test("found next minor version; complex current version", (done) => {
-        const { entryPoint } = foundComplex(["/1.1.0/index.html"])
-        const resource = entryPoint.resource
+        const { view } = foundComplex(["/1.1.0/index.html"])
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -280,8 +276,8 @@ describe("FindNextVersion", () => {
     })
 
     test("invalid version url", (done) => {
-        const { entryPoint } = invalidVersion()
-        const resource = entryPoint.resource
+        const { view } = invalidVersion()
+        const resource = view.resource
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -320,13 +316,13 @@ describe("FindNextVersion", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard()
+        const { view } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
-                    entryPoint.resource.findNext.ignite()
+                    view.terminate()
+                    view.resource.findNext.ignite()
 
                     setTimeout(check, 256) // wait for event...
                 },
@@ -337,42 +333,42 @@ describe("FindNextVersion", () => {
             },
         ])
 
-        entryPoint.resource.findNext.subscriber.subscribe(runner(done))
+        view.resource.findNext.subscriber.subscribe(runner(done))
     })
 })
 
 function standard() {
-    const entryPoint = initEntryPoint(standard_URL(), standard_version(), standard_check())
+    const view = initView(standard_URL(), standard_version(), standard_check())
 
-    return { entryPoint }
+    return { view }
 }
 function found(versions: string[]) {
-    const entryPoint = initEntryPoint(standard_URL(), standard_version(), found_check(versions))
+    const view = initView(standard_URL(), standard_version(), found_check(versions))
 
-    return { entryPoint }
+    return { view }
 }
 function foundComplex(versions: string[]) {
-    const entryPoint = initEntryPoint(complex_URL(), complex_Version(), found_check(versions))
+    const view = initView(complex_URL(), complex_Version(), found_check(versions))
 
-    return { entryPoint }
+    return { view }
 }
 function invalidVersion() {
-    const entryPoint = initEntryPoint(invalidVersion_URL(), standard_version(), standard_check())
+    const view = initView(invalidVersion_URL(), standard_version(), standard_check())
 
-    return { entryPoint }
+    return { view }
 }
 function takeLongtime() {
-    const entryPoint = initEntryPoint(standard_URL(), standard_version(), takeLongtime_check())
+    const view = initView(standard_URL(), standard_version(), takeLongtime_check())
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint(
+function initView(
     currentURL: URL,
     version: string,
     check: CheckDeployExistsRemotePod,
-): FindNextVersionEntryPoint {
-    return initFindNextVersionEntryPoint({
+): FindNextVersionView {
+    return initFindNextVersionView({
         findNext: initFindNextVersionCoreAction(
             initFindNextVersionCoreMaterial(
                 {

@@ -2,7 +2,7 @@ import { h, VNode } from "preact"
 import { useErrorBoundary } from "preact/hooks"
 import { html } from "htm/preact"
 
-import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
@@ -13,10 +13,10 @@ import { icon } from "../../../x_preact/common/design/icon"
 
 import { ApplicationErrorComponent } from "../../common/x_preact/application_error"
 
-import { NotFoundEntryPoint, NotFoundResource } from "../entry_point"
+import { NotFoundView, NotFoundResource } from "../resource"
 
-export function NotFound(entryPoint: NotFoundEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function NotFoundEntry(view: NotFoundView): VNode {
+    const resource = useApplicationView(view)
 
     const [err] = useErrorBoundary((err) => {
         // 認証していないのでエラーはどうしようもない
@@ -29,8 +29,8 @@ export function NotFound(entryPoint: NotFoundEntryPoint): VNode {
     return h(NotFoundComponent, resource)
 }
 
-export type NotFoundProps = NotFoundResource
-export function NotFoundComponent(props: NotFoundProps): VNode {
+type Props = NotFoundResource
+export function NotFoundComponent(props: Props): VNode {
     useDocumentTitle("Not Found")
 
     return loginBox(siteInfo(), {

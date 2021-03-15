@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from "preact/hooks"
 
-import { ApplicationEntryPoint, ApplicationStateAction } from "../action"
+import { ApplicationView, ApplicationStateAction } from "../action"
 
-export function useApplicationEntryPoint<R>({ resource, terminate }: ApplicationEntryPoint<R>): R {
+export function useApplicationView<R>({ resource, terminate }: ApplicationView<R>): R {
     useEffect(() => terminate, [])
     return resource
 }

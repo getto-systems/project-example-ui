@@ -2,32 +2,32 @@ import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-applicat
 
 import { SignViewLocationDetecter, SignViewType } from "../../sign/common/switch_view/data"
 
-import { initialSignViewState, SignAction, SignActionState, SignSubEntryPoint } from "./action"
+import { initialSignViewState, SignAction, SignActionState, SignSubView } from "./action"
 
 import { ConvertLocationResult } from "../../../z_vendor/getto-application/location/data"
 
 export function initSignAction(
     detecter: SignViewLocationDetecter,
-    entryPoints: SignSubEntryPoint,
+    subView: SignSubView,
 ): SignAction {
-    return new Action(detecter, entryPoints)
+    return new Action(detecter, subView)
 }
 
 class Action extends ApplicationAbstractStateAction<SignActionState> implements SignAction {
     readonly initialState = initialSignViewState
 
     detecter: SignViewLocationDetecter
-    entryPoints: SignSubEntryPoint
+    subView: SignSubView
 
-    constructor(detecter: SignViewLocationDetecter, components: SignSubEntryPoint) {
+    constructor(detecter: SignViewLocationDetecter, subView: SignSubView) {
         super()
         this.detecter = detecter
-        this.entryPoints = components
+        this.subView = subView
 
         this.igniteHook(() => {
-            const entryPoint = this.entryPoints.check()
+            const view = this.subView.check()
 
-            entryPoint.resource.core.subscriber.subscribe((state) => {
+            view.resource.core.subscriber.subscribe((state) => {
                 switch (state.type) {
                     case "required-to-login":
                         this.post(this.mapViewType(this.detecter()))
@@ -35,7 +35,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
                 }
             })
 
-            this.post({ type: "check-authTicket", entryPoint })
+            this.post({ type: "check-authTicket", view: view })
         })
     }
 
@@ -48,21 +48,21 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
             // 特に指定が無ければパスワードログイン
             return {
                 type: "password-authenticate",
-                entryPoint: this.entryPoints.password_authenticate(),
+                view: this.subView.password_authenticate(),
             }
         }
 
         const type = result.value
         switch (type) {
             case "static-privacyPolicy":
-                return { type, resource: this.entryPoints.link() }
+                return { type, resource: this.subView.link() }
 
             case "password-reset-requestToken":
-                return { type, entryPoint: this.entryPoints.password_reset_requestToken() }
+                return { type, view: this.subView.password_reset_requestToken() }
             case "password-reset-checkStatus":
-                return { type, entryPoint: this.entryPoints.password_reset_checkStatus() }
+                return { type, view: this.subView.password_reset_checkStatus() }
             case "password-reset":
-                return { type, entryPoint: this.entryPoints.password_reset() }
+                return { type, view: this.subView.password_reset() }
         }
     }
 }

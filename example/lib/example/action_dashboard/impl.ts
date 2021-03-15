@@ -1,7 +1,7 @@
-import { initBaseEntryPoint } from "../action_base/impl"
+import { initBaseView } from "../action_base/impl"
 
-import { DashboardEntryPoint, DashboardResource } from "./entry_point"
+import { DashboardView, DashboardResource } from "./resource"
 
-export function initDashboardEntryPoint(resource: DashboardResource): DashboardEntryPoint {
-    return initBaseEntryPoint(resource, () => null)
+export function initDashboardView(resource: DashboardResource): DashboardView {
+    return initBaseView(resource, () => null)
 }

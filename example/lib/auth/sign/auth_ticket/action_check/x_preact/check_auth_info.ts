@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 
 import {
     useApplicationAction,
-    useApplicationEntryPoint,
+    useApplicationView,
 } from "../../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { loginBox } from "../../../../../z_vendor/getto-css/preact/layout/login"
@@ -19,22 +19,22 @@ import { appendScript } from "../../../common/x_preact/script"
 import { ApplicationErrorComponent } from "../../../../../avail/common/x_preact/application_error"
 
 import {
-    CheckAuthTicketEntryPoint,
+    CheckAuthTicketView,
     CheckAuthTicketResource,
     CheckAuthTicketResourceState,
-} from "../entry_point"
+} from "../resource"
 import { RenewAuthTicketError } from "../../kernel/data"
 
-export function CheckAuthTicket(entryPoint: CheckAuthTicketEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function CheckAuthTicketEntry(view: CheckAuthTicketView): VNode {
+    const resource = useApplicationView(view)
     return h(CheckAuthTicketComponent, {
         ...resource,
         state: useApplicationAction(resource.core),
     })
 }
 
-export type CheckAuthTicketProps = CheckAuthTicketResource & CheckAuthTicketResourceState
-export function CheckAuthTicketComponent(props: CheckAuthTicketProps): VNode {
+type Props = CheckAuthTicketResource & CheckAuthTicketResourceState
+export function CheckAuthTicketComponent(props: Props): VNode {
     useLayoutEffect(() => {
         // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
         switch (props.state.type) {

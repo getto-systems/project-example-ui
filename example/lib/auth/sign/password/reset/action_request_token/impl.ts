@@ -1,14 +1,14 @@
 import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
-import { RequestResetTokenAction, RequestResetTokenEntryPoint } from "./entry_point"
+import { RequestResetTokenAction, RequestResetTokenView } from "./resource"
 import { RequestResetTokenCoreAction } from "./core/action"
 import { RequestResetTokenFormAction } from "./form/action"
 
-export function initRequestResetTokenEntryPoint(
+export function initRequestResetTokenView(
     actions: Readonly<{
         core: RequestResetTokenCoreAction
         form: RequestResetTokenFormAction
     }>,
-): RequestResetTokenEntryPoint {
+): RequestResetTokenView {
     const action = initAction(actions)
     return {
         resource: { requestToken: action, ...initSignLinkResource() },

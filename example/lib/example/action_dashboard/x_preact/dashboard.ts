@@ -8,7 +8,7 @@ import {
     mainTitle,
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
-import { useApplicationEntryPoint } from "../../../z_vendor/getto-application/action/x_preact/hooks"
+import { useApplicationView } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
 import { useDocumentTitle } from "../../../x_preact/common/hooks"
 
@@ -16,14 +16,14 @@ import { copyright, siteInfo } from "../../../x_preact/common/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/load_season"
-import { LoadMenu } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
+import { LoadMenuEntry } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
 import { ExampleComponent } from "../../common/action_load_season/x_preact/example"
 
-import { DashboardEntryPoint, DashboardResource } from "../entry_point"
+import { DashboardView, DashboardResource } from "../resource"
 
-export function Dashboard(entryPoint: DashboardEntryPoint): VNode {
-    const resource = useApplicationEntryPoint(entryPoint)
+export function DashboardEntry(view: DashboardView): VNode {
+    const resource = useApplicationView(view)
 
     const err = useNotifyUnexpectedError(resource)
     if (err) {
@@ -43,6 +43,6 @@ export function DashboardComponent(resource: DashboardResource): VNode {
             body: mainBody(h(ExampleComponent, resource)),
             copyright: copyright(),
         }),
-        menu: h(LoadMenu, resource),
+        menu: h(LoadMenuEntry, resource),
     })
 }

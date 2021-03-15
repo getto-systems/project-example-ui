@@ -1,12 +1,12 @@
 import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
-import { CheckResetTokenSendingStatusEntryPoint } from "./entry_point"
+import { CheckResetTokenSendingStatusView } from "./resource"
 
 import { CheckResetTokenSendingStatusCoreAction } from "./core/action"
 
-export function initCheckResetTokenSendingStatusEntryPoint(
+export function initCheckResetTokenSendingStatusView(
     action: CheckResetTokenSendingStatusCoreAction,
-): CheckResetTokenSendingStatusEntryPoint {
+): CheckResetTokenSendingStatusView {
     return {
         resource: { checkStatus: action, ...initSignLinkResource() },
         terminate: () => action.terminate(),

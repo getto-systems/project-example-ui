@@ -13,15 +13,15 @@ import { LogoutResource, LogoutResourceState } from "../resource"
 
 import { RepositoryError } from "../../../../../z_vendor/getto-application/infra/repository/data"
 
-export function Logout(resource: LogoutResource): VNode {
+export function LogoutEntry(resource: LogoutResource): VNode {
     return h(LogoutComponent, {
         ...resource,
         state: useApplicationAction(resource.logout),
     })
 }
 
-export type LogoutProps = LogoutResource & LogoutResourceState
-export function LogoutComponent(props: LogoutProps): VNode {
+type Props = LogoutResource & LogoutResourceState
+export function LogoutComponent(props: Props): VNode {
     useLayoutEffect(() => {
         switch (props.state.type) {
             case "succeed-to-logout":

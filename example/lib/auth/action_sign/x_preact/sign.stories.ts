@@ -20,7 +20,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     return h(SignComponent, {
-        view: mockSignAction(),
+        sign: mockSignAction(),
         state: state(),
     })
 

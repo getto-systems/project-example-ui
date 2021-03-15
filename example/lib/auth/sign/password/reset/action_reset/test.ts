@@ -18,7 +18,7 @@ import { mockResetPasswordLocationDetecter } from "../reset/impl/mock"
 
 import { wrapRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 
-import { initResetPasswordEntryPoint } from "./impl"
+import { initResetPasswordView } from "./impl"
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./core/impl"
 import { initResetPasswordFormAction } from "./form/impl"
 
@@ -28,12 +28,9 @@ import { startContinuousRenewEventHasDone } from "../../../auth_ticket/start_con
 import { Clock } from "../../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
 import { AuthzRepositoryPod } from "../../../auth_ticket/kernel/infra"
-import {
-    AuthnRepositoryPod,
-    RenewAuthTicketRemotePod,
-} from "../../../auth_ticket/kernel/infra"
+import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../../auth_ticket/kernel/infra"
 
-import { ResetPasswordEntryPoint } from "./entry_point"
+import { ResetPasswordView } from "./resource"
 
 import { ResetPasswordCoreState } from "./core/action"
 
@@ -50,8 +47,8 @@ const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("RegisterPassword", () => {
     test("submit valid login-id and password", (done) => {
-        const { clock, entryPoint } = standard()
-        const resource = entryPoint.resource.reset
+        const { clock, view } = standard()
+        const resource = view.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -92,8 +89,8 @@ describe("RegisterPassword", () => {
 
     test("submit valid login-id and password; with take longtime", (done) => {
         // wait for take longtime timeout
-        const { clock, entryPoint } = takeLongtime()
-        const resource = entryPoint.resource.reset
+        const { clock, view } = takeLongtime()
+        const resource = view.resource.reset
 
         resource.core.subscriber.subscribe((state) => {
             switch (state.type) {
@@ -134,8 +131,8 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without fields", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.reset
+        const { view } = standard()
+        const resource = view.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -156,8 +153,8 @@ describe("RegisterPassword", () => {
     })
 
     test("submit without resetToken", (done) => {
-        const { entryPoint } = emptyResetToken()
-        const resource = entryPoint.resource.reset
+        const { view } = emptyResetToken()
+        const resource = view.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -179,8 +176,8 @@ describe("RegisterPassword", () => {
     })
 
     test("clear", () => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.reset
+        const { view } = standard()
+        const resource = view.resource.reset
 
         resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
         resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
@@ -191,8 +188,8 @@ describe("RegisterPassword", () => {
     })
 
     test("load error", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.reset
+        const { view } = standard()
+        const resource = view.resource.reset
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -214,13 +211,13 @@ describe("RegisterPassword", () => {
     })
 
     test("terminate", (done) => {
-        const { entryPoint } = standard()
-        const resource = entryPoint.resource.reset
+        const { view } = standard()
+        const resource = view.resource.reset
 
         const runner = setupSyncActionTestRunner([
             {
                 statement: (check) => {
-                    entryPoint.terminate()
+                    view.terminate()
                     resource.form.loginID.board.input.set(markBoardValue("login-id"))
                     resource.form.password.board.input.set(markBoardValue("password"))
 
@@ -245,44 +242,44 @@ describe("RegisterPassword", () => {
 
 function standard() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function takeLongtime() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         standard_URL(),
         takeLongtime_reset(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { clock: clockPubSub, entryPoint }
+    return { clock: clockPubSub, view }
 }
 function emptyResetToken() {
     const clockPubSub = mockClockPubSub()
-    const entryPoint = initEntryPoint(
+    const view = initView(
         emptyResetToken_URL(),
         standard_reset(),
         standard_renew(clockPubSub),
         mockClock(START_AT, clockPubSub),
     )
 
-    return { entryPoint }
+    return { view }
 }
 
-function initEntryPoint(
+function initView(
     currentURL: URL,
     reset: ResetPasswordRemotePod,
     renew: RenewAuthTicketRemotePod,
     clock: Clock,
-): ResetPasswordEntryPoint {
+): ResetPasswordView {
     const authn = standard_authn()
     const authz = standard_authz()
 
@@ -291,7 +288,7 @@ function initEntryPoint(
         reset: mockResetPasswordLocationDetecter(currentURL),
     }
 
-    const entryPoint = initResetPasswordEntryPoint({
+    const view = initResetPasswordView({
         core: initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {
@@ -325,10 +322,10 @@ function initEntryPoint(
         form: initResetPasswordFormAction(),
     })
 
-    entryPoint.resource.reset.form.loginID.board.input.storeLinker.link(mockBoardValueStore())
-    entryPoint.resource.reset.form.password.board.input.storeLinker.link(mockBoardValueStore())
+    view.resource.reset.form.loginID.board.input.storeLinker.link(mockBoardValueStore())
+    view.resource.reset.form.password.board.input.storeLinker.link(mockBoardValueStore())
 
-    return entryPoint
+    return view
 }
 
 function standard_URL(): URL {

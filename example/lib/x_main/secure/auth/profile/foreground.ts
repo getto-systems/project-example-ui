@@ -1,13 +1,13 @@
 import { h, render } from "preact"
 
-import { newProfileEntryPoint } from "../../../../auth/action_profile/init"
+import { newProfileView } from "../../../../auth/action_profile/init"
 
-import { Profile } from "../../../../auth/action_profile/x_preact/profile"
+import { ProfileEntry } from "../../../../auth/action_profile/x_preact/profile"
 
 render(
     h(
-        Profile,
-        newProfileEntryPoint({
+        ProfileEntry,
+        newProfileView({
             webStorage: localStorage,
             currentLocation: location,
         }),

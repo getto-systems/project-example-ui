@@ -11,7 +11,7 @@ import {
     mainTitle,
 } from "../../../../z_vendor/getto-css/preact/layout/app"
 
-import { LoadMenu } from "../../../../outline/menu/action_load_menu/x_preact/load_menu"
+import { LoadMenuEntry } from "../../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadSeasonComponent } from "./load_season"
 
 import { markSeason } from "../../load_season/impl/test_helper"
@@ -52,7 +52,7 @@ const template = storyTemplate<MockProps>((props) => {
             body: mainBody("コンテンツ"),
             copyright: copyright(),
         }),
-        menu: h(LoadMenu, mockLoadMenuResource()),
+        menu: h(LoadMenuEntry, mockLoadMenuResource()),
     })
 
     function season(): LoadSeasonResult {

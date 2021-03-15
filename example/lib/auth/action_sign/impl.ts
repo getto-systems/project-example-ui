@@ -1,10 +1,10 @@
-import { SignEntryPoint } from "./entry_point"
+import { SignView } from "./resource"
 
 import { SignAction } from "./core/action"
 
-export function initSignEntryPoint(action: SignAction): SignEntryPoint {
+export function initSignView(action: SignAction): SignView {
     return {
-        resource: { view: action },
+        resource: { sign: action },
         terminate: () => action.terminate(),
     }
 }

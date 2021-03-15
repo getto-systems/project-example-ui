@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../../../z_vendor/storybook/preact/story"
 
-import { CheckPasswordResetSendingStatusProps, View } from "./check_reset_token_sending_status"
+import { CheckPasswordResetSendingStatusComponent } from "./check_reset_token_sending_status"
 
 import { mockCheckResetTokenSendingStatusResource } from "../mock"
 
@@ -40,7 +40,7 @@ type Props = Readonly<{
 }>
 const template = storyTemplate<Props>((props) => {
     const resource = mockCheckResetTokenSendingStatusResource()
-    return h(View, <CheckPasswordResetSendingStatusProps>{
+    return h(CheckPasswordResetSendingStatusComponent, {
         ...resource,
         state: state(),
     })

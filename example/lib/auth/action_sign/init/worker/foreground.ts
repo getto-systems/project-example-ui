@@ -1,4 +1,4 @@
-import { newCheckAuthTicketEntryPoint } from "../../../sign/auth_ticket/action_check/init"
+import { newCheckAuthTicketView } from "../../../sign/auth_ticket/action_check/init"
 import { newSignViewLocationDetecter } from "../../../sign/common/switch_view/init"
 
 import {
@@ -18,12 +18,12 @@ import {
     ResetPasswordProxy,
 } from "../../../sign/password/reset/action_reset/init/worker/foreground"
 
-import { initSignEntryPoint } from "../../impl"
+import { initSignView } from "../../impl"
 import { initSignAction } from "../../core/impl"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
-import { SignEntryPoint } from "../../entry_point"
+import { SignView } from "../../resource"
 import { initSignLinkResource } from "../../../sign/common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
@@ -31,35 +31,35 @@ type OutsideFeature = Readonly<{
     currentLocation: Location
     worker: Worker
 }>
-export function newSignWorkerForeground(feature: OutsideFeature): SignEntryPoint {
+export function newSignWorkerForeground(feature: OutsideFeature): SignView {
     const { currentLocation, worker } = feature
     const proxy = initProxy(postForegroundMessage)
 
-    const view = initSignAction(newSignViewLocationDetecter(currentLocation), {
+    const sign = initSignAction(newSignViewLocationDetecter(currentLocation), {
         link: () => initSignLinkResource(),
 
-        check: () => newCheckAuthTicketEntryPoint(feature),
+        check: () => newCheckAuthTicketView(feature),
 
-        password_authenticate: () => proxy.password.authenticate.entryPoint(feature),
-        password_reset_requestToken: () => proxy.password.reset.requestToken.entryPoint(),
-        password_reset_checkStatus: () => proxy.password.reset.checkStatus.entryPoint(feature),
-        password_reset: () => proxy.password.reset.reset.entryPoint(feature),
+        password_authenticate: () => proxy.password.authenticate.view(feature),
+        password_reset_requestToken: () => proxy.password.reset.requestToken.view(),
+        password_reset_checkStatus: () => proxy.password.reset.checkStatus.view(feature),
+        password_reset: () => proxy.password.reset.reset.view(feature),
     })
 
     const messageHandler = initBackgroundMessageHandler(proxy, (err: string) => {
-        view.error(err)
+        sign.error(err)
     })
 
     worker.addEventListener("message", (event) => {
         messageHandler(event.data)
     })
 
-    const entryPoint = initSignEntryPoint(view)
+    const view = initSignView(sign)
     return {
-        resource: entryPoint.resource,
+        resource: view.resource,
         terminate: () => {
             worker.terminate()
-            entryPoint.terminate()
+            view.terminate()
         },
     }
 

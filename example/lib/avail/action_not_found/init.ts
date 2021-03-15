@@ -1,11 +1,11 @@
 import { newGetCurrentVersionResource } from "../version/action_get_current/init"
 
-import { initNotFoundEntryPoint } from "./impl"
+import { initNotFoundView } from "./impl"
 
-import { NotFoundEntryPoint } from "./entry_point"
+import { NotFoundView } from "./resource"
 
-export function newNotFoundEntryPoint(): NotFoundEntryPoint {
-    return initNotFoundEntryPoint({
+export function newNotFoundView(): NotFoundView {
+    return initNotFoundView({
         ...newGetCurrentVersionResource(),
     })
 }
