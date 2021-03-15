@@ -1,3 +1,5 @@
+import { RemoteCommonError } from "../../../../../z_vendor/getto-application/infra/remote/data"
+
 import { LoginID } from "../../../login_id/data"
 
 export type RequestResetTokenFields = Readonly<{
@@ -9,8 +11,5 @@ export type RequestResetTokenError =
     | RequestResetTokenRemoteError
 
 export type RequestResetTokenRemoteError =
-    | Readonly<{ type: "bad-request" }>
+    | RemoteCommonError
     | Readonly<{ type: "invalid-password-reset" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>

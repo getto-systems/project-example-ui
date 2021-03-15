@@ -1,4 +1,4 @@
-import { ApiResult } from "../../../../../data"
+import { ApiCommonError, ApiResult } from "../../../../../data"
 import { parseErrorMessage } from "../../../common"
 import { ParseErrorResult } from "../../../data"
 
@@ -12,12 +12,9 @@ type SendingTokenResult =
 type SendingTokenError = "failed-to-connect-message-service"
 
 type RemoteError =
-    | Readonly<{ type: "bad-request" }>
+    | ApiCommonError
     | Readonly<{ type: "invalid-password-reset" }>
     | Readonly<{ type: "already-reset" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>
 
 interface GetSendingStatus {
     (sessionID: SendSessionID): Promise<RemoteResult>

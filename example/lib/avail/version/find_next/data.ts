@@ -7,7 +7,10 @@ export type ParseVersionResult =
     | Readonly<{ valid: true; value: Version }>
     | Readonly<{ valid: false }>
 
-export type FindNextVersionError = Readonly<{ type: "failed-to-check"; err: CheckDeployExistsError }>
+export type FindNextVersionError = Readonly<{
+    type: "failed-to-check"
+    err: CheckDeployExistsError
+}>
 
 export type CheckDeployExistsError = CheckDeployExistsRemoteError
 export type CheckDeployExistsRemoteError =

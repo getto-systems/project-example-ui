@@ -1,10 +1,8 @@
-import { ApiError, ApiResult } from "../../../data"
+import { ApiCommonError, ApiResult } from "../../../data"
 
 type SendAuthnNonce = string
 type ClearResult = ApiResult<true, RemoteError>
-type RemoteError =
-    | ApiError
-    | Readonly<{ type: "bad-request" }>
+type RemoteError = ApiCommonError
 
 interface Renew {
     (apiServerURL: string): { (nonce: SendAuthnNonce): Promise<ClearResult> }

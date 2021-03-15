@@ -1,8 +1,4 @@
-export type ApiResult<V, E> =
-    | Readonly<{ success: true; value: V }>
-    | Readonly<{ success: false; err: E }>
-
-export type ApiCommonError =
+export type RemoteCommonError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>

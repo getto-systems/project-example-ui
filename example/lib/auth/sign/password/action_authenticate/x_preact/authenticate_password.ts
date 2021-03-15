@@ -34,6 +34,7 @@ import {
 } from "../resource"
 
 import { AuthenticatePasswordError } from "../../authenticate/data"
+import { remoteCommonError } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function AuthenticatePasswordEntry(view: AuthenticatePasswordView): VNode {
     const resource = useApplicationView(view)
@@ -226,28 +227,15 @@ function loginError(err: AuthenticatePasswordError): VNodeContent[] {
         case "validation-error":
             return ["正しく入力してください"]
 
-        case "bad-request":
-            return ["アプリケーションエラーにより認証に失敗しました"]
-
         case "invalid-password-login":
             return ["ログインIDかパスワードが違います"]
 
+        case "bad-request":
         case "server-error":
-            return ["サーバーエラーにより認証に失敗しました"]
-
         case "bad-response":
-            return ["レスポンスエラーにより認証に失敗しました", ...detail(err.err)]
-
         case "infra-error":
-            return ["ネットワークエラーにより認証に失敗しました", ...detail(err.err)]
+            return remoteCommonError(err, (reason) => `${reason}により認証に失敗しました`)
     }
-}
-
-function detail(err: string): string[] {
-    if (err.length === 0) {
-        return []
-    }
-    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT = html``

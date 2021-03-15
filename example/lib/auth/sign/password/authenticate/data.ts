@@ -1,3 +1,4 @@
+import { RemoteCommonError } from "../../../../z_vendor/getto-application/infra/remote/data"
 import { LoginID } from "../../login_id/data"
 import { Password } from "../data"
 
@@ -11,8 +12,5 @@ export type AuthenticatePasswordError =
     | AuthenticatePasswordRemoteError
 
 export type AuthenticatePasswordRemoteError =
-    | Readonly<{ type: "bad-request" }>
+    | RemoteCommonError
     | Readonly<{ type: "invalid-password-login" }>
-    | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>

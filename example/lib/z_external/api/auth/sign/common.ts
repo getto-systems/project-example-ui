@@ -3,11 +3,11 @@ import { ApiCredentialMessage } from "../../y_protobuf/credential_pb.js"
 import { decodeBase64StringToUint8Array } from "../../../../z_vendor/base64/transform"
 
 import { AuthResponse, ParseErrorResult } from "./data"
-import { ApiError, ApiResult } from "../../data"
+import { ApiCommonError, ApiResult } from "../../data"
 
 export async function parseAuthResponse(
     response: Response,
-): Promise<ApiResult<AuthResponse, ApiError>> {
+): Promise<ApiResult<AuthResponse, ApiCommonError>> {
     try {
         // TODO AUTHN-NONCE にしたい
         const nonce = getHeader("X-GETTO-EXAMPLE-ID-TICKET-NONCE")

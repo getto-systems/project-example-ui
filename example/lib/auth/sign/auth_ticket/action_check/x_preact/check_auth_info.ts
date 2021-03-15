@@ -24,6 +24,7 @@ import {
     CheckAuthTicketResourceState,
 } from "../resource"
 import { RenewAuthTicketError } from "../../kernel/data"
+import { remoteCommonError } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function CheckAuthTicketEntry(view: CheckAuthTicketView): VNode {
     const resource = useApplicationView(view)
@@ -137,24 +138,11 @@ export function CheckAuthTicketComponent(props: Props): VNode {
 function renewError(err: RenewAuthTicketError): VNodeContent[] {
     switch (err.type) {
         case "bad-request":
-            return ["認証情報の送信処理でエラーが発生しました"]
-
         case "server-error":
-            return ["サーバーの認証処理でエラーが発生しました"]
-
         case "bad-response":
-            return ["サーバーから送信されたデータがエラーでした", ...detail(err.err)]
-
         case "infra-error":
-            return ["ネットワーク通信時にエラーが発生しました", ...detail(err.err)]
+            return remoteCommonError(err, (reason) => `${reason}により認証に失敗しました`)
     }
-}
-
-function detail(err: string): string[] {
-    if (err.length === 0) {
-        return []
-    }
-    return [`(詳細: ${err})`]
 }
 
 const EMPTY_CONTENT: VNode = html``

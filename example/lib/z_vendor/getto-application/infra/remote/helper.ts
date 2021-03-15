@@ -1,3 +1,4 @@
+import { RemoteCommonError } from "./data"
 import { Remote, RemotePod, RemoteResult } from "./infra"
 
 export function wrapRemote<M, V, R, E>(
@@ -23,4 +24,30 @@ export function wrapRemote<M, V, R, E>(
 
 export function passThroughRemoteValue<T>(value: T): T {
     return value
+}
+
+export function remoteCommonError(
+    err: RemoteCommonError,
+    message: { (reason: string): string },
+): string[] {
+    switch (err.type) {
+        case "bad-request":
+            return [message("アプリケーションエラー")]
+
+        case "server-error":
+            return [message("サーバーエラー")]
+
+        case "bad-response":
+            return [message("レスポンスエラー"), ...detail(err.err)]
+
+        case "infra-error":
+            return [message("ネットワークエラー"), ...detail(err.err)]
+    }
+
+    function detail(message: string): string[] {
+        if (message.length === 0) {
+            return []
+        }
+        return [`(詳細: ${message})`]
+    }
 }
