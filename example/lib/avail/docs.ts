@@ -49,7 +49,9 @@ export const docs_avail_detail: DocsSection[] = [
         ]),
     ]),
     docsSection("最新版にアップデート", [
-        docsModule(["新しいバージョンのデプロイを確認", "デプロイされているなら最新版に移行"]),
+        docsModule(["新しいバージョンを確認", "最新版に移行"]),
     ]),
-    docsSection("発生したエラーを収集", [docsModule(["実行時エラーをサーバーに送信"])]),
+    docsSection("発生したエラーを収集", [
+        docsModule(["実行時エラーをサーバーに送信", "送信されたエラーを解析"]),
+    ]),
 ]

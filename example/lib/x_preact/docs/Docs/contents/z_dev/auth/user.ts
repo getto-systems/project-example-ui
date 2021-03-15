@@ -6,11 +6,8 @@ import { v_medium } from "../../../../../../z_vendor/getto-css/preact/design/ali
 
 import { itemsSection } from "../../../box"
 
-import { content_auth_user } from "../../auth"
-
 export const content_development_auth_user = (): VNode[] => [
     container([
-        content_auth_user(),
         box({
             title: "業務で必要な時に使用するために",
             body: [

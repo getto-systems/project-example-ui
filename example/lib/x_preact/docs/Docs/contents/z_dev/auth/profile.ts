@@ -17,11 +17,8 @@ import {
     validate,
 } from "../../../box"
 
-import { content_auth_profile } from "../../auth"
-
 export const content_development_auth_profile = (): VNode[] => [
     container([
-        content_auth_profile(),
         box({
             title: "業務で必要な時に使用するために",
             body: [
@@ -85,7 +82,7 @@ const passwordReset = () => [
                     "API トークン発行",
                     "コンテンツトークン発行",
                 ]),
-                []
+                [],
             ),
             fromApiServer("リセットセッションID", []),
             toTextMessage("リセットトークン", []),
@@ -100,7 +97,10 @@ const passwordReset = () => [
         title: "リセットトークン送信状態の確認",
         body: [
             toApiServer(items(["リセットセッションID"]), []),
-            inApiServer(items([validate("リセットセッションID 検証"), "リセットステータス取得"]), []),
+            inApiServer(
+                items([validate("リセットセッションID 検証"), "リセットステータス取得"]),
+                [],
+            ),
             fromApiServer("リセットステータス", ["リセットトークン送信状態"]),
             hr,
             itemsSection("リセットセッションID 検証", [
@@ -138,7 +138,7 @@ const passwordReset = () => [
                     "API トークン発行",
                     "コンテンツトークン発行",
                 ]),
-                []
+                [],
             ),
             fromApiServer("認証トークン", [
                 "チケットトークン",
@@ -176,7 +176,10 @@ const passwordChange = () => [
         title: "ログインID 取得",
         body: [
             toApiServer("チケットトークン", ["cookie + nonce"]),
-            inApiServer(items([validate("チケットトークン検証"), validate("チケット有効期限検証")]), []),
+            inApiServer(
+                items([validate("チケットトークン検証"), validate("チケット有効期限検証")]),
+                [],
+            ),
             fromApiServer("ログインID", ["パスワードを変更しようとしているログインID を表示"]),
             hr,
             itemsSection("認証トークンを失効させる検証", [
@@ -209,7 +212,7 @@ const passwordChange = () => [
                     validate("新パスワード検証"),
                     "パスワード変更",
                 ]),
-                []
+                [],
             ),
             hr,
             itemsSection("認証トークンを失効させる検証", [
@@ -242,7 +245,7 @@ const logout = () => [
                     validate("チケット有効期限検証"),
                     "チケット有効期限無効化",
                 ]),
-                []
+                [],
             ),
             hr,
             html`<p>ログアウトで認証情報は失効</p>`,
