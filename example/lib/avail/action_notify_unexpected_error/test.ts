@@ -2,7 +2,7 @@ import { AuthzRepositoryPod } from "../../auth/sign/auth_ticket/kernel/infra"
 import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
 import { wrapRepository } from "../../z_vendor/getto-application/infra/repository/helper"
 import { mockDB } from "../../z_vendor/getto-application/infra/repository/mock"
-import { NotifyUnexpectedErrorRemotePod } from "../unexpected_error/infra"
+import { NotifyUnexpectedErrorRemotePod } from "../notify_unexpected_error/infra"
 import { initNotifyUnexpectedErrorCoreAction } from "./core/impl"
 import { initNotifyUnexpectedErrorResource } from "./impl"
 

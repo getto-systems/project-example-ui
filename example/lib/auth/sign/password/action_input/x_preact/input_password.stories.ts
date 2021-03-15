@@ -25,7 +25,7 @@ enum CharacterEnum {
 }
 
 export default {
-    title: "library/Auth/Common/Fields/InputPassword",
+    title: "library/Auth/Common/Fields/Input Password",
     argTypes: {
         validate: {
             control: { type: "select", options: enumKeys(ValidateEnum) },

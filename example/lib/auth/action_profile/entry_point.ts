@@ -1,4 +1,4 @@
-import { BaseTypes } from "../../example/view_base/entry_point"
+import { BaseTypes } from "../../example/action_base/entry_point"
 import { LogoutResource } from "../sign/auth_ticket/action_logout/resource"
 
 type ProfileTypes = BaseTypes<Resource>

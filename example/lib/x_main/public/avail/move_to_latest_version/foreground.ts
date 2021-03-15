@@ -1,8 +1,8 @@
 import { h, render } from "preact"
 
-import { newFindNextVersionEntryPoint } from "../../../../avail/version/view_find_next/init"
+import { newFindNextVersionEntryPoint } from "../../../../avail/version/action_find_next/init"
 
-import { MoveToLatestVersion } from "../../../../avail/version/view_find_next/x_preact/move_to_latest_version"
+import { MoveToLatestVersion } from "../../../../avail/version/action_find_next/x_preact/move_to_latest_version"
 
 render(
     h(

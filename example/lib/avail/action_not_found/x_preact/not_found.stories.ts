@@ -8,7 +8,7 @@ import { initGetCurrentVersionResource } from "../../version/action_get_current/
 import { initGetCurrentVersionCoreAction } from "../../version/action_get_current/core/impl"
 
 export default {
-    title: "main/public/Avail/NotFound",
+    title: "main/public/Avail/Not Found",
     parameters: {
         layout: "fullscreen",
     },

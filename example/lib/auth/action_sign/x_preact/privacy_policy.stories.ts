@@ -7,7 +7,7 @@ import { PrivacyPolicyComponent } from "./privacy_policy"
 import { initSignLinkResource } from "../../sign/common/nav/action_nav/impl"
 
 export default {
-    title: "main/public/Auth/Sign/PrivacyPolicy",
+    title: "main/public/Auth/Sign/Privacy Policy",
     parameters: {
         layout: "fullscreen",
     },

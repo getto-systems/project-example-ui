@@ -23,7 +23,7 @@ enum CheckStatusEnum {
 }
 
 export default {
-    title: "main/public/Auth/Sign/Password/Reset/CheckStatus",
+    title: "main/public/Auth/Sign/Password/Reset/Check Status",
     parameters: {
         layout: "fullscreen",
     },

@@ -23,7 +23,7 @@ enum RequestEnum {
 }
 
 export default {
-    title: "main/public/Auth/Sign/Password/Reset/RequestToken",
+    title: "main/public/Auth/Sign/Password/Reset/Request Token",
     parameters: {
         layout: "fullscreen",
     },

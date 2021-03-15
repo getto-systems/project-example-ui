@@ -12,7 +12,7 @@ enum LoadEnum {
 }
 
 export default {
-    title: "library/Outline/LoadBreadcrumbList",
+    title: "library/Outline/Load Breadcrumb List",
     argTypes: {
         load: {
             control: { type: "select", options: enumKeys(LoadEnum) },

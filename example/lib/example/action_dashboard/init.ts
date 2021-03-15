@@ -1,4 +1,4 @@
-import { newBaseResource } from "../view_base/init"
+import { newBaseResource } from "../action_base/init"
 
 import { DashboardEntryPoint } from "./entry_point"
 import { initDashboardEntryPoint } from "./impl"

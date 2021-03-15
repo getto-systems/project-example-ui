@@ -1,4 +1,4 @@
-import { versionStringConfigConverter } from "../common/converter"
+import { versionStringConfigConverter } from "../converter"
 
 import { GetCurrentVersionInfra } from "./infra"
 
