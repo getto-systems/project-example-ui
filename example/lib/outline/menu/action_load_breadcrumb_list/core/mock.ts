@@ -4,7 +4,7 @@ import { LoadBreadcrumbListCoreAction } from "./action"
 
 import { BreadcrumbList } from "../../load_breadcrumb_list/data"
 
-export function initMockLoadBreadcrumbListCoreAction(
+export function mockLoadBreadcrumbListCoreAction(
     breadcrumbList: BreadcrumbList,
 ): LoadBreadcrumbListCoreAction {
     return {
@@ -12,10 +12,10 @@ export function initMockLoadBreadcrumbListCoreAction(
     }
 }
 
-export function standard_MockBreadcrumbList(): BreadcrumbList {
-    return initMockBreadcrumbList("ホーム")
+export function mockBreadcrumbList_home(): BreadcrumbList {
+    return mockBreadcrumbList("ホーム")
 }
-export function initMockBreadcrumbList(label: string): BreadcrumbList {
+export function mockBreadcrumbList(label: string): BreadcrumbList {
     return [
         {
             type: "category",
