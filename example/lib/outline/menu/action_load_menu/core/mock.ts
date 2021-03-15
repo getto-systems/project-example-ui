@@ -5,7 +5,7 @@ import { appendMenuCategoryPath, toMenuCategory, toMenuItem } from "../../kernel
 
 import { initialLoadMenuCoreState, LoadMenuCoreAction, LoadMenuCoreState } from "./action"
 
-export function initMockLoadMenuCoreAction(menu: Menu): LoadMenuCoreAction {
+export function mockLoadMenuCoreAction(menu: Menu): LoadMenuCoreAction {
     return new Action(menu)
 }
 
@@ -25,10 +25,10 @@ class Action extends ApplicationMockStateAction<LoadMenuCoreState> implements Lo
     }
 }
 
-export function standard_MockMenu(): Menu {
-    return initMockMenu("ホーム", "lnir lnir-home", 10)
+export function mockMenu_home(): Menu {
+    return mockMenu("ホーム", "lnir lnir-home", 10)
 }
-export function initMockMenu(label: string, icon: string, badgeCount: number): Menu {
+export function mockMenu(label: string, icon: string, badgeCount: number): Menu {
     const category = { label: "MAIN", permission: { type: "allow" } } as const
     return [
         {

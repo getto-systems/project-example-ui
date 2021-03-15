@@ -1,15 +1,16 @@
 import { mockNotifyUnexpectedErrorResource } from "../../avail/action_unexpected_error/mock"
 import { mockLoadBreadcrumbListResource } from "../../outline/menu/action_load_breadcrumb_list/mock"
 import { mockLoadMenuResource } from "../../outline/menu/action_load_menu/mock"
-import { mockLoadSeasonResource } from "../common/action_load_season/mock"
 
-import { BaseResource } from "./entry_point"
+import { docs_example } from "../../example/docs"
 
-export function mockBaseResource(): BaseResource {
+import { DocsResource } from "./entry_point"
+
+export function mockDocsContentResource(): DocsResource {
     return {
         ...mockNotifyUnexpectedErrorResource(),
         ...mockLoadBreadcrumbListResource(),
         ...mockLoadMenuResource(),
-        ...mockLoadSeasonResource(),
+        docs: { title: "Docs", contents: [[docs_example]] },
     }
 }

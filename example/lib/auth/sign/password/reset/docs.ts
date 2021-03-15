@@ -147,5 +147,9 @@ export const docs_auth_sign_resetPassword_description: DocsSection[] = [
                 help: ["各トークンは cookie へ登録"],
             }),
         ]),
+        docsNote([
+            "リセットトークンに紐づいたセッションがが存在しないならエラー",
+            "セッション完了なら完了済みエラー",
+        ]),
     ]),
 ]

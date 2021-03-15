@@ -3,11 +3,17 @@ import { ApplicationEntryPoint } from "../../z_vendor/getto-application/action/a
 import { NotifyUnexpectedErrorResource } from "../../avail/action_unexpected_error/resource"
 import { LoadBreadcrumbListResource } from "../../outline/menu/action_load_breadcrumb_list/resource"
 import { LoadMenuResource } from "../../outline/menu/action_load_menu/resource"
-import { LoadDocsContentPathResource } from "../action_load_content/resource"
+import { DocsSection } from "../../z_vendor/getto-application/docs/data"
 
-export type DocsContentEntryPoint = ApplicationEntryPoint<DocsContentResource>
+export type DocsEntryPoint = ApplicationEntryPoint<DocsResource>
 
-export type DocsContentResource = NotifyUnexpectedErrorResource &
+export type DocsResource = NotifyUnexpectedErrorResource &
     LoadBreadcrumbListResource &
     LoadMenuResource &
-    LoadDocsContentPathResource
+    DocsContent
+export type DocsContent = Readonly<{
+    docs: Readonly<{
+        title: string
+        contents: DocsSection[][][]
+    }>
+}>
