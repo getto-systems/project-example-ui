@@ -26,11 +26,7 @@ import { ApplicationErrorComponent } from "../../../../../../avail/common/x_prea
 import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
 import { InputPasswordEntry } from "../../../action_input/x_preact/input_password"
 
-import {
-    ResetPasswordView,
-    ResetPasswordResource,
-    ResetPasswordResourceState,
-} from "../resource"
+import { ResetPasswordView, ResetPasswordResource, ResetPasswordResourceState } from "../resource"
 
 import { ResetPasswordError } from "../../reset/data"
 
@@ -227,7 +223,13 @@ function resetError(err: ResetPasswordError): VNodeContent[] {
             return ["アプリケーションエラーにより認証に失敗しました"]
 
         case "invalid-password-reset":
-            return ["ログインIDが最初に入力したものと違います"]
+            return ["ログインIDが最初に入力したものと違うか、有効期限が切れています"]
+
+        case "already-reset":
+            return [
+                "すでにリセット済みです",
+                "もう一度リセットする場合はトークンの送信からやり直してください",
+            ]
 
         case "server-error":
             return ["サーバーエラーにより認証に失敗しました"]

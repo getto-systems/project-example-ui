@@ -12,6 +12,7 @@ export type CheckResetTokenSendingStatusRemoteError =
     | Readonly<{ type: "empty-session-id" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "already-reset" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>

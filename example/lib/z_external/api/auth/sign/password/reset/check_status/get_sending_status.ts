@@ -14,6 +14,7 @@ type SendingTokenError = "failed-to-connect-message-service"
 type RemoteError =
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "already-reset" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
     | Readonly<{ type: "infra-error"; err: string }>
@@ -51,6 +52,7 @@ export function newApi_GetResetTokenSendingStatus(apiServerURL: string): GetSend
         switch (result.message) {
             case "bad-request":
             case "invalid-password-reset":
+            case "already-reset":
                 return { type: result.message }
 
             default:

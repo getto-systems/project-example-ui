@@ -17,6 +17,7 @@ type RawResetResult = ApiResult<AuthResponse, RemoteError>
 type RemoteError =
     | ApiError
     | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "already-reset" }>
     | Readonly<{ type: "bad-request" }>
 
 interface Reset {
@@ -45,6 +46,7 @@ export function newApi_ResetPassword(apiServerURL: string): Reset {
         switch (result.message) {
             case "bad-request":
             case "invalid-password-reset":
+            case "already-reset":
                 return { type: result.message }
 
             default:
