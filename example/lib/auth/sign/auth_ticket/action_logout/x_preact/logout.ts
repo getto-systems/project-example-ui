@@ -12,6 +12,7 @@ import { v_small } from "../../../../../z_vendor/getto-css/preact/design/alignme
 import { LogoutResource, LogoutResourceState } from "../resource"
 
 import { RepositoryError } from "../../../../../z_vendor/getto-application/infra/repository/data"
+import { ClearAuthTicketError } from "../../clear/data"
 
 export function LogoutEntry(resource: LogoutResource): VNode {
     return h(LogoutComponent, {
@@ -37,12 +38,18 @@ export function LogoutComponent(props: Props): VNode {
             return logoutBox({ success: true })
 
         case "failed-to-logout":
-            return logoutBox({ success: false, err: props.state.err })
+            return logoutBox({ success: false, err: { type: "repository", err: props.state.err } })
+
+        case "failed-to-clear":
+            return logoutBox({ success: false, err: { type: "remote", err: props.state.err } })
     }
 
     type LogoutBoxContent =
         | Readonly<{ success: true }>
-        | Readonly<{ success: false; err: RepositoryError }>
+        | Readonly<{ success: false; err: LogoutBoxError }>
+    type LogoutBoxError =
+        | Readonly<{ type: "repository"; err: RepositoryError }>
+        | Readonly<{ type: "remote"; err: ClearAuthTicketError }>
 
     function logoutBox(content: LogoutBoxContent): VNode {
         return box({
@@ -71,11 +78,39 @@ export function LogoutComponent(props: Props): VNode {
                 ...detail(content.err),
             ]
 
-            function detail(err: RepositoryError): VNode[] {
-                if (err.err.length === 0) {
+            function detail(err: LogoutBoxError): VNode[] {
+                switch (err.type) {
+                    case "repository":
+                        return errorDetail(err.err.err).map(p)
+
+                    case "remote":
+                        return remoteError(err.err).map(p)
+                }
+
+                function p(message: string): VNode {
+                    return html`<p>${message}</p>`
+                }
+            }
+            function remoteError(err: ClearAuthTicketError): string[] {
+                switch (err.type) {
+                    case "bad-request":
+                        return ["認証情報の送信処理でエラーが発生しました"]
+
+                    case "server-error":
+                        return ["サーバーの認証処理でエラーが発生しました"]
+
+                    case "bad-response":
+                        return ["サーバーから送信されたデータがエラーでした", ...errorDetail(err.err)]
+
+                    case "infra-error":
+                        return ["ネットワーク通信時にエラーが発生しました", ...errorDetail(err.err)]
+                }
+            }
+            function errorDetail(err: string): string[] {
+                if (err.length === 0) {
                     return []
                 }
-                return [html`<p>詳細: ${err.err}</p>`]
+                return [`詳細: ${err}`]
             }
         }
     }

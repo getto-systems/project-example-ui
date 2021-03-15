@@ -14,6 +14,9 @@ import { AuthnRepositoryPod } from "../kernel/infra"
 
 import { LogoutResource } from "./resource"
 import { LogoutCoreState } from "./core/action"
+import { ClearAuthTicketRemotePod } from "../clear/infra"
+import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remote/mock"
+import { clearAuthTicketEventHasDone } from "../clear/impl/core"
 
 describe("Logout", () => {
     test("clear", (done) => {
@@ -67,6 +70,7 @@ function initResource(authn: AuthnRepositoryPod, authz: AuthzRepositoryPod): Log
             initLogoutCoreMaterial({
                 authn,
                 authz,
+                clear: standard_clear()
             }),
         ),
     )
@@ -89,13 +93,16 @@ function standard_authz(): AuthzRepositoryPod {
     return wrapRepository(db)
 }
 
+function standard_clear(): ClearAuthTicketRemotePod {
+    return mockRemotePod(() => ({ success: true, value: true }), { wait_millisecond: 0 })
+}
+
 function actionHasDone(state: LogoutCoreState): boolean {
     switch (state.type) {
         case "initial-logout":
             return false
 
-        case "succeed-to-logout":
-        case "failed-to-logout":
-            return true
+        default:
+            return clearAuthTicketEventHasDone(state)
     }
 }
