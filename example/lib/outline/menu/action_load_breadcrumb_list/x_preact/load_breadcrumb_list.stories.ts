@@ -4,7 +4,7 @@ import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/s
 
 import { LoadBreadcrumbListComponent } from "./load_breadcrumb_list"
 
-import { initMockBreadcrumbList, initMockLoadBreadcrumbListCoreAction } from "../core/mock"
+import { mockBreadcrumbList, mockLoadBreadcrumbListCoreAction } from "../core/mock"
 
 enum LoadEnum {
     "home",
@@ -12,7 +12,7 @@ enum LoadEnum {
 }
 
 export default {
-    title: "library/Outline/Load Breadcrumb List",
+    title: "library/Outline/Menu/Load Breadcrumb List",
     argTypes: {
         load: {
             control: { type: "select", options: enumKeys(LoadEnum) },
@@ -26,7 +26,7 @@ type MockProps = Readonly<{
 }>
 const template = storyTemplate<MockProps>((props) => {
     return h(LoadBreadcrumbListComponent, {
-        breadcrumbList: initMockLoadBreadcrumbListCoreAction(initMockBreadcrumbList(props.label)),
+        breadcrumbList: mockLoadBreadcrumbListCoreAction(mockBreadcrumbList(props.label)),
     })
 })
 
