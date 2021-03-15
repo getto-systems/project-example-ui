@@ -1,9 +1,12 @@
+import { passThroughRemoteValue } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 import { authzRepositoryConverter } from "../../kernel/converter"
-import { StoreRepositoryResult } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 import { authnRepositoryConverter } from "../../kernel/converter"
+
+import { StoreRepositoryResult } from "../../../../../z_vendor/getto-application/infra/repository/infra"
 import { ClearAuthTicketInfra } from "../infra"
 
 import { ClearAuthTicketMethod } from "../method"
+import { ClearAuthTicketEvent } from "../event"
 
 interface Clear {
     (infra: ClearAuthTicketInfra): ClearAuthTicketMethod
@@ -11,6 +14,28 @@ interface Clear {
 export const clearAuthTicket: Clear = (infra) => async (post) => {
     const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
+    const clear = infra.clear(passThroughRemoteValue)
+
+    const authnResult = authn.get()
+    if (!authnResult.success) {
+        post({ type: "failed-to-logout", err: authnResult.err })
+        return
+    }
+    if (!authnResult.found) {
+        // authn が保存されていなければ authz のクリアだけ行う
+        if (!handleResult(authz.remove())) {
+            return
+        }
+
+        post({ type: "succeed-to-logout" })
+        return
+    }
+
+    const clearResponse = await clear(authnResult.value.nonce)
+    if (!clearResponse.success) {
+        post({ type: "failed-to-clear", err: clearResponse.err })
+        return
+    }
 
     if (!handleResult(authn.remove()) || !handleResult(authz.remove())) {
         return
@@ -24,4 +49,8 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
         }
         return result.success
     }
+}
+
+export function clearAuthTicketEventHasDone(_event: ClearAuthTicketEvent): boolean {
+    return true
 }
