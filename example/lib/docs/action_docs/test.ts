@@ -2,7 +2,7 @@ import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/acti
 
 import { mockDocsContentResource } from "./mock"
 
-import { initDocsContentEntryPoint } from "./impl"
+import { initDocsEntryPoint } from "./impl"
 
 describe("DocsContent", () => {
     test("terminate", (done) => {
@@ -34,5 +34,5 @@ function standard_elements() {
 }
 
 function newEntryPoint() {
-    return initDocsContentEntryPoint(mockDocsContentResource())
+    return initDocsEntryPoint(mockDocsContentResource())
 }

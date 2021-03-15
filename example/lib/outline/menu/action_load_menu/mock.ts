@@ -1,9 +1,9 @@
-import { initMockLoadMenuCoreAction, standard_MockMenu } from "./core/mock"
+import { mockLoadMenuCoreAction, mockMenu_home } from "./core/mock"
 
 import { LoadMenuResource } from "./resource"
 
-export function standard_MockLoadMenuResource(): LoadMenuResource {
+export function mockLoadMenuResource(): LoadMenuResource {
     return {
-        menu: initMockLoadMenuCoreAction(standard_MockMenu()),
+        menu: mockLoadMenuCoreAction(mockMenu_home()),
     }
 }

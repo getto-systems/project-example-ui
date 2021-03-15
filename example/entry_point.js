@@ -82,14 +82,10 @@ function toEntry(root) {
         return toPath("background", file)
     }
     function toPath(type, file) {
-        return path.join(__dirname, "./lib/x_main", root, ...toEntryPath(file), `${type}.ts`)
+        return path.join(__dirname, "./lib/x_main", root, toEntryPath(file), `${type}.ts`)
     }
     function toEntryPath(file) {
-        const path = file.replaceAll("-", "_")
-        if (path.startsWith(`${docsDirectory}/`)) {
-            return [docsDirectory]
-        }
-        return [path]
+        return file.replaceAll("-", "_")
     }
 
     function exists(file) {

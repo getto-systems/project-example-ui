@@ -27,7 +27,7 @@ import {
 type Props = Readonly<{
     contents: DocsSection[][][]
 }>
-export function DocsComponent(props: Props): VNode {
+export function DocsContentComponent(props: Props): VNode {
     return paddingVSpace(
         props.contents.map((sectionsArr) =>
             sectionsArr.map((sections) =>

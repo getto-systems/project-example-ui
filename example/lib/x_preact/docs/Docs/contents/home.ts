@@ -7,7 +7,7 @@ import { v_medium } from "../../../../z_vendor/getto-css/preact/design/alignment
 
 import { items } from "../box"
 
-import { DocsComponent } from "../../../../docs/kernel/x_preact/docs"
+import { DocsContentComponent } from "../../../../docs/action_docs/x_preact/content"
 
 import { docs_docs } from "../../../../docs/docs"
 import { docs_example } from "../../../../example/docs"
@@ -15,7 +15,7 @@ import { docs_avail } from "../../../../avail/docs"
 import { docs_auth } from "../../../../auth/docs"
 
 export const content_index = (): VNode[] => [
-    h(DocsComponent, { contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]] }),
+    h(DocsContentComponent, { contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]] }),
 ]
 
 export function content_index_document(): VNode {

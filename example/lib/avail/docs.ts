@@ -19,7 +19,7 @@ export const docs_avail: DocsSection[] = [
     ]),
 ]
 
-export const docs_avail_access: DocsSection[] = [
+export const docs_avail_detail: DocsSection[] = [
     docsSection("業務時間内のアクセスを保証", [
         docsDescription([
             {
@@ -34,9 +34,6 @@ export const docs_avail_access: DocsSection[] = [
             },
         ]),
     ]),
-]
-
-export const docs_avail_cost: DocsSection[] = [
     docsSection("コストがかかりすぎない構成", [
         docsDescription([
             {
@@ -51,14 +48,8 @@ export const docs_avail_cost: DocsSection[] = [
             },
         ]),
     ]),
-]
-
-export const docs_avail_update: DocsSection[] = [
     docsSection("最新版にアップデート", [
         docsModule(["新しいバージョンのデプロイを確認", "デプロイされているなら最新版に移行"]),
     ]),
-]
-
-export const docs_avail_error: DocsSection[] = [
     docsSection("発生したエラーを収集", [docsModule(["実行時エラーをサーバーに送信"])]),
 ]

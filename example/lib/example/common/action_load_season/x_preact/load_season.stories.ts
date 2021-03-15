@@ -16,7 +16,7 @@ import { LoadSeasonComponent } from "./load_season"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
-import { standard_MockLoadMenuResource } from "../../../../outline/menu/action_load_menu/mock"
+import { mockLoadMenuResource } from "../../../../outline/menu/action_load_menu/mock"
 import { mockLoadSeasonCoreAction } from "../core/mock"
 
 import { LoadSeasonResult } from "../../load_season/data"
@@ -52,7 +52,7 @@ const template = storyTemplate<MockProps>((props) => {
             body: mainBody("コンテンツ"),
             copyright: copyright(),
         }),
-        menu: h(LoadMenu, standard_MockLoadMenuResource()),
+        menu: h(LoadMenu, mockLoadMenuResource()),
     })
 
     function season(): LoadSeasonResult {

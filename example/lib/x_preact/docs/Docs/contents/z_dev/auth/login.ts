@@ -6,7 +6,7 @@ import { v_small } from "../../../../../../z_vendor/getto-css/preact/design/alig
 
 import { pending } from "../../../box"
 
-import { DocsComponent } from "../../../../../../docs/kernel/x_preact/docs"
+import { DocsContentComponent } from "../../../../../../docs/action_docs/x_preact/content"
 import {
     docs_auth_sign,
     docs_auth_sign_description,
@@ -15,7 +15,7 @@ import {
 } from "../../../../../../auth/sign/docs"
 
 export const content_development_auth_login = (): VNode[] => [
-    h(DocsComponent, {
+    h(DocsContentComponent, {
         contents: [
             [[...docs_auth_sign, ...docs_auth_sign_explanation, ...docs_auth_sign_negativeNote]],
             ...docs_auth_sign_description,

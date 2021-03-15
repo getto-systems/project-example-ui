@@ -15,7 +15,7 @@ import { lniClass, lnir } from "../../../../z_external/icon/line_icon"
 
 import { LoadMenuComponent } from "./load_menu"
 
-import { initMockLoadMenuCoreAction, initMockMenu } from "../core/mock"
+import { mockLoadMenuCoreAction, mockMenu } from "../core/mock"
 
 import { LoadMenuCoreState } from "../core/action"
 
@@ -60,7 +60,7 @@ const template = storyTemplate<MockProps>((props) => {
             copyright: copyright(),
         }),
         menu: h(LoadMenuComponent, {
-            menu: initMockLoadMenuCoreAction(menu()),
+            menu: mockLoadMenuCoreAction(menu()),
             state: state(),
         }),
     })
@@ -90,7 +90,7 @@ const template = storyTemplate<MockProps>((props) => {
     }
 
     function menu(): Menu {
-        return initMockMenu(props.label, lniClass(lnir("home")), props.badgeCount)
+        return mockMenu(props.label, lniClass(lnir("home")), props.badgeCount)
     }
 })
 

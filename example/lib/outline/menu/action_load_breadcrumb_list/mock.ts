@@ -2,7 +2,7 @@ import { initMockLoadBreadcrumbListCoreAction, standard_MockBreadcrumbList } fro
 
 import { LoadBreadcrumbListResource } from "./resource"
 
-export function standard_MockLoadBreadcrumbListResource(): LoadBreadcrumbListResource {
+export function mockLoadBreadcrumbListResource(): LoadBreadcrumbListResource {
     return {
         breadcrumbList: initMockLoadBreadcrumbListCoreAction(standard_MockBreadcrumbList()),
     }

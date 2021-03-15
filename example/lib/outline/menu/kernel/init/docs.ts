@@ -16,16 +16,10 @@ export function docsMenuContent(): MenuContent {
             ]),
             category("ドキュメント", allow, [
                 item("認証・認可", lnir("files-alt"), "/docs/auth.html"),
-            ]),
-            category("詳細設計", dev, [
-                item("配備構成", lnir("files-alt"), "/docs/z-dev/deployment.html"),
                 category("認証・認可", dev, [
-                    item("ログイン", lnir("files-alt"), "/docs/z-dev/auth/login.html"),
-                    item("アクセス制限", lnir("files-alt"), "/docs/z-dev/auth/permission.html"),
-                    item("ユーザー管理", lnir("files-alt"), "/docs/z-dev/auth/user.html"),
-                    item("認証情報管理", lnir("files-alt"), "/docs/z-dev/auth/profile.html"),
-                    item("API 詳細設計", lnir("files-alt"), "/docs/z-dev/auth/api.html"),
+                    item("認証", lnir("files-alt"), "/docs/z-dev/auth/sign.html"),
                 ]),
+                item("保守・運用", lnir("files-alt"), "/docs/avail.html"),
             ]),
             ...(env.isProduction
                 ? []

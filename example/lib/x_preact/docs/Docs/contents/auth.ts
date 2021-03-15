@@ -6,12 +6,12 @@ import { itemsSection } from "../box"
 import { box } from "../../../../z_vendor/getto-css/preact/design/box"
 import { notice_info } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
-import { DocsComponent } from "../../../../docs/kernel/x_preact/docs"
+import { DocsContentComponent } from "../../../../docs/action_docs/x_preact/content"
 
 import { docs_auth, docs_auth_summary, docs_auth_detail } from "../../../../auth/docs"
 
 export const content_auth = (): VNode[] => [
-    h(DocsComponent, {
+    h(DocsContentComponent, {
         contents: [[[...docs_auth, ...docs_auth_summary]], ...docs_auth_detail],
     }),
 ]
