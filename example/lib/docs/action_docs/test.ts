@@ -1,6 +1,6 @@
 import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockDocsContentResource } from "./mock"
+import { mockDocsResource } from "./mock"
 
 import { initDocsView } from "./impl"
 
@@ -34,5 +34,5 @@ function standard_elements() {
 }
 
 function initView() {
-    return initDocsView(mockDocsContentResource())
+    return initDocsView(mockDocsResource())
 }

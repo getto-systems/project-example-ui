@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { storyTemplate } from "../../../z_vendor/storybook/preact/story"
 
-import { mockDocsContentResource } from "../mock"
+import { mockDocsResource } from "../mock"
 
 import { DocsComponent } from "./docs"
 
@@ -17,7 +17,7 @@ type MockProps = {
     // no props
 }
 const template = storyTemplate<MockProps>(() => {
-    return h(DocsComponent, mockDocsContentResource())
+    return h(DocsComponent, mockDocsResource())
 })
 
 export const Content = template({})
