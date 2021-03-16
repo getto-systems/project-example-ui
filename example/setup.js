@@ -44,11 +44,8 @@ function pathContent() {
     const files = ["/storybook/index.html", "/coverage/lcov-report/index.html"].concat(
         entryPoint.findHtmlFiles(),
     )
-    const docs = files.filter(entryPoint.isDocs)
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
-        "export type StaticContentPath =" + toTypeVariant(docs),
-        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
     ].join("\n")
 
     function toTypeVariant(files) {
@@ -57,9 +54,6 @@ function pathContent() {
         }
         const padding = "\n    | "
         return padding + files.map(JSON.stringify).join(padding)
-    }
-    function toConstValue(files) {
-        return JSON.stringify(files, null, "    ")
     }
 }
 

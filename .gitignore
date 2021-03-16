@@ -11,6 +11,5 @@
 /example/public/dist/**/*.js
 /example/secure/dist/**/*.js
 
-**/y_protobuf/*
-**/y_environment/*
-!**/y_environment/.keep
+**/y_*/*
+!**/y_*/.keep

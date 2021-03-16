@@ -1,4 +1,4 @@
-import { MenuExpandMessage } from "../y_protobuf/auth_pb.js"
+import { MenuExpandMessage } from "../y_protobuf/outline_pb.js"
 
 import {
     decodeBase64StringToUint8Array,
