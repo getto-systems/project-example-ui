@@ -7,7 +7,7 @@ export type FindNextVersionInfra = Readonly<{
     version: string
     check: CheckDeployExistsRemotePod
     config: Readonly<{
-        delay: DelayTime
+        takeLongtimeThreshold: DelayTime
     }>
 }>
 

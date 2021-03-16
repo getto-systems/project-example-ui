@@ -11,7 +11,7 @@ export type ResetPasswordInfra = Readonly<{
     reset: ResetPasswordRemotePod
     clock: Clock
     config: Readonly<{
-        delay: DelayTime
+        takeLongtimeThreshold: DelayTime
     }>
 }>
 

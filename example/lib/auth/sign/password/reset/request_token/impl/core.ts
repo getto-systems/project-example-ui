@@ -23,7 +23,7 @@ export const requestResetToken: RequestToken = (infra) => async (fields, post) =
     const requestToken = infra.requestToken(resetSessionIDRemoteConverter)
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
-    const response = await delayedChecker(requestToken(fields.value), config.delay, () =>
+    const response = await delayedChecker(requestToken(fields.value), config.takeLongtimeThreshold, () =>
         post({ type: "take-longtime-to-request-token" }),
     )
     if (!response.success) {

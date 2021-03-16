@@ -42,7 +42,7 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
     }
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
-    const next = await delayedChecker(findNext(check, currentVersion.value), config.delay, () =>
+    const next = await delayedChecker(findNext(check, currentVersion.value), config.takeLongtimeThreshold, () =>
         post({ type: "take-longtime-to-find" }),
     )
     if (!next.success) {

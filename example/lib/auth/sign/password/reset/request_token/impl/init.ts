@@ -7,7 +7,7 @@ export function newRequestResetTokenInfra(): RequestResetTokenInfra {
     return {
         requestToken: newRequestResetTokenRemote(),
         config: {
-            delay: delaySecond(1),
+            takeLongtimeThreshold: delaySecond(1),
         },
     }
 }

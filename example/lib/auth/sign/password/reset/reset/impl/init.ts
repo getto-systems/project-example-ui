@@ -20,7 +20,7 @@ export function newResetPasswordInfra(): ResetPasswordInfra {
         reset: newResetPasswordRemote(),
         clock: newClock(),
         config: {
-            delay: delaySecond(1),
+            takeLongtimeThreshold: delaySecond(1),
         },
     }
 }

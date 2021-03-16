@@ -7,7 +7,7 @@ import { ResetSessionID } from "../data"
 export type RequestResetTokenInfra = Readonly<{
     requestToken: RequestResetTokenRemotePod
     config: Readonly<{
-        delay: DelayTime
+        takeLongtimeThreshold: DelayTime
     }>
 }>
 
