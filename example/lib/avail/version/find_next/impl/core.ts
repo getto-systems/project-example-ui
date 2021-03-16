@@ -46,7 +46,7 @@ export const findNextVersion: Find = (infra) => (detecter) => async (post) => {
         post({ type: "take-longtime-to-find" }),
     )
     if (!next.success) {
-        post({ type: "failed-to-find", err: { type: "failed-to-check", err: next.err } })
+        post({ type: "failed-to-find", err: next.err })
         return
     }
 

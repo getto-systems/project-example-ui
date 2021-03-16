@@ -43,10 +43,7 @@ const template = storyTemplate<MockProps>((props) => {
             case "failed":
                 return {
                     type: "failed-to-find",
-                    err: {
-                        type: "failed-to-check",
-                        err: { type: "infra-error", err: props.err },
-                    },
+                    err: { type: "infra-error", err: props.err },
                 }
         }
     }
