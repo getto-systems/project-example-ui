@@ -1,15 +1,12 @@
 /* eslint-disable */
-
 const fs = require("fs")
 const path = require("path")
 
-const docsDirectory = "docs"
-
 module.exports = {
     findPublicEntries,
-    findSecureFiles,
+    findHtmlFiles,
     findSecureEntries,
-    docsDirectory,
+    isDocs,
 }
 
 function findPublicEntries() {
@@ -21,7 +18,7 @@ function findPublicEntries() {
     ].reduce(toEntry("public"), {})
 }
 
-function findSecureFiles() {
+function findHtmlFiles() {
     const root = path.join(__dirname, "./public/dist")
     return gatherFiles(root).map((file) => file.replace(root, ""))
 
@@ -59,7 +56,7 @@ function findSecureFiles() {
     }
 }
 function findSecureEntries() {
-    return findSecureFiles()
+    return findHtmlFiles()
         .map((file) => file.replace("/", "").replace(/\.html$/, ""))
         .reduce(toEntry("secure"), {})
 }
@@ -96,4 +93,8 @@ function toEntry(root) {
             return false
         }
     }
+}
+
+function isDocs(file) {
+    return file.startsWith("/docs/")
 }
