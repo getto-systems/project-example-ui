@@ -44,9 +44,7 @@ function pathContent() {
     const files = ["/storybook/index.html", "/coverage/lcov-report/index.html"].concat(
         entryPoint.findHtmlFiles(),
     )
-    return [
-        "export type StaticMenuPath =" + toTypeVariant(files),
-    ].join("\n")
+    return ["export type StaticMenuPath =" + toTypeVariant(files)].join("\n")
 
     function toTypeVariant(files) {
         if (files.length === 0) {

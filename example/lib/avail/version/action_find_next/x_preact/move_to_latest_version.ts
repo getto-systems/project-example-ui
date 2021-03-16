@@ -21,7 +21,7 @@ import {
     FindNextVersionResourceState,
 } from "../resource"
 
-import { FindNextVersionError } from "../../find_next/data"
+import { CheckDeployExistsError } from "../../find_next/data"
 
 export function MoveToLatestVersionEntry(view: FindNextVersionView): VNode {
     const resource = useApplicationView(view)
@@ -82,13 +82,13 @@ export function MoveToLatestVersionComponent(props: Props): VNode {
     }
 }
 
-function errorMessage(err: FindNextVersionError): string {
-    switch (err.err.type) {
+function errorMessage(err: CheckDeployExistsError): string {
+    switch (err.type) {
         case "server-error":
             return "サーバーエラーが発生しました"
 
         case "infra-error":
-            return `ネットワークエラーが発生しました: ${err.err.err}`
+            return `ネットワークエラーが発生しました: ${err.err}`
     }
 }
 
