@@ -21,7 +21,7 @@ export function newFindNextVersionInfra(): FindNextVersionInfra {
         version: env.version,
         check: newCheckDeployExistsRemote(),
         config: {
-            delay: { delay_millisecond: 300 },
+            takeLongtimeThreshold: { delay_millisecond: 300 },
         },
     }
 }

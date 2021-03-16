@@ -143,7 +143,7 @@ function initView(requestToken: RequestResetTokenRemotePod): RequestResetTokenVi
             initRequestResetTokenCoreMaterial({
                 requestToken,
                 config: {
-                    delay: { delay_millisecond: 32 },
+                    takeLongtimeThreshold: { delay_millisecond: 32 },
                 },
             }),
         ),

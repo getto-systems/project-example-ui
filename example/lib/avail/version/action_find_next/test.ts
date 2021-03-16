@@ -375,7 +375,7 @@ function initView(
                     check,
                     version,
                     config: {
-                        delay: { delay_millisecond: 1 },
+                        takeLongtimeThreshold: { delay_millisecond: 1 },
                     },
                 },
                 mockFindNextVersionLocationDetecter(currentURL, version),

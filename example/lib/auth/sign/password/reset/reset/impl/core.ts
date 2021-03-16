@@ -36,7 +36,7 @@ export const resetPassword: Reset = (infra) => (detecter) => async (fields, post
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
     const response = await delayedChecker(
         reset({ resetToken: resetToken.value, fields: fields.value }),
-        config.delay,
+        config.takeLongtimeThreshold,
         () => post({ type: "take-longtime-to-reset" }),
     )
     if (!response.success) {

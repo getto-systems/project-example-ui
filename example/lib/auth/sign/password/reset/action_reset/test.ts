@@ -310,7 +310,7 @@ function initView(
                     reset: {
                         reset,
                         config: {
-                            delay: { delay_millisecond: 32 },
+                            takeLongtimeThreshold: { delay_millisecond: 32 },
                         },
                         clock,
                     },
