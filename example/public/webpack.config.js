@@ -1,10 +1,10 @@
 /* eslint-disable */
 const path = require("path")
-const fs = require("fs")
 
 const WorkerPlugin = require("worker-plugin")
 const TerserPlugin = require("terser-webpack-plugin")
 
+const environment = require("../environment")
 const entryPoint = require("../entry_point")
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
         ],
     },
     optimization: {
-        minimize: process.env.BUILD_ENV == "production",
+        minimize: environment.isProduction(),
         minimizer: [new TerserPlugin()],
     },
     plugins: [new WorkerPlugin()],

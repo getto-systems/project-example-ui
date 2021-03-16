@@ -2,6 +2,7 @@
 const fs = require("fs")
 const path = require("path")
 
+const environment = require("./environment")
 const entryPoint = require("./entry_point")
 
 const environmentRoot = path.join(__dirname, "./lib/y_environment")
@@ -9,7 +10,7 @@ dump(path.join(environmentRoot, "env.ts"), envContent())
 dump(path.join(environmentRoot, "path.ts"), pathContent())
 
 function envContent() {
-    const isProduction = process.env.BUILD_ENV == "production"
+    const isProduction = environment.isProduction()
     const version = (() => {
         if (isProduction) {
             return fs.readFileSync(path.join(__dirname, "../.release-version"), "utf8").trim()
@@ -41,29 +42,24 @@ function envContent() {
 
 function pathContent() {
     const files = ["/storybook/index.html", "/coverage/lcov-report/index.html"].concat(
-        entryPoint.findSecureFiles(),
+        entryPoint.findHtmlFiles(),
     )
-    const documents = files.filter(isDocument)
+    const docs = files.filter(entryPoint.isDocs)
     return [
         "export type StaticMenuPath =" + toTypeVariant(files),
-        "export type StaticContentPath =" + toTypeVariant(documents),
-        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(documents),
+        "export type StaticContentPath =" + toTypeVariant(docs),
+        "export const staticContentPaths: StaticContentPath[] = " + toConstValue(docs),
     ].join("\n")
 
-    function isDocument(file) {
-        return file.startsWith(`/${entryPoint.docsDirectory}/`)
-    }
-
     function toTypeVariant(files) {
+        if (files.length === 0) {
+            return " never"
+        }
         const padding = "\n    | "
-        return padding + files.map(toStringLiteral).join(padding)
+        return padding + files.map(JSON.stringify).join(padding)
     }
     function toConstValue(files) {
         return JSON.stringify(files, null, "    ")
-    }
-
-    function toStringLiteral(file) {
-        return `"${file}"`
     }
 }
 

@@ -6,7 +6,7 @@ import { docs_example } from "../../example/docs"
 
 import { DocsResource } from "./resource"
 
-export function mockDocsContentResource(): DocsResource {
+export function mockDocsResource(): DocsResource {
     return {
         ...mockNotifyUnexpectedErrorResource(),
         ...mockLoadBreadcrumbListResource(),
