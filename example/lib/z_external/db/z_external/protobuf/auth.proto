@@ -9,9 +9,3 @@ message AuthzMessage {
   string nonce = 1;
   repeated string roles = 2;
 }
-
-message MenuExpandMessage {
-  message Path { repeated string labels = 1; }
-
-  repeated Path paths = 1;
-}

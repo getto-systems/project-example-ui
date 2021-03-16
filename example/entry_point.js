@@ -6,7 +6,6 @@ module.exports = {
     findPublicEntries,
     findHtmlFiles,
     findSecureEntries,
-    isDocs,
 }
 
 function findPublicEntries() {
@@ -93,8 +92,4 @@ function toEntry(root) {
             return false
         }
     }
-}
-
-function isDocs(file) {
-    return file.startsWith("/docs/")
 }
