@@ -14,8 +14,4 @@ class Action
     extends ApplicationMockStateAction<FindNextVersionCoreState>
     implements FindNextVersionCoreAction {
     readonly initialState = initialFindNextVersionCoreState
-
-    find(): void {
-        // mock ではなにもしない
-    }
 }

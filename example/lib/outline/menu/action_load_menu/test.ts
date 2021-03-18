@@ -28,7 +28,7 @@ import { LoadMenuLocationDetecter } from "../kernel/method"
 
 describe("Menu", () => {
     test("load menu", (done) => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -76,7 +76,7 @@ describe("Menu", () => {
     })
 
     test("load menu; empty roles", (done) => {
-        const { resource } = empty_elements()
+        const { resource } = empty()
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -93,7 +93,7 @@ describe("Menu", () => {
     })
 
     test("load menu; saved expands", (done) => {
-        const { resource } = expand_elements()
+        const { resource } = expand()
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -141,7 +141,7 @@ describe("Menu", () => {
     })
 
     test("load menu; toggle expands", (done) => {
-        const { resource, repository } = standard_elements()
+        const { resource, repository } = standard()
         const menuExpand = repository.menuExpand(menuExpandRepositoryConverter)
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
@@ -222,7 +222,7 @@ describe("Menu", () => {
     })
 
     test("load menu; dev docs", (done) => {
-        const { resource } = devDocs_elements()
+        const { resource } = devDocs()
 
         const runner = setupAsyncActionTestRunner(actionHasDone, [
             {
@@ -286,7 +286,7 @@ describe("Menu", () => {
     })
 
     test("terminate", (done) => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         const runner = setupSyncActionTestRunner([
             {
@@ -367,28 +367,28 @@ describe("Menu", () => {
     }
 })
 
-function standard_elements() {
-    const [resource, menuExpand] = newResource(standard_authz(), empty_menuExpand())
+function standard() {
+    const [resource, menuExpand] = initResource(standard_authz(), empty_menuExpand())
 
     return { resource, repository: { menuExpand } }
 }
-function empty_elements() {
-    const [resource] = newResource(empty_authz(), empty_menuExpand())
+function empty() {
+    const [resource] = initResource(empty_authz(), empty_menuExpand())
 
     return { resource }
 }
-function devDocs_elements() {
-    const [resource] = newResource(devDocs_authz(), empty_menuExpand())
+function devDocs() {
+    const [resource] = initResource(devDocs_authz(), empty_menuExpand())
 
     return { resource }
 }
-function expand_elements() {
-    const [resource] = newResource(standard_authz(), expand_menuExpand())
+function expand() {
+    const [resource] = initResource(standard_authz(), expand_menuExpand())
 
     return { resource }
 }
 
-function newResource(
+function initResource(
     authz: AuthzRepositoryPod,
     menuExpand: MenuExpandRepositoryPod,
 ): [LoadMenuResource, MenuExpandRepositoryPod] {
