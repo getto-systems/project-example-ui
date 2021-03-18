@@ -20,19 +20,32 @@ import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_b
 import { docsArticle } from "./content"
 
 import { DocsView, DocsResource } from "../resource"
+import { DocsSection } from "../../../z_vendor/getto-application/docs/data"
 
-export function DocsEntry(view: DocsView): VNode {
-    const resource = useApplicationView(view)
+export type DocsContent = Readonly<{
+    title: string
+    contents: DocsSection[][][]
+}>
 
-    const err = useNotifyUnexpectedError(resource)
-    if (err) {
-        return h(ApplicationErrorComponent, { err: `${err}` })
-    }
-
-    return h(DocsComponent, resource)
+interface Entry {
+    (view: DocsView): VNode
 }
 
-export function DocsComponent(resource: DocsResource): VNode {
+export function DocsEntry(docs: DocsContent): Entry {
+    return (view) => {
+        const resource = useApplicationView(view)
+
+        const err = useNotifyUnexpectedError(resource)
+        if (err) {
+            return h(ApplicationErrorComponent, { err: `${err}` })
+        }
+
+        return h(DocsComponent, { ...resource, docs })
+    }
+}
+
+type Props = DocsResource & Readonly<{ docs: DocsContent }>
+export function DocsComponent(resource: Props): VNode {
     useDocumentTitle(resource.docs.title)
 
     return appLayout({
