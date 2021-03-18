@@ -6,7 +6,7 @@ import {
 } from "../z_vendor/getto-application/docs/helper"
 
 import { DocsSection } from "../z_vendor/getto-application/docs/data"
-import { docs_auth_sign, docs_auth_sign_action, docs_auth_sign_data } from "./sign/docs"
+import { docs_auth_sign, docs_auth_sign_action, docs_auth_sign_data } from "./action_sign/docs"
 
 export const docs_auth: DocsSection[] = [
     docsSection("認証・認可", [

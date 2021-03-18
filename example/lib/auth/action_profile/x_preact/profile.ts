@@ -19,7 +19,7 @@ import { ApplicationErrorComponent } from "../../../avail/common/x_preact/applic
 import { LoadSeasonComponent } from "../../../example/common/action_load_season/x_preact/load_season"
 import { LoadMenuEntry } from "../../../outline/menu/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/menu/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
-import { LogoutEntry } from "../../sign/auth_ticket/action_logout/x_preact/logout"
+import { LogoutEntry } from "../../auth_ticket/action_logout/x_preact/logout"
 
 import { ProfileView, ProfileResource } from "../resource"
 

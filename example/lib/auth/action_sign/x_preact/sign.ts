@@ -8,11 +8,11 @@ import {
 } from "../../../z_vendor/getto-application/action/x_preact/hooks"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { CheckAuthTicketEntry } from "../../sign/auth_ticket/action_check/x_preact/check_auth_info"
-import { AuthenticatePasswordEntry } from "../../sign/password/action_authenticate/x_preact/authenticate_password"
-import { RequestResetTokenEntry } from "../../sign/password/reset/action_request_token/x_preact/request_reset_token"
-import { CheckPasswordResetSendingStatusEntry } from "../../sign/password/reset/action_check_status/x_preact/check_reset_token_sending_status"
-import { ResetPasswordEntry } from "../../sign/password/reset/action_reset/x_preact/reset_password"
+import { CheckAuthTicketEntry } from "../../auth_ticket/action_check/x_preact/check_auth_info"
+import { AuthenticatePasswordEntry } from "../../password/action_authenticate/x_preact/authenticate_password"
+import { RequestResetTokenEntry } from "../../password/reset/action_request_token/x_preact/request_reset_token"
+import { CheckPasswordResetSendingStatusEntry } from "../../password/reset/action_check_status/x_preact/check_reset_token_sending_status"
+import { ResetPasswordEntry } from "../../password/reset/action_reset/x_preact/reset_password"
 
 import { SignView, SignResource, SignResourceState } from "../resource"
 import { PrivacyPolicyComponent } from "./privacy_policy"

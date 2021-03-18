@@ -8,7 +8,7 @@ import { mockNotifyUnexpectedErrorResource } from "../../../avail/action_notify_
 import { mockLoadBreadcrumbListResource } from "../../../outline/menu/action_load_breadcrumb_list/mock"
 import { mockLoadMenuResource } from "../../../outline/menu/action_load_menu/mock"
 import { mockLoadSeasonResource } from "../../../example/common/action_load_season/mock"
-import { mockLogoutResource } from "../../sign/auth_ticket/action_logout/mock"
+import { mockLogoutResource } from "../../auth_ticket/action_logout/mock"
 
 export default {
     title: "main/secure/Auth/Profile",

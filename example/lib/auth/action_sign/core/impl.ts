@@ -1,6 +1,6 @@
 import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-application/action/impl"
 
-import { SignViewLocationDetecter, SignViewType } from "../../sign/common/switch_view/data"
+import { SignViewLocationDetecter, SignViewType } from "../../common/switch_view/data"
 
 import { initialSignViewState, SignAction, SignActionState, SignSubView } from "./action"
 

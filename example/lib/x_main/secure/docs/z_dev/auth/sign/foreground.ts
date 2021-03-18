@@ -4,7 +4,7 @@ import {
     docs_auth_sign_description,
     docs_auth_sign_explanation,
     docs_auth_sign_negativeNote,
-} from "../../../../../../auth/sign/docs"
+} from "../../../../../../auth/action_sign/docs"
 
 import { newDocsView } from "../../../../../../docs/action_docs/init"
 

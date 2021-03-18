@@ -1,11 +1,11 @@
 import { ApplicationStateAction } from "../../../z_vendor/getto-application/action/action"
 
-import { CheckAuthTicketView } from "../../sign/auth_ticket/action_check/resource"
-import { AuthenticatePasswordView } from "../../sign/password/action_authenticate/resource"
-import { CheckResetTokenSendingStatusView } from "../../sign/password/reset/action_check_status/resource"
-import { RequestResetTokenView } from "../../sign/password/reset/action_request_token/resource"
-import { ResetPasswordView } from "../../sign/password/reset/action_reset/resource"
-import { SignLinkResource } from "../../sign/common/nav/action_nav/resource"
+import { CheckAuthTicketView } from "../../auth_ticket/action_check/resource"
+import { AuthenticatePasswordView } from "../../password/action_authenticate/resource"
+import { CheckResetTokenSendingStatusView } from "../../password/reset/action_check_status/resource"
+import { RequestResetTokenView } from "../../password/reset/action_request_token/resource"
+import { ResetPasswordView } from "../../password/reset/action_reset/resource"
+import { SignLinkResource } from "../../common/nav/action_nav/resource"
 
 export interface SignAction extends ApplicationStateAction<SignActionState> {
     error(err: string): void

@@ -3,14 +3,14 @@ import {
     setupSyncActionTestRunner,
 } from "../../z_vendor/getto-application/action/test_helper"
 
-import { mockAuthenticatePasswordView } from "../sign/password/action_authenticate/mock"
-import { mockRequestResetTokenView } from "../sign/password/reset/action_request_token/mock"
-import { mockResetPasswordView } from "../sign/password/reset/action_reset/mock"
-import { mockCheckResetTokenSendingStatusView } from "../sign/password/reset/action_check_status/mock"
-import { mockCheckAuthTicketView } from "../sign/auth_ticket/action_check/mock"
-import { mockSignViewLocationDetecter } from "../sign/common/switch_view/mock"
+import { mockAuthenticatePasswordView } from "../password/action_authenticate/mock"
+import { mockRequestResetTokenView } from "../password/reset/action_request_token/mock"
+import { mockResetPasswordView } from "../password/reset/action_reset/mock"
+import { mockCheckResetTokenSendingStatusView } from "../password/reset/action_check_status/mock"
+import { mockCheckAuthTicketView } from "../auth_ticket/action_check/mock"
+import { mockSignViewLocationDetecter } from "../common/switch_view/mock"
 
-import { initSignLinkResource } from "../sign/common/nav/action_nav/impl"
+import { initSignLinkResource } from "../common/nav/action_nav/impl"
 
 import { initSignAction } from "./core/impl"
 import { initSignView } from "./impl"

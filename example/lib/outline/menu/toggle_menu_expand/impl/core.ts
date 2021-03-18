@@ -1,5 +1,5 @@
 import { menuExpandRepositoryConverter } from "../../kernel/impl/convert"
-import { authzRepositoryConverter } from "../../../../auth/sign/auth_ticket/kernel/converter"
+import { authzRepositoryConverter } from "../../../../auth/auth_ticket/kernel/converter"
 
 import { buildMenu } from "../../kernel/impl/menu"
 
