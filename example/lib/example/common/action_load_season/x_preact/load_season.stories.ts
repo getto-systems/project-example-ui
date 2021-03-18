@@ -11,12 +11,12 @@ import {
     mainTitle,
 } from "../../../../z_vendor/getto-css/preact/layout/app"
 
-import { LoadMenuEntry } from "../../../../outline/menu/action_load_menu/x_preact/load_menu"
+import { LoadMenuEntry } from "../../../../outline/action_load_menu/x_preact/load_menu"
 import { LoadSeasonComponent } from "./load_season"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
-import { mockLoadMenuResource } from "../../../../outline/menu/action_load_menu/mock"
+import { mockLoadMenuResource } from "../../../../outline/action_load_menu/mock"
 import { mockLoadSeasonCoreAction } from "../core/mock"
 
 import { LoadSeasonResult } from "../../load_season/data"
