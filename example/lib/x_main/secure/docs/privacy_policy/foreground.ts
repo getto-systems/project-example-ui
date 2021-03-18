@@ -8,14 +8,13 @@ import { DocsEntry } from "../../../../docs/action_docs/x_preact/docs"
 
 render(
     h(
-        DocsEntry,
+        DocsEntry({
+            title: "プライバシーポリシー",
+            contents: [[docs_privacyPolicy]],
+        }),
         newDocsView({
             webStorage: localStorage,
             currentLocation: location,
-            docs: {
-                title: "プライバシーポリシー",
-                contents: [[docs_privacyPolicy]],
-            },
         }),
     ),
     document.body,

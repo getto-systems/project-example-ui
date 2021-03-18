@@ -11,14 +11,13 @@ import { DocsEntry } from "../../../../docs/action_docs/x_preact/docs"
 
 render(
     h(
-        DocsEntry,
+        DocsEntry({
+            title: "ドキュメント",
+            contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]],
+        }),
         newDocsView({
             webStorage: localStorage,
             currentLocation: location,
-            docs: {
-                title: "ドキュメント",
-                contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]],
-            },
         }),
     ),
     document.body,
