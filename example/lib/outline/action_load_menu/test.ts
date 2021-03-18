@@ -155,7 +155,7 @@ describe("Menu", () => {
             },
             {
                 statement: () => {
-                    resource.menu.toggle([markMenuCategoryLabel("DOCUMENT")])
+                    resource.menu.show([markMenuCategoryLabel("DOCUMENT")])
                 },
                 examine: (stack) => {
                     expect(stack).toEqual([
@@ -179,7 +179,7 @@ describe("Menu", () => {
             },
             {
                 statement: () => {
-                    resource.menu.toggle([
+                    resource.menu.show([
                         markMenuCategoryLabel("DOCUMENT"),
                         markMenuCategoryLabel("DETAIL"),
                     ])
@@ -210,10 +210,43 @@ describe("Menu", () => {
                     if (!result.found) {
                         fail("menu expand not found")
                     }
-                    expect(result.value.values).toEqual([
-                        ["DOCUMENT"],
-                        ["DOCUMENT", "DETAIL"],
+                    expect(result.value.values).toEqual([["DOCUMENT"], ["DOCUMENT", "DETAIL"]])
+                },
+            },
+            {
+                statement: () => {
+                    resource.menu.hide([
+                        markMenuCategoryLabel("DOCUMENT"),
+                        markMenuCategoryLabel("DETAIL"),
                     ])
+                },
+                examine: (stack) => {
+                    expect(stack).toEqual([
+                        {
+                            type: "succeed-to-toggle",
+                            menu: [
+                                $category("MAIN", ["MAIN"], 30, [
+                                    $item("ホーム", "home", "/1.0.0/index.html", 10),
+                                    item("ドキュメント", "docs", "/1.0.0/docs/index.html", 20),
+                                ]),
+                                $category("DOCUMENT", ["DOCUMENT"], 0, [
+                                    item("認証・認可", "auth", "/1.0.0/docs/auth.html", 0),
+                                    category("DETAIL", ["DOCUMENT", "DETAIL"], 0, [
+                                        item("詳細", "detail", "/1.0.0/docs/auth.html", 0),
+                                    ]),
+                                ]),
+                            ],
+                        },
+                    ])
+
+                    const result = menuExpand.get()
+                    if (!result.success) {
+                        fail("menu expand get failed")
+                    }
+                    if (!result.found) {
+                        fail("menu expand not found")
+                    }
+                    expect(result.value.values).toEqual([["DOCUMENT"]])
                 },
             },
         ])

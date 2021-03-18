@@ -90,14 +90,19 @@ export function LoadMenuComponent(props: Props): VNode {
             return menuCategory({
                 isExpand: node.isExpand,
                 label,
-                toggle,
+                show,
+                hide,
                 badge: badge(node.badgeCount),
                 children: menuContent(node.children, liCategory),
             })
 
-            function toggle(event: Event) {
+            function show(event: Event) {
                 event.preventDefault()
-                props.menu.toggle(node.path)
+                props.menu.show(node.path)
+            }
+            function hide(event: Event) {
+                event.preventDefault()
+                props.menu.hide(node.path)
             }
         }
 

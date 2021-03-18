@@ -20,7 +20,10 @@ class Action extends ApplicationMockStateAction<LoadMenuCoreState> implements Lo
     updateBadge() {
         // mock では特に何もしない
     }
-    toggle() {
+    show() {
+        // mock では特に何もしない
+    }
+    hide() {
         // mock では特に何もしない
     }
 }
