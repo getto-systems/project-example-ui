@@ -1,7 +1,7 @@
-import { homeMenuContent } from "../../outline/menu/kernel/init/home"
+import { homeMenuContent } from "../../outline/kernel/init/home"
 import { newNotifyUnexpectedErrorResource } from "../../avail/action_notify_unexpected_error/init"
-import { newLoadBreadcrumbListResource } from "../../outline/menu/action_load_breadcrumb_list/init"
-import { newLoadMenuResource } from "../../outline/menu/action_load_menu/init"
+import { newLoadBreadcrumbListResource } from "../../outline/action_load_breadcrumb_list/init"
+import { newLoadMenuResource } from "../../outline/action_load_menu/init"
 import { newLoadSeasonResource } from "../common/action_load_season/init"
 
 import { BaseResource } from "./resource"
