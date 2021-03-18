@@ -1,6 +1,9 @@
 import { ApplicationAbstractStateAction } from "../../../../z_vendor/getto-application/action/impl"
+
 import { findNextVersion } from "../../find_next/impl/core"
+
 import { FindNextVersionInfra } from "../../find_next/infra"
+
 import { FindNextVersionLocationDetecter } from "../../find_next/method"
 
 import {
