@@ -1,22 +1,22 @@
-import { newCheckAuthTicketView } from "../../../sign/auth_ticket/action_check/init"
-import { newSignViewLocationDetecter } from "../../../sign/common/switch_view/init"
+import { newCheckAuthTicketView } from "../../../auth_ticket/action_check/init"
+import { newSignViewLocationDetecter } from "../../../common/switch_view/init"
 
 import {
     AuthenticatePasswordProxy,
     newAuthenticatePasswordProxy,
-} from "../../../sign/password/action_authenticate/init/worker/foreground"
+} from "../../../password/action_authenticate/init/worker/foreground"
 import {
     newRequestPasswordResetTokenProxy,
     RequestPasswordResetTokenProxy,
-} from "../../../sign/password/reset/action_request_token/init/worker/foreground"
+} from "../../../password/reset/action_request_token/init/worker/foreground"
 import {
     CheckPasswordResetSendingStatusProxy,
     newCheckPasswordResetSendingStatusProxy,
-} from "../../../sign/password/reset/action_check_status/init/worker/foreground"
+} from "../../../password/reset/action_check_status/init/worker/foreground"
 import {
     newResetPasswordProxy,
     ResetPasswordProxy,
-} from "../../../sign/password/reset/action_reset/init/worker/foreground"
+} from "../../../password/reset/action_reset/init/worker/foreground"
 
 import { initSignView } from "../../impl"
 import { initSignAction } from "../../core/impl"
@@ -24,7 +24,7 @@ import { initSignAction } from "../../core/impl"
 import { ForegroundMessage, BackgroundMessage } from "./message"
 
 import { SignView } from "../../resource"
-import { initSignLinkResource } from "../../../sign/common/nav/action_nav/impl"
+import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage

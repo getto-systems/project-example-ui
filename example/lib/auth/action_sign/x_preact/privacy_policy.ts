@@ -5,12 +5,12 @@ import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
 import { siteInfo } from "../../../x_preact/common/site"
-import { signNav } from "../../sign/common/nav/x_preact/nav"
+import { signNav } from "../../common/nav/x_preact/nav"
 import { docsSectionBody } from "../../../docs/action_docs/x_preact/content"
 
 import { docs_privacyPolicy } from "../../../docs/docs"
 
-import { SignLinkResource } from "../../sign/common/nav/action_nav/resource"
+import { SignLinkResource } from "../../common/nav/action_nav/resource"
 
 export function PrivacyPolicyComponent(props: SignLinkResource): VNode {
     return loginBox(siteInfo(), {

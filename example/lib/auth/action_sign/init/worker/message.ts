@@ -1,19 +1,19 @@
 import {
     AuthenticatePasswordProxyMessage,
     AuthenticatePasswordProxyResponse,
-} from "../../../sign/password/action_authenticate/init/worker/message"
+} from "../../../password/action_authenticate/init/worker/message"
 import {
     CheckPasswordResetSendingStatusProxyMessage,
     CheckPasswordResetSendingStatusProxyResponse,
-} from "../../../sign/password/reset/action_check_status/init/worker/message"
+} from "../../../password/reset/action_check_status/init/worker/message"
 import {
     RequestPasswordResetTokenProxyMessage,
     RequestPasswordResetTokenProxyResponse,
-} from "../../../sign/password/reset/action_request_token/init/worker/message"
+} from "../../../password/reset/action_request_token/init/worker/message"
 import {
     ResetPasswordProxyMessage,
     ResetPasswordProxyResponse,
-} from "../../../sign/password/reset/action_reset/init/worker/message"
+} from "../../../password/reset/action_reset/init/worker/message"
 
 export type ForegroundMessage =
     | Readonly<{

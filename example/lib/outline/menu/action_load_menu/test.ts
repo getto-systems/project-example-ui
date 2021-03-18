@@ -18,7 +18,7 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { AuthzRepositoryPod } from "../../../auth/sign/auth_ticket/kernel/infra"
+import { AuthzRepositoryPod } from "../../../auth/auth_ticket/kernel/infra"
 import { GetMenuBadgeRemotePod, MenuExpandRepositoryPod } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"

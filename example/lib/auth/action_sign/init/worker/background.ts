@@ -1,15 +1,15 @@
-import { newAuthenticatePasswordHandler } from "../../../sign/password/action_authenticate/init/worker/background"
-import { newRequestResetTokenHandler } from "../../../sign/password/reset/action_request_token/init/worker/background"
-import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../sign/password/reset/action_check_status/init/worker/background"
-import { newResetPasswordHandler } from "../../../sign/password/reset/action_reset/init/worker/background"
+import { newAuthenticatePasswordHandler } from "../../../password/action_authenticate/init/worker/background"
+import { newRequestResetTokenHandler } from "../../../password/reset/action_request_token/init/worker/background"
+import { newCheckPasswordResetSendingStatusWorkerHandler } from "../../../password/reset/action_check_status/init/worker/background"
+import { newResetPasswordHandler } from "../../../password/reset/action_reset/init/worker/background"
 
 import { WorkerHandler } from "../../../../z_vendor/getto-application/action/worker/background"
 
 import { ForegroundMessage, BackgroundMessage } from "./message"
-import { AuthenticatePasswordProxyMessage } from "../../../sign/password/action_authenticate/init/worker/message"
-import { RequestPasswordResetTokenProxyMessage } from "../../../sign/password/reset/action_request_token/init/worker/message"
-import { CheckPasswordResetSendingStatusProxyMessage } from "../../../sign/password/reset/action_check_status/init/worker/message"
-import { ResetPasswordProxyMessage } from "../../../sign/password/reset/action_reset/init/worker/message"
+import { AuthenticatePasswordProxyMessage } from "../../../password/action_authenticate/init/worker/message"
+import { RequestPasswordResetTokenProxyMessage } from "../../../password/reset/action_request_token/init/worker/message"
+import { CheckPasswordResetSendingStatusProxyMessage } from "../../../password/reset/action_check_status/init/worker/message"
+import { ResetPasswordProxyMessage } from "../../../password/reset/action_reset/init/worker/message"
 
 export function newSignWorkerBackground(worker: Worker): void {
     const handler: Handler = {
