@@ -2,7 +2,7 @@ import { ApplicationAbstractStateAction } from "../../../z_vendor/getto-applicat
 
 import { loadMenu } from "../../load_menu/impl/core"
 import { updateMenuBadge } from "../../update_menu_badge/impl/core"
-import { toggleMenuExpand } from "../../toggle_menu_expand/impl/core"
+import { hideMenuExpand, showMenuExpand } from "../../toggle_menu_expand/impl/core"
 
 import { LoadMenuInfra, LoadMenuStore } from "../../load_menu/infra"
 import { UpdateMenuBadgeInfra, UpdateMenuBadgeStore } from "../../update_menu_badge/infra"
@@ -35,7 +35,8 @@ export function initLoadMenuCoreMaterial(
     return {
         load: loadMenu(infra, store)(detecter),
         updateBadge: updateMenuBadge(infra, store)(detecter),
-        toggle: toggleMenuExpand(infra, store)(detecter),
+        show: showMenuExpand(infra, store)(detecter),
+        hide: hideMenuExpand(infra, store)(detecter),
     }
 }
 
@@ -71,7 +72,10 @@ class Action
         this.material.updateBadge(this.post)
     }
 
-    toggle(path: MenuCategoryPath): void {
-        this.material.toggle(path, this.post)
+    show(path: MenuCategoryPath): void {
+        this.material.show(path, this.post)
+    }
+    hide(path: MenuCategoryPath): void {
+        this.material.hide(path, this.post)
     }
 }

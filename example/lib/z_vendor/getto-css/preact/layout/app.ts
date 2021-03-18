@@ -145,19 +145,21 @@ export function menuBody(id: string, content: VNodeContent): VNode {
 export type MenuCategoryContent = Readonly<{
     isExpand: boolean
     label: string
-    toggle: Handler<Event>
+    show: Handler<Event>
+    hide: Handler<Event>
     badge: VNodeContent
     children: VNodeContent
 }>
 export function menuCategory({
     isExpand,
     label,
-    toggle,
+    show,
+    hide,
     badge,
     children,
 }: MenuCategoryContent): VNode {
     return html`<details class="menu__nav" open=${isExpand} key=${label}>
-        <summary class="menu__nav__summary" onClick=${toggle}>
+        <summary class="menu__nav__summary" onClick=${isExpand ? hide : show}>
             <span class="menu__nav__summary__container">
                 <span class="menu__nav__summary__label">${label}</span>
                 <span class="menu__nav__summary__badge">${badge}</span>

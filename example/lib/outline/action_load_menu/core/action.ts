@@ -12,13 +12,15 @@ import { MenuCategoryPath } from "../../kernel/data"
 
 export interface LoadMenuCoreAction extends ApplicationStateAction<LoadMenuCoreState> {
     updateBadge(): void
-    toggle(path: MenuCategoryPath): void
+    show(path: MenuCategoryPath): void
+    hide(path: MenuCategoryPath): void
 }
 
 export type LoadMenuCoreMaterial = Readonly<{
     load: LoadMenuMethod
     updateBadge: UpdateMenuBadgeMethod
-    toggle: ToggleMenuExpandMethod
+    show: ToggleMenuExpandMethod
+    hide: ToggleMenuExpandMethod
 }>
 
 export type LoadMenuCoreState =
