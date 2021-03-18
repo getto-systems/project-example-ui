@@ -27,7 +27,10 @@ export function appLayout_sidebar({
     sidebar,
     menu,
 }: AppLayoutSidebarContent): VNode {
-    return layoutContent("sidebar_single", siteInfo, header, [appBodyContainer([main, sidebar]), menu])
+    return layoutContent("sidebar_single", siteInfo, header, [
+        appBodyContainer([main, sidebar]),
+        menu,
+    ])
 }
 
 export function appLayout_sidebar_double({
@@ -37,7 +40,10 @@ export function appLayout_sidebar_double({
     sidebar,
     menu,
 }: AppLayoutSidebarContent): VNode {
-    return layoutContent("sidebar_double", siteInfo, header, [appBodyContainer([main, sidebar]), menu])
+    return layoutContent("sidebar_double", siteInfo, header, [
+        appBodyContainer([main, sidebar]),
+        menu,
+    ])
 }
 
 type AppLayoutType = "normal" | "sidebar_single" | "sidebar_double"
@@ -56,7 +62,7 @@ function layoutContent(
     type: AppLayoutType,
     siteInfo: SiteInfo,
     header: VNodeContent[],
-    content: VNodeContent[]
+    content: VNodeContent[],
 ) {
     return html`<main class="layout__app ${toAppLayoutClass(type)}">
         ${appHeader(siteInfo, header)}
@@ -88,7 +94,9 @@ export type MainLayoutContent = Readonly<{
     copyright: VNodeContent
 }>
 export function appMain({ header, body, copyright }: MainLayoutContent): VNode {
-    return html`<article class="layout__app__main">${header} ${body} ${mainFooter(copyright)}</article>`
+    return html`<article class="layout__app__main">
+        ${header} ${body} ${mainFooter(copyright)}
+    </article>`
 }
 export function appSidebar({ header, body, copyright }: MainLayoutContent): VNode {
     return html`<aside class="layout__app__sidebar">
@@ -141,11 +149,19 @@ export type MenuCategoryContent = Readonly<{
     badge: VNodeContent
     children: VNodeContent
 }>
-export function menuCategory({ isExpand, label, toggle, badge, children }: MenuCategoryContent): VNode {
+export function menuCategory({
+    isExpand,
+    label,
+    toggle,
+    badge,
+    children,
+}: MenuCategoryContent): VNode {
     return html`<details class="menu__nav" open=${isExpand} key=${label}>
         <summary class="menu__nav__summary" onClick=${toggle}>
-            <span class="menu__nav__summary__label">${label}</span>
-            <span class="menu__nav__summary__badge">${badge}</span>
+            <span class="menu__nav__summary__container">
+                <span class="menu__nav__summary__label">${label}</span>
+                <span class="menu__nav__summary__badge">${badge}</span>
+            </span>
         </summary>
         <ul class="menu__nav__items">
             ${children}
