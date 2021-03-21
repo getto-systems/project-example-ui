@@ -67,7 +67,6 @@ const passwordReset = () => [
             v_medium(),
             itemsSection("ログインID 検証", [
                 "空でないこと",
-                // TODO 長すぎないことをチェックしたほうがいい
             ]),
         ],
     }),
@@ -88,7 +87,6 @@ const passwordReset = () => [
             toTextMessage("リセットトークン", []),
             hr,
             itemsSection("ログインID 検証", [
-                // TODO 長すぎないことをチェックしたほうがいい
                 "リセットトークンの宛先が登録されていること",
             ]),
         ],
@@ -119,7 +117,6 @@ const passwordReset = () => [
             v_medium(),
             itemsSection("ログインID 検証", [
                 "空でないこと",
-                // TODO 長すぎないことをチェックしたほうがいい
             ]),
             itemsSection("パスワード検証", ["空でないこと", "長すぎないこと"]),
         ],
@@ -156,7 +153,6 @@ const passwordReset = () => [
                 "セッションが完了していないこと",
             ]),
             itemsSection("ログインID 検証", [
-                // TODO 長すぎないことをチェックしたほうがいい
                 "セッションを開始したときに入力したものと同じであること",
             ]),
             itemsSection("パスワード検証", ["空でないこと", "長すぎないこと"]),
@@ -222,7 +218,6 @@ const passwordChange = () => [
             html`<p>旧パスワードは使用できなくなる</p>`,
             v_medium(),
             itemsSection("ログインID 検証", [
-                // TODO 長すぎないことをチェックしたほうがいい
                 "ユーザーのログインID と一致すること",
             ]),
             itemsSection("旧パスワード検証", [
