@@ -107,16 +107,25 @@ function purpose(content: string[]): VNodeContent {
     return content.map(notice_info)
 }
 function module(content: string[]): VNodeContent {
-    // TODO section.paragraph 的なやつにしたい（p には ul 要素を入れられなかった気がする）
-    return html`<p><ul>${content.map(li)}</ul></p>`
+    return html`<section class="paragraph">
+        <ul>
+            ${content.map(li)}
+        </ul>
+    </section>`
 
     function li(message: string): VNode {
         return html`<li>${icon("angle-double-right")} ${message}</li>`
     }
 }
 function item(title: string, content: string[]): VNodeContent {
-    // TODO section.paragraph 的なやつにしたい（p には ul 要素を入れられなかった気がする）
-    return [html`<p>${title}</p>`, html`<p><ul>${content.map(li)}</ul></p>`]
+    return [
+        html`<p>${title}</p>`,
+        html`<section class="paragraph">
+            <ul>
+                ${content.map(li)}
+            </ul>
+        </section>`,
+    ]
 
     function li(message: string): VNode {
         return html`<li>${icon("chevron-right")} ${message}</li>`
@@ -184,7 +193,9 @@ function action(contents: DocsAction[]): VNodeContent {
             }
         }
         function body(contents: DocsActionContent[]): VNodeContent {
-            return html`<ul>${contents.map((content) => li(message(content)))}</ul>`
+            return html`<ul>
+                ${contents.map((content) => li(message(content)))}
+            </ul>`
 
             function li(message: VNodeContent): VNode {
                 return html`<li>${message}</li>`
@@ -202,8 +213,12 @@ function action(contents: DocsAction[]): VNodeContent {
     }
 }
 function note(contents: string[]): VNodeContent {
-    // TODO section.paragraph 的なやつにしたい（p には ul 要素を入れられなかった気がする）
-    return html`<hr /><p><ul>${contents.map(li)}</ul></p>`
+    return html`<hr />
+        <section class="paragraph">
+            <ul>
+                ${contents.map(li)}
+            </ul>
+        </section>`
 
     function li(content: string): VNode {
         return html`<li>${content}</li>`
