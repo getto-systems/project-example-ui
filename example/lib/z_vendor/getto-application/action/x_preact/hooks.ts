@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useState } from "preact/hooks"
 import { ApplicationView, ApplicationStateAction } from "../action"
 
 export function useApplicationView<R>({ resource, terminate }: ApplicationView<R>): R {
-    useEffect(() => terminate, [])
+    useEffect(() => terminate, [terminate])
     return resource
 }
 
@@ -15,6 +15,6 @@ export function useApplicationAction<S>(action: ApplicationStateAction<S>): S {
         return () => {
             action.subscriber.unsubscribe(setState)
         }
-    }, [])
+    }, [action])
     return state
 }

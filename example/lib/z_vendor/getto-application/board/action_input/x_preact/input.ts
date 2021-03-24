@@ -26,7 +26,7 @@ function useBoardValueStore(input: InputBoardValueAction) {
     useLayoutEffect(() => {
         input.storeLinker.link(store())
         return () => input.storeLinker.unlink()
-    }, [])
+    }, [input.storeLinker])
 
     return REF
 
