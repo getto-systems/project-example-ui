@@ -22,74 +22,77 @@ import { RequestResetTokenCoreState } from "./core/action"
 const VALID_LOGIN = { loginID: "login-id" } as const
 
 describe("RequestResetToken", () => {
-    test("submit valid login-id", (done) => {
-        const { view } = standard()
-        const resource = view.resource.requestToken
+    test("submit valid login-id", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource.requestToken
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
 
-                    resource.core.submit(resource.form.validate.get())
+                        resource.core.submit(resource.form.validate.get())
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-request-token" },
+                            { type: "succeed-to-request-token", sessionID: "session-id" },
+                        ])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-request-token" },
-                        { type: "succeed-to-request-token", sessionID: "session-id" },
-                    ])
+            ])
+
+            resource.core.subscriber.subscribe(runner(done))
+        }))
+
+    test("submit valid login-id; with take longtime", () =>
+        new Promise<void>((done) => {
+            // wait for take longtime timeout
+            const { view } = takeLongtime()
+            const resource = view.resource.requestToken
+
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+
+                        resource.core.submit(resource.form.validate.get())
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-request-token" },
+                            { type: "take-longtime-to-request-token" },
+                            { type: "succeed-to-request-token", sessionID: "session-id" },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("submit valid login-id; with take longtime", (done) => {
-        // wait for take longtime timeout
-        const { view } = takeLongtime()
-        const resource = view.resource.requestToken
+    test("submit without fields", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource.requestToken
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-
-                    resource.core.submit(resource.form.validate.get())
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        // try to request token without fields
+                        resource.core.submit(resource.form.validate.get())
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "failed-to-request-token", err: { type: "validation-error" } },
+                        ])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-request-token" },
-                        { type: "take-longtime-to-request-token" },
-                        { type: "succeed-to-request-token", sessionID: "session-id" },
-                    ])
-                },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
-
-    test("submit without fields", (done) => {
-        const { view } = standard()
-        const resource = view.resource.requestToken
-
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    // try to request token without fields
-                    resource.core.submit(resource.form.validate.get())
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-request-token", err: { type: "validation-error" } },
-                    ])
-                },
-            },
-        ])
-
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
     test("clear", () => {
         const { view } = standard()
@@ -101,29 +104,30 @@ describe("RequestResetToken", () => {
         expect(resource.form.loginID.board.input.get()).toEqual("")
     })
 
-    test("terminate", (done) => {
-        const { view } = standard()
-        const resource = view.resource.requestToken
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource.requestToken
 
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: () => {
-                    view.terminate()
-                    resource.form.loginID.board.input.set(markBoardValue("login-id"))
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: () => {
+                        view.terminate()
+                        resource.form.loginID.board.input.set(markBoardValue("login-id"))
+                    },
+                    examine: (stack) => {
+                        // no input/validate event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-                examine: (stack) => {
-                    // no input/validate event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
+            ])
 
-        const handler = runner(done)
-        resource.core.subscriber.subscribe(handler)
-        resource.form.validate.subscriber.subscribe(handler)
-        resource.form.loginID.validate.subscriber.subscribe(handler)
-        resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
-    })
+            const handler = runner(done)
+            resource.core.subscriber.subscribe(handler)
+            resource.form.validate.subscriber.subscribe(handler)
+            resource.form.loginID.validate.subscriber.subscribe(handler)
+            resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
+        }))
 })
 
 function standard() {

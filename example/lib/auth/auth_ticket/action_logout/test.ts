@@ -19,43 +19,45 @@ import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/
 import { clearAuthTicketEventHasDone } from "../clear/impl/core"
 
 describe("Logout", () => {
-    test("clear", (done) => {
-        const { resource } = standard()
+    test("clear", () =>
+        new Promise<void>((done) => {
+            const { resource } = standard()
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.logout.submit()
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.logout.submit()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([{ type: "succeed-to-logout" }])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([{ type: "succeed-to-logout" }])
+            ])
+
+            resource.logout.subscriber.subscribe(runner(done))
+        }))
+
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { resource } = standard()
+
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        resource.logout.terminate()
+                        resource.logout.submit()
+
+                        setTimeout(check, 256) // wait for events...
+                    },
+                    examine: (stack) => {
+                        // no input/validate event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.logout.subscriber.subscribe(runner(done))
-    })
-
-    test("terminate", (done) => {
-        const { resource } = standard()
-
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    resource.logout.terminate()
-                    resource.logout.submit()
-
-                    setTimeout(check, 256) // wait for events...
-                },
-                examine: (stack) => {
-                    // no input/validate event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
-
-        resource.logout.subscriber.subscribe(runner(done))
-    })
+            resource.logout.subscriber.subscribe(runner(done))
+        }))
 })
 
 function standard() {
@@ -70,7 +72,7 @@ function initResource(authn: AuthnRepositoryPod, authz: AuthzRepositoryPod): Log
             initLogoutCoreMaterial({
                 authn,
                 authz,
-                clear: standard_clear()
+                clear: standard_clear(),
             }),
         ),
     )

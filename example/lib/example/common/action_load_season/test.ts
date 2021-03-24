@@ -30,6 +30,7 @@ describe("LoadSeason", () => {
 
         // TODO カバレッジのために直接呼び出している。シーズンの設定用 action を作るべき
         season(seasonRepositoryConverter).set(markSeason({ year: 2021 }))
+        expect(true).toBe(true)
     })
 })
 

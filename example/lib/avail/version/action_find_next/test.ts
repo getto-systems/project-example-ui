@@ -22,285 +22,295 @@ import { FindNextVersionView } from "./resource"
 import { FindNextVersionCoreState } from "./core/action"
 
 describe("FindNextVersion", () => {
-    test("up to date", (done) => {
-        const { view } = standard()
-        const resource = view.resource
+    test("up to date", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: true,
-                            version: "1.0.0",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: true,
+                                version: "1.0.0",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("up to date; take longtime", (done) => {
-        const { view } = takeLongtime()
-        const resource = view.resource
+    test("up to date; take longtime", () =>
+        new Promise<void>((done) => {
+            const { view } = takeLongtime()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "take-longtime-to-find" },
-                        {
-                            type: "succeed-to-find",
-                            upToDate: true,
-                            version: "1.0.0",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "take-longtime-to-find" },
+                            {
+                                type: "succeed-to-find",
+                                upToDate: true,
+                                version: "1.0.0",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next minor version", (done) => {
-        const { view } = found(["/1.1.0/index.html"])
-        const resource = view.resource
+    test("found next minor version", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.1.0/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.1.0",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.1.0",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next patch version", (done) => {
-        const { view } = found(["/1.0.1/index.html"])
-        const resource = view.resource
+    test("found next patch version", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.0.1/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.0.1",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.0.1",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next minor version; recursive", (done) => {
-        const { view } = found(["/1.1.0/index.html", "/1.2.0/index.html"])
-        const resource = view.resource
+    test("found next minor version; recursive", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.1.0/index.html", "/1.2.0/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.2.0",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.2.0",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next patch version; recursive", (done) => {
-        const { view } = found(["/1.0.1/index.html", "/1.0.2/index.html"])
-        const resource = view.resource
+    test("found next patch version; recursive", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.0.1/index.html", "/1.0.2/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.0.2",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.0.2",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next patch version; complex", (done) => {
-        const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html"])
-        const resource = view.resource
+    test("found next patch version; complex", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.1.1",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.1.1",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next patch version; complex skipped", (done) => {
-        const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html", "/1.1.3/index.html"])
-        const resource = view.resource
+    test("found next patch version; complex skipped", () =>
+        new Promise<void>((done) => {
+            const { view } = found(["/1.1.0/index.html", "/1.1.1/index.html", "/1.1.3/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.1.1",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.1.1",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("found next minor version; complex current version", (done) => {
-        const { view } = foundComplex(["/1.1.0/index.html"])
-        const resource = view.resource
+    test("found next minor version; complex current version", () =>
+        new Promise<void>((done) => {
+            const { view } = foundComplex(["/1.1.0/index.html"])
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: false,
-                            version: "1.1.0",
-                            target: {
-                                valid: true,
-                                value: "/index.html?search=parameter#hash",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: false,
+                                version: "1.1.0",
+                                target: {
+                                    valid: true,
+                                    value: "/index.html?search=parameter#hash",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
-    test("invalid version url", (done) => {
-        const { view } = invalidVersion()
-        const resource = view.resource
+    test("invalid version url", () =>
+        new Promise<void>((done) => {
+            const { view } = invalidVersion()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.findNext.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "succeed-to-find",
-                            upToDate: true,
-                            version: "1.0.0",
-                            target: {
-                                valid: false,
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.findNext.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "succeed-to-find",
+                                upToDate: true,
+                                version: "1.0.0",
+                                target: {
+                                    valid: false,
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.findNext.subscriber.subscribe(runner(done))
-    })
+            resource.findNext.subscriber.subscribe(runner(done))
+        }))
 
     test("valid ApplicationTargetPath", () => {
         expect(
@@ -315,26 +325,27 @@ describe("FindNextVersion", () => {
         expect(applicationPath("1.0.0", { valid: false })).toEqual("/1.0.0/index.html")
     })
 
-    test("terminate", (done) => {
-        const { view } = standard()
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
 
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    view.terminate()
-                    view.resource.findNext.ignite()
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        view.terminate()
+                        view.resource.findNext.ignite()
 
-                    setTimeout(check, 256) // wait for event...
+                        setTimeout(check, 256) // wait for event...
+                    },
+                    examine: (stack) => {
+                        // no input/validate event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-                examine: (stack) => {
-                    // no input/validate event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
+            ])
 
-        view.resource.findNext.subscriber.subscribe(runner(done))
-    })
+            view.resource.findNext.subscriber.subscribe(runner(done))
+        }))
 })
 
 function standard() {

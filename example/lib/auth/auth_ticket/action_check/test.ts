@@ -47,234 +47,241 @@ const CONTINUOUS_RENEW_AT = [
 ]
 
 describe("CheckAuthTicket", () => {
-    test("instant load", (done) => {
-        const { clock, view } = instantLoadable()
-        const resource = view.resource
+    test("instant load", () =>
+        new Promise<void>((done) => {
+            const { clock, view } = instantLoadable()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.core.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "try-to-instant-load",
-                            scriptPath: {
-                                valid: true,
-                                value: "https://secure.example.com/index.js",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "try-to-instant-load",
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-            {
-                statement: () => {
-                    clock.update(CONTINUOUS_RENEW_START_AT)
-                    resource.core.succeedToInstantLoad()
+                {
+                    statement: () => {
+                        clock.update(CONTINUOUS_RENEW_START_AT)
+                        resource.core.succeedToInstantLoad()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "succeed-to-start-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "required-to-login" },
+                        ])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "succeed-to-start-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "required-to-login" },
-                    ])
-                },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("instant load failed", (done) => {
-        const { clock, view } = instantLoadable()
-        const resource = view.resource
+    test("instant load failed", () =>
+        new Promise<void>((done) => {
+            const { clock, view } = instantLoadable()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.core.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "try-to-instant-load",
-                            scriptPath: {
-                                valid: true,
-                                value: "https://secure.example.com/index.js",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "try-to-instant-load",
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
-                        },
-                    ])
+                        ])
+                    },
                 },
-            },
-            {
-                statement: () => {
-                    clock.update(CONTINUOUS_RENEW_START_AT)
-                    resource.core.failedToInstantLoad()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-renew" },
-                        {
-                            type: "try-to-load",
-                            scriptPath: {
-                                valid: true,
-                                value: "https://secure.example.com/index.js",
+                {
+                    statement: () => {
+                        clock.update(CONTINUOUS_RENEW_START_AT)
+                        resource.core.failedToInstantLoad()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-renew" },
+                            {
+                                type: "try-to-load",
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
-                        },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "required-to-login" },
-                    ])
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "required-to-login" },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("renew stored credential", (done) => {
-        const { clock, view } = standard()
-        const resource = view.resource
+    test("renew stored credential", () =>
+        new Promise<void>((done) => {
+            const { clock, view } = standard()
+            const resource = view.resource
 
-        resource.core.subscriber.subscribe((state) => {
-            switch (state.type) {
-                case "try-to-load":
-                    clock.update(CONTINUOUS_RENEW_START_AT)
-                    break
-            }
-        })
+            resource.core.subscriber.subscribe((state) => {
+                switch (state.type) {
+                    case "try-to-load":
+                        clock.update(CONTINUOUS_RENEW_START_AT)
+                        break
+                }
+            })
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.core.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-renew" },
-                        {
-                            type: "try-to-load",
-                            scriptPath: {
-                                valid: true,
-                                value: "https://secure.example.com/index.js",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-renew" },
+                            {
+                                type: "try-to-load",
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
-                        },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "required-to-login" },
-                    ])
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "required-to-login" },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("renew stored credential; take long time", (done) => {
-        // wait for take longtime timeout
-        const { clock, view } = takeLongtime()
-        const resource = view.resource
+    test("renew stored credential; take long time", () =>
+        new Promise<void>((done) => {
+            // wait for take longtime timeout
+            const { clock, view } = takeLongtime()
+            const resource = view.resource
 
-        resource.core.subscriber.subscribe((state) => {
-            switch (state.type) {
-                case "try-to-load":
-                    clock.update(CONTINUOUS_RENEW_START_AT)
-                    break
-            }
-        })
+            resource.core.subscriber.subscribe((state) => {
+                switch (state.type) {
+                    case "try-to-load":
+                        clock.update(CONTINUOUS_RENEW_START_AT)
+                        break
+                }
+            })
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.core.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-renew" },
-                        { type: "take-longtime-to-renew" },
-                        {
-                            type: "try-to-load",
-                            scriptPath: {
-                                valid: true,
-                                value: "https://secure.example.com/index.js",
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-renew" },
+                            { type: "take-longtime-to-renew" },
+                            {
+                                type: "try-to-load",
+                                scriptPath: {
+                                    valid: true,
+                                    value: "https://secure.example.com/index.js",
+                                },
                             },
-                        },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "succeed-to-continuous-renew" },
-                        { type: "required-to-login" },
-                    ])
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "succeed-to-continuous-renew" },
+                            { type: "required-to-login" },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("renew without stored credential", (done) => {
-        // empty credential
-        const { view } = noStored()
-        const resource = view.resource
+    test("renew without stored credential", () =>
+        new Promise<void>((done) => {
+            // empty credential
+            const { view } = noStored()
+            const resource = view.resource
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.core.ignite()
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.core.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([{ type: "required-to-login" }])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([{ type: "required-to-login" }])
+            ])
+
+            resource.core.subscriber.subscribe(runner(done))
+        }))
+
+    test("load error", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource
+
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: () => {
+                        resource.core.loadError({ type: "infra-error", err: "load error" })
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            {
+                                type: "load-error",
+                                err: { type: "infra-error", err: "load error" },
+                            },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
+            resource.core.subscriber.subscribe(runner(done))
+        }))
 
-    test("load error", (done) => {
-        const { view } = standard()
-        const resource = view.resource
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
 
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: () => {
-                    resource.core.loadError({ type: "infra-error", err: "load error" })
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        view.terminate()
+                        view.resource.core.ignite()
+
+                        setTimeout(check, 256) // wait for event...
+                    },
+                    examine: (stack) => {
+                        // no input/validate event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        {
-                            type: "load-error",
-                            err: { type: "infra-error", err: "load error" },
-                        },
-                    ])
-                },
-            },
-        ])
+            ])
 
-        resource.core.subscriber.subscribe(runner(done))
-    })
-
-    test("terminate", (done) => {
-        const { view } = standard()
-
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    view.terminate()
-                    view.resource.core.ignite()
-
-                    setTimeout(check, 256) // wait for event...
-                },
-                examine: (stack) => {
-                    // no input/validate event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
-
-        view.resource.core.subscriber.subscribe(runner(done))
-    })
+            view.resource.core.subscriber.subscribe(runner(done))
+        }))
 })
 
 function standard() {

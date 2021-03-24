@@ -8,8 +8,8 @@ describe("NotFound", () => {
     test("terminate", () => {
         const { view } = standard()
 
-        // 特に何もしないのでテストすることもないが、カバレッジのために呼び出しておく
         view.terminate()
+        expect(true).toBe(true)
     })
 })
 

@@ -7,12 +7,11 @@ import { initNotifyUnexpectedErrorCoreAction } from "./core/impl"
 import { initNotifyUnexpectedErrorResource } from "./impl"
 
 describe("NotifyUnexpectedError", () => {
-    test("notify", (done) => {
+    test("notify", () => {
         const { resource } = standard()
 
         resource.error.notify("error")
-
-        done()
+        expect(true).toBe(true)
     })
 })
 
