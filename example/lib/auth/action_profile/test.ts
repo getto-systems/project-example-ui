@@ -5,29 +5,30 @@ import { mockAuthProfileResource } from "./mock"
 import { initProfileView } from "./impl"
 
 describe("Profile", () => {
-    test("terminate", (done) => {
-        const { view } = standard()
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
 
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    view.terminate()
-                    view.resource.menu.ignite()
-                    view.resource.logout.submit()
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        view.terminate()
+                        view.resource.menu.ignite()
+                        view.resource.logout.submit()
 
-                    setTimeout(check, 256) // wait for events.
+                        setTimeout(check, 256) // wait for events.
+                    },
+                    examine: (stack) => {
+                        // no event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-                examine: (stack) => {
-                    // no event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
+            ])
 
-        const handler = runner(done)
-        view.resource.menu.subscriber.subscribe(handler)
-        view.resource.logout.subscriber.subscribe(handler)
-    })
+            const handler = runner(done)
+            view.resource.menu.subscriber.subscribe(handler)
+            view.resource.logout.subscriber.subscribe(handler)
+        }))
 })
 
 function standard() {

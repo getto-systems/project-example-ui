@@ -29,98 +29,102 @@ import { CheckResetTokenSendingStatusCoreState } from "./core/action"
 import { ResetTokenSendingResult } from "../check_status/data"
 
 describe("CheckPasswordResetSendingStatus", () => {
-    test("valid session-id", (done) => {
-        const { view } = standard()
-        const resource = view.resource.checkStatus
+    test("valid session-id", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource.checkStatus
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.ignite()
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-check-status" },
+                            { type: "succeed-to-send-token" },
+                        ])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-check-status" },
-                        { type: "succeed-to-send-token" },
-                    ])
+            ])
+
+            resource.subscriber.subscribe(runner(done))
+        }))
+
+    test("submit valid login-id; with long sending", () =>
+        new Promise<void>((done) => {
+            // wait for send token check limit
+            const { view } = takeLongtime()
+            const resource = view.resource.checkStatus
+
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "try-to-check-status" },
+                            { type: "retry-to-check-status", status: { sending: true } },
+                            { type: "retry-to-check-status", status: { sending: true } },
+                            { type: "retry-to-check-status", status: { sending: true } },
+                            { type: "retry-to-check-status", status: { sending: true } },
+                            { type: "retry-to-check-status", status: { sending: true } },
+                            {
+                                type: "failed-to-check-status",
+                                err: { type: "infra-error", err: "overflow check limit" },
+                            },
+                        ])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.subscriber.subscribe(runner(done))
-    })
+            resource.subscriber.subscribe(runner(done))
+        }))
 
-    test("submit valid login-id; with long sending", (done) => {
-        // wait for send token check limit
-        const { view } = takeLongtime()
-        const resource = view.resource.checkStatus
+    test("check without session id", () =>
+        new Promise<void>((done) => {
+            const { view } = noSessionID()
+            const resource = view.resource.checkStatus
 
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.ignite()
+            const runner = setupAsyncActionTestRunner(actionHasDone, [
+                {
+                    statement: () => {
+                        resource.ignite()
+                    },
+                    examine: (stack) => {
+                        expect(stack).toEqual([
+                            { type: "failed-to-check-status", err: { type: "empty-session-id" } },
+                        ])
+                    },
                 },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "try-to-check-status" },
-                        { type: "retry-to-check-status", status: { sending: true } },
-                        { type: "retry-to-check-status", status: { sending: true } },
-                        { type: "retry-to-check-status", status: { sending: true } },
-                        { type: "retry-to-check-status", status: { sending: true } },
-                        { type: "retry-to-check-status", status: { sending: true } },
-                        {
-                            type: "failed-to-check-status",
-                            err: { type: "infra-error", err: "overflow check limit" },
-                        },
-                    ])
+            ])
+
+            resource.subscriber.subscribe(runner(done))
+        }))
+
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard()
+            const resource = view.resource.checkStatus
+
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        view.terminate()
+                        resource.ignite()
+
+                        setTimeout(check, 256) // wait for events...
+                    },
+                    examine: (stack) => {
+                        // no input/validate event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-            },
-        ])
+            ])
 
-        resource.subscriber.subscribe(runner(done))
-    })
-
-    test("check without session id", (done) => {
-        const { view } = noSessionID()
-        const resource = view.resource.checkStatus
-
-        const runner = setupAsyncActionTestRunner(actionHasDone, [
-            {
-                statement: () => {
-                    resource.ignite()
-                },
-                examine: (stack) => {
-                    expect(stack).toEqual([
-                        { type: "failed-to-check-status", err: { type: "empty-session-id" } },
-                    ])
-                },
-            },
-        ])
-
-        resource.subscriber.subscribe(runner(done))
-    })
-
-    test("terminate", (done) => {
-        const { view } = standard()
-        const resource = view.resource.checkStatus
-
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    view.terminate()
-                    resource.ignite()
-
-                    setTimeout(check, 256) // wait for events...
-                },
-                examine: (stack) => {
-                    // no input/validate event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
-
-        resource.subscriber.subscribe(runner(done))
-    })
+            resource.subscriber.subscribe(runner(done))
+        }))
 })
 
 function standard() {

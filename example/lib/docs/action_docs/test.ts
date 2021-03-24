@@ -5,26 +5,27 @@ import { mockDocsResource } from "./mock"
 import { initDocsView } from "./impl"
 
 describe("DocsContent", () => {
-    test("terminate", (done) => {
-        const { view } = standard_elements()
+    test("terminate", () =>
+        new Promise<void>((done) => {
+            const { view } = standard_elements()
 
-        const runner = setupSyncActionTestRunner([
-            {
-                statement: (check) => {
-                    view.terminate()
-                    view.resource.menu.ignite()
+            const runner = setupSyncActionTestRunner([
+                {
+                    statement: (check) => {
+                        view.terminate()
+                        view.resource.menu.ignite()
 
-                    setTimeout(check, 256) // wait for events.
+                        setTimeout(check, 256) // wait for events.
+                    },
+                    examine: (stack) => {
+                        // no event after terminate
+                        expect(stack).toEqual([])
+                    },
                 },
-                examine: (stack) => {
-                    // no event after terminate
-                    expect(stack).toEqual([])
-                },
-            },
-        ])
+            ])
 
-        view.resource.menu.subscriber.subscribe(runner(done))
-    })
+            view.resource.menu.subscriber.subscribe(runner(done))
+        }))
 })
 
 function standard_elements() {
