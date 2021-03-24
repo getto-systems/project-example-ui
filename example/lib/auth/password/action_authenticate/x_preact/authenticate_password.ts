@@ -70,7 +70,7 @@ export function AuthenticatePasswordComponent(props: Props): VNode {
                 })
                 break
         }
-    }, [props.state.core])
+    }, [props.authenticate.core, props.state.core])
 
     switch (props.state.core.type) {
         case "initial-login":

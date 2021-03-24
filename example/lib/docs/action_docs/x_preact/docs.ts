@@ -27,21 +27,19 @@ export type DocsContent = Readonly<{
     contents: DocsSection[][][]
 }>
 
-interface Entry {
-    (view: DocsView): VNode
-}
+type EntryProps = Readonly<{
+    view: DocsView
+    docs: DocsContent
+}>
+export function DocsEntry(props: EntryProps): VNode {
+    const resource = useApplicationView(props.view)
 
-export function DocsEntry(docs: DocsContent): Entry {
-    return (view) => {
-        const resource = useApplicationView(view)
-
-        const err = useNotifyUnexpectedError(resource)
-        if (err) {
-            return h(ApplicationErrorComponent, { err: `${err}` })
-        }
-
-        return h(DocsComponent, { ...resource, docs })
+    const err = useNotifyUnexpectedError(resource)
+    if (err) {
+        return h(ApplicationErrorComponent, { err: `${err}` })
     }
+
+    return h(DocsComponent, { ...resource, docs: props.docs })
 }
 
 type Props = DocsResource & Readonly<{ docs: DocsContent }>

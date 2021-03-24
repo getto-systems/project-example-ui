@@ -65,7 +65,7 @@ export function ResetPasswordComponent(props: Props): VNode {
                 })
                 break
         }
-    }, [props.state.core])
+    }, [props.reset.core, props.state.core])
 
     switch (props.state.core.type) {
         case "initial-reset":

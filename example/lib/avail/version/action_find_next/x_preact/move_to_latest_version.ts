@@ -25,19 +25,17 @@ import { CheckDeployExistsError } from "../../find_next/data"
 
 export function MoveToLatestVersionEntry(view: FindNextVersionView): VNode {
     const resource = useApplicationView(view)
-
+    const state = useApplicationAction(resource.findNext)
     const [err] = useErrorBoundary((err) => {
         // 認証前なのでエラーはどうしようもない
         console.log(err)
     })
+
     if (err) {
         return h(ApplicationErrorComponent, { err: `${err}` })
     }
 
-    return h(MoveToLatestVersionComponent, {
-        ...resource,
-        state: useApplicationAction(resource.findNext),
-    })
+    return h(MoveToLatestVersionComponent, { ...resource, state })
 }
 
 type Props = FindNextVersionResource & FindNextVersionResourceState

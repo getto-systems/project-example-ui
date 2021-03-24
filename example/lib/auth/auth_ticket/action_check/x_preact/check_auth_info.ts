@@ -75,7 +75,7 @@ export function CheckAuthTicketComponent(props: Props): VNode {
                 })
                 break
         }
-    }, [props.state])
+    }, [props.core, props.state])
 
     switch (props.state.type) {
         case "initial-check":

@@ -53,7 +53,7 @@ export function RequestResetTokenComponent(props: Props): VNode {
                 )
                 return
         }
-    }, [props.state.core])
+    }, [props.link, props.state.core])
 
     switch (props.state.core.type) {
         case "initial-request-token":

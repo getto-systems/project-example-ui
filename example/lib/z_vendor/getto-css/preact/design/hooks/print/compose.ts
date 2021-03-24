@@ -15,7 +15,7 @@ export function useReportRowsComposition<R>(
         if (nextComposition.hasNext) {
             setData(nextComposition.data)
         }
-    }, [data])
+    }, [content, data])
     return data
 }
 
