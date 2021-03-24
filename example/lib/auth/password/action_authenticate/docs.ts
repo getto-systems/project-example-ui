@@ -7,14 +7,14 @@ import {
 
 import { DocsSection } from "../../../z_vendor/getto-application/docs/data"
 
-export const docs_auth_sign_authenticatePassword: DocsSection[] = [
+export const docs_auth_authenticatePassword: DocsSection[] = [
     docsSection("パスワードログイン", [
         docsModule(["ログインID・パスワード入力", "ログインID・パスワード認証"]),
     ]),
 ]
 
-export const docs_auth_sign_authenticatePassword_description: DocsSection[] = [
-    ...docs_auth_sign_authenticatePassword,
+export const docs_auth_authenticatePassword_description: DocsSection[] = [
+    ...docs_auth_authenticatePassword,
 
     docsSection("ログインID・パスワード入力", [
         docsAction(({ action, validate }) => [

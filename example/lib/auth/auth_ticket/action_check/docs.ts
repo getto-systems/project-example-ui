@@ -7,14 +7,14 @@ import {
 
 import { DocsSection } from "../../../z_vendor/getto-application/docs/data"
 
-export const docs_auth_sign_checkAuthTicket: DocsSection[] = [
+export const docs_auth_checkAuthTicket: DocsSection[] = [
     docsSection("認証チケット更新", [
         docsModule(["コンテンツのロード", "チケット有効期限更新", "定期的に継続更新"]),
     ]),
 ]
 
-export const docs_auth_sign_checkAuthTicket_description: DocsSection[] = [
-    ...docs_auth_sign_checkAuthTicket,
+export const docs_auth_checkAuthTicket_description: DocsSection[] = [
+    ...docs_auth_checkAuthTicket,
 
     docsSection("コンテンツのロード", [
         docsAction(({ request, action, message }) => [

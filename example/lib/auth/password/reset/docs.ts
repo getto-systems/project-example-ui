@@ -8,7 +8,7 @@ import {
 
 import { DocsSection } from "../../../z_vendor/getto-application/docs/data"
 
-export const docs_auth_sign_resetPassword: DocsSection[] = [
+export const docs_auth_resetPassword: DocsSection[] = [
     docsSection("パスワードリセット", [
         docsModule([
             "ログインID入力",
@@ -20,7 +20,7 @@ export const docs_auth_sign_resetPassword: DocsSection[] = [
     ]),
 ]
 
-export const docs_auth_sign_resetPassword_data: DocsSection[] = [
+export const docs_auth_resetPassword_data: DocsSection[] = [
     docsSection("パスワードリセット", [
         docsDescription([
             {
@@ -48,8 +48,8 @@ export const docs_auth_sign_resetPassword_data: DocsSection[] = [
     ]),
 ]
 
-export const docs_auth_sign_resetPassword_description: DocsSection[] = [
-    ...docs_auth_sign_resetPassword,
+export const docs_auth_resetPassword_description: DocsSection[] = [
+    ...docs_auth_resetPassword,
 
     docsSection("ログインID入力", [
         docsAction(({ action, validate }) => [

@@ -1,7 +1,7 @@
 import { DocsSection } from "../../z_vendor/getto-application/docs/data"
 import { docsDescription, docsSection } from "../../z_vendor/getto-application/docs/helper"
 
-export const docs_auth_sign_password: DocsSection[] = [
+export const docs_auth_password: DocsSection[] = [
     docsSection("パスワード", [
         docsDescription([
             {

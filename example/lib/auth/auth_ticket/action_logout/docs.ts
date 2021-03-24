@@ -7,12 +7,12 @@ import {
 
 import { DocsSection } from "../../../z_vendor/getto-application/docs/data"
 
-export const docs_auth_sign_logout: DocsSection[] = [
+export const docs_auth_logout: DocsSection[] = [
     docsSection("ログアウト", [docsModule(["認証チケットの無効化"])]),
 ]
 
-export const docs_auth_sign_logout_description: DocsSection[] = [
-    ...docs_auth_sign_logout,
+export const docs_auth_logout_description: DocsSection[] = [
+    ...docs_auth_logout,
 
     docsSection("認証チケットの無効化", [
         docsAction(({ request, action, validate, message }) => [

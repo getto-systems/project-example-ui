@@ -1,7 +1,7 @@
 import { DocsSection } from "../../z_vendor/getto-application/docs/data"
 import { docsDescription, docsSection } from "../../z_vendor/getto-application/docs/helper"
 
-export const docs_auth_sign_authTicket: DocsSection[] = [
+export const docs_auth_ticket: DocsSection[] = [
     docsSection("認証チケット", [
         docsDescription([
             {
