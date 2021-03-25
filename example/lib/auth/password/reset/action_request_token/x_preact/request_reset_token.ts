@@ -197,11 +197,15 @@ function requestTokenError(err: RequestResetTokenError): VNodeContent[] {
         case "invalid-password-reset":
             return ["ログインIDが登録されていないか、トークンの送信先が登録されていません"]
 
+        case "invalid-nonce":
         case "bad-request":
         case "server-error":
         case "bad-response":
         case "infra-error":
-            return remoteCommonError(err, (reason) => `${reason}によりトークンの送信に失敗しました`)
+            return remoteCommonError(err, (reason) => [
+                `${reason.message}によりトークンの送信に失敗しました`,
+                ...reason.detail,
+            ])
     }
 }
 

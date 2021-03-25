@@ -1,11 +1,11 @@
-import { PasswordLoginMessage } from "../../../y_protobuf/password_login_pb.js"
+import { PasswordLoginMessage } from "../../y_protobuf/password_login_pb.js"
 
-import { encodeUint8ArrayToBase64String } from "../../../../../z_vendor/base64/transform"
+import { encodeUint8ArrayToBase64String } from "../../../../z_vendor/base64/transform"
 
 import { parseAuthResponse, parseErrorMessage } from "../common"
 
 import { AuthResponse, ParseErrorResult } from "../data"
-import { ApiCommonError, ApiResult } from "../../../data"
+import { ApiCommonError, ApiResult } from "../../data"
 
 type LoginFields = Readonly<{ loginID: string; password: string }>
 type LoginResult = ApiResult<AuthResponse, RemoteError>

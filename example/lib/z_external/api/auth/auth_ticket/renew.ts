@@ -1,7 +1,7 @@
 import { parseAuthResponse, parseErrorMessage } from "../common"
 
 import { AuthResponse, ParseErrorResult } from "../data"
-import { ApiCommonError, ApiResult } from "../../../data"
+import { ApiCommonError, ApiResult } from "../../data"
 
 type SendAuthnNonce = string
 type RemoteResult = ApiResult<AuthResponse, RemoteError>

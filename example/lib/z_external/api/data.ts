@@ -3,7 +3,7 @@ export type ApiResult<V, E> =
     | Readonly<{ success: false; err: E }>
 
 export type ApiCommonError =
+    | Readonly<{ type: "invalid-nonce" }>
     | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
     | Readonly<{ type: "bad-response"; err: string }>
-    | Readonly<{ type: "infra-error"; err: string }>

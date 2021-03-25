@@ -1,4 +1,4 @@
-import { ApiCommonError, ApiResult } from "../../../../../data"
+import { ApiCommonError, ApiResult } from "../../../../data"
 import { parseErrorMessage } from "../../../common"
 import { ParseErrorResult } from "../../../data"
 

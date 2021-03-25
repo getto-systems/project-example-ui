@@ -1,9 +1,9 @@
-import { ApiCredentialMessage } from "../../y_protobuf/credential_pb.js"
+import { ApiCredentialMessage } from "../y_protobuf/credential_pb.js"
 
-import { decodeBase64StringToUint8Array } from "../../../../z_vendor/base64/transform"
+import { decodeBase64StringToUint8Array } from "../../../z_vendor/base64/transform"
 
 import { AuthResponse, ParseErrorResult } from "./data"
-import { ApiCommonError, ApiResult } from "../../data"
+import { ApiCommonError, ApiResult } from "../data"
 
 export async function parseAuthResponse(
     response: Response,

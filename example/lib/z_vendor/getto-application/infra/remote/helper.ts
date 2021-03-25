@@ -1,10 +1,10 @@
-import { RemoteCommonError } from "./data"
+import { RemoteCommonError, RemoteInfraError } from "./data"
 import { Remote, RemotePod, RemoteResult } from "./infra"
 
-export function wrapRemote<M, V, R, E>(
-    remote: Remote<M, R, E>,
-    errorHandler: { (err: unknown): E },
-): RemotePod<M, V, R, E> {
+export function wrapRemote<M, V, R, E_raw, E_wrapped>(
+    remote: Remote<M, R, E_raw>,
+    errorHandler: { (err: unknown): E_wrapped },
+): RemotePod<M, V, R, E_raw | E_wrapped> {
     return (converter) => async (message) => {
         const remoteResult = await access(message)
         if (!remoteResult.success) {
@@ -13,7 +13,7 @@ export function wrapRemote<M, V, R, E>(
         return { success: true, value: converter(remoteResult.value) }
     }
 
-    async function access(message: M): Promise<RemoteResult<R, E>> {
+    async function access(message: M): Promise<RemoteResult<R, E_raw | E_wrapped>> {
         try {
             return await remote(message)
         } catch (err) {
@@ -21,27 +21,40 @@ export function wrapRemote<M, V, R, E>(
         }
     }
 }
+export function remoteInfraError(err: unknown): RemoteInfraError {
+    return {
+        type: "infra-error",
+        err: `${err}`,
+    }
+}
 
 export function passThroughRemoteValue<T>(value: T): T {
     return value
 }
 
-export function remoteCommonError(
+export type RemoteCommonErrorReason = Readonly<{
+    message: string
+    detail: string[]
+}>
+export function remoteCommonError<T>(
     err: RemoteCommonError,
-    message: { (reason: string): string },
-): string[] {
+    message: { (reason: RemoteCommonErrorReason): T[] },
+): T[] {
     switch (err.type) {
+        case "invalid-nonce":
+            return message({ message: "接続エラー", detail: [] })
+
         case "bad-request":
-            return [message("アプリケーションエラー")]
+            return message({ message: "アプリケーションエラー", detail: [] })
 
         case "server-error":
-            return [message("サーバーエラー")]
+            return message({ message: "サーバーエラー", detail: [] })
 
         case "bad-response":
-            return [message("レスポンスエラー"), ...detail(err.err)]
+            return message({ message: "レスポンスエラー", detail: detail(err.err) })
 
         case "infra-error":
-            return [message("ネットワークエラー"), ...detail(err.err)]
+            return message({ message: "ネットワークエラー", detail: detail(err.err) })
     }
 
     function detail(message: string): string[] {

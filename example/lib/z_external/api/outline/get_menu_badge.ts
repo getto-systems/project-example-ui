@@ -13,7 +13,7 @@ type LoadError =
 interface Get {
     (nonce: ApiNonce): Promise<LoadResult>
 }
-export function initApi_GetMenuBadge(_apiServerURL: string): Get {
+export function newApi_GetMenuBadge(_apiServerURL: string): Get {
     return async (_nonce: ApiNonce): Promise<LoadResult> => {
         // TODO ちゃんと実装する
         return { success: true, value: [] }

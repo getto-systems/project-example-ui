@@ -229,11 +229,15 @@ function resetError(err: ResetPasswordError): VNodeContent[] {
                 "もう一度リセットする場合はトークンの送信からやり直してください",
             ]
 
+        case "invalid-nonce":
         case "bad-request":
         case "server-error":
         case "bad-response":
         case "infra-error":
-            return remoteCommonError(err, (reason) => `${reason}によりリセットに失敗しました`)
+            return remoteCommonError(err, (reason) => [
+                `${reason.message}によりリセットに失敗しました`,
+                ...reason.detail,
+            ])
     }
 }
 
