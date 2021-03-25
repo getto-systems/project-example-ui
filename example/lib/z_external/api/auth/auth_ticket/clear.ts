@@ -1,4 +1,4 @@
-import { ApiCommonError, ApiResult } from "../../../data"
+import { ApiCommonError, ApiResult } from "../../data"
 
 type SendAuthnNonce = string
 type ClearResult = ApiResult<true, RemoteError>

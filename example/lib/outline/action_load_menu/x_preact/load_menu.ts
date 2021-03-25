@@ -19,6 +19,7 @@ import { LoadMenuResource, LoadMenuResourceState } from "../resource"
 
 import { RepositoryError } from "../../../z_vendor/getto-application/infra/repository/data"
 import { GetMenuBadgeError, Menu, MenuCategoryNode, MenuItemNode } from "../../kernel/data"
+import { remoteCommonError } from "../../../z_vendor/getto-application/infra/remote/helper"
 
 export const MENU_ID = "menu"
 
@@ -143,19 +144,10 @@ function repositoryError(err: RepositoryError): VNode[] {
     }
 }
 function error(err: GetMenuBadgeError): VNode[] {
-    switch (err.type) {
-        case "bad-request":
-            return [notice_alert("アプリケーションエラー")]
-
-        case "server-error":
-            return [notice_alert("サーバーエラー")]
-
-        case "bad-response":
-            return [notice_alert("レスポンスエラー"), ...errorDetail(err.err)]
-
-        case "infra-error":
-            return [notice_alert("ネットワークエラー"), ...errorDetail(err.err)]
-    }
+    return remoteCommonError(err, (reason) => [
+        notice_alert(reason.message),
+        ...reason.detail.map((message) => html`<small><p>${message}</p></small>`),
+    ])
 }
 function errorDetail(err: string): VNode[] {
     if (err.length === 0) {

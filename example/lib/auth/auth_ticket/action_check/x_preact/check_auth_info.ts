@@ -136,13 +136,10 @@ export function CheckAuthTicketComponent(props: Props): VNode {
 }
 
 function renewError(err: RenewAuthTicketError): VNodeContent[] {
-    switch (err.type) {
-        case "bad-request":
-        case "server-error":
-        case "bad-response":
-        case "infra-error":
-            return remoteCommonError(err, (reason) => `${reason}により認証に失敗しました`)
-    }
+    return remoteCommonError(err, (reason) => [
+        `${reason.message}により認証に失敗しました`,
+        ...reason.detail,
+    ])
 }
 
 const EMPTY_CONTENT: VNode = html``

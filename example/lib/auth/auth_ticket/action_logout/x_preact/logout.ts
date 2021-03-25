@@ -13,6 +13,7 @@ import { LogoutResource, LogoutResourceState } from "../resource"
 
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import { ClearAuthTicketError } from "../../clear/data"
+import { remoteCommonError } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function LogoutEntry(resource: LogoutResource): VNode {
     return h(LogoutComponent, {
@@ -92,19 +93,10 @@ export function LogoutComponent(props: Props): VNode {
                 }
             }
             function remoteError(err: ClearAuthTicketError): string[] {
-                switch (err.type) {
-                    case "bad-request":
-                        return ["認証情報の送信処理でエラーが発生しました"]
-
-                    case "server-error":
-                        return ["サーバーの認証処理でエラーが発生しました"]
-
-                    case "bad-response":
-                        return ["サーバーから送信されたデータがエラーでした", ...errorDetail(err.err)]
-
-                    case "infra-error":
-                        return ["ネットワーク通信時にエラーが発生しました", ...errorDetail(err.err)]
-                }
+                return remoteCommonError(err, (reason) => [
+                    `${reason.message}によりログアウトに失敗しました`,
+                    ...reason.detail,
+                ])
             }
             function errorDetail(err: string): string[] {
                 if (err.length === 0) {

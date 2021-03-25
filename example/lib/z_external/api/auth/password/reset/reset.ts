@@ -1,6 +1,6 @@
 import { parseAuthResponse, parseErrorMessage } from "../../common"
 
-import { ApiCommonError, ApiResult } from "../../../../data"
+import { ApiCommonError, ApiResult } from "../../../data"
 import { AuthResponse, ParseErrorResult } from "../../data"
 
 type SendMessage = Readonly<{
