@@ -71,4 +71,4 @@ export function toggleMenuExpandEventHasDone(_event: ToggleMenuExpandEvent): boo
     return true
 }
 
-const EMPTY_BADGE: MenuBadge = {}
+const EMPTY_BADGE: MenuBadge = new Map()

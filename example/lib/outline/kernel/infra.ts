@@ -6,6 +6,7 @@ import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
     key: string
+    loadMenuBadge: boolean
     menuTree: MenuTree
 }>
 
@@ -52,7 +53,7 @@ export type GetMenuBadgeRemotePod = GetMenuBadgeRemoteTypes["pod"]
 export type GetMenuBadgeRemoteResult = GetMenuBadgeRemoteTypes["result"]
 export type GetMenuBadgeSimulator = GetMenuBadgeRemoteTypes["simulator"]
 
-export type MenuBadge = Record<string, number>
+export type MenuBadge = Map<string, number>
 export type MenuBadgeItem = Readonly<{ path: string; count: number }>
 
 export type MenuExpand = ArraySet<MenuCategoryPath>

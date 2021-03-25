@@ -35,9 +35,9 @@ export function menuTargetPathLocationConverter(
 
 export function menuBadgeRemoteConverter(menuBadgeItems: MenuBadgeItem[]): MenuBadge {
     return menuBadgeItems.reduce((acc, item) => {
-        acc[item.path] = item.count
+        acc.set(item.path, item.count)
         return acc
-    }, <MenuBadge>{})
+    }, <MenuBadge>new Map())
 }
 
 export const menuExpandRepositoryConverter: RepositoryConverter<

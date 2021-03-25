@@ -56,4 +56,4 @@ export function loadMenuEventHasDone(_event: LoadMenuEvent): boolean {
     return true
 }
 
-const EMPTY_BADGE: MenuBadge = {}
+const EMPTY_BADGE: MenuBadge = new Map()
