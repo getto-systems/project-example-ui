@@ -1,3 +1,3 @@
-[submodule "example/lib/z_external/api/z_external/protobuf"]
-	path = example/lib/z_external/api/z_external/protobuf
+[submodule "example/lib/z_external/api/z_protobuf"]
+	path = example/lib/z_external/api/z_protobuf
 	url = https://github.com/getto-systems/project-example-auth-protocol_buffers.git

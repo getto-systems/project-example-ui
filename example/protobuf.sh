@@ -14,8 +14,10 @@ protobuf_generate_all(){
     local file
 
     root=$1
-    protobuf=${root}/z_external/protobuf/
+    protobuf=${root}/z_protobuf/
     dest=${root}/y_protobuf/
+
+    rm -rf $dest/*
 
     for proto in $(find $protobuf -name '*.proto'); do
         file=${proto#$protobuf}
