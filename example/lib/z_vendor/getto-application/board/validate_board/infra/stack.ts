@@ -5,15 +5,16 @@ export function initValidateBoardStack(): ValidateBoardStack {
 }
 
 class Stack implements ValidateBoardStack {
-    stack: Record<string, boolean> = {}
+    stack: Map<string, boolean> = new Map()
 
     get(name: string): ValidateBoardStateFound {
-        if (name in this.stack) {
-            return { found: true, state: this.stack[name] }
+        const state = this.stack.get(name)
+        if (state === undefined) {
+            return { found: false }
         }
-        return { found: false }
+        return { found: true, state }
     }
-    set(name: string, result: boolean): void {
-        this.stack[name] = result
+    set(name: string, valid: boolean): void {
+        this.stack.set(name, valid)
     }
 }

@@ -32,7 +32,7 @@ class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
     post: Post<WorkerProxyCallMessage<N, M>>
 
     idGenerator: IDGenerator
-    map: Record<number, Post<E>> = {}
+    map: Map<number, Post<E>> = new Map()
 
     constructor(method: N, post: Post<WorkerProxyCallMessage<N, M>>) {
         this.method = method
@@ -42,18 +42,19 @@ class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
 
     call(params: M, post: Post<E>): void {
         const id = this.idGenerator()
-        this.map[id] = post
+        this.map.set(id, post)
         this.post({ method: this.method, id, params })
     }
     resolve({ id, done, event }: WorkerProxyCallResponse<N, E>): void {
-        if (!this.map[id]) {
+        const post = this.map.get(id)
+        if (!post) {
             throw new Error("handler is not set")
         }
 
-        this.map[id](event)
+        post(event)
 
         if (done) {
-            delete this.map[id]
+            this.map.delete(id)
         }
     }
 }

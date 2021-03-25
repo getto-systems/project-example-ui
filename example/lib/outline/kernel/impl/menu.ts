@@ -48,7 +48,7 @@ export function buildMenu(params: BuildMenuParams): Menu {
         return {
             type: "item",
             isActive: menuTargetPath.valid ? item.path === menuTargetPath.value : false,
-            badgeCount: menuBadge[item.path] || 0,
+            badgeCount: menuBadge.get(item.path) || 0,
             item: toMenuItem(item, version),
         }
     }

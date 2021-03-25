@@ -58,4 +58,4 @@ export function updateMenuBadgeEventHasDone(_event: UpdateMenuBadgeEvent): boole
     return true
 }
 
-const EMPTY_BADGE: MenuBadge = {}
+const EMPTY_BADGE: MenuBadge = new Map()
