@@ -230,11 +230,7 @@ function loginError(err: AuthenticatePasswordError): VNodeContent[] {
         case "invalid-password-login":
             return ["ログインIDかパスワードが違います"]
 
-        case "invalid-nonce":
-        case "bad-request":
-        case "server-error":
-        case "bad-response":
-        case "infra-error":
+        default:
             return remoteCommonError(err, (reason) => [
                 `${reason.message}により認証に失敗しました`,
                 ...reason.detail,
