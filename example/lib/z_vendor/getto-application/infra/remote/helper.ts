@@ -41,8 +41,17 @@ export function remoteCommonError<T>(
     message: { (reason: RemoteCommonErrorReason): T[] },
 ): T[] {
     switch (err.type) {
+        case "unauthorized":
+            return message({
+                message: "認証エラー",
+                detail: ["もう一度ログインしてください"],
+            })
+
         case "invalid-nonce":
-            return message({ message: "接続エラー", detail: [] })
+            return message({
+                message: "接続エラー",
+                detail: ["繰り返し接続エラーになる場合、お手数ですが管理者に連絡お願いします"],
+            })
 
         case "bad-request":
             return message({ message: "アプリケーションエラー", detail: [] })

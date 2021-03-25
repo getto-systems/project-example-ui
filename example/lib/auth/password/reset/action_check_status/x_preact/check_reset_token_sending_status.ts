@@ -136,11 +136,7 @@ function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[
         case "already-reset":
             return ["すでにリセット済みです"]
 
-        case "invalid-nonce":
-        case "bad-request":
-        case "server-error":
-        case "bad-response":
-        case "infra-error":
+        default:
             return remoteCommonError(err, (reason) => [
                 `${reason.message}によりステータスの取得に失敗しました`,
                 ...reason.detail,
@@ -148,17 +144,10 @@ function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[
     }
 }
 function sendTokenError(err: SendResetTokenError): VNodeContent[] {
-    switch (err.type) {
-        case "invalid-nonce":
-        case "bad-request":
-        case "server-error":
-        case "bad-response":
-        case "infra-error":
-            return remoteCommonError(err, (reason) => [
-                `${reason.message}によりリセットトークンの送信に失敗しました`,
-                ...reason.detail,
-            ])
-    }
+    return remoteCommonError(err, (reason) => [
+        `${reason.message}によりリセットトークンの送信に失敗しました`,
+        ...reason.detail,
+    ])
 }
 
 const EMPTY_CONTENT = html``
