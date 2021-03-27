@@ -6,20 +6,15 @@ export type AuthTicket = Readonly<{
 }>
 
 export type Authn = Readonly<{
-    nonce: AuthnNonce
     authAt: AuthAt
 }>
 
-export type AuthnNonce = string & { AuthnNonce: never }
-export type AuthAt = Date & { AuthAt: never }
-
 export type Authz = Readonly<{
-    nonce: AuthzNonce
-    roles: AuthzRoles
+    roles: GrantedRoles
 }>
 
-export type AuthzNonce = string & { AuthzNonce: never }
-export type AuthzRoles = string[] & { AuthzRoles: never }
+export type AuthAt = Date & { AuthAt: never }
+export type GrantedRoles = string[] & { GrantedRoles: never }
 
 export function hasExpired(
     authAt: AuthAt,
@@ -28,6 +23,5 @@ export function hasExpired(
     return target.now.getTime() > authAt.getTime() + target.expire_millisecond
 }
 
-export type RenewAuthTicketError = RemoteCommonError
-
-export type RenewAuthTicketRemoteError = RenewAuthTicketError | Readonly<{ type: "invalid-ticket" }>
+export type RenewAuthTicketError = RenewAuthTicketRemoteError
+export type RenewAuthTicketRemoteError = RemoteCommonError

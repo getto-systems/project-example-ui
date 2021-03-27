@@ -14,5 +14,5 @@ export type ResetPasswordError =
 
 export type ResetPasswordRemoteError =
     | RemoteCommonError
-    | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "invalid-reset" }>
     | Readonly<{ type: "already-reset" }>

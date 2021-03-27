@@ -9,6 +9,7 @@ import { MenuContent } from "../../kernel/infra"
 
 export function newUpdateMenuBadgeInfra(
     webStorage: Storage,
+    webCrypto: Crypto,
     menuContent: MenuContent,
 ): UpdateMenuBadgeInfra {
     return {
@@ -16,7 +17,7 @@ export function newUpdateMenuBadgeInfra(
         menuTree: menuContent.menuTree,
         authz: newAuthzRepository(webStorage),
         getMenuBadge: menuContent.loadMenuBadge
-            ? newGetMenuBadgeRemote()
+            ? newGetMenuBadgeRemote(webCrypto)
             : newGetMenuBadgeNoopRemote(),
     }
 }

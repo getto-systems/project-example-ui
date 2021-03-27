@@ -1,55 +1,70 @@
-import { parseAuthResponse, parseErrorMessage } from "../../common"
+import { ResetPasswordResult_pb, ResetPassword_pb } from "../../../y_protobuf/auth_pb.js"
 
-import { ApiCommonError, ApiResult } from "../../../data"
-import { AuthResponse, ParseErrorResult } from "../../data"
+import { decodeProtobuf, encodeProtobuf } from "../../../../../z_vendor/protobuf/helper"
+import { apiCommonError, apiRequest } from "../../../helper"
 
-type SendMessage = Readonly<{
-    resetToken: SendResetToken
-    fields: Readonly<{
-        loginID: SendLoginID
-        password: SendPassword
-    }>
-}>
-type SendResetToken = string
-type SendLoginID = string
-type SendPassword = string
-type RawResetResult = ApiResult<AuthResponse, RemoteError>
-type RemoteError =
-    | ApiCommonError
-    | Readonly<{ type: "invalid-password-reset" }>
-    | Readonly<{ type: "already-reset" }>
+import { ApiFeature } from "../../../infra"
+
+import { ApiAuthenticateResponse, ApiCommonError, ApiResult } from "../../../data"
 
 interface Reset {
-    (message: SendMessage): Promise<RawResetResult>
+    (params: ResetParams): Promise<ResetResult>
 }
-export function newApi_ResetPassword(apiServerURL: string): Reset {
-    return async (_message: SendMessage): Promise<RawResetResult> => {
-        const response = await fetch(apiServerURL, {
-            method: "POST",
-            credentials: "include",
-            headers: [["X-GETTO-EXAMPLE-ID-HANDLER", "Reset"]],
-            // TODO body を適切に送信する
+
+type ResetParams = Readonly<{
+    resetToken: string
+    fields: Readonly<{
+        loginID: string
+        password: string
+    }>
+}>
+type ResetResult = ApiResult<ApiAuthenticateResponse, ApiCommonError | ResetError>
+type ResetError = Readonly<{ type: "invalid-reset" }> | Readonly<{ type: "already-reset" }>
+
+export function newApi_ResetPassword(feature: ApiFeature): Reset {
+    return async (params: ResetParams): Promise<ResetResult> => {
+        const mock = true
+        if (mock) {
+            // TODO api の実装が終わったらつなぐ
+            return { success: true, value: { roles: ["admin", "dev-docs"] } }
+        }
+
+        const request = apiRequest(feature, "/auth/password/reset", "POST")
+        const response = await fetch(request.url, {
+            ...request.options,
+            body: encodeProtobuf(ResetPassword_pb, (message) => {
+                message.resetToken = params.resetToken
+                message.loginId = params.fields.loginID
+                message.password = params.fields.password
+            }),
         })
 
-        if (response.ok) {
-            return parseAuthResponse(response)
-        } else {
-            return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
+        if (!response.ok) {
+            return { success: false, err: apiCommonError(response.status) }
         }
-    }
 
-    function toRemoteError(result: ParseErrorResult): RemoteError {
+        const result = decodeProtobuf(ResetPasswordResult_pb, await response.text())
         if (!result.success) {
-            return { type: "bad-response", err: result.err }
+            return { success: false, err: mapError(result) }
         }
-        switch (result.message) {
-            case "bad-request":
-            case "invalid-password-reset":
-            case "already-reset":
-                return { type: result.message }
+        return {
+            success: true,
+            value: {
+                roles: result.value?.roles || [],
+            },
+        }
 
-            default:
-                return { type: "server-error" }
+        function mapError(result: ResetPasswordResult_pb): ResetError {
+            if (!result.err || !result.err.type) {
+                return { type: "invalid-reset" }
+            }
+            switch (result.err.type) {
+                case ResetPasswordResult_pb.ErrorType.INVALID_RESET:
+                    return { type: "invalid-reset" }
+
+                case ResetPasswordResult_pb.ErrorType.ALREADY_RESET:
+                    return { type: "already-reset" }
+            }
         }
     }
 }

@@ -78,11 +78,13 @@ async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewA
     post({ type: "try-to-renew" })
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
-    const response = await delayedChecker(renew(info.nonce), config.takeLongtimeThreshold, () =>
-        post({ type: "take-longtime-to-renew" }),
+    const response = await delayedChecker(
+        renew({ type: "always" }),
+        config.takeLongtimeThreshold,
+        () => post({ type: "take-longtime-to-renew" }),
     )
     if (!response.success) {
-        if (response.err.type === "invalid-ticket") {
+        if (response.err.type === "unauthorized") {
             const removeResult = authn.remove()
             if (!removeResult.success) {
                 post({ type: "repository-error", err: removeResult.err })

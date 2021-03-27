@@ -10,16 +10,20 @@ import { newGetScriptPathLocationDetecter } from "../../common/secure/get_script
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
 export function newCheckAuthTicketView(feature: OutsideFeature): CheckAuthTicketView {
-    const { webStorage, currentLocation } = feature
+    const { webStorage, webCrypto, currentLocation } = feature
     return initCheckAuthTicketView(
         initCheckAuthTicketCoreAction(
             initCheckAuthTicketCoreMaterial(
                 {
-                    check: newCheckAuthTicketInfra(webStorage),
-                    startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
+                    check: newCheckAuthTicketInfra(webStorage, webCrypto),
+                    startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(
+                        webStorage,
+                        webCrypto,
+                    ),
                     getSecureScriptPath: newGetSecureScriptPathInfra(),
                 },
                 newGetScriptPathLocationDetecter(currentLocation),

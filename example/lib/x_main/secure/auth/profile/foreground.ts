@@ -9,6 +9,7 @@ render(
         ProfileEntry,
         newProfileView({
             webStorage: localStorage,
+            webCrypto: crypto,
             currentLocation: location,
         }),
     ),

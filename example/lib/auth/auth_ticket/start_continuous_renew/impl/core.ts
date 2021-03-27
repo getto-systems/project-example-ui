@@ -71,9 +71,9 @@ export const startContinuousRenew: Start = (infra) => (post) => {
             return NEXT
         }
 
-        const response = await renew(result.value.nonce)
+        const response = await renew({ type: "always" })
         if (!response.success) {
-            if (response.err.type === "invalid-ticket") {
+            if (response.err.type === "unauthorized") {
                 handleStoreResult(authn.remove())
                 handleStoreResult(authz.remove())
                 post({ type: "required-to-login" })

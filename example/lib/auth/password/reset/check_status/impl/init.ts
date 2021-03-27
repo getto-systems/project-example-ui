@@ -16,10 +16,12 @@ export function newCheckResetTokenSendingStatusLocationDetecter(
     return newLocationDetecter(currentLocation, detectSessionID)
 }
 
-export function newCheckResetTokenSendingStatusInfra(): CheckResetTokenSendingStatusInfra {
+export function newCheckResetTokenSendingStatusInfra(
+    webCrypto: Crypto,
+): CheckResetTokenSendingStatusInfra {
     return {
-        sendToken: newSendResetTokenRemote(),
-        getStatus: newGetResetTokenSendingStatusRemote(),
+        sendToken: newSendResetTokenRemote(webCrypto),
+        getStatus: newGetResetTokenSendingStatusRemote(webCrypto),
         config: {
             wait: waitSecond(0.25),
             limit: limit(40),

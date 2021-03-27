@@ -11,10 +11,15 @@ import { ResetPasswordCoreBackgroundInfra } from "../../core/impl"
 import { ResetPasswordProxyMessage, ResetPasswordProxyResponse } from "./message"
 import { backgroundLocationDetecter } from "../../../../../../z_vendor/getto-application/location/helper"
 
+type OutsideFeature = Readonly<{
+    webCrypto: Crypto
+}>
 export function newResetPasswordHandler(
+    feature: OutsideFeature,
     post: Post<ResetPasswordProxyResponse>,
 ): WorkerHandler<ResetPasswordProxyMessage> {
-    const pod = newCoreBackgroundPod()
+    const { webCrypto } = feature
+    const pod = newCoreBackgroundPod(webCrypto)
     return (message) => {
         switch (message.method) {
             case "reset":
@@ -33,9 +38,11 @@ export function newResetPasswordHandler(
     }
 }
 
-export function newResetPasswordCoreBackgroundInfra(): ResetPasswordCoreBackgroundInfra {
+export function newResetPasswordCoreBackgroundInfra(
+    webCrypto: Crypto,
+): ResetPasswordCoreBackgroundInfra {
     return {
-        reset: newResetPasswordInfra(),
+        reset: newResetPasswordInfra(webCrypto),
     }
 }
 

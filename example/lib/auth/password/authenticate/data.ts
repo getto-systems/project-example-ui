@@ -13,4 +13,4 @@ export type AuthenticatePasswordError =
 
 export type AuthenticatePasswordRemoteError =
     | RemoteCommonError
-    | Readonly<{ type: "invalid-password-login" }>
+    | Readonly<{ type: "invalid-password" }>

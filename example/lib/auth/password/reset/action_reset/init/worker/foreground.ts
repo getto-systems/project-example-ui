@@ -25,6 +25,7 @@ import { ResetPasswordCoreAction } from "../../core/action"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
 export interface ResetPasswordProxy
@@ -48,8 +49,8 @@ class Proxy
     }
 
     view(feature: OutsideFeature): ResetPasswordView {
-        const { webStorage, currentLocation } = feature
-        const foreground = newCoreForegroundMaterial(webStorage, currentLocation)
+        const { webStorage, webCrypto, currentLocation } = feature
+        const foreground = newCoreForegroundMaterial(webStorage, webCrypto, currentLocation)
         const detecter = newResetPasswordLocationDetecter(currentLocation)
         return buildResetPasswordView(
             initResetPasswordCoreAction({
@@ -70,16 +71,15 @@ class Proxy
 
 export function newResetPasswordCoreForegroundInfra(
     webStorage: Storage,
+    webCrypto: Crypto,
 ): ResetPasswordCoreForegroundInfra {
     return {
-        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage),
+        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage, webCrypto),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }
 
-export function buildResetPasswordView(
-    core: ResetPasswordCoreAction,
-): ResetPasswordView {
+export function buildResetPasswordView(core: ResetPasswordCoreAction): ResetPasswordView {
     return initResetPasswordView({ core, form: initResetPasswordFormAction() })
 }
 

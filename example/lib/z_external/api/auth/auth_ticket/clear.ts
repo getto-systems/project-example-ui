@@ -1,42 +1,29 @@
+import { apiCommonError, apiRequest } from "../../helper"
+
+import { ApiFeature } from "../../infra"
+
 import { ApiCommonError, ApiResult } from "../../data"
 
-type SendAuthnNonce = string
-type ClearResult = ApiResult<true, RemoteError>
-type RemoteError = ApiCommonError
-
-interface Renew {
-    (apiServerURL: string): { (nonce: SendAuthnNonce): Promise<ClearResult> }
+interface Clear {
+    (): Promise<ClearResult>
 }
-export const newApi_ClearAuthTicket: Renew = (_apiServerURL) => async (_nonce) => {
-    // TODO ちゃんと投げる
-    return { success: true, value: true }
-    // const response = await fetch(apiServerURL, {
-    //     method: "POST",
-    //     credentials: "include",
-    //     headers: [
-    //         ["X-GETTO-EXAMPLE-ID-HANDLER", "Clear"],
-    //         // TODO AUTHN-NONCE にしたい
-    //         ["X-GETTO-EXAMPLE-ID-TICKET-NONCE", nonce],
-    //     ],
-    // })
+type ClearResult = ApiResult<true, ApiCommonError>
 
-    // if (response.ok) {
-    //     return { success: true, value: true }
-    // } else {
-    //     return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
-    // }
+export function newApi_ClearAuthTicket(feature: ApiFeature): Clear {
+    return async (): Promise<ClearResult> => {
+        const mock = true
+        if (mock) {
+            // TODO api の実装が終わったらつなぐ
+            return { success: true, value: true }
+        }
 
-    // function toRemoteError(result: ParseErrorResult): RemoteError {
-    //     if (!result.success) {
-    //         return { type: "bad-response", err: result.err }
-    //     }
-    //     switch (result.message) {
-    //         case "bad-request":
-    //         case "invalid-ticket":
-    //             return { type: result.message }
+        const request = apiRequest(feature, "/auth/clear", "POST")
+        const response = await fetch(request.url, request.options)
 
-    //         default:
-    //             return { type: "server-error" }
-    //     }
-    // }
+        if (!response.ok) {
+            return { success: false, err: apiCommonError(response.status) }
+        }
+
+        return { success: true, value: true }
+    }
 }

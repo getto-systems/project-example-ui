@@ -10,14 +10,17 @@ import {
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
-export function newAuthenticatePasswordView(
-    feature: OutsideFeature,
-): AuthenticatePasswordView {
-    const { webStorage, currentLocation } = feature
-    const foreground = newAuthenticatePasswordCoreForegroundMaterial(webStorage, currentLocation)
-    const background = newAuthenticatePasswordCoreBackgroundMaterial()
+export function newAuthenticatePasswordView(feature: OutsideFeature): AuthenticatePasswordView {
+    const { webStorage, webCrypto, currentLocation } = feature
+    const foreground = newAuthenticatePasswordCoreForegroundMaterial(
+        webStorage,
+        webCrypto,
+        currentLocation,
+    )
+    const background = newAuthenticatePasswordCoreBackgroundMaterial(webCrypto)
 
     return buildAuthenticatePasswordView(
         initAuthenticatePasswordCoreAction({

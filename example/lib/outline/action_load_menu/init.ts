@@ -11,19 +11,20 @@ import { LoadMenuResource } from "./resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
 export function newLoadMenuResource(
     feature: OutsideFeature,
     menuContent: MenuContent,
 ): LoadMenuResource {
-    const { webStorage, currentLocation } = feature
+    const { webStorage, webCrypto, currentLocation } = feature
     return {
         menu: initLoadMenuCoreAction(
             initLoadMenuCoreMaterial(
                 {
                     ...newLoadMenuInfra(webStorage, menuContent),
-                    ...newUpdateMenuBadgeInfra(webStorage, menuContent),
+                    ...newUpdateMenuBadgeInfra(webStorage, webCrypto, menuContent),
                     ...newToggleMenuExpandInfra(webStorage, menuContent),
                 },
                 newLoadMenuLocationDetecter(currentLocation),

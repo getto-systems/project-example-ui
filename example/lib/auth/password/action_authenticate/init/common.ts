@@ -15,13 +15,18 @@ import {
 
 export function newAuthenticatePasswordCoreForegroundMaterial(
     webStorage: Storage,
+    webCrypto: Crypto,
     currentLocation: Location,
 ): AuthenticatePasswordCoreForegroundMaterial {
-    const infra = newAuthenticatePasswordCoreForegroundInfra(webStorage)
+    const infra = newAuthenticatePasswordCoreForegroundInfra(webStorage, webCrypto)
     const detecter = newGetScriptPathLocationDetecter(currentLocation)
     return initAuthenticatePasswordCoreForegroundMaterial(infra, detecter)
 }
 
-export function newAuthenticatePasswordCoreBackgroundMaterial(): AuthenticatePasswordCoreBackgroundMaterial {
-    return initAuthenticatePasswordCoreBackgroundMaterial(newAuthenticatePasswordCoreBackgroundInfra())
+export function newAuthenticatePasswordCoreBackgroundMaterial(
+    webCrypto: Crypto,
+): AuthenticatePasswordCoreBackgroundMaterial {
+    return initAuthenticatePasswordCoreBackgroundMaterial(
+        newAuthenticatePasswordCoreBackgroundInfra(webCrypto),
+    )
 }

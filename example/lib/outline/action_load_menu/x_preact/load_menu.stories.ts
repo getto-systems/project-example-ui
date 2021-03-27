@@ -26,9 +26,7 @@ enum LoadEnum {
     "failed-to-fetch-menu",
     "required-to-login",
     "repository-error",
-    "bad-request",
     "server-error",
-    "bad-response",
     "infra-error",
 }
 

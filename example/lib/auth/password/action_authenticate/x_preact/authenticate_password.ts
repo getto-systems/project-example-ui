@@ -227,7 +227,7 @@ function loginError(err: AuthenticatePasswordError): VNodeContent[] {
         case "validation-error":
             return ["正しく入力してください"]
 
-        case "invalid-password-login":
+        case "invalid-password":
             return ["ログインIDかパスワードが違います"]
 
         default:

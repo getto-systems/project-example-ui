@@ -89,7 +89,6 @@ function standard_authn(): AuthnRepositoryPod {
 function standard_authz(): AuthzRepositoryPod {
     const db = mockDB<AuthzRepositoryValue>()
     db.set({
-        nonce: "nonce",
         roles: ["role"],
     })
     return wrapRepository(db)

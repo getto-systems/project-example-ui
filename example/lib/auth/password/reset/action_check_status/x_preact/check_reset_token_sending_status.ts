@@ -130,7 +130,7 @@ function checkStatusError(err: CheckResetTokenSendingStatusError): VNodeContent[
         case "empty-session-id":
             return ["パスワードリセットのためのセッションIDが取得できませんでした"]
 
-        case "invalid-password-reset":
+        case "invalid-reset":
             return ["セッションエラーによりステータスの取得に失敗しました"]
 
         case "already-reset":

@@ -28,6 +28,7 @@ import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
     worker: Worker
 }>

@@ -2,7 +2,6 @@ import { RemoteTypes } from "../../../z_vendor/getto-application/infra/remote/in
 import { AuthzRepositoryPod } from "../kernel/infra"
 import { AuthnRepositoryPod } from "../kernel/infra"
 
-import { AuthnNonce } from "../kernel/data"
 import { ClearAuthTicketRemoteError } from "./data"
 
 export type ClearAuthTicketInfra = Readonly<{
@@ -11,7 +10,12 @@ export type ClearAuthTicketInfra = Readonly<{
     clear: ClearAuthTicketRemotePod
 }>
 
-type ClearRemoteTypes = RemoteTypes<AuthnNonce, true, true, ClearAuthTicketRemoteError>
+type ClearRemoteTypes = RemoteTypes<
+    { type: "always" }, // 引数は必要ないが、null は嫌なのでこうしておく
+    true,
+    true,
+    ClearAuthTicketRemoteError
+>
 export type ClearAuthTicketRemotePod = ClearRemoteTypes["pod"]
 export type ClearAuthTicketResult = ClearRemoteTypes["result"]
 export type ClearAuthTicketSimulator = ClearRemoteTypes["simulator"]

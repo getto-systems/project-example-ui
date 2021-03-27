@@ -4,6 +4,6 @@ import { initRequestResetTokenCoreMaterial } from "../core/impl"
 
 import { RequestResetTokenCoreMaterial } from "../core/action"
 
-export function newRequestResetTokenCoreMaterial(): RequestResetTokenCoreMaterial {
-    return initRequestResetTokenCoreMaterial(newRequestResetTokenInfra())
+export function newRequestResetTokenCoreMaterial(webCrypto: Crypto): RequestResetTokenCoreMaterial {
+    return initRequestResetTokenCoreMaterial(newRequestResetTokenInfra(webCrypto))
 }

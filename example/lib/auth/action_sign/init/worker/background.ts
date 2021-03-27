@@ -11,20 +11,23 @@ import { RequestPasswordResetTokenProxyMessage } from "../../../password/reset/a
 import { CheckPasswordResetSendingStatusProxyMessage } from "../../../password/reset/action_check_status/init/worker/message"
 import { ResetPasswordProxyMessage } from "../../../password/reset/action_reset/init/worker/message"
 
-export function newSignWorkerBackground(worker: Worker): void {
+type OutsideFeature = Readonly<{
+    webCrypto: Crypto
+}>
+export function newSignWorkerBackground(feature: OutsideFeature, worker: Worker): void {
     const handler: Handler = {
         password: {
-            authenticate: newAuthenticatePasswordHandler((response) =>
+            authenticate: newAuthenticatePasswordHandler(feature, (response) =>
                 postBackgroundMessage({ type: "password-authenticate", response }),
             ),
             reset: {
-                requestToken: newRequestResetTokenHandler((response) =>
+                requestToken: newRequestResetTokenHandler(feature, (response) =>
                     postBackgroundMessage({ type: "password-reset-requestToken", response }),
                 ),
-                checkStatus: newCheckPasswordResetSendingStatusWorkerHandler((response) =>
+                checkStatus: newCheckPasswordResetSendingStatusWorkerHandler(feature, (response) =>
                     postBackgroundMessage({ type: "password-reset-checkStatus", response }),
                 ),
-                reset: newResetPasswordHandler((response) =>
+                reset: newResetPasswordHandler(feature, (response) =>
                     postBackgroundMessage({
                         type: "password-reset",
                         response,

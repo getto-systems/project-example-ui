@@ -8,15 +8,16 @@ import { initNotifyUnexpectedErrorResource } from "./impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
 }>
 export function newNotifyUnexpectedErrorResource(
     feature: OutsideFeature,
 ): NotifyUnexpectedErrorResource {
-    const { webStorage } = feature
+    const { webStorage, webCrypto } = feature
     return initNotifyUnexpectedErrorResource(
         initNotifyUnexpectedErrorCoreAction({
             authz: newAuthzRepository(webStorage),
-            notify: newNotifyUnexpectedErrorRemote(),
+            notify: newNotifyUnexpectedErrorRemote(webCrypto),
         }),
     )
 }

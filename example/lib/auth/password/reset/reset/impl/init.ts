@@ -15,9 +15,9 @@ export function newResetPasswordLocationDetecter(
     return newLocationDetecter(currentLocation, detectResetToken)
 }
 
-export function newResetPasswordInfra(): ResetPasswordInfra {
+export function newResetPasswordInfra(webCrypto: Crypto): ResetPasswordInfra {
     return {
-        reset: newResetPasswordRemote(),
+        reset: newResetPasswordRemote(webCrypto),
         clock: newClock(),
         config: {
             takeLongtimeThreshold: delaySecond(1),

@@ -319,13 +319,7 @@ function simulateAuthenticate(_fields: AuthenticatePasswordFields): Authenticate
     return {
         success: true,
         value: {
-            authn: {
-                nonce: "authn-nonce",
-            },
-            authz: {
-                nonce: "api-nonce",
-                roles: ["role"],
-            },
+            roles: ["role"],
         },
     }
 }
@@ -335,8 +329,8 @@ function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
     return mockRemotePod(
         () => {
             if (count > 1) {
-                // 最初の 2回だけ renew して、あとは renew を cancel するための invalid-ticket
-                return { success: false, err: { type: "invalid-ticket" } }
+                // 最初の 2回だけ renew して、あとは renew を cancel するための unauthorized
+                return { success: false, err: { type: "unauthorized" } }
             }
 
             // 現在時刻を動かす
@@ -347,13 +341,7 @@ function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
             return {
                 success: true,
                 value: {
-                    authn: {
-                        nonce: "renewed-authn-nonce",
-                    },
-                    authz: {
-                        nonce: "api-nonce",
-                        roles: ["role"],
-                    },
+                    roles: ["role"],
                 },
             }
         },

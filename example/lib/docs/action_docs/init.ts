@@ -9,6 +9,7 @@ import { DocsView } from "./resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
 export function newDocsView(feature: OutsideFeature): DocsView {

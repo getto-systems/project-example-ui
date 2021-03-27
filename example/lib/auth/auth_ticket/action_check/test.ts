@@ -406,8 +406,8 @@ function renewPod(clock: ClockPubSub, waitTime: WaitTime): RenewAuthTicketRemote
     let count = 0
     return mockRemotePod(() => {
         if (count > 2) {
-            // 最初の 3回だけ renew して、あとは renew を cancel するための invalid-ticket
-            return { success: false, err: { type: "invalid-ticket" } }
+            // 最初の 3回だけ renew して、あとは renew を cancel するための unauthorized
+            return { success: false, err: { type: "unauthorized" } }
         }
 
         // 現在時刻を動かす
@@ -418,13 +418,7 @@ function renewPod(clock: ClockPubSub, waitTime: WaitTime): RenewAuthTicketRemote
         return {
             success: true,
             value: {
-                authn: {
-                    nonce: "renewed-authn-nonce",
-                },
-                authz: {
-                    nonce: "api-nonce",
-                    roles: ["role"],
-                },
+                roles: ["role"],
             },
         }
     }, waitTime)

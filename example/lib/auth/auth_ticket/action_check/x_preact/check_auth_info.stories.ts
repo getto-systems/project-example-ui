@@ -10,9 +10,7 @@ import { CheckAuthTicketCoreState } from "../core/action"
 
 enum CheckEnum {
     "takeLongtime",
-    "bad-request",
     "server-error",
-    "bad-response",
     "infra-error",
 }
 
@@ -43,17 +41,8 @@ const template = storyTemplate<Props>((props) => {
             case "takeLongtime":
                 return { type: "take-longtime-to-renew" }
 
-            case "bad-request":
-                return { type: "failed-to-renew", err: { type: "bad-request" } }
-
             case "server-error":
                 return { type: "failed-to-renew", err: { type: "server-error" } }
-
-            case "bad-response":
-                return {
-                    type: "failed-to-renew",
-                    err: { type: "bad-response", err: props.err },
-                }
 
             case "infra-error":
                 return {

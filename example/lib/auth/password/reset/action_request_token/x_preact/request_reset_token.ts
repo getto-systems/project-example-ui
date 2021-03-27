@@ -194,7 +194,7 @@ function requestTokenError(err: RequestResetTokenError): VNodeContent[] {
         case "validation-error":
             return ["正しく入力してください"]
 
-        case "invalid-password-reset":
+        case "invalid-reset":
             return ["ログインIDが登録されていないか、トークンの送信先が登録されていません"]
 
         default:
