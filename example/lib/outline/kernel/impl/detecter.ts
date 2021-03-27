@@ -1,4 +1,4 @@
-import { menuTargetPathLocationConverter } from "./convert"
+import { menuTargetPathLocationConverter } from "./converter"
 import { LoadMenuLocationDetectMethod, LoadMenuLocationKeys } from "../method"
 
 interface Detecter {

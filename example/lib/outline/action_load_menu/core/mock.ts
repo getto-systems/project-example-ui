@@ -1,7 +1,7 @@
 import { ApplicationMockStateAction } from "../../../z_vendor/getto-application/action/mock"
 
 import { Menu } from "../../kernel/data"
-import { appendMenuCategoryPath, toMenuCategory, toMenuItem } from "../../kernel/impl/convert"
+import { appendMenuCategoryPath, toMenuCategory, toMenuItem } from "../../kernel/impl/converter"
 
 import { initialLoadMenuCoreState, LoadMenuCoreAction, LoadMenuCoreState } from "./action"
 

@@ -1,4 +1,4 @@
-import { menuExpandRepositoryConverter } from "../../kernel/impl/convert"
+import { menuExpandRepositoryConverter } from "../../kernel/impl/converter"
 import { authzRepositoryConverter } from "../../../auth/auth_ticket/kernel/converter"
 
 import { buildMenu } from "../../kernel/impl/menu"
