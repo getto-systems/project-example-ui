@@ -13,7 +13,7 @@ import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
 import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./core/impl"
 
-import { menuExpandRepositoryConverter } from "../kernel/impl/convert"
+import { menuExpandRepositoryConverter } from "../kernel/impl/converter"
 import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
@@ -504,9 +504,6 @@ function actionHasDone(state: LoadMenuCoreState): boolean {
     switch (state.type) {
         case "initial-menu":
             return false
-
-        case "failed-to-fetch-menu":
-            return true
 
         case "succeed-to-load":
         case "required-to-login":
