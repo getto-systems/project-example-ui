@@ -505,9 +505,6 @@ function actionHasDone(state: LoadMenuCoreState): boolean {
         case "initial-menu":
             return false
 
-        case "failed-to-fetch-menu":
-            return true
-
         case "succeed-to-load":
         case "required-to-login":
         case "repository-error":

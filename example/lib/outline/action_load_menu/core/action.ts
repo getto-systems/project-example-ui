@@ -25,7 +25,6 @@ export type LoadMenuCoreMaterial = Readonly<{
 
 export type LoadMenuCoreState =
     | Readonly<{ type: "initial-menu" }>
-    | Readonly<{ type: "failed-to-fetch-menu" }>
     | LoadMenuEvent
     | UpdateMenuBadgeEvent
     | ToggleMenuExpandEvent

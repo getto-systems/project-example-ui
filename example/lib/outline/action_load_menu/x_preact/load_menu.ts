@@ -44,9 +44,6 @@ export function LoadMenuComponent(props: Props): VNode {
         case "failed-to-update":
             return menu([menuBox(error(props.state.err)), content(props.state.menu)])
 
-        case "failed-to-fetch-menu":
-            return menu([menuBox(fetchError())])
-
         case "required-to-login":
             return menu([menuBox(requiredToLogin())])
 
@@ -128,12 +125,6 @@ function badge(badgeCount: number) {
     return badge_alert(html`${badgeCount}`)
 }
 
-function fetchError(): VNode[] {
-    return [
-        notice_alert("アプリケーションエラー"),
-        html`<small><p>アプリケーションの設定ミスです。メニューを取得できません</p></small>`,
-    ]
-}
 function requiredToLogin(): VNode[] {
     return [notice_alert("認証エラー"), html`<small><p>もう一度ログインしてください</p></small>`]
 }

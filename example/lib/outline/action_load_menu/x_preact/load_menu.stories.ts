@@ -23,7 +23,6 @@ import { Menu } from "../../kernel/data"
 
 enum LoadEnum {
     "success",
-    "failed-to-fetch-menu",
     "required-to-login",
     "repository-error",
     "server-error",
@@ -68,7 +67,6 @@ const template = storyTemplate<MockProps>((props) => {
             case "success":
                 return { type: "succeed-to-load", menu: menu() }
 
-            case "failed-to-fetch-menu":
             case "required-to-login":
                 return { type: props.load }
 
