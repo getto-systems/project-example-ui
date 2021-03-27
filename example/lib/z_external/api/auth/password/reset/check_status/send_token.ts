@@ -1,41 +1,29 @@
-import { ApiCommonError, ApiResult } from "../../../../data"
-import { parseErrorMessage } from "../../../common"
-import { ParseErrorResult } from "../../../data"
+import { apiCommonError, apiRequest } from "../../../../helper"
 
-type RawSendTokenResult = ApiResult<true, RemoteError>
-type RemoteError = ApiCommonError
+import { ApiFeature } from "../../../../infra"
+
+import { ApiCommonError, ApiResult } from "../../../../data"
 
 interface SendToken {
-    (): Promise<RawSendTokenResult>
+    (): Promise<SendTokenResult>
 }
-export function newApi_SendResetToken(apiServerURL: string): SendToken {
-    return async (): Promise<RawSendTokenResult> => {
-        const response = await fetch(apiServerURL, {
-            method: "POST",
-            credentials: "include",
-            headers: [["X-GETTO-EXAMPLE-ID-HANDLER", "ResetSession-SendToken"]],
-        })
 
-        if (response.ok) {
-            return {
-                success: true,
-                value: true,
-            }
-        } else {
-            return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
-        }
-    }
+type SendTokenResult = ApiResult<true, ApiCommonError>
 
-    function toRemoteError(result: ParseErrorResult): RemoteError {
-        if (!result.success) {
-            return { type: "bad-response", err: result.err }
+export function newApi_SendResetToken(feature: ApiFeature): SendToken {
+    return async (): Promise<SendTokenResult> => {
+        const mock = true
+        if (mock) {
+            // TODO api の実装が終わったらつなぐ
+            return { success: true, value: true }
         }
-        switch (result.message) {
-            case "bad-request":
-                return { type: result.message }
 
-            default:
-                return { type: "server-error" }
+        const request = apiRequest(feature, "/auth/password/reset/token/sender", "POST")
+        const response = await fetch(request.url, request.options)
+
+        if (!response.ok) {
+            return { success: false, err: apiCommonError(response.status) }
         }
+        return { success: true, value: true }
     }
 }

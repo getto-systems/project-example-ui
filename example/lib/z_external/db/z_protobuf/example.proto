@@ -1,5 +1,3 @@
 syntax = "proto3";
 
-message SeasonMessage {
-  int32 year = 1;
-}
+message Season_pb { int32 year = 1; }

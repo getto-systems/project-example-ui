@@ -40,7 +40,7 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
         menuBadge: EMPTY_BADGE,
     }
 
-    const response = await getMenuBadge(authzResult.value.nonce)
+    const response = await getMenuBadge({ type: "always" })
     if (!response.success) {
         post({ type: "failed-to-update", menu: buildMenu(buildParams), err: response.err })
         return

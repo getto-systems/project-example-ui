@@ -1,43 +1,35 @@
-import { parseAuthResponse, parseErrorMessage } from "../common"
+import { AuthenticateResponse_pb } from "../../y_protobuf/auth_pb.js"
 
-import { AuthResponse, ParseErrorResult } from "../data"
-import { ApiCommonError, ApiResult } from "../../data"
+import { decodeProtobuf } from "../../../../z_vendor/protobuf/helper"
+import { apiCommonError, apiRequest } from "../../helper"
 
-type SendAuthnNonce = string
-type RemoteResult = ApiResult<AuthResponse, RemoteError>
-type RemoteError = ApiCommonError | Readonly<{ type: "invalid-ticket" }>
+import { ApiFeature } from "../../infra"
+
+import { ApiAuthenticateResponse, ApiCommonError, ApiResult } from "../../data"
 
 interface Renew {
-    (apiServerURL: string): { (nonce: SendAuthnNonce): Promise<RemoteResult> }
+    (): Promise<RenewResult>
 }
-export const newApi_RenewAuthTicket: Renew = (apiServerURL) => async (nonce) => {
-    const response = await fetch(apiServerURL, {
-        method: "POST",
-        credentials: "include",
-        headers: [
-            ["X-GETTO-EXAMPLE-ID-HANDLER", "Renew"],
-            // TODO AUTHN-NONCE にしたい
-            ["X-GETTO-EXAMPLE-ID-TICKET-NONCE", nonce],
-        ],
-    })
+type RenewResult = ApiResult<ApiAuthenticateResponse, ApiCommonError>
 
-    if (response.ok) {
-        return parseAuthResponse(response)
-    } else {
-        return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
-    }
-
-    function toRemoteError(result: ParseErrorResult): RemoteError {
-        if (!result.success) {
-            return { type: "bad-response", err: result.err }
+export function newApi_RenewAuthTicket(feature: ApiFeature): Renew {
+    return async (): Promise<RenewResult> => {
+        const mock = true
+        if (mock) {
+            // TODO api の実装が終わったらつなぐ
+            return { success: true, value: { roles: ["admin", "dev-docs"] } }
         }
-        switch (result.message) {
-            case "bad-request":
-            case "invalid-ticket":
-                return { type: result.message }
 
-            default:
-                return { type: "server-error" }
+        const request = apiRequest(feature, "/auth/renew", "POST")
+        const response = await fetch(request.url, request.options)
+
+        if (!response.ok) {
+            return { success: false, err: apiCommonError(response.status) }
+        }
+
+        return {
+            success: true,
+            value: decodeProtobuf(AuthenticateResponse_pb, await response.text()),
         }
     }
 }

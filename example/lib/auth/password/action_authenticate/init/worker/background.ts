@@ -10,10 +10,15 @@ import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } f
 
 import { newAuthenticatePasswordCoreBackgroundMaterial } from "../common"
 
+type OutsideFeature = Readonly<{
+    webCrypto: Crypto
+}>
 export function newAuthenticatePasswordHandler(
+    feature: OutsideFeature,
     post: Post<AuthenticatePasswordProxyResponse>,
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
-    const material = newAuthenticatePasswordCoreBackgroundMaterial()
+    const { webCrypto } = feature
+    const material = newAuthenticatePasswordCoreBackgroundMaterial(webCrypto)
     return (message) => {
         switch (message.method) {
             case "authenticate":
@@ -29,9 +34,11 @@ export function newAuthenticatePasswordHandler(
     }
 }
 
-export function newAuthenticatePasswordCoreBackgroundInfra(): AuthenticatePasswordCoreBackgroundInfra {
+export function newAuthenticatePasswordCoreBackgroundInfra(
+    webCrypto: Crypto,
+): AuthenticatePasswordCoreBackgroundInfra {
     return {
-        authenticate: newAuthenticatePasswordInfra(),
+        authenticate: newAuthenticatePasswordInfra(webCrypto),
     }
 }
 

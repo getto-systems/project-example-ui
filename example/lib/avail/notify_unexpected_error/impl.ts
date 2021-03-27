@@ -24,10 +24,7 @@ export const notifyUnexpectedError: Notify = (infra) => async (err) => {
         return
     }
 
-    const result = await notify({
-        nonce: authzResult.value.nonce,
-        err,
-    })
+    const result = await notify(err)
     if (!result.success) {
         // エラーの通知に失敗したらもうどうしようもないので console.log しておく
         console.log(result.err)

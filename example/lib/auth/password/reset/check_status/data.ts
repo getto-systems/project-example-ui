@@ -13,7 +13,7 @@ export type CheckResetTokenSendingStatusError = CheckResetTokenSendingStatusRemo
 export type CheckResetTokenSendingStatusRemoteError =
     | RemoteCommonError
     | Readonly<{ type: "empty-session-id" }>
-    | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "invalid-reset" }>
     | Readonly<{ type: "already-reset" }>
 
 export type SendResetTokenError = RemoteCommonError

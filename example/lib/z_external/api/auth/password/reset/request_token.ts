@@ -1,45 +1,52 @@
-import { ApiCommonError, ApiResult } from "../../../data"
-import { parseErrorMessage } from "../../common"
-import { ParseErrorResult } from "../../data"
+import { RequestResetTokenResult_pb, RequestResetToken_pb } from "../../../y_protobuf/auth_pb.js"
 
-type SendFields = Readonly<{
-    loginID: SendLoginID
-}>
-type SendLoginID = string
-type RemoteResult = ApiResult<string, RemoteError>
-type RemoteError = ApiCommonError | Readonly<{ type: "invalid-password-reset" }>
+import { decodeProtobuf, encodeProtobuf } from "../../../../../z_vendor/protobuf/helper"
+import { apiCommonError, apiRequest } from "../../../helper"
+
+import { ApiFeature } from "../../../infra"
+
+import { ApiCommonError, ApiResult } from "../../../data"
 
 interface RequestToken {
-    (fields: SendFields): Promise<RemoteResult>
+    (fields: RequestTokenFields): Promise<RequestTokenResult>
 }
-export function newApi_RequestToken(apiServerURL: string): RequestToken {
-    return async (_fields: SendFields): Promise<RemoteResult> => {
-        const response = await fetch(apiServerURL, {
-            method: "POST",
-            credentials: "include",
-            headers: [["X-GETTO-EXAMPLE-ID-HANDLER", "ResetSession-Start"]],
-            // TODO body を適切に送信する
+type RequestTokenFields = Readonly<{
+    loginID: string
+}>
+type RequestTokenResult = ApiResult<string, ApiCommonError | RequestTokenError>
+type RequestTokenError = Readonly<{ type: "invalid-reset" }>
+
+export function newApi_RequestResetToken(feature: ApiFeature): RequestToken {
+    return async (fields): Promise<RequestTokenResult> => {
+        const mock = true
+        if (mock) {
+            // TODO api の実装が終わったらつなぐ
+            return { success: true, value: "reset-session-id" }
+        }
+
+        const request = apiRequest(feature, "/auth/password/reset/token", "POST")
+        const response = await fetch(request.url, {
+            ...request.options,
+            body: encodeProtobuf(RequestResetToken_pb, (message) => {
+                message.loginId = fields.loginID
+            }),
         })
 
-        if (response.ok) {
-            // TODO 適切にデコードする
-            return { success: true, value: "session-id" }
-        } else {
-            return { success: false, err: toRemoteError(await parseErrorMessage(response)) }
+        if (!response.ok) {
+            return { success: false, err: apiCommonError(response.status) }
         }
-    }
 
-    function toRemoteError(result: ParseErrorResult): RemoteError {
+        const result = decodeProtobuf(RequestResetTokenResult_pb, await response.text())
         if (!result.success) {
-            return { type: "bad-response", err: result.err }
+            return { success: false, err: mapError(result) }
         }
-        switch (result.message) {
-            case "bad-request":
-            case "invalid-password-reset":
-                return { type: result.message }
+        return {
+            success: true,
+            value: result.value?.sessionId || "",
+        }
 
-            default:
-                return { type: "server-error" }
+        function mapError(_result: RequestResetTokenResult_pb): RequestTokenError {
+            return { type: "invalid-reset" }
         }
     }
 }

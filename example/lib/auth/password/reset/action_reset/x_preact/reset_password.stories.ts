@@ -15,10 +15,8 @@ enum ResetEnum {
     "try",
     "takeLongtime",
     "validation-error",
-    "bad-request",
     "invalid",
     "server-error",
-    "bad-response",
     "infra-error",
 }
 
@@ -62,23 +60,14 @@ const template = storyTemplate<Props>((props) => {
             case "validation-error":
                 return { type: "failed-to-reset", err: { type: "validation-error" } }
 
-            case "bad-request":
-                return { type: "failed-to-reset", err: { type: "bad-request" } }
-
             case "invalid":
                 return {
                     type: "failed-to-reset",
-                    err: { type: "invalid-password-reset" },
+                    err: { type: "invalid-reset" },
                 }
 
             case "server-error":
                 return { type: "failed-to-reset", err: { type: "server-error" } }
-
-            case "bad-response":
-                return {
-                    type: "failed-to-reset",
-                    err: { type: "bad-response", err: props.err },
-                }
 
             case "infra-error":
                 return {

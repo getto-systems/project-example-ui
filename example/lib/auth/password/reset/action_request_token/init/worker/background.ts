@@ -9,10 +9,15 @@ import {
     RequestPasswordResetTokenProxyResponse,
 } from "./message"
 
+type OutsideFeature = Readonly<{
+    webCrypto: Crypto
+}>
 export function newRequestResetTokenHandler(
+    feature: OutsideFeature,
     post: Post<RequestPasswordResetTokenProxyResponse>,
 ): WorkerHandler<RequestPasswordResetTokenProxyMessage> {
-    const material = newRequestResetTokenCoreMaterial()
+    const { webCrypto } = feature
+    const material = newRequestResetTokenCoreMaterial(webCrypto)
     return (message) => {
         switch (message.method) {
             case "requestToken":

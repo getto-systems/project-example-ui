@@ -220,7 +220,7 @@ function resetError(err: ResetPasswordError): VNodeContent[] {
         case "empty-reset-token":
             return ["リセットトークンが見つかりませんでした"]
 
-        case "invalid-password-reset":
+        case "invalid-reset":
             return ["ログインIDが最初に入力したものと違うか、有効期限が切れています"]
 
         case "already-reset":

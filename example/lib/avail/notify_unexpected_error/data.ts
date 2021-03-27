@@ -1,1 +1,3 @@
-export type NotifyUnexpectedErrorRemoteError = Readonly<{ type: "infra-error"; err: string }>
+import { RemoteCommonError } from "../../z_vendor/getto-application/infra/remote/data"
+
+export type NotifyUnexpectedErrorRemoteError = RemoteCommonError

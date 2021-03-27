@@ -10,6 +10,7 @@ render(
     h(DocsEntry, {
         view: newDocsView({
             webStorage: localStorage,
+            webCrypto: crypto,
             currentLocation: location,
         }),
         docs: {

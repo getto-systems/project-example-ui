@@ -1,4 +1,7 @@
-import { newCheckResetTokenSendingStatusInfra } from "../../check_status/impl/init"
+import {
+    newCheckResetTokenSendingStatusInfra,
+    newCheckResetTokenSendingStatusLocationDetecter,
+} from "../../check_status/impl/init"
 
 import {
     initCheckResetTokenSendingStatusCoreMaterial,
@@ -10,13 +13,19 @@ import {
     CheckResetTokenSendingStatusCoreMaterialPod,
 } from "../core/action"
 
-import { CheckResetTokenSendingStatusLocationDetecter } from "../../check_status/method"
-
 export function newCheckSendingStatusMaterial(
-    detecter: CheckResetTokenSendingStatusLocationDetecter,
+    webCrypto: Crypto,
+    currentLocation: Location,
 ): CheckResetTokenSendingStatusCoreMaterial {
-    return initCheckResetTokenSendingStatusCoreMaterial(newCheckResetTokenSendingStatusInfra(), detecter)
+    return initCheckResetTokenSendingStatusCoreMaterial(
+        newCheckResetTokenSendingStatusInfra(webCrypto),
+        newCheckResetTokenSendingStatusLocationDetecter(currentLocation),
+    )
 }
-export function newCheckSendingStatusMaterialPod(): CheckResetTokenSendingStatusCoreMaterialPod {
-    return initCheckResetTokenSendingStatusCoreMaterialPod(newCheckResetTokenSendingStatusInfra())
+export function newCheckSendingStatusMaterialPod(
+    webCrypto: Crypto,
+): CheckResetTokenSendingStatusCoreMaterialPod {
+    return initCheckResetTokenSendingStatusCoreMaterialPod(
+        newCheckResetTokenSendingStatusInfra(webCrypto),
+    )
 }

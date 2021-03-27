@@ -6,10 +6,14 @@ import { initRequestResetTokenCoreAction, initRequestResetTokenCoreMaterial } fr
 
 import { RequestResetTokenView } from "../resource"
 
-export function newRequestResetTokenView(): RequestResetTokenView {
+type OutsideFeature = Readonly<{
+    webCrypto: Crypto
+}>
+export function newRequestResetTokenView(feature: OutsideFeature): RequestResetTokenView {
+    const { webCrypto } = feature
     return buildRequestResetTokenView(
         initRequestResetTokenCoreAction(
-            initRequestResetTokenCoreMaterial(newRequestResetTokenInfra()),
+            initRequestResetTokenCoreMaterial(newRequestResetTokenInfra(webCrypto)),
         ),
     )
 }

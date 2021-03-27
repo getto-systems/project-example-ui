@@ -10,11 +10,11 @@ import {
 import { CheckAuthTicketInfra } from "../infra"
 import { newAuthnRepository } from "../../kernel/infra/repository/last_auth"
 
-export function newCheckAuthTicketInfra(webStorage: Storage): CheckAuthTicketInfra {
+export function newCheckAuthTicketInfra(webStorage: Storage, webCrypto: Crypto): CheckAuthTicketInfra {
     return {
         authz: newAuthzRepository(webStorage),
         authn: newAuthnRepository(webStorage),
-        renew: newRenewAuthTicketRemote(),
+        renew: newRenewAuthTicketRemote(webCrypto),
         clock: newClock(),
         config: {
             instantLoadExpire: expireMinute(3),

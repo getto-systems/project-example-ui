@@ -31,7 +31,7 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
         return
     }
 
-    const clearResponse = await clear(authnResult.value.nonce)
+    const clearResponse = await clear({ type: "always" })
     if (!clearResponse.success) {
         post({ type: "failed-to-clear", err: clearResponse.err })
         return

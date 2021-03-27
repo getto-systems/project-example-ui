@@ -12,4 +12,4 @@ export type RequestResetTokenError =
 
 export type RequestResetTokenRemoteError =
     | RemoteCommonError
-    | Readonly<{ type: "invalid-password-reset" }>
+    | Readonly<{ type: "invalid-reset" }>

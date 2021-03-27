@@ -10,6 +10,7 @@ render(
         SignEntry,
         newSignWorkerForeground({
             webStorage: localStorage,
+            webCrypto: crypto,
             currentLocation: location,
             worker: newWorker({
                 currentScript: document.currentScript,

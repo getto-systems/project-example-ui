@@ -13,10 +13,8 @@ enum CheckStatusEnum {
     "check",
     "waiting",
     "sending",
-    "bad-request",
     "invalid",
     "server-error",
-    "bad-response",
     "infra-error",
     "send-error",
     "send",
@@ -65,28 +63,16 @@ const template = storyTemplate<Props>((props) => {
                     status: { sending: true },
                 }
 
-            case "bad-request":
-                return {
-                    type: "failed-to-check-status",
-                    err: { type: "bad-request" },
-                }
-
             case "invalid":
                 return {
                     type: "failed-to-check-status",
-                    err: { type: "invalid-password-reset" },
+                    err: { type: "invalid-reset" },
                 }
 
             case "server-error":
                 return {
                     type: "failed-to-check-status",
                     err: { type: "server-error" },
-                }
-
-            case "bad-response":
-                return {
-                    type: "failed-to-check-status",
-                    err: { type: "bad-response", err: props.err },
                 }
 
             case "infra-error":

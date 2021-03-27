@@ -5,9 +5,9 @@ import { delaySecond } from "../../../../z_vendor/getto-application/infra/config
 
 import { AuthenticatePasswordInfra } from "../infra"
 
-export function newAuthenticatePasswordInfra(): AuthenticatePasswordInfra {
+export function newAuthenticatePasswordInfra(webCrypto: Crypto): AuthenticatePasswordInfra {
     return {
-        authenticate: newAuthenticatePasswordRemote(),
+        authenticate: newAuthenticatePasswordRemote(webCrypto),
         clock: newClock(),
         config: {
             takeLongtimeThreshold: delaySecond(1),

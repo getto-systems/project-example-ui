@@ -1,7 +1,6 @@
 import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 import { RepositoryPod } from "../../z_vendor/getto-application/infra/repository/infra"
 
-import { AuthzNonce } from "../../auth/auth_ticket/kernel/data"
 import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
@@ -41,10 +40,12 @@ export interface MenuStore<T> {
     get(): FetchMenuStoreResult<T>
     set(value: T): void
 }
-export type FetchMenuStoreResult<T> = Readonly<{ found: true; value: T }> | Readonly<{ found: false }>
+export type FetchMenuStoreResult<T> =
+    | Readonly<{ found: true; value: T }>
+    | Readonly<{ found: false }>
 
 type GetMenuBadgeRemoteTypes = RemoteTypes<
-    AuthzNonce,
+    { type: "always" }, // 引数は必要ないが、null にするのは嫌なのでこうしておく
     MenuBadge,
     MenuBadgeItem[],
     GetMenuBadgeRemoteError

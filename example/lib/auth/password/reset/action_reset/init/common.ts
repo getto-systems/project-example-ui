@@ -18,19 +18,25 @@ import {
 
 export function newCoreForegroundMaterial(
     webStorage: Storage,
+    webCrypto: Crypto,
     currentLocation: Location,
 ): ResetPasswordCoreForegroundMaterial {
-    const infra = newResetPasswordCoreForegroundInfra(webStorage)
+    const infra = newResetPasswordCoreForegroundInfra(webStorage, webCrypto)
     return initResetPasswordCoreForegroundMaterial(infra, {
         getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
     })
 }
 
-export function newCoreBackgroundPod(): ResetPasswordCoreBackgroundMaterialPod {
-    return initResetPasswordCoreBackgroundMaterialPod(newResetPasswordCoreBackgroundInfra())
+export function newCoreBackgroundPod(webCrypto: Crypto): ResetPasswordCoreBackgroundMaterialPod {
+    return initResetPasswordCoreBackgroundMaterialPod(
+        newResetPasswordCoreBackgroundInfra(webCrypto),
+    )
 }
-export function newCoreBackgroundMaterial(currentLocation: Location): ResetPasswordCoreBackgroundMaterial {
-    const infra = newResetPasswordCoreBackgroundInfra()
+export function newCoreBackgroundMaterial(
+    webCrypto: Crypto,
+    currentLocation: Location,
+): ResetPasswordCoreBackgroundMaterial {
+    const infra = newResetPasswordCoreBackgroundInfra(webCrypto)
     return initResetPasswordCoreBackgroundMaterial(infra, {
         reset: newResetPasswordLocationDetecter(currentLocation),
     })

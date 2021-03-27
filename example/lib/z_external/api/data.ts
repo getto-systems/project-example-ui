@@ -5,6 +5,8 @@ export type ApiResult<V, E> =
 export type ApiCommonError =
     | Readonly<{ type: "unauthorized" }>
     | Readonly<{ type: "invalid-nonce" }>
-    | Readonly<{ type: "bad-request" }>
     | Readonly<{ type: "server-error" }>
-    | Readonly<{ type: "bad-response"; err: string }>
+
+export type ApiAuthenticateResponse = Readonly<{
+    roles: string[]
+}>

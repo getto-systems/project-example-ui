@@ -6,11 +6,12 @@ import { newLoadSeasonResource } from "../common/action_load_season/init"
 
 import { BaseResource } from "./resource"
 
-type OutsideFeature = Readonly<{
+export type BaseOutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
-export function newBaseResource(feature: OutsideFeature): BaseResource {
+export function newBaseResource(feature: BaseOutsideFeature): BaseResource {
     const menu = homeMenuContent()
     return {
         ...newLoadBreadcrumbListResource(feature, menu),

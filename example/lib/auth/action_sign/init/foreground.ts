@@ -13,6 +13,7 @@ import { initSignLinkResource } from "../../common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webCrypto: Crypto
     currentLocation: Location
 }>
 export function newSignForeground(feature: OutsideFeature): SignView {
@@ -25,7 +26,7 @@ export function newSignForeground(feature: OutsideFeature): SignView {
 
             password_authenticate: () => newAuthenticatePasswordView(feature),
 
-            password_reset_requestToken: () => newRequestResetTokenView(),
+            password_reset_requestToken: () => newRequestResetTokenView(feature),
             password_reset_checkStatus: () => newCheckPasswordResetSendingStatus(feature),
             password_reset: () => newResetPasswordView(feature),
         }),
