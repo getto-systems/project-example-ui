@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.8.4
+
+- fix: css : See merge request getto-systems-base/projects/example/ui!1062
+- fix: deploy : See merge request getto-systems-base/projects/example/ui!1061
+
+
 ## Version : 0.8.3
 
 - fix: setup-css.js : See merge request getto-systems-base/projects/example/ui!1057
