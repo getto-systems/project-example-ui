@@ -11,9 +11,9 @@ import {
 } from "../../../z_vendor/getto-css/preact/layout/app"
 
 import { useNotifyUnexpectedError } from "../../../avail/action_notify_unexpected_error/x_preact/hooks"
-import { useDocumentTitle } from "../../../x_preact/common/hooks"
+import { useDocumentTitle } from "../../../x_preact/hooks"
 
-import { copyright, siteInfo } from "../../../x_preact/common/site"
+import { copyright, siteInfo } from "../../../example/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
 import { LoadSeasonComponent } from "../../../example/common/action_load_season/x_preact/load_season"

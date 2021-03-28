@@ -4,7 +4,7 @@ import { html } from "htm/preact"
 import { loginBox } from "../../../z_vendor/getto-css/preact/layout/login"
 import { buttons } from "../../../z_vendor/getto-css/preact/design/form"
 
-import { siteInfo } from "../../../x_preact/common/site"
+import { siteInfo } from "../../../example/site"
 import { signNav } from "../../common/nav/x_preact/nav"
 import { docsSectionBody } from "../../../docs/action_docs/x_preact/content"
 
