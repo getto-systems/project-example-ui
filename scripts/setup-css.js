@@ -9,16 +9,16 @@ const CleanCss = require("clean-css")
 
 compile({
     source: path.join(__dirname, "../css/site.css"),
-    output: path.join(__dirname, "../public/dist/css/site.min.css"),
+    output: path.join(__dirname, "../public/dist/css/site.css"),
 })
 
 function compile({ source, output }) {
-    process.chdir(path.dirname(source))
-
     fs.readFile(source, (_err, css) => {
         postcss([autoprefixer])
             .process(css, { from: source, to: output })
             .then((postcssResult) => {
+                process.chdir(path.dirname(source))
+
                 const result = new CleanCss({ level: 2 }).minify(postcssResult.css)
                 if (result.errors.length > 0) {
                     console.error(result.errors)
