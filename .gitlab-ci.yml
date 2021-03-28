@@ -19,7 +19,7 @@ test:
     refs:
       - merge_requests
     changes:
-      - example/lib/**/*.ts
+      - lib/**/*.ts
 
   before_script:
     - npm clean-install
