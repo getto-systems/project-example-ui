@@ -1,8 +1,11 @@
-import { decodeProtobuf } from "../../../z_vendor/protobuf/helper"
-import { ApiCommonError, ApiResult } from "../data"
-import { apiCommonError, apiRequest } from "../helper"
-import { ApiFeature } from "../infra"
 import { GetMenuBadgeResult_pb } from "../y_protobuf/outline_pb.js"
+
+import { decodeProtobuf } from "../../../z_vendor/protobuf/helper"
+import { apiCommonError, apiRequest } from "../helper"
+
+import { ApiFeature } from "../infra"
+
+import { ApiCommonError, ApiResult } from "../data"
 
 interface GetMenu {
     (): Promise<GetMenuResult>
