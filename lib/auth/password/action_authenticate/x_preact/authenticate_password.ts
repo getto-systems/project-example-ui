@@ -17,9 +17,9 @@ import {
     form,
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { VNodeContent } from "../../../../x_preact/common/design/common"
-import { siteInfo } from "../../../../x_preact/common/site"
-import { spinner } from "../../../../x_preact/common/design/icon"
+import { VNodeContent } from "../../../../x_preact/design/common"
+import { siteInfo } from "../../../../example/site"
+import { spinner } from "../../../../x_preact/design/icon"
 import { appendScript } from "../../../common/x_preact/script"
 import { signNav } from "../../../common/nav/x_preact/nav"
 

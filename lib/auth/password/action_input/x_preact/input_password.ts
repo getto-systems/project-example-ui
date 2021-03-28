@@ -8,7 +8,7 @@ import {
     label_password_fill,
 } from "../../../../z_vendor/getto-css/preact/design/form"
 
-import { VNodeContent } from "../../../../x_preact/common/design/common"
+import { VNodeContent } from "../../../../x_preact/design/common"
 
 import { InputBoardComponent } from "../../../../z_vendor/getto-application/board/action_input/x_preact/input"
 
