@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version : 0.8.3
+
+- fix: setup-css.js : See merge request getto-systems-base/projects/example/ui!1057
+
+
+
 ## Version : 0.8.2
 
 
