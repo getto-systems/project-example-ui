@@ -111,7 +111,7 @@ export function CheckAuthTicketComponent(props: Props): VNode {
     }
 
     function takeLongtimeMessage() {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: "認証に時間がかかっています",
             body: [
                 html`<p>${spinner} 認証処理中です</p>`,
@@ -124,7 +124,7 @@ export function CheckAuthTicketComponent(props: Props): VNode {
         })
     }
     function errorMessage(err: RenewAuthTicketError): VNode {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: "認証に失敗しました",
             body: [
                 ...renewError(err).map((message) => html`<p>${message}</p>`),

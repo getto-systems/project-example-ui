@@ -37,12 +37,12 @@ export function ProfileComponent(props: ProfileResource): VNode {
     useDocumentTitle("プロフィール")
 
     return appLayout({
-        siteInfo: siteInfo(),
+        siteInfo,
         header: [h(LoadSeasonComponent, props)],
         main: appMain({
             header: mainHeader([mainTitle("プロフィール"), h(LoadBreadcrumbListComponent, props)]),
             body: mainBody(h(LogoutEntry, props)),
-            copyright: copyright(),
+            copyright,
         }),
         menu: h(LoadMenuEntry, props),
     })

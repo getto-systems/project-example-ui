@@ -109,7 +109,7 @@ export function ResetPasswordComponent(props: Props): VNode {
 
     function resetForm(content: ResetFormContent): VNode {
         return form(
-            loginBox(siteInfo(), {
+            loginBox(siteInfo, {
                 title: resetTitle(),
                 body: [
                     h(InputLoginIDEntry, {
@@ -187,7 +187,7 @@ export function ResetPasswordComponent(props: Props): VNode {
         }
     }
     function takeLongtimeMessage() {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: resetTitle(),
             body: [
                 html`<p>${spinner} リセットに時間がかかっています</p>`,
