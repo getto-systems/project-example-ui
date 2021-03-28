@@ -3,8 +3,8 @@
   "scripts": {
     "build": "npm run setup && npm run build-storybook",
     "setup": "npm run setup:lib",
-    "setup:lib": "rm -rf lib && cp -a ../example/lib .",
-    "build-storybook": "build-storybook -o ../example/public/dist/storybook/"
+    "setup:lib": "rm -rf lib && cp -a ../lib .",
+    "build-storybook": "build-storybook -o ../public/dist/storybook/"
   },
   "author": "",
   "license": "MIT",

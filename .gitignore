@@ -4,12 +4,12 @@
 /storybook/node_modules/
 /storybook/lib/
 
-/example/public/dist/coverage/
-/example/public/dist/storybook/
+/public/dist/coverage/
+/public/dist/storybook/
 
-/example/public/dist/css/
-/example/public/dist/**/*.js
-/example/secure/dist/**/*.js
+/public/dist/css/
+/public/dist/**/*.js
+/secure/dist/**/*.js
 
 **/y_*/*
 !**/y_*/.keep

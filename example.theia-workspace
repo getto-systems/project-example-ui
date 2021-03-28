@@ -1,0 +1,32 @@
+{
+    "folders": [
+        {
+            "path": "file:///apps/getto/example/ui/lib"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/public"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/secure"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/css"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/env"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/scripts"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/config"
+        },
+        {
+            "path": "file:///apps/getto/example/ui/storybook"
+        }
+    ],
+    "settings": {
+        "editor.autoSave": "on",
+        "typescript.tsdk": "/apps/getto/example/ui/node_modules/typescript/lib"
+    }
+}
