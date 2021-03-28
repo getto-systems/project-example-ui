@@ -1,6 +1,9 @@
 {
     "folders": [
         {
+            "path": "file:///apps/getto/example/ui/css"
+        },
+        {
             "path": "file:///apps/getto/example/ui/lib"
         },
         {
@@ -8,9 +11,6 @@
         },
         {
             "path": "file:///apps/getto/example/ui/secure"
-        },
-        {
-            "path": "file:///apps/getto/example/ui/css"
         },
         {
             "path": "file:///apps/getto/example/ui/env"
