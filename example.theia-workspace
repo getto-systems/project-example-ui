@@ -16,7 +16,7 @@
             "path": "file:///apps/getto/example/ui/env"
         },
         {
-            "path": "file:///apps/getto/example/ui/scripts"
+            "path": "file:///apps/getto/example/ui/setup"
         },
         {
             "path": "file:///apps/getto/example/ui/config"
