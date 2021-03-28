@@ -13,7 +13,7 @@ import { docs_privacyPolicy } from "../../../docs/docs"
 import { SignLinkResource } from "../../common/nav/action_nav/resource"
 
 export function PrivacyPolicyComponent(props: SignLinkResource): VNode {
-    return loginBox(siteInfo(), {
+    return loginBox(siteInfo, {
         title: "プライバシーポリシー",
         body: docs_privacyPolicy.flatMap((section) => html`${section.body.map(docsSectionBody)}`),
         footer: buttons({ left: loginLink(), right: resetLink() }),

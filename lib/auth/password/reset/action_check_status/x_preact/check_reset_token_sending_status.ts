@@ -69,7 +69,7 @@ export function CheckPasswordResetSendingStatusComponent(props: Props): VNode {
         | Readonly<{ type: "retry"; status: ResetTokenSendingStatus }>
 
     function checkStatusMessage(content: CheckStatusContent): VNode {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: "リセットトークンを送信しています",
             body: message(),
             footer: footerLinks(),
@@ -86,14 +86,14 @@ export function CheckPasswordResetSendingStatusComponent(props: Props): VNode {
         }
     }
     function successMessage(): VNode {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: "リセットトークンを送信しました",
             body: sendTokenMessage(),
             footer: footerLinks(),
         })
     }
     function errorMessage(title: VNodeContent, error: VNodeContent[]): VNode {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title,
             body: [
                 ...error.map((message) => html`<p>${message}</p>`),

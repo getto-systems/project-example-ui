@@ -90,7 +90,7 @@ export function RequestResetTokenComponent(props: Props): VNode {
 
     function startSessionForm(content: StartSessionFormContent): VNode {
         return form(
-            loginBox(siteInfo(), {
+            loginBox(siteInfo, {
                 title: startSessionTitle(),
                 body: [
                     h(InputLoginIDEntry, {
@@ -164,7 +164,7 @@ export function RequestResetTokenComponent(props: Props): VNode {
         }
     }
     function takeLongtimeMessage() {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: startSessionTitle(),
             body: [
                 html`<p>${spinner} トークンの送信に時間がかかっています</p>`,

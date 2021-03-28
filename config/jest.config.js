@@ -17,7 +17,6 @@ module.exports = {
         "!**/infra.ts",
         "!**/mock.ts",
         "!**/docs.ts",
-        "!**/site.ts",
     ],
     coverageThreshold: {
         global: {

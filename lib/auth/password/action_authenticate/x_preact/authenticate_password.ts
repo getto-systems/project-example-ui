@@ -117,7 +117,7 @@ export function AuthenticatePasswordComponent(props: Props): VNode {
 
     function authenticateForm(content: AuthenticateFormContent): VNode {
         return form(
-            loginBox(siteInfo(), {
+            loginBox(siteInfo, {
                 title: authenticateTitle(),
                 body: [
                     h(InputLoginIDEntry, { field: props.authenticate.form.loginID, help: [] }),
@@ -197,7 +197,7 @@ export function AuthenticatePasswordComponent(props: Props): VNode {
         }
     }
     function takeLongtimeMessage() {
-        return loginBox(siteInfo(), {
+        return loginBox(siteInfo, {
             title: authenticateTitle(),
             body: [
                 html`<p>${spinner} 認証中です</p>`,

@@ -47,7 +47,7 @@ export function DocsComponent(resource: Props): VNode {
     useDocumentTitle(resource.docs.title)
 
     return appLayout({
-        siteInfo: siteInfo(),
+        siteInfo,
         header: [],
         main: appMain({
             header: mainHeader([
@@ -55,7 +55,7 @@ export function DocsComponent(resource: Props): VNode {
                 h(LoadBreadcrumbListComponent, resource),
             ]),
             body: mainBody(docsArticle(resource.docs.contents)),
-            copyright: copyright(),
+            copyright,
         }),
         menu: h(LoadMenuEntry, resource),
     })
