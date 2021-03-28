@@ -7,7 +7,9 @@
 /public/dist/coverage/
 /public/dist/storybook/
 
-/public/dist/css/
+/public/dist/css/*
+!/public/dist/css/.keep
+
 /public/dist/**/*.js
 /secure/dist/**/*.js
 
