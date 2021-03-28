@@ -20,9 +20,6 @@
         },
         {
             "path": "file:///apps/getto/example/ui/config"
-        },
-        {
-            "path": "file:///apps/getto/example/ui/storybook"
         }
     ],
     "settings": {
