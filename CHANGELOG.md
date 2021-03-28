@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version : 0.8.1
+
+
+
 ## Version : 0.8.0
 
 - fix: test trigger paths : See merge request getto-systems-base/projects/example/ui!1055
