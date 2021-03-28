@@ -59,7 +59,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
                 version: infra.version,
                 menuTree: infra.menuTree,
                 menuTargetPath: detecter(),
-                permittedRoles: authzResult.value.roles,
+                grantedRoles: authzResult.value.roles,
                 menuExpand: expand,
                 menuBadge: badge,
             }),

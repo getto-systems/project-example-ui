@@ -33,7 +33,7 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
 
     const buildParams: BuildMenuParams = {
         version: infra.version,
-        permittedRoles: authzResult.value.roles,
+        grantedRoles: authzResult.value.roles,
         menuExpand: expand,
         menuTargetPath: detecter(),
         menuTree: infra.menuTree,

@@ -45,7 +45,7 @@ export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
             version: infra.version,
             menuTree: infra.menuTree,
             menuTargetPath: detecter(),
-            permittedRoles: authzResult.value.roles,
+            grantedRoles: authzResult.value.roles,
             menuExpand: expand,
             menuBadge: EMPTY_BADGE, // ロードに時間がかかる可能性があるのであとでロードする
         }),

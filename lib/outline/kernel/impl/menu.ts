@@ -18,12 +18,12 @@ export type BuildMenuParams = Readonly<{
     version: string
     menuTree: MenuTree
     menuTargetPath: ConvertLocationResult<MenuTargetPath>
-    permittedRoles: GrantedRoles
+    grantedRoles: GrantedRoles
     menuExpand: MenuExpand
     menuBadge: MenuBadge
 }>
 export function buildMenu(params: BuildMenuParams): Menu {
-    const { version, menuTree, menuTargetPath, permittedRoles, menuExpand, menuBadge } = params
+    const { version, menuTree, menuTargetPath, grantedRoles, menuExpand, menuBadge } = params
 
     return toMenu(menuTree, [])
 
@@ -90,7 +90,7 @@ export function buildMenu(params: BuildMenuParams): Menu {
                     return permission.permits.every(isAllow)
 
                 case "role":
-                    return permittedRoles.includes(permission.role)
+                    return grantedRoles.includes(permission.role)
             }
         }
         function hasActive(node: MenuNode): boolean {
