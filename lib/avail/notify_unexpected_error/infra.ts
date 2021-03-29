@@ -1,11 +1,8 @@
 import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
 
-import { AuthzRepositoryPod } from "../../auth/auth_ticket/kernel/infra"
-
 import { NotifyUnexpectedErrorRemoteError } from "./data"
 
 export type NotifyUnexpectedErrorInfra = Readonly<{
-    authz: AuthzRepositoryPod
     notify: NotifyUnexpectedErrorRemotePod
 }>
 

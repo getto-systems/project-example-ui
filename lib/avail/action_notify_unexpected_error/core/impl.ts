@@ -1,4 +1,4 @@
-import { notifyUnexpectedError } from "../../notify_unexpected_error/impl"
+import { notifyUnexpectedError } from "../../notify_unexpected_error/impl/core"
 
 import { NotifyUnexpectedErrorInfra } from "../../notify_unexpected_error/infra"
 
