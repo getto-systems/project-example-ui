@@ -29,7 +29,7 @@ import {
 } from "../resource"
 
 import { RequestResetTokenError } from "../../request_token/data"
-import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
+import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input"
 import { remoteCommonError } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 export function RequestResetTokenEntry(view: RequestResetTokenView): VNode {
