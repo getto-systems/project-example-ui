@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { InputPasswordComponent } from "./input_password"
+import { InputPasswordComponent } from "./input"
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 

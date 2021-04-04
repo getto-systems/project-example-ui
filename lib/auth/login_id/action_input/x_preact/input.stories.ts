@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { InputLoginIDComponent } from "./input_login_id"
+import { InputLoginIDComponent } from "./input"
 
 import { mockInputLoginIDAction } from "../core/mock"
 

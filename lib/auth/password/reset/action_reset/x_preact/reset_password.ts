@@ -23,8 +23,8 @@ import { appendScript } from "../../../../common/x_preact/script"
 import { signNav } from "../../../../common/nav/x_preact/nav"
 
 import { ApplicationErrorComponent } from "../../../../../avail/common/x_preact/application_error"
-import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input_login_id"
-import { InputPasswordEntry } from "../../../action_input/x_preact/input_password"
+import { InputLoginIDEntry } from "../../../../login_id/action_input/x_preact/input"
+import { InputPasswordEntry } from "../../../action_input/x_preact/input"
 
 import { ResetPasswordView, ResetPasswordResource, ResetPasswordResourceState } from "../resource"
 
