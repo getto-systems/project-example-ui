@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { enumKeys, storyTemplate } from "../../../../z_vendor/storybook/preact/story"
 
-import { ExampleComponent } from "./example"
+import { LoadSeasonFieldComponent } from "./load_season_field"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
@@ -30,7 +30,7 @@ type MockProps = Readonly<{
     err: string
 }>
 const template = storyTemplate<MockProps>((props) => {
-    return h(ExampleComponent, { season: mockLoadSeasonCoreAction(season()) })
+    return h(LoadSeasonFieldComponent, { season: mockLoadSeasonCoreAction(season()) })
 
     function season(): LoadSeasonResult {
         switch (props.load) {

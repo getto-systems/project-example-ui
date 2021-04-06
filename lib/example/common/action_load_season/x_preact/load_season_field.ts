@@ -1,7 +1,6 @@
 import { VNode } from "preact"
 import { html } from "htm/preact"
 
-import { box_double } from "../../../../z_vendor/getto-css/preact/design/box"
 import { field } from "../../../../z_vendor/getto-css/preact/design/form"
 import { notice_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 import { v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
@@ -13,22 +12,19 @@ import { LoadSeasonResource } from "../resource"
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import { Season } from "../../load_season/data"
 
-export function ExampleComponent(resource: LoadSeasonResource): VNode {
-    const result = resource.season.load()
-    if (!result.success) {
-        return seasonBox(loadError(result.err))
-    }
-    return seasonBox(seasonInfo(result.value))
-}
-
-function seasonBox(body: VNodeContent): VNode {
-    return box_double({
-        title: "GETTO Example",
-        body: field({
-            title: "シーズン",
-            body,
-        }),
+export function LoadSeasonFieldComponent(resource: LoadSeasonResource): VNode {
+    return field({
+        title: "シーズン",
+        body: body(),
     })
+
+    function body(): VNodeContent {
+        const result = resource.season.load()
+        if (!result.success) {
+            return loadError(result.err)
+        }
+        return seasonInfo(result.value)
+    }
 }
 
 function seasonInfo(season: Season): VNodeContent {
