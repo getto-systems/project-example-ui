@@ -33,14 +33,17 @@ export function ProfileEntry(view: ProfileView): VNode {
 
     return h(ProfileComponent, resource)
 }
+
+const pageTitle = "プロフィール" as const
+
 export function ProfileComponent(props: ProfileResource): VNode {
-    useDocumentTitle("プロフィール")
+    useDocumentTitle(pageTitle)
 
     return appLayout({
         siteInfo,
         header: [h(LoadSeasonComponent, props)],
         main: appMain({
-            header: mainHeader([mainTitle("プロフィール"), h(LoadBreadcrumbListComponent, props)]),
+            header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, props)]),
             body: mainBody(h(LogoutEntry, props)),
             copyright,
         }),
