@@ -18,9 +18,10 @@ import { ApplicationErrorComponent } from "../../../avail/common/x_preact/applic
 import { LoadSeasonComponent } from "../../common/action_load_season/x_preact/load_season"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
-import { ExampleComponent } from "../../common/action_load_season/x_preact/example"
+import { LoadSeasonFieldComponent } from "../../common/action_load_season/x_preact/load_season_field"
 
 import { DashboardView, DashboardResource } from "../resource"
+import { box_double, container } from "../../../z_vendor/getto-css/preact/design/box"
 
 export function DashboardEntry(view: DashboardView): VNode {
     const resource = useApplicationView(view)
@@ -48,4 +49,13 @@ export function DashboardComponent(resource: DashboardResource): VNode {
         }),
         menu: h(LoadMenuEntry, resource),
     })
+}
+
+function ExampleComponent(resource: DashboardResource): VNode {
+    return container(
+        box_double({
+            title: "GETTO Example",
+            body: h(LoadSeasonFieldComponent, resource),
+        }),
+    )
 }
