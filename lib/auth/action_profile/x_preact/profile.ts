@@ -16,7 +16,7 @@ import { useDocumentTitle } from "../../../x_preact/hooks"
 import { copyright, siteInfo } from "../../../example/site"
 
 import { ApplicationErrorComponent } from "../../../avail/common/x_preact/application_error"
-import { LoadSeasonComponent } from "../../../example/common/action_load_season/x_preact/load_season"
+import { LoadSeasonEntry } from "../../../example/common/action_load_season/x_preact/load_season"
 import { LoadMenuEntry } from "../../../outline/action_load_menu/x_preact/load_menu"
 import { LoadBreadcrumbListComponent } from "../../../outline/action_load_breadcrumb_list/x_preact/load_breadcrumb_list"
 import { LogoutEntry } from "../../auth_ticket/action_logout/x_preact/logout"
@@ -41,7 +41,7 @@ export function ProfileComponent(props: ProfileResource): VNode {
 
     return appLayout({
         siteInfo,
-        header: [h(LoadSeasonComponent, props)],
+        header: [h(LoadSeasonEntry, props)],
         main: appMain({
             header: mainHeader([mainTitle(pageTitle), h(LoadBreadcrumbListComponent, props)]),
             body: mainBody(h(LogoutEntry, props)),

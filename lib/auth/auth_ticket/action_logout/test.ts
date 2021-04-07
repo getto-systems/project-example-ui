@@ -3,7 +3,7 @@ import {
     setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
-import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockDB_legacy } from "../../../z_vendor/getto-application/infra/repository/mock"
 
 import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
@@ -79,7 +79,7 @@ function initResource(authn: AuthnRepositoryPod, authz: AuthzRepositoryPod): Log
 }
 
 function standard_authn(): AuthnRepositoryPod {
-    const db = mockDB()
+    const db = mockDB_legacy()
     db.set({
         nonce: "stored-authn-nonce",
         authAt: new Date("2020-01-01 09:00:00").toISOString(),
@@ -87,7 +87,7 @@ function standard_authn(): AuthnRepositoryPod {
     return wrapRepository(db)
 }
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB<AuthzRepositoryValue>()
+    const db = mockDB_legacy<AuthzRepositoryValue>()
     db.set({
         roles: ["role"],
     })

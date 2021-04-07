@@ -1,10 +1,14 @@
-import { DB, FetchDBResult, DBTransformer } from "./infra"
+import { DB_legacy, FetchDBResult_legacy, DBTransformer } from "./infra"
 
-export function initDB<T>(storage: Storage, key: string, transformer: DBTransformer<T>): DB<T> {
-    return new Impl(storage, key, transformer)
+export function initStorage_legacy<T>(
+    storage: Storage,
+    key: string,
+    transformer: DBTransformer<T>,
+): DB_legacy<T> {
+    return new Storage_legacy(storage, key, transformer)
 }
 
-class Impl<T> implements DB<T> {
+class Storage_legacy<T> implements DB_legacy<T> {
     readonly storage: Storage
     readonly key: string
 
@@ -16,7 +20,7 @@ class Impl<T> implements DB<T> {
         this.transformer = transformer
     }
 
-    get(): FetchDBResult<T> {
+    get(): FetchDBResult_legacy<T> {
         const value = this.storage.getItem(this.key)
         if (!value) {
             return { found: false }

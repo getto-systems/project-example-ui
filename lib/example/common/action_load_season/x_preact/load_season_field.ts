@@ -1,4 +1,4 @@
-import { VNode } from "preact"
+import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
 import { field } from "../../../../z_vendor/getto-css/preact/design/form"
@@ -7,23 +7,37 @@ import { v_small } from "../../../../z_vendor/getto-css/preact/design/alignment"
 
 import { VNodeContent } from "../../../../x_preact/design/common"
 
-import { LoadSeasonResource } from "../resource"
+import { LoadSeasonResource, LoadSeasonResourceState } from "../resource"
 
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
 import { Season } from "../../load_season/data"
+import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
-export function LoadSeasonFieldComponent(resource: LoadSeasonResource): VNode {
+export function LoadSeasonFieldEntry(resource: LoadSeasonResource): VNode {
+    return h(LoadSeasonFieldComponent, {
+        ...resource,
+        state: useApplicationAction(resource.season),
+    })
+}
+
+type Props = LoadSeasonResource & LoadSeasonResourceState
+export function LoadSeasonFieldComponent(props: Props): VNode {
     return field({
         title: "シーズン",
         body: body(),
     })
 
     function body(): VNodeContent {
-        const result = resource.season.load()
-        if (!result.success) {
-            return loadError(result.err)
+        switch (props.state.type) {
+            case "initial-season":
+                return EMPTY_CONTENT
+
+            case "succeed-to-load":
+                return seasonInfo(props.state.value)
+
+            case "failed-to-load":
+                return loadError(props.state.err)
         }
-        return seasonInfo(result.value)
     }
 }
 
@@ -41,3 +55,5 @@ function loadError(err: RepositoryError): VNodeContent {
         return [v_small(), html`<small><p>詳細: ${err.err}</p></small>`]
     }
 }
+
+const EMPTY_CONTENT = html``
