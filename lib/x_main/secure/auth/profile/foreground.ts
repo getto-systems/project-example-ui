@@ -1,6 +1,6 @@
 import { h, render } from "preact"
 
-import { foregroundOutsideFeature } from "../../../helper"
+import { foregroundOutsideFeature } from "../../../outside_feature/helper"
 
 import { newProfileView } from "../../../../auth/action_profile/init"
 

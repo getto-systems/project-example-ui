@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { foregroundOutsideFeature } from "../../helper"
+import { foregroundOutsideFeature } from "../../outside_feature/helper"
 
 import { newDashboardView } from "../../../example/action_dashboard/init"
 
