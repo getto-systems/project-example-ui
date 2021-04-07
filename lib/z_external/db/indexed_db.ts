@@ -59,11 +59,10 @@ class DB implements IndexedDB {
                 const request = tx.objectStore(target.store).get(target.key)
                 request.onsuccess = (e: Event) => {
                     if (!e.target || !(e.target instanceof IDBRequest)) {
+                        resolve(dbError("invalid get result"))
                         return
                     }
-
-                    const result = e.target.result
-                    if (!result) {
+                    if (!e.target.result) {
                         resolve({ success: true, found: false })
                         return
                     }
@@ -74,7 +73,7 @@ class DB implements IndexedDB {
                         resolve({
                             success: true,
                             found: true,
-                            value: converter(result.value),
+                            value: converter(e.target.result),
                         })
                     } catch (err) {
                         resolve(dbError(`${err}`))
