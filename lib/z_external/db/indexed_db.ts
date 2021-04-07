@@ -28,7 +28,7 @@ export type IndexedDBTarget = Readonly<{
     key: string
 }>
 
-// 構造を変えるときは migration を追加する
+// 構造を変えるときは migration を追加することで対応
 const MIGRATIONS: Migration[] = [
     (db, stores) => {
         stores.forEach((store) => {
@@ -53,34 +53,38 @@ class DB implements IndexedDB {
     get<T>(target: IndexedDBTarget, converter: FromDBConverter<T>): Promise<FetchDBResult<T>> {
         return new Promise((resolve) => {
             this.open(resolve, (db) => {
-                const tx = db.transaction(target.store)
-                tx.oncomplete = () => db.close()
+                try {
+                    const tx = db.transaction(target.store)
+                    tx.oncomplete = () => db.close()
 
-                const request = tx.objectStore(target.store).get(target.key)
-                request.onsuccess = (e: Event) => {
-                    if (!e.target || !(e.target instanceof IDBRequest)) {
-                        resolve(dbError("invalid get result"))
-                        return
-                    }
-                    if (!e.target.result) {
-                        resolve({ success: true, found: false })
-                        return
-                    }
+                    const request = tx.objectStore(target.store).get(target.key)
+                    request.onsuccess = (e: Event) => {
+                        if (!e.target || !(e.target instanceof IDBRequest)) {
+                            resolve(dbError("invalid get result"))
+                            return
+                        }
+                        if (!e.target.result) {
+                            resolve({ success: true, found: false })
+                            return
+                        }
 
-                    try {
-                        // e.target.result は any のため、実行時エラーを覚悟する
-                        // ブラウザのオブジェクトストレージの内容が any なのは本質的で避けられない
-                        resolve({
-                            success: true,
-                            found: true,
-                            value: converter(e.target.result),
-                        })
-                    } catch (err) {
-                        resolve(dbError(`${err}`))
+                        try {
+                            // e.target.result は any のため、実行時エラーを覚悟する
+                            // ブラウザのオブジェクトストレージの内容が any なのは本質的で避けられない
+                            resolve({
+                                success: true,
+                                found: true,
+                                value: converter(e.target.result.value),
+                            })
+                        } catch (err) {
+                            resolve(dbError(`${err}`))
+                        }
                     }
-                }
-                request.onerror = () => {
-                    resolve(dbError("failed to get"))
+                    request.onerror = () => {
+                        resolve(dbError("failed to get"))
+                    }
+                } catch (err) {
+                    resolve(dbError(`${err}`))
                 }
             })
         })
@@ -89,17 +93,21 @@ class DB implements IndexedDB {
     set<T>(target: IndexedDBTarget, converter: ToDBConverter<T>, value: T): Promise<StoreDBResult> {
         return new Promise((resolve) => {
             this.open(resolve, (db) => {
-                const tx = db.transaction(target.store)
-                tx.oncomplete = () => db.close()
+                try {
+                    const tx = db.transaction(target.store, "readwrite")
+                    tx.oncomplete = () => db.close()
 
-                const request = tx
-                    .objectStore(target.store)
-                    .put({ key: target.key, value: converter(value) })
-                request.onsuccess = () => {
-                    resolve({ success: true })
-                }
-                request.onerror = () => {
-                    resolve(dbError("failed to put"))
+                    const request = tx
+                        .objectStore(target.store)
+                        .put({ key: target.key, value: converter(value) })
+                    request.onsuccess = () => {
+                        resolve({ success: true })
+                    }
+                    request.onerror = () => {
+                        resolve(dbError("failed to put"))
+                    }
+                } catch (err) {
+                    resolve(dbError(`${err}`))
                 }
             })
         })
@@ -108,15 +116,19 @@ class DB implements IndexedDB {
     remove(target: IndexedDBTarget): Promise<StoreDBResult> {
         return new Promise((resolve) => {
             this.open(resolve, (db) => {
-                const tx = db.transaction(target.store)
-                tx.oncomplete = () => db.close()
+                try {
+                    const tx = db.transaction(target.store, "readwrite")
+                    tx.oncomplete = () => db.close()
 
-                const request = tx.objectStore(target.store).delete(target.key)
-                request.onsuccess = () => {
-                    resolve({ success: true })
-                }
-                request.onerror = () => {
-                    resolve(dbError("failed to remove"))
+                    const request = tx.objectStore(target.store).delete(target.key)
+                    request.onsuccess = () => {
+                        resolve({ success: true })
+                    }
+                    request.onerror = () => {
+                        resolve(dbError("failed to remove"))
+                    }
+                } catch (err) {
+                    resolve(dbError(`${err}`))
                 }
             })
         })

@@ -8,12 +8,13 @@ import { ToggleMenuExpandInfra } from "../infra"
 
 export function newToggleMenuExpandInfra(
     webStorage: Storage,
+    webDB: IDBFactory,
     menuContent: MenuContent,
 ): ToggleMenuExpandInfra {
     return {
         version: env.version,
         menuTree: menuContent.menuTree,
         authz: newAuthzRepository(webStorage),
-        menuExpand: newMenuExpandRepository(webStorage, menuContent.key),
+        menuExpand: newMenuExpandRepository(webDB, menuContent),
     }
 }

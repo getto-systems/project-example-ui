@@ -22,7 +22,7 @@ interface ModifyExpand {
     (expand: MenuExpand, path: MenuCategoryPath): void
 }
 function modifyMenuExpand(modify: ModifyExpand): Toggle {
-    return (infra, store) => (detecter) => (path, post) => {
+    return (infra, store) => (detecter) => async (path, post) => {
         const authz = infra.authz(authzRepositoryConverter)
         const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
 
@@ -42,7 +42,9 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         modify(expand, path)
 
-        const storeResult = menuExpand.set(expand)
+        // 別なタブで expand を変更した場合は上書き合戦になるが、マージは大変なのでさぼる
+        // 対応が必要になったらストレージに update を追加してトランザクション内でマージする必要がある
+        const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
             post({ type: "repository-error", err: storeResult.err })
             return

@@ -1,9 +1,10 @@
 import { RemoteTypes } from "../../z_vendor/getto-application/infra/remote/infra"
-import { RepositoryPod_legacy } from "../../z_vendor/getto-application/infra/repository/infra"
+import { RepositoryPod } from "../../z_vendor/getto-application/infra/repository/infra"
 
 import { GetMenuBadgeRemoteError, MenuCategoryPath } from "./data"
 
 export type MenuContent = Readonly<{
+    database: string
     key: string
     loadMenuBadge: boolean
     menuTree: MenuTree
@@ -59,7 +60,7 @@ export type MenuBadgeItem = Readonly<{ path: string; count: number }>
 
 export type MenuExpand = ArraySet<MenuCategoryPath>
 
-export type MenuExpandRepositoryPod = RepositoryPod_legacy<MenuExpand, MenuExpandRepositoryValue>
+export type MenuExpandRepositoryPod = RepositoryPod<MenuExpand, MenuExpandRepositoryValue>
 export type MenuExpandRepositoryValue = string[][]
 
 class ArraySet<T> {

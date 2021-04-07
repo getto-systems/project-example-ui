@@ -7,12 +7,13 @@ import { initDocsView } from "./impl"
 
 import { DocsView } from "./resource"
 
-type OutsideFeature = Readonly<{
+export type DocsOutsideFeature = Readonly<{
     webStorage: Storage
+    webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
 }>
-export function newDocsView(feature: OutsideFeature): DocsView {
+export function newDocsView(feature: DocsOutsideFeature): DocsView {
     const menu = docsMenuContent()
     return initDocsView({
         ...newLoadBreadcrumbListResource(feature, menu),
