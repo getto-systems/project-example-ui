@@ -8,7 +8,6 @@ import { initDocsView } from "./impl"
 import { DocsView } from "./resource"
 
 export type DocsOutsideFeature = Readonly<{
-    webStorage: Storage
     webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location

@@ -8,7 +8,6 @@ render(
     h(
         ProfileEntry,
         newProfileView({
-            webStorage: localStorage,
             webDB: indexedDB,
             webCrypto: crypto,
             currentLocation: location,

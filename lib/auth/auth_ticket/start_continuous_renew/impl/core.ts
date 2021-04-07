@@ -21,7 +21,7 @@ export const saveAuthTicket: Save = (infra) => async (info, post) => {
         post({ type: "failed-to-save", err: authnResult.err })
         return
     }
-    const authzResult = authz.set(info.authz)
+    const authzResult = await authz.set(info.authz)
     if (!authzResult.success) {
         post({ type: "failed-to-save", err: authzResult.err })
         return
@@ -62,7 +62,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         }
         if (!result.found) {
             handleStoreResult(await authn.remove())
-            handleStoreResult(authz.remove())
+            handleStoreResult(await authz.remove())
             return CANCEL
         }
 
@@ -77,7 +77,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         if (!response.success) {
             if (response.err.type === "unauthorized") {
                 handleStoreResult(await authn.remove())
-                handleStoreResult(authz.remove())
+                handleStoreResult(await authz.remove())
                 post({ type: "required-to-login" })
             } else {
                 post({ type: "failed-to-continuous-renew", err: response.err })
@@ -88,7 +88,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         if (!handleStoreResult(await authn.set(response.value.authn))) {
             return CANCEL
         }
-        if (!handleStoreResult(authz.set(response.value.authz))) {
+        if (!handleStoreResult(await authz.set(response.value.authz))) {
             return CANCEL
         }
 

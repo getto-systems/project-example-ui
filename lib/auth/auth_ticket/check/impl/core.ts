@@ -100,7 +100,7 @@ async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewA
     if (!checkRepositoryError(await authn.set(response.value.authn))) {
         return
     }
-    if (!checkRepositoryError(authz.set(response.value.authz))) {
+    if (!checkRepositoryError(await authz.set(response.value.authz))) {
         return
     }
 
