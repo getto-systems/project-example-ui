@@ -18,10 +18,11 @@ import {
 
 export function newCoreForegroundMaterial(
     webStorage: Storage,
+    webDB: IDBFactory,
     webCrypto: Crypto,
     currentLocation: Location,
 ): ResetPasswordCoreForegroundMaterial {
-    const infra = newResetPasswordCoreForegroundInfra(webStorage, webCrypto)
+    const infra = newResetPasswordCoreForegroundInfra(webStorage, webDB, webCrypto)
     return initResetPasswordCoreForegroundMaterial(infra, {
         getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
     })

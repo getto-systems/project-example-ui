@@ -10,13 +10,15 @@ import {
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
 }>
 export function newAuthenticatePasswordView(feature: OutsideFeature): AuthenticatePasswordView {
-    const { webStorage, webCrypto, currentLocation } = feature
+    const { webStorage, webDB, webCrypto, currentLocation } = feature
     const foreground = newAuthenticatePasswordCoreForegroundMaterial(
         webStorage,
+        webDB,
         webCrypto,
         currentLocation,
     )

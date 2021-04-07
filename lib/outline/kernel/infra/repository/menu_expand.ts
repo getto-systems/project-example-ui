@@ -7,7 +7,7 @@ export type MenuExpandRepositoryParams = Readonly<{
     database: string
     key: string
 }>
-export function newMenuExpandRepository(
+export function newMenuExpandRepositoryPod(
     webDB: IDBFactory,
     params: MenuExpandRepositoryParams,
 ): MenuExpandRepositoryPod {

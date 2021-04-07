@@ -8,12 +8,16 @@ import {
     expireMinute,
 } from "../../../../z_vendor/getto-application/infra/config/infra"
 import { CheckAuthTicketInfra } from "../infra"
-import { newAuthnRepository } from "../../kernel/infra/repository/last_auth"
+import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
 
-export function newCheckAuthTicketInfra(webStorage: Storage, webCrypto: Crypto): CheckAuthTicketInfra {
+export function newCheckAuthTicketInfra(
+    webStorage: Storage,
+    webDB: IDBFactory,
+    webCrypto: Crypto,
+): CheckAuthTicketInfra {
     return {
         authz: newAuthzRepository(webStorage),
-        authn: newAuthnRepository(webStorage),
+        authn: newAuthnRepositoryPod(webDB),
         renew: newRenewAuthTicketRemote(webCrypto),
         clock: newClock(),
         config: {

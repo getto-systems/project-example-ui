@@ -50,14 +50,14 @@ export const renewAuthTicket: RenewAuthTicket = (infra) => async (post) => {
     })
 }
 
-function loadAuthn(
+async function loadAuthn(
     infra: CheckAuthTicketInfra,
     post: Post<RenewAuthTicketEvent>,
     hook: { (authn: Authn): void },
 ) {
     const authn = infra.authn(authnRepositoryConverter)
 
-    const findResult = authn.get()
+    const findResult = await authn.get()
     if (!findResult.success) {
         post({ type: "repository-error", err: findResult.err })
         return
@@ -85,7 +85,7 @@ async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewA
     )
     if (!response.success) {
         if (response.err.type === "unauthorized") {
-            const removeResult = authn.remove()
+            const removeResult = await authn.remove()
             if (!removeResult.success) {
                 post({ type: "repository-error", err: removeResult.err })
                 return
@@ -97,7 +97,7 @@ async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewA
         return
     }
 
-    if (!checkRepositoryError(authn.set(response.value.authn))) {
+    if (!checkRepositoryError(await authn.set(response.value.authn))) {
         return
     }
     if (!checkRepositoryError(authz.set(response.value.authz))) {

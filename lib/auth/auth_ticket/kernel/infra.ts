@@ -1,9 +1,12 @@
 import { RemoteTypes } from "../../../z_vendor/getto-application/infra/remote/infra"
-import { RepositoryPod_legacy } from "../../../z_vendor/getto-application/infra/repository/infra"
+import {
+    RepositoryPod,
+    RepositoryPod_legacy,
+} from "../../../z_vendor/getto-application/infra/repository/infra"
 
 import { AuthTicket, Authn, Authz, RenewAuthTicketRemoteError } from "./data"
 
-export type AuthnRepositoryPod = RepositoryPod_legacy<Authn, AuthnRepositoryValue>
+export type AuthnRepositoryPod = RepositoryPod<Authn, AuthnRepositoryValue>
 export type AuthnRepositoryValue = Readonly<{
     authAt: string
 }>

@@ -1,7 +1,7 @@
 import { env } from "../../../y_environment/env"
 
 import { newAuthzRepository } from "../../../auth/auth_ticket/kernel/infra/repository/authz"
-import { newMenuExpandRepository } from "../../kernel/infra/repository/menu_expand"
+import { newMenuExpandRepositoryPod } from "../../kernel/infra/repository/menu_expand"
 
 import { MenuContent } from "../../kernel/infra"
 import { LoadMenuInfra } from "../infra"
@@ -15,6 +15,6 @@ export function newLoadMenuInfra(
         version: env.version,
         menuTree: menuContent.menuTree,
         authz: newAuthzRepository(webStorage),
-        menuExpand: newMenuExpandRepository(webDB, menuContent),
+        menuExpand: newMenuExpandRepositoryPod(webDB, menuContent),
     }
 }

@@ -1,10 +1,9 @@
-import { StartContinuousRenewEvent } from "./event"
+import { SaveAuthTicketEvent, StartContinuousRenewEvent } from "./event"
 
 import { AuthTicket } from "../kernel/data"
-import { SaveAuthTicketResult } from "./data"
 
 export interface SaveAuthTicketMethod {
-    (auth: AuthTicket): SaveAuthTicketResult
+    (auth: AuthTicket, post: Post<SaveAuthTicketEvent>): void
 }
 
 export interface StartContinuousRenewMethod {

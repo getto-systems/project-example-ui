@@ -13,18 +13,18 @@ type Params = Readonly<{
     database: string
 }>
 export function newDB_Season(webDB: IDBFactory, params: Params): DB<Season> {
-    const current_season: IndexedDBTarget = {
+    const currentSeason: IndexedDBTarget = {
         store: "season",
         key: "current",
     }
     const db = initIndexedDB(webDB, {
         database: params.database,
-        stores: [current_season.store],
+        stores: [currentSeason.store],
     })
     return {
-        get: (): Promise<FetchDBResult<Season>> => db.get(current_season, fromDB),
-        set: (value: Season): Promise<StoreDBResult> => db.set(current_season, toDB, value),
-        remove: (): Promise<StoreDBResult> => db.remove(current_season),
+        get: (): Promise<FetchDBResult<Season>> => db.get(currentSeason, fromDB),
+        set: (value: Season): Promise<StoreDBResult> => db.set(currentSeason, toDB, value),
+        remove: (): Promise<StoreDBResult> => db.remove(currentSeason),
     }
 }
 

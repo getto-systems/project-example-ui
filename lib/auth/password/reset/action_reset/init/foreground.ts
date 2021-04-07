@@ -10,16 +10,17 @@ import { ResetPasswordView } from "../resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
 }>
 export function newResetPasswordView(feature: OutsideFeature): ResetPasswordView {
-    const { webStorage, webCrypto, currentLocation } = feature
+    const { webStorage, webDB, webCrypto, currentLocation } = feature
     return buildResetPasswordView(
         initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {
-                    ...newResetPasswordCoreForegroundInfra(webStorage, webCrypto),
+                    ...newResetPasswordCoreForegroundInfra(webStorage, webDB, webCrypto),
                     ...newResetPasswordCoreBackgroundInfra(webCrypto),
                 },
                 {

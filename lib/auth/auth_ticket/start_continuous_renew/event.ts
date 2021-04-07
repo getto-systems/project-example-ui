@@ -1,6 +1,10 @@
 import { RepositoryError } from "../../../z_vendor/getto-application/infra/repository/data"
 import { RenewAuthTicketError } from "../kernel/data"
 
+export type SaveAuthTicketEvent =
+    | Readonly<{ type: "succeed-to-save" }>
+    | Readonly<{ type: "failed-to-save"; err: RepositoryError }>
+
 export type StartContinuousRenewEvent =
     | Readonly<{ type: "succeed-to-start-continuous-renew" }>
     | Readonly<{ type: "required-to-login" }>

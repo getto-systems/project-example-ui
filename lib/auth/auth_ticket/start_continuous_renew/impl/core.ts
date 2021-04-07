@@ -12,20 +12,22 @@ import { StartContinuousRenewEvent } from "../event"
 interface Save {
     (infra: StartContinuousRenewInfra): SaveAuthTicketMethod
 }
-export const saveAuthTicket: Save = (infra) => (info) => {
+export const saveAuthTicket: Save = (infra) => async (info, post) => {
     const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
 
-    const authnResult = authn.set(info.authn)
+    const authnResult = await authn.set(info.authn)
     if (!authnResult.success) {
-        return authnResult
+        post({ type: "failed-to-save", err: authnResult.err })
+        return
     }
     const authzResult = authz.set(info.authz)
     if (!authzResult.success) {
-        return authzResult
+        post({ type: "failed-to-save", err: authzResult.err })
+        return
     }
 
-    return { success: true }
+    post({ type: "succeed-to-save" })
 }
 
 interface Start {
@@ -53,13 +55,13 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         const CANCEL = { next: false }
         const NEXT = { next: true }
 
-        const result = authn.get()
+        const result = await authn.get()
         if (!result.success) {
             post({ type: "repository-error", err: result.err })
             return CANCEL
         }
         if (!result.found) {
-            handleStoreResult(authn.remove())
+            handleStoreResult(await authn.remove())
             handleStoreResult(authz.remove())
             return CANCEL
         }
@@ -74,7 +76,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         const response = await renew({ type: "always" })
         if (!response.success) {
             if (response.err.type === "unauthorized") {
-                handleStoreResult(authn.remove())
+                handleStoreResult(await authn.remove())
                 handleStoreResult(authz.remove())
                 post({ type: "required-to-login" })
             } else {
@@ -83,7 +85,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
             return CANCEL
         }
 
-        if (!handleStoreResult(authn.set(response.value.authn))) {
+        if (!handleStoreResult(await authn.set(response.value.authn))) {
             return CANCEL
         }
         if (!handleStoreResult(authz.set(response.value.authz))) {
