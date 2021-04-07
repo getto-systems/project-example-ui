@@ -6,9 +6,9 @@ import { LoadSeasonFieldComponent } from "./load_season_field"
 
 import { markSeason } from "../../load_season/impl/test_helper"
 
-import { mockLoadSeasonCoreAction } from "../core/mock"
+import { mockLoadSeasonResource } from "../mock"
 
-import { LoadSeasonResult } from "../../load_season/data"
+import { LoadSeasonCoreState } from "../core/action"
 
 enum LoadEnum {
     "success",
@@ -30,15 +30,15 @@ type MockProps = Readonly<{
     err: string
 }>
 const template = storyTemplate<MockProps>((props) => {
-    return h(LoadSeasonFieldComponent, { season: mockLoadSeasonCoreAction(season()) })
+    return h(LoadSeasonFieldComponent, { ...mockLoadSeasonResource(), state: state() })
 
-    function season(): LoadSeasonResult {
+    function state(): LoadSeasonCoreState {
         switch (props.load) {
             case "success":
-                return { success: true, value: markSeason({ year: props.year }) }
+                return { type: "succeed-to-load", value: markSeason({ year: props.year }) }
 
             case "error":
-                return { success: false, err: { type: "infra-error", err: props.err } }
+                return { type: "failed-to-load", err: { type: "infra-error", err: props.err } }
         }
     }
 })

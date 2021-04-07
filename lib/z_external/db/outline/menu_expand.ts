@@ -1,13 +1,13 @@
 import { MenuExpand_pb } from "../y_protobuf/outline_pb.js"
 
 import { decodeProtobuf, encodeProtobuf } from "../../../z_vendor/protobuf/helper"
-import { initDB } from "../impl"
+import { initStorage_legacy } from "../helper"
 
-import { DB } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { DB_legacy } from "../../../z_vendor/getto-application/infra/repository/infra"
 
 type Expand = string[][]
-export function newDB_MenuExpand(storage: Storage, key: string): DB<Expand> {
-    return initDB(storage, key, {
+export function newDB_MenuExpand(storage: Storage, key: string): DB_legacy<Expand> {
+    return initStorage_legacy(storage, key, {
         toString: (value: Expand) =>
             encodeProtobuf(MenuExpand_pb, (message) => {
                 message.paths = value.map((labels) => {

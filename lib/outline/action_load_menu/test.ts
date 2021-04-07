@@ -7,7 +7,7 @@ import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_he
 
 import { wrapRepository } from "../../z_vendor/getto-application/infra/repository/helper"
 import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
-import { mockDB } from "../../z_vendor/getto-application/infra/repository/mock"
+import { mockDB_legacy } from "../../z_vendor/getto-application/infra/repository/mock"
 
 import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
@@ -465,24 +465,24 @@ function standard_version(): string {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
+    const authz = mockDB_legacy()
     authz.set({ nonce: "api-nonce", roles: ["admin"] })
     return wrapRepository(authz)
 }
 function empty_authz(): AuthzRepositoryPod {
-    return wrapRepository(mockDB())
+    return wrapRepository(mockDB_legacy())
 }
 function devDocs_authz(): AuthzRepositoryPod {
-    const authz = mockDB()
+    const authz = mockDB_legacy()
     authz.set({ nonce: "api-nonce", roles: ["admin", "dev-docs"] })
     return wrapRepository(authz)
 }
 
 function empty_menuExpand(): MenuExpandRepositoryPod {
-    return wrapRepository(mockDB())
+    return wrapRepository(mockDB_legacy())
 }
 function expand_menuExpand(): MenuExpandRepositoryPod {
-    const menuExpand = mockDB()
+    const menuExpand = mockDB_legacy()
     menuExpand.set([[markMenuCategoryLabel("DOCUMENT")]])
     return wrapRepository(menuExpand)
 }

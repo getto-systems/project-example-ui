@@ -5,7 +5,7 @@ import {
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
-import { mockDB } from "../../../../z_vendor/getto-application/infra/repository/mock"
+import { mockDB_legacy } from "../../../../z_vendor/getto-application/infra/repository/mock"
 import {
     ClockPubSub,
     mockClock,
@@ -342,10 +342,10 @@ function emptyResetToken_URL(): URL {
 }
 
 function standard_authn(): AuthnRepositoryPod {
-    return wrapRepository(mockDB())
+    return wrapRepository(mockDB_legacy())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB()
+    const db = mockDB_legacy()
     db.set({
         nonce: "api-nonce",
         roles: ["role"],

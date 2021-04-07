@@ -8,7 +8,7 @@ import {
     mockClock,
     mockClockPubSub,
 } from "../../../z_vendor/getto-application/infra/clock/mock"
-import { mockDB } from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockDB_legacy } from "../../../z_vendor/getto-application/infra/repository/mock"
 import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 
 import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
@@ -372,7 +372,7 @@ function initView(
 }
 
 function standard_authn(): AuthnRepositoryPod {
-    const db = mockDB()
+    const db = mockDB_legacy()
     db.set({
         nonce: "stored-authn-nonce",
         authAt: STORED_LAST_AUTH_AT,
@@ -380,11 +380,11 @@ function standard_authn(): AuthnRepositoryPod {
     return wrapRepository(db)
 }
 function noStored_authn(): AuthnRepositoryPod {
-    return wrapRepository(mockDB())
+    return wrapRepository(mockDB_legacy())
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB()
+    const db = mockDB_legacy()
     db.set({
         nonce: "api-nonce",
         roles: ["role"],
@@ -392,7 +392,7 @@ function standard_authz(): AuthzRepositoryPod {
     return wrapRepository(db)
 }
 function noStored_authz(): AuthzRepositoryPod {
-    return wrapRepository(mockDB())
+    return wrapRepository(mockDB_legacy())
 }
 
 function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
