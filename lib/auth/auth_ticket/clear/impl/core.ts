@@ -16,7 +16,7 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
     const authz = infra.authz(authzRepositoryConverter)
     const clear = infra.clear(passThroughRemoteValue)
 
-    const authnResult = authn.get()
+    const authnResult = await authn.get()
     if (!authnResult.success) {
         post({ type: "failed-to-logout", err: authnResult.err })
         return
@@ -37,7 +37,7 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
         return
     }
 
-    if (!handleResult(authn.remove()) || !handleResult(authz.remove())) {
+    if (!handleResult(await authn.remove()) || !handleResult(authz.remove())) {
         return
     }
 

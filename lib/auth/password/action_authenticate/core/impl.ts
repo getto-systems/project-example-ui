@@ -97,22 +97,27 @@ class Action
         })
     }
     startContinuousRenew(info: AuthTicket): void {
-        const result = this.material.save(info)
-        if (!result.success) {
-            this.post({ type: "repository-error", err: result.err })
-        }
-
-        this.material.startContinuousRenew((event) => {
+        this.material.save(info, (event) => {
             switch (event.type) {
-                case "succeed-to-start-continuous-renew":
-                    this.post({
-                        type: "try-to-load",
-                        scriptPath: this.secureScriptPath(),
-                    })
+                case "failed-to-save":
+                    this.post({ type: "repository-error", err: event.err })
                     return
 
-                default:
-                    this.post(event)
+                case "succeed-to-save":
+                    this.material.startContinuousRenew((event) => {
+                        switch (event.type) {
+                            case "succeed-to-start-continuous-renew":
+                                this.post({
+                                    type: "try-to-load",
+                                    scriptPath: this.secureScriptPath(),
+                                })
+                                return
+
+                            default:
+                                this.post(event)
+                                return
+                        }
+                    })
                     return
             }
         })

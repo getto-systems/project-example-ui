@@ -12,18 +12,18 @@ type Params = Readonly<{
     key: string
 }>
 export function newDB_MenuExpand(webDB: IDBFactory, params: Params): DB<Expand> {
-    const menu_expand: IndexedDBTarget = {
+    const menuExpand: IndexedDBTarget = {
         store: "menu-expand",
         key: params.key,
     }
     const db = initIndexedDB(webDB, {
         database: params.database,
-        stores: [menu_expand.store],
+        stores: [menuExpand.store],
     })
     return {
-        get: (): Promise<FetchDBResult<Expand>> => db.get(menu_expand, fromDB),
-        set: (value: Expand): Promise<StoreDBResult> => db.set(menu_expand, toDB, value),
-        remove: (): Promise<StoreDBResult> => db.remove(menu_expand),
+        get: (): Promise<FetchDBResult<Expand>> => db.get(menuExpand, fromDB),
+        set: (value: Expand): Promise<StoreDBResult> => db.set(menuExpand, toDB, value),
+        remove: (): Promise<StoreDBResult> => db.remove(menuExpand),
     }
 }
 

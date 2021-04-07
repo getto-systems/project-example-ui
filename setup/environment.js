@@ -27,11 +27,11 @@ function envContent() {
         apiServerURL: process.env.API_SERVER_URL,
 
         database: {
+            authn: "GETTO-EXAMPLE-AUTHN",
             season: "GETTO-EXAMPLE-SEASON",
             menuExpand: "GETTO-EXAMPLE-MENU-EXPAND",
         },
         storageKey: {
-            authn: "GETTO-EXAMPLE-AUTHN",
             authz: "GETTO-EXAMPLE-AUTHZ",
         },
     }

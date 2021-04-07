@@ -3,13 +3,19 @@ import {
     setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
-import { mockDB_legacy } from "../../../z_vendor/getto-application/infra/repository/mock"
+import {
+    mockDB_legacy,
+    mockRepository,
+} from "../../../z_vendor/getto-application/infra/repository/mock"
 
-import { wrapRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
+import {
+    convertRepository,
+    wrapRepository,
+} from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
 import { initLogoutResource } from "./impl"
 
-import { AuthzRepositoryPod, AuthzRepositoryValue } from "../kernel/infra"
+import { AuthnRepositoryValue, AuthzRepositoryPod, AuthzRepositoryValue } from "../kernel/infra"
 import { AuthnRepositoryPod } from "../kernel/infra"
 
 import { LogoutResource } from "./resource"
@@ -79,12 +85,11 @@ function initResource(authn: AuthnRepositoryPod, authz: AuthzRepositoryPod): Log
 }
 
 function standard_authn(): AuthnRepositoryPod {
-    const db = mockDB_legacy()
+    const db = mockRepository<AuthnRepositoryValue>()
     db.set({
-        nonce: "stored-authn-nonce",
         authAt: new Date("2020-01-01 09:00:00").toISOString(),
     })
-    return wrapRepository(db)
+    return convertRepository(db)
 }
 function standard_authz(): AuthzRepositoryPod {
     const db = mockDB_legacy<AuthzRepositoryValue>()

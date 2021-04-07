@@ -1,12 +1,16 @@
 import { newAuthzRepository } from "../../kernel/infra/repository/authz"
-import { newAuthnRepository } from "../../kernel/infra/repository/last_auth"
+import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
 
 import { ClearAuthTicketInfra } from "../infra"
 import { newClearAuthTicketRemote } from "../infra/clear"
 
-export function newClearAuthTicketInfra(webStorage: Storage, webCrypto: Crypto): ClearAuthTicketInfra {
+export function newClearAuthTicketInfra(
+    webStorage: Storage,
+    webDB: IDBFactory,
+    webCrypto: Crypto,
+): ClearAuthTicketInfra {
     return {
-        authn: newAuthnRepository(webStorage),
+        authn: newAuthnRepositoryPod(webDB),
         authz: newAuthzRepository(webStorage),
         clear: newClearAuthTicketRemote(webCrypto),
     }

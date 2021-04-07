@@ -7,13 +7,14 @@ import { LogoutResource } from "./resource"
 
 type OutsideFeature = Readonly<{
     webStorage: Storage
+    webDB: IDBFactory
     webCrypto: Crypto
 }>
 export function newLogoutResource(feature: OutsideFeature): LogoutResource {
-    const { webStorage, webCrypto } = feature
+    const { webStorage, webDB, webCrypto } = feature
     return initLogoutResource(
         initLogoutCoreAction(
-            initLogoutCoreMaterial(newClearAuthTicketInfra(webStorage, webCrypto)),
+            initLogoutCoreMaterial(newClearAuthTicketInfra(webStorage, webDB, webCrypto)),
         ),
     )
 }
