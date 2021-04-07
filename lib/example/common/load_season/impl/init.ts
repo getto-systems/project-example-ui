@@ -3,9 +3,9 @@ import { newSeasonRepositoryPod } from "../infra/repository/season"
 
 import { LoadSeasonInfra } from "../infra"
 
-export function newLoadSeasonInfra(webStorage: Storage): LoadSeasonInfra {
+export function newLoadSeasonInfra(webDB: IDBFactory): LoadSeasonInfra {
     return {
-        season: newSeasonRepositoryPod(webStorage),
+        season: newSeasonRepositoryPod(webDB),
         clock: newClock(),
     }
 }

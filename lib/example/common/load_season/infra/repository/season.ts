@@ -6,6 +6,6 @@ import { convertRepository } from "../../../../../z_vendor/getto-application/inf
 
 import { SeasonRepositoryPod } from "../../infra"
 
-export function newSeasonRepositoryPod(webStorage: Storage): SeasonRepositoryPod {
-    return convertRepository(newDB_Season(webStorage, env.storageKey.season))
+export function newSeasonRepositoryPod(webDB: IDBFactory): SeasonRepositoryPod {
+    return convertRepository(newDB_Season(webDB, env.storageKey.season))
 }

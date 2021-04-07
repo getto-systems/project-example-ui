@@ -3,11 +3,11 @@ import { initLoadSeasonCoreAction } from "./core/impl"
 import { LoadSeasonResource } from "./resource"
 
 type OutsideFeature = Readonly<{
-    webStorage: Storage
+    webDB: IDBFactory
 }>
 export function newLoadSeasonResource(feature: OutsideFeature): LoadSeasonResource {
-    const { webStorage } = feature
+    const { webDB } = feature
     return {
-        season: initLoadSeasonCoreAction(newLoadSeasonInfra(webStorage)),
+        season: initLoadSeasonCoreAction(newLoadSeasonInfra(webDB)),
     }
 }

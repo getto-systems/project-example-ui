@@ -1,44 +1,41 @@
 import { Season_pb } from "../y_protobuf/example_pb.js"
 
 import { decodeProtobuf, encodeProtobuf } from "../../../z_vendor/protobuf/helper"
-import { initStorage_legacy } from "../helper"
+import { IndexedDBTarget, initIndexedDB } from "../indexed_db"
 
-import { DB, FetchDBResult, StoreDBResult } from "../infra"
+import { DB, DBConverter, FetchDBResult, StoreDBResult } from "../infra"
 
 type Season = Readonly<{
     year: number
 }>
-export function newDB_Season(storage: Storage, key: string): DB<Season> {
-    const db = initStorage_legacy(storage, key, {
-        toString: (value: Season) =>
-            encodeProtobuf(Season_pb, (message) => {
-                message.year = value.year
-            }),
-        fromString: (raw: string) => decodeProtobuf(Season_pb, raw),
+
+const CURRENT_SEASON: IndexedDBTarget = {
+    store: "season",
+    key: "current",
+}
+
+export function newDB_Season(webDB: IDBFactory, database: string): DB<Season> {
+    const db = initIndexedDB(webDB, {
+        database,
+        stores: [CURRENT_SEASON.store],
     })
     return {
-        get: async (): Promise<FetchDBResult<Season>> => {
-            try {
-                return { success: true, ...db.get() }
-            } catch (err) {
-                return { success: false, err: { type: "infra-error", err: `${err}` } }
-            }
+        get: (): Promise<FetchDBResult<Season>> => {
+            return db.get(CURRENT_SEASON, seasonConverter.fromDB)
         },
-        set: async (value): Promise<StoreDBResult> => {
-            try {
-                db.set(value)
-                return { success: true }
-            } catch (err) {
-                return { success: false, err: { type: "infra-error", err: `${err}` } }
-            }
+        set: (value: Season): Promise<StoreDBResult> => {
+            return db.set(CURRENT_SEASON, seasonConverter.toDB, value)
         },
-        remove: async (): Promise<StoreDBResult> => {
-            try {
-                db.remove()
-                return { success: true }
-            } catch (err) {
-                return { success: false, err: { type: "infra-error", err: `${err}` } }
-            }
+        remove: (): Promise<StoreDBResult> => {
+            return db.remove(CURRENT_SEASON)
         },
     }
+}
+
+const seasonConverter: DBConverter<Season> = {
+    toDB: (value: Season) =>
+        encodeProtobuf(Season_pb, (message) => {
+            message.year = value.year
+        }),
+    fromDB: (raw: string) => decodeProtobuf(Season_pb, raw),
 }
