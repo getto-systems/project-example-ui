@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { newApi_AuthenticatePassword } from "../../../../../z_external/api/auth/password/authenticate"
+import { newApi_AuthenticatePassword } from "../../../../../z_details/api/auth/password/authenticate"
 
 import {
     remoteFeature,

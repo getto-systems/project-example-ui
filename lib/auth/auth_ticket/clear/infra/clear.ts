@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { newApi_ClearAuthTicket } from "../../../../z_external/api/auth/auth_ticket/clear"
+import { newApi_ClearAuthTicket } from "../../../../z_details/api/auth/auth_ticket/clear"
 
 import {
     remoteFeature,

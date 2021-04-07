@@ -1,6 +1,6 @@
 import { env } from "../../../../../../y_environment/env"
 
-import { newApi_RequestResetToken } from "../../../../../../z_external/api/auth/password/reset/request_token"
+import { newApi_RequestResetToken } from "../../../../../../z_details/api/auth/password/reset/request_token"
 
 import {
     remoteFeature,

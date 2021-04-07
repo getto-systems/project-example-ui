@@ -1,5 +1,5 @@
 import { env } from "../../../../../y_environment/env"
-import { newDB_Authz } from "../../../../../z_external/db/auth/authz"
+import { newDB_Authz } from "../../../../../z_details/db/auth/authz"
 
 import { convertRepository } from "../../../../../z_vendor/getto-application/infra/repository/helper"
 

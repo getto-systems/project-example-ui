@@ -1,6 +1,6 @@
 import { env } from "../../../../../../y_environment/env"
 
-import { newApi_ResetPassword } from "../../../../../../z_external/api/auth/password/reset/reset"
+import { newApi_ResetPassword } from "../../../../../../z_details/api/auth/password/reset/reset"
 
 import {
     remoteFeature,

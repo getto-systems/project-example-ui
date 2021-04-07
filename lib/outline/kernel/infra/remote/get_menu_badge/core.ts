@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { newApi_GetMenuBadge } from "../../../../../z_external/api/outline/get_menu_badge"
+import { newApi_GetMenuBadge } from "../../../../../z_details/api/outline/get_menu_badge"
 import {
     remoteFeature,
     convertRemote,

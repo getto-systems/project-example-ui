@@ -1,4 +1,4 @@
-import { newDB_MenuExpand } from "../../../../z_external/db/outline/menu_expand"
+import { newDB_MenuExpand } from "../../../../z_details/db/outline/menu_expand"
 import { convertRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
 import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"

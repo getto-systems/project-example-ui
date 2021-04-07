@@ -1,6 +1,6 @@
 import { env } from "../../../../y_environment/env"
 
-import { newApi_NotifyUnexpectedError } from "../../../../z_external/api/avail/notify_unexpected_error"
+import { newApi_NotifyUnexpectedError } from "../../../../z_details/api/avail/notify_unexpected_error"
 
 import {
     remoteFeature,

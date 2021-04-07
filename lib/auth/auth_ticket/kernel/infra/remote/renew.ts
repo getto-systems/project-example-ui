@@ -1,6 +1,6 @@
 import { env } from "../../../../../y_environment/env"
 
-import { newApi_RenewAuthTicket } from "../../../../../z_external/api/auth/auth_ticket/renew"
+import { newApi_RenewAuthTicket } from "../../../../../z_details/api/auth/auth_ticket/renew"
 
 import {
     remoteFeature,
