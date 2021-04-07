@@ -7,11 +7,12 @@ import {
     wrapRemote,
 } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { GetMenuBadgeRemotePod } from "../../../infra"
 
-export function newGetMenuBadgeRemote(webCrypto: Crypto): GetMenuBadgeRemotePod {
+export function newGetMenuBadgeRemote(feature: RemoteOutsideFeature): GetMenuBadgeRemotePod {
     return wrapRemote(
-        newApi_GetMenuBadge(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_GetMenuBadge(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

@@ -4,17 +4,14 @@ import { initFindNextVersionView } from "./impl"
 import { initFindNextVersionCoreAction, initFindNextVersionCoreMaterial } from "./core/impl"
 
 import { FindNextVersionView } from "./resource"
+import { LocationOutsideFeature } from "../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    currentLocation: Location
-}>
-export function newFindNextVersionView(feature: OutsideFeature): FindNextVersionView {
-    const { currentLocation } = feature
+export function newFindNextVersionView(feature: LocationOutsideFeature): FindNextVersionView {
     return initFindNextVersionView({
         findNext: initFindNextVersionCoreAction(
             initFindNextVersionCoreMaterial(
                 newFindNextVersionInfra(),
-                newFindNextVersionLocationDetecter(currentLocation),
+                newFindNextVersionLocationDetecter(feature),
             ),
         ),
     })

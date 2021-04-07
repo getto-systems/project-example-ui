@@ -7,20 +7,15 @@ import {
     newAuthenticatePasswordCoreBackgroundMaterial,
     newAuthenticatePasswordCoreForegroundMaterial,
 } from "./common"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
-export function newAuthenticatePasswordView(feature: OutsideFeature): AuthenticatePasswordView {
-    const { webDB, webCrypto, currentLocation } = feature
-    const foreground = newAuthenticatePasswordCoreForegroundMaterial(
-        webDB,
-        webCrypto,
-        currentLocation,
-    )
-    const background = newAuthenticatePasswordCoreBackgroundMaterial(webCrypto)
+export function newAuthenticatePasswordView(
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
+): AuthenticatePasswordView {
+    const foreground = newAuthenticatePasswordCoreForegroundMaterial(feature)
+    const background = newAuthenticatePasswordCoreBackgroundMaterial(feature)
 
     return buildAuthenticatePasswordView(
         initAuthenticatePasswordCoreAction({

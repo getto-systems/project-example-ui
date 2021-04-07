@@ -4,14 +4,13 @@ import { newWorker } from "../../../../z_vendor/getto-application/action/worker/
 import { newSignWorkerForeground } from "../../../../auth/action_sign/init/worker/foreground"
 
 import { SignEntry } from "../../../../auth/action_sign/x_preact/sign"
+import { foregroundOutsideFeature } from "../../../helper"
 
 render(
     h(
         SignEntry,
         newSignWorkerForeground({
-            webDB: indexedDB,
-            webCrypto: crypto,
-            currentLocation: location,
+            ...foregroundOutsideFeature(),
             worker: newWorker({
                 currentScript: document.currentScript,
             }),

@@ -6,13 +6,13 @@ import { newLoadMenuResource } from "../../outline/action_load_menu/init"
 import { initDocsView } from "./impl"
 
 import { DocsView } from "./resource"
+import { RepositoryOutsideFeature } from "../../z_vendor/getto-application/infra/repository/infra"
+import { RemoteOutsideFeature } from "../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../z_vendor/getto-application/location/infra"
 
-export type DocsOutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
-export function newDocsView(feature: DocsOutsideFeature): DocsView {
+export function newDocsView(
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
+): DocsView {
     const menu = docsMenuContent()
     return initDocsView({
         ...newLoadBreadcrumbListResource(feature, menu),

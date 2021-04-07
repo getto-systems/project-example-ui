@@ -9,10 +9,13 @@ type Season = Readonly<{
     year: number
 }>
 
+type OutsideFeature = Readonly<{
+    webDB: IDBFactory
+}>
 type Params = Readonly<{
     database: string
 }>
-export function newDB_Season(webDB: IDBFactory, params: Params): DB<Season> {
+export function newDB_Season({ webDB }: OutsideFeature, params: Params): DB<Season> {
     const currentSeason: IndexedDBTarget = {
         store: "season",
         key: "current",

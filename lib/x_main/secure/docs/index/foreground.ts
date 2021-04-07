@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { docsFeature } from "../helper"
+import { foregroundOutsideFeature } from "../../../helper"
 
 import { newDocsView } from "../../../../docs/action_docs/init"
 
@@ -13,7 +13,7 @@ import { DocsEntry } from "../../../../docs/action_docs/x_preact/docs"
 
 render(
     h(DocsEntry, {
-        view: newDocsView(docsFeature()),
+        view: newDocsView(foregroundOutsideFeature()),
         docs: {
             title: "ドキュメント",
             contents: [[docs_example], [[...docs_docs, ...docs_avail, ...docs_auth]]],

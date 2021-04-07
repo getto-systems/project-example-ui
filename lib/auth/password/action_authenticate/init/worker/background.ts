@@ -8,17 +8,16 @@ import { WorkerHandler } from "../../../../../z_vendor/getto-application/action/
 
 import { AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse } from "./message"
 
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+
 import { newAuthenticatePasswordCoreBackgroundMaterial } from "../common"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
+type OutsideFeature = RemoteOutsideFeature
 export function newAuthenticatePasswordHandler(
     feature: OutsideFeature,
     post: Post<AuthenticatePasswordProxyResponse>,
 ): WorkerHandler<AuthenticatePasswordProxyMessage> {
-    const { webCrypto } = feature
-    const material = newAuthenticatePasswordCoreBackgroundMaterial(webCrypto)
+    const material = newAuthenticatePasswordCoreBackgroundMaterial(feature)
     return (message) => {
         switch (message.method) {
             case "authenticate":
@@ -35,10 +34,10 @@ export function newAuthenticatePasswordHandler(
 }
 
 export function newAuthenticatePasswordCoreBackgroundInfra(
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): AuthenticatePasswordCoreBackgroundInfra {
     return {
-        authenticate: newAuthenticatePasswordInfra(webCrypto),
+        authenticate: newAuthenticatePasswordInfra(feature),
     }
 }
 

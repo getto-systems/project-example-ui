@@ -8,11 +8,14 @@ import {
     wrapRemote,
 } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { AuthenticatePasswordRemotePod } from "../../infra"
 
-export function newAuthenticatePasswordRemote(webCrypto: Crypto): AuthenticatePasswordRemotePod {
+export function newAuthenticatePasswordRemote(
+    feature: RemoteOutsideFeature,
+): AuthenticatePasswordRemotePod {
     return wrapRemote(
-        newApi_AuthenticatePassword(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_AuthenticatePassword(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

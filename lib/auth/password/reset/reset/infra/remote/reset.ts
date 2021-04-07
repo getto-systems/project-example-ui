@@ -8,11 +8,12 @@ import {
     wrapRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { ResetPasswordRemotePod } from "../../infra"
 
-export function newResetPasswordRemote(webCrypto: Crypto): ResetPasswordRemotePod {
+export function newResetPasswordRemote(feature: RemoteOutsideFeature): ResetPasswordRemotePod {
     return wrapRemote(
-        newApi_ResetPassword(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_ResetPassword(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

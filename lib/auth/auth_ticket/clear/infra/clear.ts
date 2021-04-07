@@ -8,11 +8,12 @@ import {
     wrapRemote,
 } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { ClearAuthTicketRemotePod } from "../infra"
 
-export function newClearAuthTicketRemote(webCrypto: Crypto): ClearAuthTicketRemotePod {
+export function newClearAuthTicketRemote(feature: RemoteOutsideFeature): ClearAuthTicketRemotePod {
     return wrapRemote(
-        newApi_ClearAuthTicket(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_ClearAuthTicket(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

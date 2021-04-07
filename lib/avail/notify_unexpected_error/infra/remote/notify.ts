@@ -8,11 +8,14 @@ import {
     wrapRemote,
 } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
 import { NotifyUnexpectedErrorRemotePod } from "../../infra"
 
-export function newNotifyUnexpectedErrorRemote(webCrypto: Crypto): NotifyUnexpectedErrorRemotePod {
+export function newNotifyUnexpectedErrorRemote(
+    feature: RemoteOutsideFeature,
+): NotifyUnexpectedErrorRemotePod {
     return wrapRemote(
-        newApi_NotifyUnexpectedError(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_NotifyUnexpectedError(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

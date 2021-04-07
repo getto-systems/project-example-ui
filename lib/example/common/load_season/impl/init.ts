@@ -2,10 +2,12 @@ import { newClock } from "../../../../z_vendor/getto-application/infra/clock/ini
 import { newSeasonRepositoryPod } from "../infra/repository/season"
 
 import { LoadSeasonInfra } from "../infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
 
-export function newLoadSeasonInfra(webDB: IDBFactory): LoadSeasonInfra {
+type OutsideFeature = RepositoryOutsideFeature
+export function newLoadSeasonInfra(feature: OutsideFeature): LoadSeasonInfra {
     return {
-        season: newSeasonRepositoryPod(webDB),
+        season: newSeasonRepositoryPod(feature),
         clock: newClock(),
     }
 }

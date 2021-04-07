@@ -7,11 +7,14 @@ import { DB, FetchDBResult, StoreDBResult } from "../infra"
 
 type Expand = string[][]
 
+type OutsideFeature = Readonly<{
+    webDB: IDBFactory
+}>
 type Params = Readonly<{
     database: string
     key: string
 }>
-export function newDB_MenuExpand(webDB: IDBFactory, params: Params): DB<Expand> {
+export function newDB_MenuExpand({ webDB }: OutsideFeature, params: Params): DB<Expand> {
     const menuExpand: IndexedDBTarget = {
         store: "menu-expand",
         key: params.key,

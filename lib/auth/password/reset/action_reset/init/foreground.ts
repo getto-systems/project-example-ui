@@ -7,24 +7,23 @@ import { newGetScriptPathLocationDetecter } from "../../../../common/secure/get_
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "../core/impl"
 
 import { ResetPasswordView } from "../resource"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
-export function newResetPasswordView(feature: OutsideFeature): ResetPasswordView {
-    const { webDB, webCrypto, currentLocation } = feature
+export function newResetPasswordView(
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
+): ResetPasswordView {
     return buildResetPasswordView(
         initResetPasswordCoreAction(
             initResetPasswordCoreMaterial(
                 {
-                    ...newResetPasswordCoreForegroundInfra(webDB, webCrypto),
-                    ...newResetPasswordCoreBackgroundInfra(webCrypto),
+                    ...newResetPasswordCoreForegroundInfra(feature),
+                    ...newResetPasswordCoreBackgroundInfra(feature),
                 },
                 {
-                    getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
-                    reset: newResetPasswordLocationDetecter(currentLocation),
+                    getSecureScriptPath: newGetScriptPathLocationDetecter(feature),
+                    reset: newResetPasswordLocationDetecter(feature),
                 },
             ),
         ),

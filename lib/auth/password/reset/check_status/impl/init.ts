@@ -9,19 +9,21 @@ import { limit, waitSecond } from "../../../../../z_vendor/getto-application/inf
 import { CheckResetTokenSendingStatusInfra } from "../infra"
 
 import { CheckResetTokenSendingStatusLocationDetecter } from "../method"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
 export function newCheckResetTokenSendingStatusLocationDetecter(
-    currentLocation: Location,
+    feature: LocationOutsideFeature,
 ): CheckResetTokenSendingStatusLocationDetecter {
-    return newLocationDetecter(currentLocation, detectSessionID)
+    return newLocationDetecter(feature, detectSessionID)
 }
 
 export function newCheckResetTokenSendingStatusInfra(
-    webCrypto: Crypto,
+    feature: RemoteOutsideFeature,
 ): CheckResetTokenSendingStatusInfra {
     return {
-        sendToken: newSendResetTokenRemote(webCrypto),
-        getStatus: newGetResetTokenSendingStatusRemote(webCrypto),
+        sendToken: newSendResetTokenRemote(feature),
+        getStatus: newGetResetTokenSendingStatusRemote(feature),
         config: {
             wait: waitSecond(0.25),
             limit: limit(40),

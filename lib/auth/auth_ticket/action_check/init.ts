@@ -7,23 +7,23 @@ import { initCheckAuthTicketCoreAction, initCheckAuthTicketCoreMaterial } from "
 
 import { CheckAuthTicketView } from "./resource"
 import { newGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/init"
+import { RemoteOutsideFeature } from "../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
+type OutsideFeature = RemoteOutsideFeature &
+    RepositoryOutsideFeature &
+    LocationOutsideFeature
 export function newCheckAuthTicketView(feature: OutsideFeature): CheckAuthTicketView {
-    const { webDB, webCrypto, currentLocation } = feature
     return initCheckAuthTicketView(
         initCheckAuthTicketCoreAction(
             initCheckAuthTicketCoreMaterial(
                 {
-                    check: newCheckAuthTicketInfra(webDB, webCrypto),
-                    startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webDB, webCrypto),
+                    check: newCheckAuthTicketInfra(feature),
+                    startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(feature),
                     getSecureScriptPath: newGetSecureScriptPathInfra(),
                 },
-                newGetScriptPathLocationDetecter(currentLocation),
+                newGetScriptPathLocationDetecter(feature),
             ),
         ),
     )

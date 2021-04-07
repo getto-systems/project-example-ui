@@ -1,6 +1,7 @@
 import { newDB_MenuExpand } from "../../../../z_external/db/outline/menu_expand"
 import { convertRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { MenuExpandRepositoryPod } from "../../infra"
 
 export type MenuExpandRepositoryParams = Readonly<{
@@ -8,8 +9,8 @@ export type MenuExpandRepositoryParams = Readonly<{
     key: string
 }>
 export function newMenuExpandRepositoryPod(
-    webDB: IDBFactory,
+    feature: RepositoryOutsideFeature,
     params: MenuExpandRepositoryParams,
 ): MenuExpandRepositoryPod {
-    return convertRepository(newDB_MenuExpand(webDB, params))
+    return convertRepository(newDB_MenuExpand(feature, params))
 }

@@ -8,13 +8,14 @@ import {
     wrapRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { GetResetTokenSendingStatusRemotePod } from "../../infra"
 
 export function newGetResetTokenSendingStatusRemote(
-    webCrypto: Crypto,
+    feature: RemoteOutsideFeature,
 ): GetResetTokenSendingStatusRemotePod {
     return wrapRemote(
-        newApi_GetResetTokenSendingStatus(remoteFeature(env.apiServerURL, webCrypto)),
+        newApi_GetResetTokenSendingStatus(remoteFeature(env.apiServerURL, feature)),
         remoteInfraError,
     )
 }

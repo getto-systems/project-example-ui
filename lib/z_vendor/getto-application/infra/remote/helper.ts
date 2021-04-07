@@ -1,7 +1,10 @@
 import { RemoteCommonError, RemoteInfraError } from "./data"
-import { Remote, RemoteFeature, RemotePod, RemoteResult } from "./infra"
+import { Remote, RemoteFeature, RemoteOutsideFeature, RemotePod, RemoteResult } from "./infra"
 
-export function remoteFeature(serverURL: string, webCrypto: Crypto): RemoteFeature {
+export function remoteFeature(
+    serverURL: string,
+    { webCrypto }: RemoteOutsideFeature,
+): RemoteFeature {
     return {
         serverURL,
         nonce: () => webCrypto.getRandomValues(new Uint32Array(4)).join("-"),

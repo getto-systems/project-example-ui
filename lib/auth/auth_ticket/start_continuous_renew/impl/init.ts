@@ -1,4 +1,4 @@
-import { newAuthzRepository } from "../../kernel/infra/repository/authz"
+import { newAuthzRepositoryPod } from "../../kernel/infra/repository/authz"
 import { newRenewAuthTicketRemote } from "../../kernel/infra/remote/renew"
 import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
 
@@ -10,15 +10,17 @@ import {
 } from "../../../../z_vendor/getto-application/infra/config/infra"
 
 import { StartContinuousRenewInfra } from "../infra"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
 
+type OutsideFeature = RepositoryOutsideFeature & RemoteOutsideFeature
 export function newStartContinuousRenewAuthnInfoInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): StartContinuousRenewInfra {
     return {
-        authz: newAuthzRepository(webDB),
-        authn: newAuthnRepositoryPod(webDB),
-        renew: newRenewAuthTicketRemote(webCrypto),
+        authn: newAuthnRepositoryPod(feature),
+        authz: newAuthzRepositoryPod(feature),
+        renew: newRenewAuthTicketRemote(feature),
         clock: newClock(),
         config: {
             authnExpire: expireMinute(1),

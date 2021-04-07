@@ -1,16 +1,18 @@
-import { newAuthzRepository } from "../../kernel/infra/repository/authz"
+import { newAuthzRepositoryPod } from "../../kernel/infra/repository/authz"
 import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
 
 import { ClearAuthTicketInfra } from "../infra"
 import { newClearAuthTicketRemote } from "../infra/clear"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
 
+type OutsideFeature = RemoteOutsideFeature & RepositoryOutsideFeature
 export function newClearAuthTicketInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): ClearAuthTicketInfra {
     return {
-        authn: newAuthnRepositoryPod(webDB),
-        authz: newAuthzRepository(webDB),
-        clear: newClearAuthTicketRemote(webCrypto),
+        authn: newAuthnRepositoryPod(feature),
+        authz: newAuthzRepositoryPod(feature),
+        clear: newClearAuthTicketRemote(feature),
     }
 }
