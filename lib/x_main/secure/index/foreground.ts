@@ -9,6 +9,7 @@ render(
         DashboardEntry,
         newDashboardView({
             webStorage: localStorage,
+            webDB: indexedDB,
             webCrypto: crypto,
             currentLocation: location,
         }),

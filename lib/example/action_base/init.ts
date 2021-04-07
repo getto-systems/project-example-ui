@@ -8,6 +8,7 @@ import { BaseResource } from "./resource"
 
 export type BaseOutsideFeature = Readonly<{
     webStorage: Storage
+    webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
 }>

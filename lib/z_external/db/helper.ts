@@ -1,9 +1,9 @@
-import { DB_legacy, FetchDBResult_legacy, DBTransformer } from "./infra"
+import { DB_legacy, FetchDBResult_legacy, DBTransformer_legacy } from "./infra"
 
 export function initStorage_legacy<T>(
     storage: Storage,
     key: string,
-    transformer: DBTransformer<T>,
+    transformer: DBTransformer_legacy<T>,
 ): DB_legacy<T> {
     return new Storage_legacy(storage, key, transformer)
 }
@@ -12,9 +12,9 @@ class Storage_legacy<T> implements DB_legacy<T> {
     readonly storage: Storage
     readonly key: string
 
-    readonly transformer: DBTransformer<T>
+    readonly transformer: DBTransformer_legacy<T>
 
-    constructor(storage: Storage, key: string, transformer: DBTransformer<T>) {
+    constructor(storage: Storage, key: string, transformer: DBTransformer_legacy<T>) {
         this.storage = storage
         this.key = key
         this.transformer = transformer

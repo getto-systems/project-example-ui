@@ -7,9 +7,11 @@ export interface DB<T> {
 export type FetchDBResult<T> =
     | Readonly<{ success: true; found: true; value: T }>
     | Readonly<{ success: true; found: false }>
-    | Readonly<{ success: false; err: DBError }>
+    | DBErrorResult
 
-export type StoreDBResult = Readonly<{ success: true }> | Readonly<{ success: false; err: DBError }>
+export type StoreDBResult = Readonly<{ success: true }> | DBErrorResult
+
+export type DBErrorResult = Readonly<{ success: false; err: DBError }>
 
 export type DBError = Readonly<{ type: "infra-error"; err: string }>
 
@@ -23,7 +25,18 @@ export type FetchDBResult_legacy<T> =
     | Readonly<{ found: true; value: T }>
     | Readonly<{ found: false }>
 
-export interface DBTransformer<T> {
+export interface DBTransformer_legacy<T> {
     toString(value: T): string
     fromString(raw: string): T
+}
+
+export type DBConverter<T> = Readonly<{
+    toDB: ToDBConverter<T>
+    fromDB: FromDBConverter<T>
+}>
+export interface ToDBConverter<T> {
+    (value: T): string
+}
+export interface FromDBConverter<T> {
+    (raw: string): T
 }
