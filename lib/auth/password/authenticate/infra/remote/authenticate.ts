@@ -4,8 +4,7 @@ import { newApi_AuthenticatePassword } from "../../../../../z_external/api/auth/
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
@@ -14,8 +13,5 @@ import { AuthenticatePasswordRemotePod } from "../../infra"
 export function newAuthenticatePasswordRemote(
     feature: RemoteOutsideFeature,
 ): AuthenticatePasswordRemotePod {
-    return wrapRemote(
-        newApi_AuthenticatePassword(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_AuthenticatePassword(remoteFeature(env.apiServerURL, feature)))
 }

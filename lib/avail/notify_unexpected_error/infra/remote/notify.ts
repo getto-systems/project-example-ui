@@ -4,8 +4,7 @@ import { newApi_NotifyUnexpectedError } from "../../../../z_external/api/avail/n
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
@@ -14,8 +13,5 @@ import { NotifyUnexpectedErrorRemotePod } from "../../infra"
 export function newNotifyUnexpectedErrorRemote(
     feature: RemoteOutsideFeature,
 ): NotifyUnexpectedErrorRemotePod {
-    return wrapRemote(
-        newApi_NotifyUnexpectedError(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_NotifyUnexpectedError(remoteFeature(env.apiServerURL, feature)))
 }

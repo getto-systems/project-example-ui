@@ -4,16 +4,12 @@ import { newApi_SendResetToken } from "../../../../../../z_external/api/auth/pas
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { SendResetTokenRemotePod } from "../../infra"
 
 export function newSendResetTokenRemote(feature: RemoteOutsideFeature): SendResetTokenRemotePod {
-    return wrapRemote(
-        newApi_SendResetToken(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_SendResetToken(remoteFeature(env.apiServerURL, feature)))
 }

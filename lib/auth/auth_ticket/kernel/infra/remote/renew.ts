@@ -4,16 +4,12 @@ import { newApi_RenewAuthTicket } from "../../../../../z_external/api/auth/auth_
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 import { RenewAuthTicketRemotePod } from "../../infra"
 
 export function newRenewAuthTicketRemote(feature: RemoteOutsideFeature): RenewAuthTicketRemotePod {
-    return wrapRemote(
-        newApi_RenewAuthTicket(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_RenewAuthTicket(remoteFeature(env.apiServerURL, feature)))
 }

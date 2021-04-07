@@ -4,16 +4,12 @@ import { newApi_ResetPassword } from "../../../../../../z_external/api/auth/pass
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { ResetPasswordRemotePod } from "../../infra"
 
 export function newResetPasswordRemote(feature: RemoteOutsideFeature): ResetPasswordRemotePod {
-    return wrapRemote(
-        newApi_ResetPassword(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_ResetPassword(remoteFeature(env.apiServerURL, feature)))
 }

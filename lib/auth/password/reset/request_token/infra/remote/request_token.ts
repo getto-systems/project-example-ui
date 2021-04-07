@@ -4,8 +4,7 @@ import { newApi_RequestResetToken } from "../../../../../../z_external/api/auth/
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
 import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
@@ -14,8 +13,5 @@ import { RequestResetTokenRemotePod } from "../../infra"
 export function newRequestResetTokenRemote(
     feature: RemoteOutsideFeature,
 ): RequestResetTokenRemotePod {
-    return wrapRemote(
-        newApi_RequestResetToken(remoteFeature(env.apiServerURL, feature)),
-        remoteInfraError,
-    )
+    return convertRemote(newApi_RequestResetToken(remoteFeature(env.apiServerURL, feature)))
 }

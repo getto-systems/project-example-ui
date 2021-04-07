@@ -1,4 +1,4 @@
-import { ApiCommonError } from "./data"
+import { ApiCommonError, ApiErrorResult, ApiInfraError } from "./data"
 import { ApiFeature, ApiMethod, ApiRequest } from "./infra"
 
 export function apiRequest(feature: ApiFeature, path: string, method: ApiMethod): ApiRequest {
@@ -19,15 +19,22 @@ export function apiRequest(feature: ApiFeature, path: string, method: ApiMethod)
     }
 }
 
-export function apiCommonError(status: number): ApiCommonError {
-    switch (status) {
-        case 401:
-            return { type: "unauthorized" }
+export function apiStatusError(status: number): ApiErrorResult<ApiCommonError> {
+    return { success: false, err: err() }
 
-        case 409:
-            return { type: "invalid-nonce" }
+    function err(): ApiCommonError {
+        switch (status) {
+            case 401:
+                return { type: "unauthorized" }
 
-        default:
-            return { type: "server-error" }        
+            case 409:
+                return { type: "invalid-nonce" }
+
+            default:
+                return { type: "server-error" }
+        }
     }
+}
+export function apiInfraError(err: unknown): ApiErrorResult<ApiInfraError> {
+    return { success: false, err: { type: "infra-error", err: `${err}` } }
 }
