@@ -28,7 +28,7 @@ export type IndexedDBTarget = Readonly<{
     key: string
 }>
 
-// 構造を変えるときは migration を追加する
+// 構造を変えるときは migration を追加することで対応
 const MIGRATIONS: Migration[] = [
     (db, stores) => {
         stores.forEach((store) => {

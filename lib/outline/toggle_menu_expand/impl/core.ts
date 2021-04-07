@@ -42,6 +42,8 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         modify(expand, path)
 
+        // 別なタブで expand を変更した場合は上書き合戦になるが、マージは大変なのでさぼる
+        // 対応が必要になったらストレージに update を追加してトランザクション内でマージする必要がある
         const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
             post({ type: "repository-error", err: storeResult.err })
