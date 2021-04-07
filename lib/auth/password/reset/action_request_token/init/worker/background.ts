@@ -9,15 +9,14 @@ import {
     RequestPasswordResetTokenProxyResponse,
 } from "./message"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
+
+type OutsideFeature = RemoteOutsideFeature
 export function newRequestResetTokenHandler(
     feature: OutsideFeature,
     post: Post<RequestPasswordResetTokenProxyResponse>,
 ): WorkerHandler<RequestPasswordResetTokenProxyMessage> {
-    const { webCrypto } = feature
-    const material = newRequestResetTokenCoreMaterial(webCrypto)
+    const material = newRequestResetTokenCoreMaterial(feature)
     return (message) => {
         switch (message.method) {
             case "requestToken":

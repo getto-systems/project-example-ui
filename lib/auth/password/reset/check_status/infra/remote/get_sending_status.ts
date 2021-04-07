@@ -1,20 +1,19 @@
 import { env } from "../../../../../../y_environment/env"
 
-import { newApi_GetResetTokenSendingStatus } from "../../../../../../z_external/api/auth/password/reset/check_status/get_sending_status"
+import { newApi_GetResetTokenSendingStatus } from "../../../../../../z_details/api/auth/password/reset/check_status/get_sending_status"
 
 import {
     remoteFeature,
-    remoteInfraError,
-    wrapRemote,
+    convertRemote,
 } from "../../../../../../z_vendor/getto-application/infra/remote/helper"
 
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 import { GetResetTokenSendingStatusRemotePod } from "../../infra"
 
 export function newGetResetTokenSendingStatusRemote(
-    webCrypto: Crypto,
+    feature: RemoteOutsideFeature,
 ): GetResetTokenSendingStatusRemotePod {
-    return wrapRemote(
-        newApi_GetResetTokenSendingStatus(remoteFeature(env.apiServerURL, webCrypto)),
-        remoteInfraError,
+    return convertRemote(
+        newApi_GetResetTokenSendingStatus(remoteFeature(env.apiServerURL, feature)),
     )
 }

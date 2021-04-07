@@ -4,18 +4,13 @@ import { initCheckResetTokenSendingStatusView } from "../impl"
 
 import { CheckResetTokenSendingStatusView } from "../resource"
 import { initCheckResetTokenSendingStatusCoreAction } from "../core/impl"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-    currentLocation: Location
-}>
 export function newCheckPasswordResetSendingStatus(
-    feature: OutsideFeature,
+    feature: RemoteOutsideFeature & LocationOutsideFeature,
 ): CheckResetTokenSendingStatusView {
-    const { webCrypto, currentLocation } = feature
     return initCheckResetTokenSendingStatusView(
-        initCheckResetTokenSendingStatusCoreAction(
-            newCheckSendingStatusMaterial(webCrypto, currentLocation),
-        ),
+        initCheckResetTokenSendingStatusCoreAction(newCheckSendingStatusMaterial(feature)),
     )
 }

@@ -12,20 +12,21 @@ import {
     CheckResetTokenSendingStatusCoreMaterial,
     CheckResetTokenSendingStatusCoreMaterialPod,
 } from "../core/action"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
 export function newCheckSendingStatusMaterial(
-    webCrypto: Crypto,
-    currentLocation: Location,
+    feature: RemoteOutsideFeature & LocationOutsideFeature,
 ): CheckResetTokenSendingStatusCoreMaterial {
     return initCheckResetTokenSendingStatusCoreMaterial(
-        newCheckResetTokenSendingStatusInfra(webCrypto),
-        newCheckResetTokenSendingStatusLocationDetecter(currentLocation),
+        newCheckResetTokenSendingStatusInfra(feature),
+        newCheckResetTokenSendingStatusLocationDetecter(feature),
     )
 }
 export function newCheckSendingStatusMaterialPod(
-    webCrypto: Crypto,
+    feature: RemoteOutsideFeature,
 ): CheckResetTokenSendingStatusCoreMaterialPod {
     return initCheckResetTokenSendingStatusCoreMaterialPod(
-        newCheckResetTokenSendingStatusInfra(webCrypto),
+        newCheckResetTokenSendingStatusInfra(feature),
     )
 }

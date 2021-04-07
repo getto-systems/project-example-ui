@@ -24,12 +24,11 @@ import {
 
 import { AuthenticatePasswordView } from "../../resource"
 import { AuthenticatePasswordCoreAction } from "../../core/action"
+import { RepositoryOutsideFeature } from "../../../../../z_vendor/getto-application/infra/repository/infra"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
+type OutsideFeature = RepositoryOutsideFeature & RemoteOutsideFeature & LocationOutsideFeature
 export interface AuthenticatePasswordProxy
     extends WorkerProxy<AuthenticatePasswordProxyMessage, AuthenticatePasswordProxyResponse> {
     view(feature: OutsideFeature): AuthenticatePasswordView
@@ -53,12 +52,7 @@ class Proxy
     }
 
     view(feature: OutsideFeature): AuthenticatePasswordView {
-        const { webDB, webCrypto, currentLocation } = feature
-        const foreground = newAuthenticatePasswordCoreForegroundMaterial(
-            webDB,
-            webCrypto,
-            currentLocation,
-        )
+        const foreground = newAuthenticatePasswordCoreForegroundMaterial(feature)
         return buildAuthenticatePasswordView(
             initAuthenticatePasswordCoreAction({
                 authenticate: (fields, post) => this.material.authenticate.call({ fields }, post),
@@ -76,11 +70,10 @@ class Proxy
 }
 
 export function newAuthenticatePasswordCoreForegroundInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): AuthenticatePasswordCoreForegroundInfra {
     return {
-        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webDB, webCrypto),
+        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(feature),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }

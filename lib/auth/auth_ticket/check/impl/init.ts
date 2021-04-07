@@ -1,4 +1,5 @@
-import { newAuthzRepository } from "../../kernel/infra/repository/authz"
+import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
+import { newAuthzRepositoryPod } from "../../kernel/infra/repository/authz"
 import { newRenewAuthTicketRemote } from "../../kernel/infra/remote/renew"
 
 import { newClock } from "../../../../z_vendor/getto-application/infra/clock/init"
@@ -8,16 +9,17 @@ import {
     expireMinute,
 } from "../../../../z_vendor/getto-application/infra/config/infra"
 import { CheckAuthTicketInfra } from "../infra"
-import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
 
+type OutsideFeature = RepositoryOutsideFeature & RemoteOutsideFeature
 export function newCheckAuthTicketInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): CheckAuthTicketInfra {
     return {
-        authz: newAuthzRepository(webDB),
-        authn: newAuthnRepositoryPod(webDB),
-        renew: newRenewAuthTicketRemote(webCrypto),
+        authz: newAuthzRepositoryPod(feature),
+        authn: newAuthnRepositoryPod(feature),
+        renew: newRenewAuthTicketRemote(feature),
         clock: newClock(),
         config: {
             instantLoadExpire: expireMinute(3),

@@ -3,7 +3,10 @@ import { newRequestResetTokenInfra } from "../../request_token/impl/init"
 import { initRequestResetTokenCoreMaterial } from "../core/impl"
 
 import { RequestResetTokenCoreMaterial } from "../core/action"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
 
-export function newRequestResetTokenCoreMaterial(webCrypto: Crypto): RequestResetTokenCoreMaterial {
-    return initRequestResetTokenCoreMaterial(newRequestResetTokenInfra(webCrypto))
+export function newRequestResetTokenCoreMaterial(
+    feature: RemoteOutsideFeature,
+): RequestResetTokenCoreMaterial {
+    return initRequestResetTokenCoreMaterial(newRequestResetTokenInfra(feature))
 }

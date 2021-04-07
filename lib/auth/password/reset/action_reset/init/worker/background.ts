@@ -10,16 +10,14 @@ import { ResetPasswordCoreBackgroundInfra } from "../../core/impl"
 
 import { ResetPasswordProxyMessage, ResetPasswordProxyResponse } from "./message"
 import { backgroundLocationDetecter } from "../../../../../../z_vendor/getto-application/location/helper"
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
+type OutsideFeature = RemoteOutsideFeature
 export function newResetPasswordHandler(
     feature: OutsideFeature,
     post: Post<ResetPasswordProxyResponse>,
 ): WorkerHandler<ResetPasswordProxyMessage> {
-    const { webCrypto } = feature
-    const pod = newCoreBackgroundPod(webCrypto)
+    const pod = newCoreBackgroundPod(feature)
     return (message) => {
         switch (message.method) {
             case "reset":
@@ -39,10 +37,10 @@ export function newResetPasswordHandler(
 }
 
 export function newResetPasswordCoreBackgroundInfra(
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): ResetPasswordCoreBackgroundInfra {
     return {
-        reset: newResetPasswordInfra(webCrypto),
+        reset: newResetPasswordInfra(feature),
     }
 }
 

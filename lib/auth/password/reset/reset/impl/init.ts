@@ -8,16 +8,18 @@ import { delaySecond } from "../../../../../z_vendor/getto-application/infra/con
 import { ResetPasswordInfra } from "../infra"
 
 import { ResetPasswordLocationDetecter } from "../method"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
 export function newResetPasswordLocationDetecter(
-    currentLocation: Location,
+    feature: LocationOutsideFeature,
 ): ResetPasswordLocationDetecter {
-    return newLocationDetecter(currentLocation, detectResetToken)
+    return newLocationDetecter(feature, detectResetToken)
 }
 
-export function newResetPasswordInfra(webCrypto: Crypto): ResetPasswordInfra {
+export function newResetPasswordInfra(feature: RemoteOutsideFeature): ResetPasswordInfra {
     return {
-        reset: newResetPasswordRemote(webCrypto),
+        reset: newResetPasswordRemote(feature),
         clock: newClock(),
         config: {
             takeLongtimeThreshold: delaySecond(1),

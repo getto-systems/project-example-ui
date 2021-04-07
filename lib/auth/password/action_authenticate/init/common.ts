@@ -12,21 +12,22 @@ import {
     AuthenticatePasswordCoreBackgroundMaterial,
     AuthenticatePasswordCoreForegroundMaterial,
 } from "../core/action"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../../../z_vendor/getto-application/location/infra"
 
 export function newAuthenticatePasswordCoreForegroundMaterial(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
-    currentLocation: Location,
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
 ): AuthenticatePasswordCoreForegroundMaterial {
-    const infra = newAuthenticatePasswordCoreForegroundInfra(webDB, webCrypto)
-    const detecter = newGetScriptPathLocationDetecter(currentLocation)
+    const infra = newAuthenticatePasswordCoreForegroundInfra(feature)
+    const detecter = newGetScriptPathLocationDetecter(feature)
     return initAuthenticatePasswordCoreForegroundMaterial(infra, detecter)
 }
 
 export function newAuthenticatePasswordCoreBackgroundMaterial(
-    webCrypto: Crypto,
+    feature: RemoteOutsideFeature,
 ): AuthenticatePasswordCoreBackgroundMaterial {
     return initAuthenticatePasswordCoreBackgroundMaterial(
-        newAuthenticatePasswordCoreBackgroundInfra(webCrypto),
+        newAuthenticatePasswordCoreBackgroundInfra(feature),
     )
 }

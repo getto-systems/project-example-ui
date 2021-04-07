@@ -4,15 +4,13 @@ import { initNotifyUnexpectedErrorResource } from "./impl"
 import { initNotifyUnexpectedErrorCoreAction } from "./core/impl"
 
 import { NotifyUnexpectedErrorResource } from "./resource"
+import { RemoteOutsideFeature } from "../../z_vendor/getto-application/infra/remote/infra"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
+type OutsideFeature = RemoteOutsideFeature
 export function newNotifyUnexpectedErrorResource(
     feature: OutsideFeature,
 ): NotifyUnexpectedErrorResource {
-    const { webCrypto } = feature
     return initNotifyUnexpectedErrorResource(
-        initNotifyUnexpectedErrorCoreAction(newNotifyUnexpectedErrorInfra(webCrypto)),
+        initNotifyUnexpectedErrorCoreAction(newNotifyUnexpectedErrorInfra(feature)),
     )
 }

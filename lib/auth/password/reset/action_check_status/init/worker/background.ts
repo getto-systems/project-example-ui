@@ -8,16 +8,14 @@ import {
 } from "./message"
 import { newCheckSendingStatusMaterialPod } from "../common"
 import { backgroundLocationDetecter } from "../../../../../../z_vendor/getto-application/location/helper"
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
+type OutsideFeature = RemoteOutsideFeature
 export function newCheckPasswordResetSendingStatusWorkerHandler(
     feature: OutsideFeature,
     post: Post<CheckPasswordResetSendingStatusProxyResponse>,
 ): WorkerHandler<CheckPasswordResetSendingStatusProxyMessage> {
-    const { webCrypto } = feature
-    const pod = newCheckSendingStatusMaterialPod(webCrypto)
+    const pod = newCheckSendingStatusMaterialPod(feature)
     return (message) => {
         switch (message.method) {
             case "checkStatus":

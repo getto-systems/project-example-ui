@@ -1,23 +1,25 @@
 import { env } from "../../../y_environment/env"
 
-import { newAuthzRepository } from "../../../auth/auth_ticket/kernel/infra/repository/authz"
+import { newAuthzRepositoryPod } from "../../../auth/auth_ticket/kernel/infra/repository/authz"
 import { newGetMenuBadgeRemote } from "../../kernel/infra/remote/get_menu_badge/core"
 import { newGetMenuBadgeNoopRemote } from "../../kernel/infra/remote/get_menu_badge/noop"
 
 import { UpdateMenuBadgeInfra } from "../infra"
 import { MenuContent } from "../../kernel/infra"
+import { RepositoryOutsideFeature } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { RemoteOutsideFeature } from "../../../z_vendor/getto-application/infra/remote/infra"
 
+type OutsideFeature = RepositoryOutsideFeature & RemoteOutsideFeature
 export function newUpdateMenuBadgeInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
     menuContent: MenuContent,
 ): UpdateMenuBadgeInfra {
     return {
         version: env.version,
         menuTree: menuContent.menuTree,
-        authz: newAuthzRepository(webDB),
+        authz: newAuthzRepositoryPod(feature),
         getMenuBadge: menuContent.loadMenuBadge
-            ? newGetMenuBadgeRemote(webCrypto)
+            ? newGetMenuBadgeRemote(feature)
             : newGetMenuBadgeNoopRemote(),
     }
 }

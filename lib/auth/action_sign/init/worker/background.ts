@@ -11,10 +11,13 @@ import { RequestPasswordResetTokenProxyMessage } from "../../../password/reset/a
 import { CheckPasswordResetSendingStatusProxyMessage } from "../../../password/reset/action_check_status/init/worker/message"
 import { ResetPasswordProxyMessage } from "../../../password/reset/action_reset/init/worker/message"
 
-type OutsideFeature = Readonly<{
-    webCrypto: Crypto
-}>
-export function newSignWorkerBackground(feature: OutsideFeature, worker: Worker): void {
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { WorkerOutsideFeature } from "../../../../z_vendor/getto-application/action/worker/infra"
+
+type OutsideFeature = RemoteOutsideFeature & WorkerOutsideFeature
+export function newSignWorkerBackground(feature: OutsideFeature): void {
+    const { worker } = feature
+
     const handler: Handler = {
         password: {
             authenticate: newAuthenticatePasswordHandler(feature, (response) =>

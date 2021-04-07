@@ -16,9 +16,9 @@ import {
 
 import { CheckResetTokenSendingStatusView } from "../../resource"
 
-type OutsideFeature = Readonly<{
-    currentLocation: Location
-}>
+import { LocationOutsideFeature } from "../../../../../../z_vendor/getto-application/location/infra"
+
+type OutsideFeature = LocationOutsideFeature
 export interface CheckPasswordResetSendingStatusProxy
     extends WorkerProxy<
         CheckPasswordResetSendingStatusProxyMessage,
@@ -48,8 +48,7 @@ class Proxy
     }
 
     view(feature: OutsideFeature): CheckResetTokenSendingStatusView {
-        const { currentLocation } = feature
-        const detecter = newCheckResetTokenSendingStatusLocationDetecter(currentLocation)
+        const detecter = newCheckResetTokenSendingStatusLocationDetecter(feature)
         return initCheckResetTokenSendingStatusView(
             initCheckResetTokenSendingStatusCoreAction({
                 checkStatus: (post) => this.material.checkStatus.call(detecter(), post),

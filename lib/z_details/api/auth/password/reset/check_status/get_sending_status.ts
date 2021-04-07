@@ -4,7 +4,7 @@ import {
 } from "../../../../y_protobuf/auth_pb.js"
 
 import { decodeProtobuf, encodeProtobuf } from "../../../../../../z_vendor/protobuf/helper"
-import { apiCommonError, apiRequest } from "../../../../helper"
+import { apiStatusError, apiRequest, apiInfraError } from "../../../../helper"
 
 import { ApiFeature } from "../../../../infra"
 
@@ -28,31 +28,38 @@ type GetSendingStatusError =
 
 export function newApi_GetResetTokenSendingStatus(feature: ApiFeature): GetSendingStatus {
     return async (sessionID): Promise<GetSendingStatusResult> => {
-        const mock = true
-        if (mock) {
-            // TODO api の実装が終わったらつなぐ
-            return { success: true, value: { done: true, send: true } }
-        }
+        try {
+            const mock = true
+            if (mock) {
+                // TODO api の実装が終わったらつなぐ
+                return { success: true, value: { done: true, send: true } }
+            }
 
-        const request = apiRequest(feature, "/auth/password/reset/status", "GET")
-        const response = await fetch(request.url, {
-            ...request.options,
-            body: encodeProtobuf(GetResetTokenSendingStatus_pb, (message) => {
-                message.sessionId = sessionID
-            }),
-        })
+            const request = apiRequest(feature, "/auth/password/reset/status", "GET")
+            const response = await fetch(request.url, {
+                ...request.options,
+                body: encodeProtobuf(GetResetTokenSendingStatus_pb, (message) => {
+                    message.sessionId = sessionID
+                }),
+            })
 
-        if (!response.ok) {
-            return { success: false, err: apiCommonError(response.status) }
-        }
+            if (!response.ok) {
+                return apiStatusError(response.status)
+            }
 
-        const result = decodeProtobuf(GetResetTokenSendingStatusResult_pb, await response.text())
-        if (!result.success) {
-            return { success: false, err: mapError(result) }
-        }
-        return {
-            success: true,
-            value: toSendTokenResult(result),
+            const result = decodeProtobuf(
+                GetResetTokenSendingStatusResult_pb,
+                await response.text(),
+            )
+            if (!result.success) {
+                return { success: false, err: mapError(result) }
+            }
+            return {
+                success: true,
+                value: toSendTokenResult(result),
+            }
+        } catch (err) {
+            return apiInfraError(err)
         }
 
         function toSendTokenResult(

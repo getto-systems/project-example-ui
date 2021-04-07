@@ -26,17 +26,20 @@ import { ForegroundMessage, BackgroundMessage } from "./message"
 import { SignView } from "../../resource"
 import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-    worker: Worker
-}>
+import { RepositoryOutsideFeature } from "../../../../z_vendor/getto-application/infra/repository/infra"
+import { RemoteOutsideFeature } from "../../../../z_vendor/getto-application/infra/remote/infra"
+import { WorkerOutsideFeature } from "../../../../z_vendor/getto-application/action/worker/infra"
+import { LocationOutsideFeature } from "../../../../z_vendor/getto-application/location/infra"
+
+type OutsideFeature = RemoteOutsideFeature &
+    RepositoryOutsideFeature &
+    WorkerOutsideFeature &
+    LocationOutsideFeature
 export function newSignWorkerForeground(feature: OutsideFeature): SignView {
-    const { currentLocation, worker } = feature
+    const { worker } = feature
     const proxy = initProxy(postForegroundMessage)
 
-    const sign = initSignAction(newSignViewLocationDetecter(currentLocation), {
+    const sign = initSignAction(newSignViewLocationDetecter(feature), {
         link: () => initSignLinkResource(),
 
         check: () => newCheckAuthTicketView(feature),

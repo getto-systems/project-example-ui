@@ -11,15 +11,16 @@ import { initSignAction } from "../core/impl"
 import { SignView } from "../resource"
 import { initSignLinkResource } from "../../common/nav/action_nav/impl"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
+import { RepositoryOutsideFeature } from "../../../z_vendor/getto-application/infra/repository/infra"
+import { RemoteOutsideFeature } from "../../../z_vendor/getto-application/infra/remote/infra"
+import { LocationOutsideFeature } from "../../../z_vendor/getto-application/location/infra"
+
+type OutsideFeature = RepositoryOutsideFeature &
+    RemoteOutsideFeature &
+    LocationOutsideFeature
 export function newSignForeground(feature: OutsideFeature): SignView {
-    const { currentLocation } = feature
     return initSignView(
-        initSignAction(newSignViewLocationDetecter(currentLocation), {
+        initSignAction(newSignViewLocationDetecter(feature), {
             link: () => initSignLinkResource(),
 
             check: () => newCheckAuthTicketView(feature),

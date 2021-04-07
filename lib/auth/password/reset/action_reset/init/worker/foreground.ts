@@ -20,14 +20,14 @@ import {
     ResetPasswordProxyResponse,
 } from "./message"
 
+import { RemoteOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../../../z_vendor/getto-application/infra/repository/infra"
+
 import { ResetPasswordView } from "../../resource"
 import { ResetPasswordCoreAction } from "../../core/action"
+import { LocationOutsideFeature } from "../../../../../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
+type OutsideFeature = RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature
 export interface ResetPasswordProxy
     extends WorkerProxy<ResetPasswordProxyMessage, ResetPasswordProxyResponse> {
     view(feature: OutsideFeature): ResetPasswordView
@@ -49,9 +49,8 @@ class Proxy
     }
 
     view(feature: OutsideFeature): ResetPasswordView {
-        const { webDB, webCrypto, currentLocation } = feature
-        const foreground = newCoreForegroundMaterial(webDB, webCrypto, currentLocation)
-        const detecter = newResetPasswordLocationDetecter(currentLocation)
+        const foreground = newCoreForegroundMaterial(feature)
+        const detecter = newResetPasswordLocationDetecter(feature)
         return buildResetPasswordView(
             initResetPasswordCoreAction({
                 reset: (fields, post) =>
@@ -70,11 +69,10 @@ class Proxy
 }
 
 export function newResetPasswordCoreForegroundInfra(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
+    feature: OutsideFeature,
 ): ResetPasswordCoreForegroundInfra {
     return {
-        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webDB, webCrypto),
+        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(feature),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }

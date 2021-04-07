@@ -5,11 +5,12 @@ import { detectPathname } from "./core"
 import { GetScriptPathInfra } from "../infra"
 
 import { GetScriptPathLocationDetecter } from "../method"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
 export function newGetScriptPathLocationDetecter(
-    currentLocation: Location,
+    feature: LocationOutsideFeature,
 ): GetScriptPathLocationDetecter {
-    return newLocationDetecter(currentLocation, detectPathname)
+    return newLocationDetecter(feature, detectPathname)
 }
 
 export function newGetSecureScriptPathInfra(): GetScriptPathInfra {

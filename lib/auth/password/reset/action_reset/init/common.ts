@@ -15,29 +15,29 @@ import {
     ResetPasswordCoreBackgroundMaterialPod,
     ResetPasswordCoreForegroundMaterial,
 } from "../core/action"
+import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../../../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../../../../z_vendor/getto-application/location/infra"
 
 export function newCoreForegroundMaterial(
-    webDB: IDBFactory,
-    webCrypto: Crypto,
-    currentLocation: Location,
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
 ): ResetPasswordCoreForegroundMaterial {
-    const infra = newResetPasswordCoreForegroundInfra(webDB, webCrypto)
+    const infra = newResetPasswordCoreForegroundInfra(feature)
     return initResetPasswordCoreForegroundMaterial(infra, {
-        getSecureScriptPath: newGetScriptPathLocationDetecter(currentLocation),
+        getSecureScriptPath: newGetScriptPathLocationDetecter(feature),
     })
 }
 
-export function newCoreBackgroundPod(webCrypto: Crypto): ResetPasswordCoreBackgroundMaterialPod {
-    return initResetPasswordCoreBackgroundMaterialPod(
-        newResetPasswordCoreBackgroundInfra(webCrypto),
-    )
+export function newCoreBackgroundPod(
+    feature: RemoteOutsideFeature,
+): ResetPasswordCoreBackgroundMaterialPod {
+    return initResetPasswordCoreBackgroundMaterialPod(newResetPasswordCoreBackgroundInfra(feature))
 }
 export function newCoreBackgroundMaterial(
-    webCrypto: Crypto,
-    currentLocation: Location,
+    feature: RemoteOutsideFeature & LocationOutsideFeature,
 ): ResetPasswordCoreBackgroundMaterial {
-    const infra = newResetPasswordCoreBackgroundInfra(webCrypto)
+    const infra = newResetPasswordCoreBackgroundInfra(feature)
     return initResetPasswordCoreBackgroundMaterial(infra, {
-        reset: newResetPasswordLocationDetecter(currentLocation),
+        reset: newResetPasswordLocationDetecter(feature),
     })
 }

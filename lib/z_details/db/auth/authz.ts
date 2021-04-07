@@ -9,10 +9,13 @@ type Authz = Readonly<{
     roles: string[]
 }>
 
+type OutsideFeature = Readonly<{
+    webDB: IDBFactory
+}>
 type Params = Readonly<{
     database: string
 }>
-export function newDB_Authz(webDB: IDBFactory, params: Params): DB<Authz> {
+export function newDB_Authz({ webDB }: OutsideFeature, params: Params): DB<Authz> {
     const lastAuth: IndexedDBTarget = {
         store: "authz",
         key: "last",

@@ -8,26 +8,23 @@ import { initLoadMenuCoreAction, initLoadMenuCoreMaterial } from "./core/impl"
 import { MenuContent } from "../kernel/infra"
 
 import { LoadMenuResource } from "./resource"
+import { RemoteOutsideFeature } from "../../z_vendor/getto-application/infra/remote/infra"
+import { RepositoryOutsideFeature } from "../../z_vendor/getto-application/infra/repository/infra"
+import { LocationOutsideFeature } from "../../z_vendor/getto-application/location/infra"
 
-type OutsideFeature = Readonly<{
-    webDB: IDBFactory
-    webCrypto: Crypto
-    currentLocation: Location
-}>
 export function newLoadMenuResource(
-    feature: OutsideFeature,
+    feature: RemoteOutsideFeature & RepositoryOutsideFeature & LocationOutsideFeature,
     menuContent: MenuContent,
 ): LoadMenuResource {
-    const { webDB, webCrypto, currentLocation } = feature
     return {
         menu: initLoadMenuCoreAction(
             initLoadMenuCoreMaterial(
                 {
-                    ...newLoadMenuInfra(webDB, menuContent),
-                    ...newUpdateMenuBadgeInfra(webDB, webCrypto, menuContent),
-                    ...newToggleMenuExpandInfra(webDB, menuContent),
+                    ...newLoadMenuInfra(feature, menuContent),
+                    ...newUpdateMenuBadgeInfra(feature, menuContent),
+                    ...newToggleMenuExpandInfra(feature, menuContent),
                 },
-                newLoadMenuLocationDetecter(currentLocation),
+                newLoadMenuLocationDetecter(feature),
             ),
         ),
     }
