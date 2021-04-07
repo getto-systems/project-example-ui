@@ -26,14 +26,13 @@ function envContent() {
         secureServerURL: process.env.SECURE_SERVER_URL,
         apiServerURL: process.env.API_SERVER_URL,
 
+        database: {
+            season: "GETTO-EXAMPLE-SEASON",
+            menuExpand: "GETTO-EXAMPLE-MENU-EXPAND",
+        },
         storageKey: {
             authn: "GETTO-EXAMPLE-AUTHN",
             authz: "GETTO-EXAMPLE-AUTHZ",
-            season: "GETTO-EXAMPLE-SEASON",
-            menuExpand: {
-                home: "GETTO-EXAMPLE-MENU-EXPAND-HOME",
-                docs: "GETTO-EXAMPLE-MENU-EXPAND-DOCS",
-            },
         },
     }
 

@@ -30,10 +30,6 @@ export interface DBTransformer_legacy<T> {
     fromString(raw: string): T
 }
 
-export type DBConverter<T> = Readonly<{
-    toDB: ToDBConverter<T>
-    fromDB: FromDBConverter<T>
-}>
 export interface ToDBConverter<T> {
     (value: T): string
 }

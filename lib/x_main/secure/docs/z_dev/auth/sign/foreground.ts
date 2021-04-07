@@ -1,4 +1,11 @@
 import { render, h } from "preact"
+
+import { docsFeature } from "../../../helper"
+
+import { newDocsView } from "../../../../../../docs/action_docs/init"
+
+import { DocsEntry } from "../../../../../../docs/action_docs/x_preact/docs"
+
 import {
     docs_auth_sign,
     docs_auth_sign_description,
@@ -6,17 +13,9 @@ import {
     docs_auth_sign_negativeNote,
 } from "../../../../../../auth/action_sign/docs"
 
-import { newDocsView } from "../../../../../../docs/action_docs/init"
-
-import { DocsEntry } from "../../../../../../docs/action_docs/x_preact/docs"
-
 render(
     h(DocsEntry, {
-        view: newDocsView({
-            webStorage: localStorage,
-            webCrypto: crypto,
-            currentLocation: location,
-        }),
+        view: newDocsView(docsFeature()),
         docs: {
             title: "認証",
             contents: [

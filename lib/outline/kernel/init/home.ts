@@ -5,7 +5,8 @@ import { category, item } from "./common"
 
 export function homeMenuContent(): MenuContent {
     return {
-        key: env.storageKey.menuExpand.home,
+        database: env.database.menuExpand,
+        key: "home",
         loadMenuBadge: true,
         menuTree: [
             category("MAIN", allow, [

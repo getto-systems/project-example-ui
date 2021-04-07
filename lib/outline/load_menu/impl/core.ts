@@ -28,7 +28,7 @@ export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
         return
     }
 
-    const menuExpandResult = menuExpand.get()
+    const menuExpandResult = await menuExpand.get()
     if (!menuExpandResult.success) {
         post({ type: "repository-error", err: menuExpandResult.err })
         return

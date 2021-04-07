@@ -8,7 +8,8 @@ import { MenuContent, MenuPermission } from "../infra"
 
 export function docsMenuContent(): MenuContent {
     return {
-        key: env.storageKey.menuExpand.docs,
+        database: env.database.menuExpand,
+        key: "docs",
         loadMenuBadge: false,
         menuTree: [
             category("MAIN", allow, [
