@@ -8,20 +8,14 @@ import {
     mockClock,
     mockClockPubSub,
 } from "../../../z_vendor/getto-application/infra/clock/mock"
-import {
-    mockDB_legacy,
-    mockRepository,
-} from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"
 import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 
 import { markBoardValue } from "../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../z_vendor/getto-application/board/action_input/mock"
 import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
 
-import {
-    convertRepository,
-    wrapRepository,
-} from "../../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 
 import { initAuthenticatePasswordView } from "./impl"
 import {
@@ -35,7 +29,11 @@ import { startContinuousRenewEventHasDone } from "../../auth_ticket/start_contin
 
 import { Clock } from "../../../z_vendor/getto-application/infra/clock/infra"
 import { AuthenticatePasswordRemotePod, AuthenticatePasswordResult } from "../authenticate/infra"
-import { AuthnRepositoryValue, AuthzRepositoryPod } from "../../auth_ticket/kernel/infra"
+import {
+    AuthnRepositoryValue,
+    AuthzRepositoryPod,
+    AuthzRepositoryValue,
+} from "../../auth_ticket/kernel/infra"
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../auth_ticket/kernel/infra"
 
 import { AuthenticatePasswordView } from "./resource"
@@ -307,12 +305,9 @@ function standard_authn(): AuthnRepositoryPod {
     return convertRepository(mockRepository<AuthnRepositoryValue>())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB_legacy()
-    db.set({
-        nonce: "api-nonce",
-        roles: ["role"],
-    })
-    return wrapRepository(db)
+    const db = mockRepository<AuthzRepositoryValue>()
+    db.set({ roles: ["role"] })
+    return convertRepository(db)
 }
 
 function standard_authenticate(): AuthenticatePasswordRemotePod {

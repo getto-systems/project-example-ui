@@ -27,7 +27,6 @@ import { SignView } from "../../resource"
 import { initSignLinkResource } from "../../../common/nav/action_nav/impl"
 
 type OutsideFeature = Readonly<{
-    webStorage: Storage
     webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location

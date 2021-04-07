@@ -14,12 +14,11 @@ import {
 } from "../core/action"
 
 export function newAuthenticatePasswordCoreForegroundMaterial(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
     currentLocation: Location,
 ): AuthenticatePasswordCoreForegroundMaterial {
-    const infra = newAuthenticatePasswordCoreForegroundInfra(webStorage, webDB, webCrypto)
+    const infra = newAuthenticatePasswordCoreForegroundInfra(webDB, webCrypto)
     const detecter = newGetScriptPathLocationDetecter(currentLocation)
     return initAuthenticatePasswordCoreForegroundMaterial(infra, detecter)
 }

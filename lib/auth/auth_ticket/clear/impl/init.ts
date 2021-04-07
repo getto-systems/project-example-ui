@@ -5,13 +5,12 @@ import { ClearAuthTicketInfra } from "../infra"
 import { newClearAuthTicketRemote } from "../infra/clear"
 
 export function newClearAuthTicketInfra(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
 ): ClearAuthTicketInfra {
     return {
         authn: newAuthnRepositoryPod(webDB),
-        authz: newAuthzRepository(webStorage),
+        authz: newAuthzRepository(webDB),
         clear: newClearAuthTicketRemote(webCrypto),
     }
 }

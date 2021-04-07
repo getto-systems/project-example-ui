@@ -26,7 +26,6 @@ import { AuthenticatePasswordView } from "../../resource"
 import { AuthenticatePasswordCoreAction } from "../../core/action"
 
 type OutsideFeature = Readonly<{
-    webStorage: Storage
     webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
@@ -54,9 +53,8 @@ class Proxy
     }
 
     view(feature: OutsideFeature): AuthenticatePasswordView {
-        const { webStorage, webDB, webCrypto, currentLocation } = feature
+        const { webDB, webCrypto, currentLocation } = feature
         const foreground = newAuthenticatePasswordCoreForegroundMaterial(
-            webStorage,
             webDB,
             webCrypto,
             currentLocation,
@@ -78,12 +76,11 @@ class Proxy
 }
 
 export function newAuthenticatePasswordCoreForegroundInfra(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
 ): AuthenticatePasswordCoreForegroundInfra {
     return {
-        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage, webDB, webCrypto),
+        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webDB, webCrypto),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }

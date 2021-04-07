@@ -5,15 +5,9 @@ import {
 
 import { markMenuCategoryLabel, standard_MenuTree } from "../kernel/impl/test_helper"
 
-import {
-    convertRepository,
-    wrapRepository,
-} from "../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../z_vendor/getto-application/infra/repository/helper"
 import { mockRemotePod } from "../../z_vendor/getto-application/infra/remote/mock"
-import {
-    mockDB_legacy,
-    mockRepository,
-} from "../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../z_vendor/getto-application/infra/repository/mock"
 
 import { mockLoadMenuLocationDetecter } from "../kernel/impl/mock"
 
@@ -24,7 +18,7 @@ import { loadMenuEventHasDone } from "../load_menu/impl/core"
 import { updateMenuBadgeEventHasDone } from "../update_menu_badge/impl/core"
 import { toggleMenuExpandEventHasDone } from "../toggle_menu_expand/impl/core"
 
-import { AuthzRepositoryPod } from "../../auth/auth_ticket/kernel/infra"
+import { AuthzRepositoryPod, AuthzRepositoryValue } from "../../auth/auth_ticket/kernel/infra"
 import {
     GetMenuBadgeRemotePod,
     MenuExpandRepositoryPod,
@@ -475,17 +469,17 @@ function standard_version(): string {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const authz = mockDB_legacy()
-    authz.set({ nonce: "api-nonce", roles: ["admin"] })
-    return wrapRepository(authz)
+    const authz = mockRepository<AuthzRepositoryValue>()
+    authz.set({ roles: ["admin"] })
+    return convertRepository(authz)
 }
 function empty_authz(): AuthzRepositoryPod {
-    return wrapRepository(mockDB_legacy())
+    return convertRepository(mockRepository<AuthzRepositoryValue>())
 }
 function devDocs_authz(): AuthzRepositoryPod {
-    const authz = mockDB_legacy()
-    authz.set({ nonce: "api-nonce", roles: ["admin", "dev-docs"] })
-    return wrapRepository(authz)
+    const authz = mockRepository<AuthzRepositoryValue>()
+    authz.set({ roles: ["admin", "dev-docs"] })
+    return convertRepository(authz)
 }
 
 function empty_menuExpand(): MenuExpandRepositoryPod {

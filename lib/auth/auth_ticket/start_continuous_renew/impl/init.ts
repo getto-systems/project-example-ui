@@ -12,12 +12,11 @@ import {
 import { StartContinuousRenewInfra } from "../infra"
 
 export function newStartContinuousRenewAuthnInfoInfra(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
 ): StartContinuousRenewInfra {
     return {
-        authz: newAuthzRepository(webStorage),
+        authz: newAuthzRepository(webDB),
         authn: newAuthnRepositoryPod(webDB),
         renew: newRenewAuthTicketRemote(webCrypto),
         clock: newClock(),

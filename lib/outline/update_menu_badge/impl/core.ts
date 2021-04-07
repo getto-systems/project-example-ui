@@ -17,7 +17,7 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
     const getMenuBadge = infra.getMenuBadge(menuBadgeRemoteConverter)
     const authz = infra.authz(authzRepositoryConverter)
 
-    const authzResult = authz.get()
+    const authzResult = await authz.get()
     if (!authzResult.success) {
         post({ type: "repository-error", err: authzResult.err })
         return

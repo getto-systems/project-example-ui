@@ -23,7 +23,7 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
     }
     if (!authnResult.found) {
         // authn が保存されていなければ authz のクリアだけ行う
-        if (!handleResult(authz.remove())) {
+        if (!handleResult(await authz.remove())) {
             return
         }
 
@@ -37,7 +37,7 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
         return
     }
 
-    if (!handleResult(await authn.remove()) || !handleResult(authz.remove())) {
+    if (!handleResult(await authn.remove()) || !handleResult(await authz.remove())) {
         return
     }
 

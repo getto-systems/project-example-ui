@@ -17,7 +17,7 @@ export const loadMenu: Load = (infra, store) => (detecter) => async (post) => {
     const authz = infra.authz(authzRepositoryConverter)
     const menuExpand = infra.menuExpand(menuExpandRepositoryConverter)
 
-    const authzResult = authz.get()
+    const authzResult = await authz.get()
     if (!authzResult.success) {
         post({ type: "repository-error", err: authzResult.err })
         return

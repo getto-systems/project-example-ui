@@ -9,7 +9,6 @@ render(
     h(
         SignEntry,
         newSignWorkerForeground({
-            webStorage: localStorage,
             webDB: indexedDB,
             webCrypto: crypto,
             currentLocation: location,

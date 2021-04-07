@@ -8,18 +8,12 @@ import {
     mockClock,
     mockClockPubSub,
 } from "../../../z_vendor/getto-application/infra/clock/mock"
-import {
-    mockDB_legacy,
-    mockRepository,
-} from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"
 import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 
 import { mockGetScriptPathLocationDetecter } from "../../common/secure/get_script_path/impl/mock"
 
-import {
-    convertRepository,
-    wrapRepository,
-} from "../../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initCheckAuthTicketView } from "./impl"
 import { initCheckAuthTicketCoreAction, initCheckAuthTicketCoreMaterial } from "./core/impl"
 
@@ -28,7 +22,7 @@ import { checkAuthTicketEventHasDone } from "../check/impl/core"
 
 import { Clock } from "../../../z_vendor/getto-application/infra/clock/infra"
 import { WaitTime } from "../../../z_vendor/getto-application/infra/config/infra"
-import { AuthnRepositoryValue, AuthzRepositoryPod } from "../kernel/infra"
+import { AuthnRepositoryValue, AuthzRepositoryPod, AuthzRepositoryValue } from "../kernel/infra"
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../kernel/infra"
 
 import { CheckAuthTicketView } from "./resource"
@@ -389,15 +383,14 @@ function noStored_authn(): AuthnRepositoryPod {
 }
 
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB_legacy()
+    const db = mockRepository<AuthzRepositoryValue>()
     db.set({
-        nonce: "api-nonce",
         roles: ["role"],
     })
-    return wrapRepository(db)
+    return convertRepository(db)
 }
 function noStored_authz(): AuthzRepositoryPod {
-    return wrapRepository(mockDB_legacy())
+    return convertRepository(mockRepository<AuthzRepositoryValue>())
 }
 
 function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {

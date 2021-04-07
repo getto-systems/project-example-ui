@@ -11,12 +11,11 @@ import { CheckAuthTicketInfra } from "../infra"
 import { newAuthnRepositoryPod } from "../../kernel/infra/repository/authn"
 
 export function newCheckAuthTicketInfra(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
 ): CheckAuthTicketInfra {
     return {
-        authz: newAuthzRepository(webStorage),
+        authz: newAuthzRepository(webDB),
         authn: newAuthnRepositoryPod(webDB),
         renew: newRenewAuthTicketRemote(webCrypto),
         clock: newClock(),

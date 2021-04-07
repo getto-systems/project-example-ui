@@ -24,7 +24,6 @@ import { ResetPasswordView } from "../../resource"
 import { ResetPasswordCoreAction } from "../../core/action"
 
 type OutsideFeature = Readonly<{
-    webStorage: Storage
     webDB: IDBFactory
     webCrypto: Crypto
     currentLocation: Location
@@ -50,8 +49,8 @@ class Proxy
     }
 
     view(feature: OutsideFeature): ResetPasswordView {
-        const { webStorage, webDB, webCrypto, currentLocation } = feature
-        const foreground = newCoreForegroundMaterial(webStorage, webDB, webCrypto, currentLocation)
+        const { webDB, webCrypto, currentLocation } = feature
+        const foreground = newCoreForegroundMaterial(webDB, webCrypto, currentLocation)
         const detecter = newResetPasswordLocationDetecter(currentLocation)
         return buildResetPasswordView(
             initResetPasswordCoreAction({
@@ -71,12 +70,11 @@ class Proxy
 }
 
 export function newResetPasswordCoreForegroundInfra(
-    webStorage: Storage,
     webDB: IDBFactory,
     webCrypto: Crypto,
 ): ResetPasswordCoreForegroundInfra {
     return {
-        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webStorage, webDB, webCrypto),
+        startContinuousRenew: newStartContinuousRenewAuthnInfoInfra(webDB, webCrypto),
         getSecureScriptPath: newGetSecureScriptPathInfra(),
     }
 }

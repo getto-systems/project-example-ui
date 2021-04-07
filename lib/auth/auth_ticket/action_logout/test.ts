@@ -3,15 +3,9 @@ import {
     setupSyncActionTestRunner,
 } from "../../../z_vendor/getto-application/action/test_helper"
 
-import {
-    mockDB_legacy,
-    mockRepository,
-} from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"
 
-import {
-    convertRepository,
-    wrapRepository,
-} from "../../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
 import { initLogoutResource } from "./impl"
 
@@ -92,11 +86,11 @@ function standard_authn(): AuthnRepositoryPod {
     return convertRepository(db)
 }
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB_legacy<AuthzRepositoryValue>()
+    const db = mockRepository<AuthzRepositoryValue>()
     db.set({
         roles: ["role"],
     })
-    return wrapRepository(db)
+    return convertRepository(db)
 }
 
 function standard_clear(): ClearAuthTicketRemotePod {

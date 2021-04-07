@@ -5,10 +5,7 @@ import {
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
-import {
-    mockDB_legacy,
-    mockRepository,
-} from "../../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRepository } from "../../../../z_vendor/getto-application/infra/repository/mock"
 import {
     ClockPubSub,
     mockClock,
@@ -19,10 +16,7 @@ import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remo
 import { mockGetScriptPathLocationDetecter } from "../../../common/secure/get_script_path/impl/mock"
 import { mockResetPasswordLocationDetecter } from "../reset/impl/mock"
 
-import {
-    convertRepository,
-    wrapRepository,
-} from "../../../../z_vendor/getto-application/infra/repository/helper"
+import { convertRepository } from "../../../../z_vendor/getto-application/infra/repository/helper"
 
 import { initResetPasswordView } from "./impl"
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./core/impl"
@@ -33,7 +27,11 @@ import { startContinuousRenewEventHasDone } from "../../../auth_ticket/start_con
 
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
-import { AuthnRepositoryValue, AuthzRepositoryPod } from "../../../auth_ticket/kernel/infra"
+import {
+    AuthnRepositoryValue,
+    AuthzRepositoryPod,
+    AuthzRepositoryValue,
+} from "../../../auth_ticket/kernel/infra"
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../../auth_ticket/kernel/infra"
 
 import { ResetPasswordView } from "./resource"
@@ -351,12 +349,9 @@ function standard_authn(): AuthnRepositoryPod {
     return convertRepository(mockRepository<AuthnRepositoryValue>())
 }
 function standard_authz(): AuthzRepositoryPod {
-    const db = mockDB_legacy()
-    db.set({
-        nonce: "api-nonce",
-        roles: ["role"],
-    })
-    return wrapRepository(db)
+    const db = mockRepository<AuthzRepositoryValue>()
+    db.set({ roles: ["role"] })
+    return convertRepository(db)
 }
 
 function standard_reset(): ResetPasswordRemotePod {

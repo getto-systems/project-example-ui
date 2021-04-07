@@ -6,15 +6,11 @@ import { newMenuExpandRepositoryPod } from "../../kernel/infra/repository/menu_e
 import { MenuContent } from "../../kernel/infra"
 import { LoadMenuInfra } from "../infra"
 
-export function newLoadMenuInfra(
-    webStorage: Storage,
-    webDB: IDBFactory,
-    menuContent: MenuContent,
-): LoadMenuInfra {
+export function newLoadMenuInfra(webDB: IDBFactory, menuContent: MenuContent): LoadMenuInfra {
     return {
         version: env.version,
         menuTree: menuContent.menuTree,
-        authz: newAuthzRepository(webStorage),
+        authz: newAuthzRepository(webDB),
         menuExpand: newMenuExpandRepositoryPod(webDB, menuContent),
     }
 }
