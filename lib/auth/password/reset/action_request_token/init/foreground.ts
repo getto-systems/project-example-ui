@@ -4,8 +4,9 @@ import { buildRequestResetTokenView } from "./worker/foreground"
 
 import { initRequestResetTokenCoreAction, initRequestResetTokenCoreMaterial } from "../core/impl"
 
-import { RequestResetTokenView } from "../resource"
 import { RemoteOutsideFeature } from "../../../../../z_vendor/getto-application/infra/remote/infra"
+
+import { RequestResetTokenView } from "../resource"
 
 type OutsideFeature = RemoteOutsideFeature
 export function newRequestResetTokenView(feature: OutsideFeature): RequestResetTokenView {
