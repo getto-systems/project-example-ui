@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## Version : 0.9.0
+
+- refactor : See merge request getto-systems-base/projects/example/ui!1088
+- refactor: worker : See merge request getto-systems-base/projects/example/ui!1087
+- refactor: outside feature : See merge request getto-systems-base/projects/example/ui!1086
+- refactor: outside feature : See merge request getto-systems-base/projects/example/ui!1085
+- replace: indexed db : See merge request getto-systems-base/projects/example/ui!1084
+- replace: indexed db : See merge request getto-systems-base/projects/example/ui!1083
+- replace: indexed db : See merge request getto-systems-base/projects/example/ui!1082
+- replace: indexed db : See merge request getto-systems-base/projects/example/ui!1081
+- refactor: repository : See merge request getto-systems-base/projects/example/ui!1080
+- refactor: example component : See merge request getto-systems-base/projects/example/ui!1079
+- fix: page title : See merge request getto-systems-base/projects/example/ui!1078
+- upgrade: theme : See merge request getto-systems-base/projects/example/ui!1077
+- rename: input.ts : See merge request getto-systems-base/projects/example/ui!1076
+- rename: not-found.html : See merge request getto-systems-base/projects/example/ui!1075
+- update: vendor : See merge request getto-systems-base/projects/example/ui!1074
+- update: vendor : See merge request getto-systems-base/projects/example/ui!1073
+- update: vendor : See merge request getto-systems-base/projects/example/ui!1072
+- refactor: unused code : See merge request getto-systems-base/projects/example/ui!1071
+- ignore coverage: site : See merge request getto-systems-base/projects/example/ui!1070
+- refactor: site info : See merge request getto-systems-base/projects/example/ui!1069
+- refactor: preact libs : See merge request getto-systems-base/projects/example/ui!1068
+- fix: workspace directory : See merge request getto-systems-base/projects/example/ui!1067
+- upgrade: theme : See merge request getto-systems-base/projects/example/ui!1066
+- upgrade: theme : See merge request getto-systems-base/projects/example/ui!1065
+- fix: css : See merge request getto-systems-base/projects/example/ui!1064
+
+
 ## Version : 0.8.4
 
 - fix: css : See merge request getto-systems-base/projects/example/ui!1062
