@@ -1,6 +1,8 @@
 import { h, VNode } from "preact"
 import { html } from "htm/preact"
 
+import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
+
 import { label_alert } from "../../../../z_vendor/getto-css/preact/design/highlight"
 
 import { VNodeContent } from "../../../../x_preact/design/common"
@@ -9,7 +11,6 @@ import { LoadSeasonResource, LoadSeasonResourceState } from "../resource"
 
 import { Season } from "../../load_season/data"
 import { RepositoryError } from "../../../../z_vendor/getto-application/infra/repository/data"
-import { useApplicationAction } from "../../../../z_vendor/getto-application/action/x_preact/hooks"
 
 export function LoadSeasonEntry(resource: LoadSeasonResource): VNode {
     return h(LoadSeasonComponent, { ...resource, state: useApplicationAction(resource.season) })

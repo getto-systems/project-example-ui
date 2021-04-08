@@ -1,5 +1,4 @@
 export type ApiResult<V, E> = Readonly<{ success: true; value: V }> | ApiErrorResult<E>
-
 export type ApiErrorResult<E> = Readonly<{ success: false; err: E }>
 
 export type ApiCommonError =
