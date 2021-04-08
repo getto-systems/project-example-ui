@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version : 0.11.0
+
+- fix: menu : See merge request getto-systems-base/projects/example/ui!1092
+
+
 ## Version : 0.10.0
 
 - fix: menu : See merge request getto-systems-base/projects/example/ui!1090
