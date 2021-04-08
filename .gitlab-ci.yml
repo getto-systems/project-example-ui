@@ -21,10 +21,15 @@ test:
     changes:
       - lib/**/*.ts
 
+  variables:
+    SECURE_SERVER_URL: https://secure.example.com
+    API_SERVER_URL: https://api.example.com
+
   before_script:
     - npm clean-install
   script:
     - npm test
+    - npm run build
 
 bump_version:
   stage: bump_version
