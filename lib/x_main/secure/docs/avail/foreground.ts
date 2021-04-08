@@ -1,6 +1,6 @@
 import { render, h } from "preact"
 
-import { foregroundOutsideFeature } from "../../../outside_feature/helper"
+import { foregroundOutsideFeature } from "../../../x_outside_feature/common"
 
 import { newDocsView } from "../../../../docs/action_docs/init"
 

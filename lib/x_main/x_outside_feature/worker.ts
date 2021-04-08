@@ -5,7 +5,7 @@ import {
     CommonOutsideFeature,
     foregroundOutsideFeature,
     ForegroundOutsideFeature,
-} from "./helper"
+} from "./common"
 
 import { WorkerOutsideFeature } from "../../z_vendor/getto-application/action/worker/infra"
 
