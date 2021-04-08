@@ -15,8 +15,6 @@ import {
     AuthenticatePasswordCoreMaterial,
     AuthenticatePasswordCoreAction,
     AuthenticatePasswordCoreState,
-    AuthenticatePasswordCoreForegroundMaterial,
-    AuthenticatePasswordCoreBackgroundMaterial,
     initialAuthenticatePasswordCoreState,
 } from "./action"
 
@@ -27,14 +25,9 @@ import { AuthenticatePasswordFields } from "../../authenticate/data"
 import { AuthTicket } from "../../../auth_ticket/kernel/data"
 import { ConvertBoardResult } from "../../../../z_vendor/getto-application/board/kernel/data"
 
-export type AuthenticatePasswordCoreInfra = AuthenticatePasswordCoreForegroundInfra &
-    AuthenticatePasswordCoreBackgroundInfra
-
-export type AuthenticatePasswordCoreForegroundInfra = Readonly<{
+export type AuthenticatePasswordCoreInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetScriptPathInfra
-}>
-export type AuthenticatePasswordCoreBackgroundInfra = Readonly<{
     authenticate: AuthenticatePasswordInfra
 }>
 
@@ -43,24 +36,9 @@ export function initAuthenticatePasswordCoreMaterial(
     locationInfo: GetScriptPathLocationDetecter,
 ): AuthenticatePasswordCoreMaterial {
     return {
-        ...initAuthenticatePasswordCoreForegroundMaterial(infra, locationInfo),
-        ...initAuthenticatePasswordCoreBackgroundMaterial(infra),
-    }
-}
-export function initAuthenticatePasswordCoreForegroundMaterial(
-    infra: AuthenticatePasswordCoreForegroundInfra,
-    locationInfo: GetScriptPathLocationDetecter,
-): AuthenticatePasswordCoreForegroundMaterial {
-    return {
         save: saveAuthTicket(infra.startContinuousRenew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(locationInfo),
-    }
-}
-export function initAuthenticatePasswordCoreBackgroundMaterial(
-    infra: AuthenticatePasswordCoreBackgroundInfra,
-): AuthenticatePasswordCoreBackgroundMaterial {
-    return {
         authenticate: authenticatePassword(infra.authenticate),
     }
 }

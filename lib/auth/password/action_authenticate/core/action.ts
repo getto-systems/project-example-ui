@@ -23,15 +23,10 @@ export interface AuthenticatePasswordCoreAction
     loadError(err: LoadScriptError): void
 }
 
-export type AuthenticatePasswordCoreMaterial = AuthenticatePasswordCoreForegroundMaterial &
-    AuthenticatePasswordCoreBackgroundMaterial
-
-export type AuthenticatePasswordCoreForegroundMaterial = Readonly<{
+export type AuthenticatePasswordCoreMaterial = Readonly<{
     save: SaveAuthTicketMethod
     startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
-}>
-export type AuthenticatePasswordCoreBackgroundMaterial = Readonly<{
     authenticate: AuthenticatePasswordMethod
 }>
 

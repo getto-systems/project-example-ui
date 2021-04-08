@@ -1,6 +1,6 @@
 import { ApplicationStateAction } from "../../../../../z_vendor/getto-application/action/action"
 
-import { ResetPasswordMethod, ResetPasswordPod } from "../../reset/method"
+import { ResetPasswordMethod } from "../../reset/method"
 import { GetScriptPathMethod } from "../../../../common/secure/get_script_path/method"
 import {
     SaveAuthTicketMethod,
@@ -22,19 +22,11 @@ export interface ResetPasswordCoreAction extends ApplicationStateAction<ResetPas
     loadError(err: LoadScriptError): void
 }
 
-export type ResetPasswordCoreMaterial = ResetPasswordCoreForegroundMaterial &
-    ResetPasswordCoreBackgroundMaterial
-
-export type ResetPasswordCoreForegroundMaterial = Readonly<{
+export type ResetPasswordCoreMaterial = Readonly<{
     save: SaveAuthTicketMethod
     startContinuousRenew: StartContinuousRenewMethod
     getSecureScriptPath: GetScriptPathMethod
-}>
-export type ResetPasswordCoreBackgroundMaterial = Readonly<{
     reset: ResetPasswordMethod
-}>
-export type ResetPasswordCoreBackgroundMaterialPod = Readonly<{
-    initReset: ResetPasswordPod
 }>
 
 export type ResetPasswordCoreState =

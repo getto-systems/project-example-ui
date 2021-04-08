@@ -15,9 +15,6 @@ import {
     ResetPasswordCoreMaterial,
     ResetPasswordCoreAction,
     ResetPasswordCoreState,
-    ResetPasswordCoreForegroundMaterial,
-    ResetPasswordCoreBackgroundMaterialPod,
-    ResetPasswordCoreBackgroundMaterial,
     initialResetPasswordCoreState,
 } from "./action"
 
@@ -29,14 +26,9 @@ import { ResetPasswordFields } from "../../reset/data"
 import { AuthTicket } from "../../../../auth_ticket/kernel/data"
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
-export type ResetPasswordCoreInfra = ResetPasswordCoreForegroundInfra &
-    ResetPasswordCoreBackgroundInfra
-
-export type ResetPasswordCoreForegroundInfra = Readonly<{
+export type ResetPasswordCoreInfra = Readonly<{
     startContinuousRenew: StartContinuousRenewInfra
     getSecureScriptPath: GetScriptPathInfra
-}>
-export type ResetPasswordCoreBackgroundInfra = Readonly<{
     reset: ResetPasswordInfra
 }>
 
@@ -52,34 +44,10 @@ export function initResetPasswordCoreMaterial(
     detecter: ResetPasswordCoreForegroundDetecter & ResetPasswordCoreBackgroundDetecter,
 ): ResetPasswordCoreMaterial {
     return {
-        ...initResetPasswordCoreForegroundMaterial(infra, detecter),
-        ...initResetPasswordCoreBackgroundMaterial(infra, detecter),
-    }
-}
-export function initResetPasswordCoreForegroundMaterial(
-    infra: ResetPasswordCoreForegroundInfra,
-    detecter: ResetPasswordCoreForegroundDetecter,
-): ResetPasswordCoreForegroundMaterial {
-    return {
         save: saveAuthTicket(infra.startContinuousRenew),
         startContinuousRenew: startContinuousRenew(infra.startContinuousRenew),
         getSecureScriptPath: getScriptPath(infra.getSecureScriptPath)(detecter.getSecureScriptPath),
-    }
-}
-export function initResetPasswordCoreBackgroundMaterial(
-    infra: ResetPasswordCoreBackgroundInfra,
-    detecter: ResetPasswordCoreBackgroundDetecter,
-): ResetPasswordCoreBackgroundMaterial {
-    const pod = initResetPasswordCoreBackgroundMaterialPod(infra)
-    return {
-        reset: pod.initReset(detecter.reset),
-    }
-}
-export function initResetPasswordCoreBackgroundMaterialPod(
-    infra: ResetPasswordCoreBackgroundInfra,
-): ResetPasswordCoreBackgroundMaterialPod {
-    return {
-        initReset: resetPassword(infra.reset),
+        reset: resetPassword(infra.reset)(detecter.reset),
     }
 }
 
