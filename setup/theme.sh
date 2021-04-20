@@ -5,8 +5,8 @@ if [ -z "$APP_ROOT" ]; then
 fi
 
 version=2.34.0
-find $APP_ROOT/public/ -name '*.html' | xargs sed -i "s|[^/]*/getto.css|${version}/getto.css|"
-find $APP_ROOT/storybook/ -name '*.html' | xargs sed -i "s|[^/]*/getto.css|${version}/getto.css|"
+find $APP_ROOT/public -name '*.html' | xargs sed -i '' "s|[^/]*/getto.css|${version}/getto.css|"
+find $APP_ROOT/storybook -name '*.html' | xargs sed -i '' "s|[^/]*/getto.css|${version}/getto.css|"
 
 title="GETTO Example"
-find $APP_ROOT/public/ -name '*.html' | xargs sed -i "s|<title>.*</title>|<title>${title}</title>|"
+find $APP_ROOT/public -name '*.html' | xargs sed -i '' "s|<title>.*</title>|<title>${title}</title>|"
