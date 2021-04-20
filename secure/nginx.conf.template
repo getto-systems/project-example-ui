@@ -26,6 +26,6 @@ server {
       add_header 'Access-Control-Allow-Headers' 'Content-Type';
     }
 
-    proxy_pass http://${LABO_IP}:${GETTO_EXAMPLE_UI_SECURE_PORT};
+    proxy_pass http://${GETTO_EXAMPLE_UI_DEV_IP}:${GETTO_EXAMPLE_UI_SECURE_PORT};
   }
 }
