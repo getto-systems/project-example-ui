@@ -1,0 +1,25 @@
+{
+    "folders": [
+        {
+            "path": "css"
+        },
+        {
+            "path": "lib"
+        },
+        {
+            "path": "public"
+        },
+        {
+            "path": "secure"
+        },
+        {
+            "path": "env"
+        },
+        {
+            "path": "setup"
+        },
+        {
+            "path": "config"
+        }
+    ]
+}
