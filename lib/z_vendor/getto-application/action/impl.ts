@@ -3,10 +3,10 @@ import { initActionStatePubSub } from "./infra/state_pub_sub"
 import { initActionTerminateRunner } from "./infra/terminate_runner"
 
 import {
-    ActionIgniteHook,
-    ActionIgniteRunner,
-    ActionTerminateHook,
-    ActionTerminateRunner,
+    ApplicationActionIgniteHook,
+    ApplicationActionIgniteRunner,
+    ApplicationActionTerminateHook,
+    ApplicationActionTerminateRunner,
 } from "./infra"
 
 import { ApplicationActionStateSubscriber, ApplicationStateAction } from "./action"
@@ -19,8 +19,8 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
     // this.material.doSomething(this.post) できるようにプロパティとして提供
     readonly post: Post<S>
 
-    readonly igniteRunner: ActionIgniteRunner = initActionIgniteRunner()
-    readonly terminateRunner: ActionTerminateRunner = initActionTerminateRunner()
+    readonly igniteRunner: ApplicationActionIgniteRunner = initActionIgniteRunner()
+    readonly terminateRunner: ApplicationActionTerminateRunner = initActionTerminateRunner()
 
     constructor() {
         const { pub, sub } = initActionStatePubSub<S>()
@@ -33,10 +33,10 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
         })
     }
 
-    igniteHook(hook: ActionIgniteHook): void {
+    igniteHook(hook: ApplicationActionIgniteHook): void {
         this.igniteRunner.register(hook)
     }
-    terminateHook(hook: ActionTerminateHook): void {
+    terminateHook(hook: ApplicationActionTerminateHook): void {
         this.terminateRunner.register(hook)
     }
 
