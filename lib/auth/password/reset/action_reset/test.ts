@@ -81,9 +81,9 @@ describe("RegisterPassword", () => {
                                     value: "https://secure.example.com/index.js",
                                 },
                             },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -125,9 +125,9 @@ describe("RegisterPassword", () => {
                                     value: "https://secure.example.com/index.js",
                                 },
                             },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -404,10 +404,10 @@ function actionHasDone(state: ResetPasswordCoreState): boolean {
         case "load-error":
             return true
 
-        case "succeed-to-continuous-renew":
+        case "succeed-to-renew":
         case "authn-not-expired":
         case "required-to-login":
-        case "failed-to-continuous-renew":
+        case "failed-to-renew":
             return startContinuousRenewEventHasDone(state)
 
         default:

@@ -76,11 +76,11 @@ describe("CheckAuthTicket", () => {
                     },
                     examine: (stack) => {
                         expect(stack).toEqual([
-                            { type: "succeed-to-start-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-start-continuous-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -126,9 +126,9 @@ describe("CheckAuthTicket", () => {
                                     value: "https://secure.example.com/index.js",
                                 },
                             },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -165,9 +165,9 @@ describe("CheckAuthTicket", () => {
                                     value: "https://secure.example.com/index.js",
                                 },
                             },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -206,9 +206,9 @@ describe("CheckAuthTicket", () => {
                                     value: "https://secure.example.com/index.js",
                                 },
                             },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "succeed-to-continuous-renew" },
-                            { type: "required-to-login" },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "succeed-to-renew", continue: true },
+                            { type: "required-to-login", continue: false },
                         ])
                     },
                 },
@@ -440,9 +440,8 @@ function actionHasDone(state: CheckAuthTicketCoreState): boolean {
             return checkAuthTicketEventHasDone(state)
 
         case "succeed-to-start-continuous-renew":
-        case "succeed-to-continuous-renew":
+        case "succeed-to-renew":
         case "authn-not-expired":
-        case "failed-to-continuous-renew":
             return startContinuousRenewEventHasDone(state)
     }
 }

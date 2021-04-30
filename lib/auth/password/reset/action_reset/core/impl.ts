@@ -86,7 +86,7 @@ class Action
         this.material.save(info, (event) => {
             switch (event.type) {
                 case "failed-to-save":
-                    this.post({ type: "repository-error", err: event.err })
+                    this.post({ type: "repository-error", continue: false, err: event.err })
                     return
 
                 case "succeed-to-save":

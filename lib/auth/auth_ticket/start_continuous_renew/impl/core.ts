@@ -1,7 +1,6 @@
 import { authzRepositoryConverter } from "../../kernel/converter"
 import { authnRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
 
-import { StoreRepositoryResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { StartContinuousRenewInfra } from "../infra"
 
 import { SaveAuthTicketMethod, StartContinuousRenewMethod } from "../method"
@@ -31,74 +30,77 @@ export const saveAuthTicket: Save = (infra) => async (info, post) => {
 interface Start {
     (infra: StartContinuousRenewInfra): StartContinuousRenewMethod
 }
-export const startContinuousRenew: Start = (infra) => async (post) => {
-    const { config } = infra
+export const startContinuousRenew: Start = (infra) => (post) => {
+    return new Promise((resolve) => {
+        const { config } = infra
 
-    const timer = setInterval(async () => {
-        // 設定された interval ごとに更新
-        const result = await continuousRenew()
-        if (!result.next) {
-            clearInterval(timer)
-        }
-    }, config.interval.interval_millisecond)
+        const timer = setInterval(async () => {
+            // 設定された interval ごとに更新
+            const result = await continuousRenew()
+            const state = post(result)
+            if (!result.continue) {
+                clearInterval(timer)
+                resolve(state)
+            }
+        }, config.interval.interval_millisecond)
 
-    return post({ type: "succeed-to-start-continuous-renew" })
+        post({ type: "succeed-to-start-continuous-renew", continue: true })
+    })
 
-    async function continuousRenew(): Promise<{ next: boolean }> {
+    async function continuousRenew(): Promise<StartContinuousRenewEvent> {
         const { clock, config } = infra
         const authz = infra.authz(authzRepositoryConverter)
         const authn = infra.authn(authnRepositoryConverter)
         const renew = infra.renew(authRemoteConverter(clock))
 
-        const CANCEL = { next: false }
-        const NEXT = { next: true }
-
         const result = await authn.get()
         if (!result.success) {
-            post({ type: "repository-error", err: result.err })
-            return CANCEL
+            return { type: "repository-error", continue: false, err: result.err }
         }
         if (!result.found) {
-            handleStoreResult(await authn.remove())
-            handleStoreResult(await authz.remove())
-            return CANCEL
+            return clearTicket()
         }
 
         // 前回の更新時刻が新しければ今回は通信しない
         const time = { now: clock.now(), ...config.authnExpire }
         if (!hasExpired(result.value.authAt, time)) {
-            post({ type: "authn-not-expired" })
-            return NEXT
+            return { type: "authn-not-expired", continue: true }
         }
 
         const response = await renew({ type: "always" })
         if (!response.success) {
             if (response.err.type === "unauthorized") {
-                handleStoreResult(await authn.remove())
-                handleStoreResult(await authz.remove())
-                post({ type: "required-to-login" })
+                return clearTicket()
             } else {
-                post({ type: "failed-to-continuous-renew", err: response.err })
+                return { type: "failed-to-renew", continue: false, err: response.err }
             }
-            return CANCEL
         }
 
-        if (!handleStoreResult(await authn.set(response.value.authn))) {
-            return CANCEL
-        }
-        if (!handleStoreResult(await authz.set(response.value.authz))) {
-            return CANCEL
+        const authnStoreResult = await authn.set(response.value.authn)
+        if (!authnStoreResult.success) {
+            return { type: "repository-error", continue: false, err: authnStoreResult.err }
         }
 
-        post({ type: "succeed-to-continuous-renew" })
-        return NEXT
-    }
-
-    function handleStoreResult(result: StoreRepositoryResult): boolean {
-        if (!result.success) {
-            post({ type: "repository-error", err: result.err })
+        const authzStoreResult = await authn.set(response.value.authn)
+        if (!authzStoreResult.success) {
+            return { type: "repository-error", continue: false, err: authzStoreResult.err }
         }
-        return result.success
+
+        return { type: "succeed-to-renew", continue: true }
+
+        async function clearTicket(): Promise<StartContinuousRenewEvent> {
+            const authnRemoveResult = await authn.remove()
+            if (!authnRemoveResult.success) {
+                return { type: "repository-error", continue: false, err: authnRemoveResult.err }
+            }
+
+            const authzRemoveResult = await authz.remove()
+            if (!authzRemoveResult.success) {
+                return { type: "repository-error", continue: false, err: authzRemoveResult.err }
+            }
+
+            return { type: "required-to-login", continue: false }
+        }
     }
 }
 
@@ -106,11 +108,11 @@ export function startContinuousRenewEventHasDone(event: StartContinuousRenewEven
     switch (event.type) {
         case "succeed-to-start-continuous-renew":
         case "authn-not-expired":
-        case "succeed-to-continuous-renew":
+        case "succeed-to-renew":
             return false
 
         case "required-to-login":
-        case "failed-to-continuous-renew":
+        case "failed-to-renew":
         case "repository-error":
             return true
     }

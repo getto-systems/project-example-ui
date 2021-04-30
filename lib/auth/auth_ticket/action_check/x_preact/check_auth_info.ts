@@ -88,9 +88,8 @@ export function CheckAuthTicketComponent(props: Props): VNode {
             return EMPTY_CONTENT
 
         case "succeed-to-start-continuous-renew":
-        case "succeed-to-continuous-renew":
+        case "succeed-to-renew":
         case "authn-not-expired":
-        case "failed-to-continuous-renew":
             // これらはスクリプトがロードされた後に発行される
             // したがって、un-mount されているのでここには来ない
             return EMPTY_CONTENT

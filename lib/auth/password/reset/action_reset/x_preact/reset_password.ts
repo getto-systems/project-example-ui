@@ -84,10 +84,10 @@ export function ResetPasswordComponent(props: Props): VNode {
             // スクリプトのロードは appendChild する必要があるため useLayoutEffect で行う
             return EMPTY_CONTENT
 
-        case "succeed-to-continuous-renew":
+        case "succeed-to-renew":
         case "authn-not-expired":
         case "required-to-login":
-        case "failed-to-continuous-renew":
+        case "failed-to-renew":
             // これらはスクリプトがロードされた後に発行される
             // したがって、un-mount されているのでここには来ない
             return EMPTY_CONTENT
