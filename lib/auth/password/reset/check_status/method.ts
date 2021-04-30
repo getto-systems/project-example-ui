@@ -14,9 +14,9 @@ export type CheckResetTokenSendingStatusLocationDetectMethod = CheckStatusLocati
 export type CheckResetTokenSendingStatusLocationInfo = CheckStatusLocationTypes["info"]
 
 export interface CheckSendingStatusMethod {
-    (post: Post<CheckResetTokenSendingStatusEvent>): void
+    <S>(post: Post<CheckResetTokenSendingStatusEvent, S>): Promise<S>
 }
 
-interface Post<T> {
-    (state: T): void
+interface Post<E, S> {
+    (event: E): S
 }
