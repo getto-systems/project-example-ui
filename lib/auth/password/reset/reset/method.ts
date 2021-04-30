@@ -15,9 +15,12 @@ export type ResetPasswordLocationDetectMethod = ResetLocationTypes["method"]
 export type ResetPasswordLocationInfo = ResetLocationTypes["info"]
 
 export interface ResetPasswordMethod {
-    (fields: ConvertBoardResult<ResetPasswordFields>, post: Post<ResetPasswordEvent>): void
+    <S>(
+        fields: ConvertBoardResult<ResetPasswordFields>,
+        post: Post<ResetPasswordEvent, S>,
+    ): Promise<S>
 }
 
-interface Post<T> {
-    (state: T): void
+interface Post<E, S> {
+    (event: E): S
 }
