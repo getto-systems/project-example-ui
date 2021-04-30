@@ -19,13 +19,14 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
 
     const authzResult = await authz.get()
     if (!authzResult.success) {
-        post({ type: "repository-error", err: authzResult.err })
-        return
+        return post({ type: "repository-error", err: authzResult.err })
     }
     if (!authzResult.found) {
-        authz.remove()
-        post({ type: "required-to-login" })
-        return
+        const authzRemoveResult = await authz.remove()
+        if (!authzRemoveResult.success) {
+            return post({ type: "repository-error", err: authzRemoveResult.err })
+        }
+        return post({ type: "required-to-login" })
     }
 
     const fetchResult = store.menuExpand.get()
@@ -42,13 +43,12 @@ export const updateMenuBadge: Update = (infra, store) => (detecter) => async (po
 
     const response = await getMenuBadge({ type: "always" })
     if (!response.success) {
-        post({ type: "failed-to-update", menu: buildMenu(buildParams), err: response.err })
-        return
+        return post({ type: "failed-to-update", menu: buildMenu(buildParams), err: response.err })
     }
 
     store.menuBadge.set(response.value)
 
-    post({
+    return post({
         type: "succeed-to-update",
         menu: buildMenu({ ...buildParams, menuBadge: response.value }),
     })
