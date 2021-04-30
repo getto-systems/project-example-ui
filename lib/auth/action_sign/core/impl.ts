@@ -20,11 +20,7 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
     subView: SignSubView
 
     constructor(detecter: SignViewLocationDetecter, subView: SignSubView) {
-        super()
-        this.detecter = detecter
-        this.subView = subView
-
-        this.igniteHook(() => {
+        super(async () => {
             const view = this.subView.check()
 
             view.resource.core.subscriber.subscribe((state) => {
@@ -35,8 +31,10 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
                 }
             })
 
-            this.post({ type: "check-authTicket", view: view })
+            return this.post({ type: "check-authTicket", view: view })
         })
+        this.detecter = detecter
+        this.subView = subView
     }
 
     error(err: string): void {

@@ -19,33 +19,31 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
     // this.material.doSomething(this.post) できるようにプロパティとして提供
     readonly post: Post<S>
 
-    readonly igniteRunner: ApplicationActionIgniteRunner = initActionIgniteRunner()
+    readonly igniteRunner: ApplicationActionIgniteRunner<S>
     readonly terminateRunner: ApplicationActionTerminateRunner = initActionTerminateRunner()
 
-    constructor() {
+    constructor(hook: ApplicationActionIgniteHook<S> = async () => this.initialState) {
         const { pub, sub } = initActionStatePubSub<S>()
         this.subscriber = sub
-
         this.post = (state: S) => pub.post(state)
 
+        this.igniteRunner = initActionIgniteRunner(hook)
         this.terminateHook(() => {
             pub.terminate()
         })
     }
 
-    igniteHook(hook: ApplicationActionIgniteHook): void {
-        this.igniteRunner.register(hook)
-    }
     terminateHook(hook: ApplicationActionTerminateHook): void {
         this.terminateRunner.register(hook)
     }
 
-    ignite(): void {
-        // すべての subscriber が登録された後で ignite するための setTimeout
-        setTimeout(() => this.igniteRunner.ignite())
+    ignite(): Promise<S> {
+        return new Promise((resolve) => {
+            // すべての subscriber が登録された後で ignite するための setTimeout
+            setTimeout(() => resolve(this.igniteRunner.ignite()))
+        })
     }
     terminate(): void {
-        this.igniteRunner.terminate()
         this.terminateRunner.terminate()
     }
 }

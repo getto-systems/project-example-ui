@@ -3,13 +3,11 @@ export interface ApplicationActionStatePublisher<S> {
     terminate(): void
 }
 
-export interface ApplicationActionIgniteRunner {
-    register(hook: ApplicationActionIgniteHook): void
-    ignite(): void
-    terminate(): void
+export interface ApplicationActionIgniteRunner<S> {
+    ignite(): Promise<S>
 }
-export interface ApplicationActionIgniteHook {
-    (): void
+export interface ApplicationActionIgniteHook<S> {
+    (): Promise<S>
 }
 
 export interface ApplicationActionTerminateRunner {

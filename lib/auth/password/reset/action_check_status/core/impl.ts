@@ -45,11 +45,7 @@ class Action
     material: CheckResetTokenSendingStatusCoreMaterial
 
     constructor(material: CheckResetTokenSendingStatusCoreMaterial) {
-        super()
+        super(() => this.material.checkStatus(this.post))
         this.material = material
-
-        this.igniteHook(() => {
-            this.material.checkStatus(this.post)
-        })
     }
 }
