@@ -1,9 +1,9 @@
 import { ClearAuthTicketEvent } from "./event"
 
 export interface ClearAuthTicketMethod {
-    (post: Post<ClearAuthTicketEvent>): void
+    <S>(post: Post<ClearAuthTicketEvent, S>): Promise<S>
 }
 
-interface Post<E> {
-    (event: E): void
+interface Post<E, S> {
+    (event: E): S
 }
