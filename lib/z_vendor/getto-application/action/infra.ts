@@ -1,21 +1,21 @@
-export interface ActionStatePublisher<S> {
+export interface ApplicationActionStatePublisher<S> {
     post(state: S): void
     terminate(): void
 }
 
-export interface ActionIgniteRunner {
-    register(hook: ActionIgniteHook): void
+export interface ApplicationActionIgniteRunner {
+    register(hook: ApplicationActionIgniteHook): void
     ignite(): void
     terminate(): void
 }
-export interface ActionIgniteHook {
+export interface ApplicationActionIgniteHook {
     (): void
 }
 
-export interface ActionTerminateRunner {
-    register(hook: ActionTerminateHook): void
+export interface ApplicationActionTerminateRunner {
+    register(hook: ApplicationActionTerminateHook): void
     terminate(): void
 }
-export interface ActionTerminateHook {
+export interface ApplicationActionTerminateHook {
     (): void
 }

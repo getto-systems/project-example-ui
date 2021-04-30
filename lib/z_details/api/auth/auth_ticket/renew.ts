@@ -15,13 +15,13 @@ type RenewResult = ApiResult<ApiAuthenticateResponse, ApiCommonError>
 export function newApi_RenewAuthTicket(feature: ApiFeature): Renew {
     return async (): Promise<RenewResult> => {
         try {
-            const mock = true
+            const mock = false
             if (mock) {
                 // TODO api の実装が終わったらつなぐ
                 return { success: true, value: { roles: ["admin", "dev-docs"] } }
             }
 
-            const request = apiRequest(feature, "/auth/renew", "POST")
+            const request = apiRequest(feature, "/auth/auth-ticket/renew", "POST")
             const response = await fetch(request.url, request.options)
 
             if (!response.ok) {

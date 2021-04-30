@@ -1,13 +1,13 @@
-import { ActionIgniteHook, ActionIgniteRunner } from "../infra"
+import { ApplicationActionIgniteHook, ApplicationActionIgniteRunner } from "../infra"
 
-export function initActionIgniteRunner(): ActionIgniteRunner {
+export function initActionIgniteRunner(): ApplicationActionIgniteRunner {
     return new Runner()
 }
 
-class Runner implements ActionIgniteRunner {
+class Runner implements ApplicationActionIgniteRunner {
     state: IgniteHookState = { done: false, hooks: [] }
 
-    register(hook: ActionIgniteHook): void {
+    register(hook: ApplicationActionIgniteHook): void {
         if (this.state.done) {
             console.warn("igniteHook IGNORED: hook added in ignite hook")
             return
@@ -29,5 +29,5 @@ class Runner implements ActionIgniteRunner {
 }
 
 type IgniteHookState =
-    | Readonly<{ done: false; hooks: ActionIgniteHook[] }>
+    | Readonly<{ done: false; hooks: ApplicationActionIgniteHook[] }>
     | Readonly<{ done: true }>

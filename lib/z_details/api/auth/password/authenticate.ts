@@ -21,7 +21,7 @@ type AuthenticateError = Readonly<{ type: "invalid-password" }>
 export function newApi_AuthenticatePassword(feature: ApiFeature): Authenticate {
     return async (fields): Promise<AuthenticateResult> => {
         try {
-            const mock = true
+            const mock = false
             if (mock) {
                 // TODO api の実装が終わったらつなぐ
                 return { success: true, value: { roles: ["admin", "dev-docs"] } }
