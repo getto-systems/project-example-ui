@@ -11,8 +11,7 @@ interface Authenticate {
 }
 export const authenticatePassword: Authenticate = (infra) => async (fields, post) => {
     if (!fields.valid) {
-        post({ type: "failed-to-login", err: { type: "validation-error" } })
-        return
+        return post({ type: "failed-to-login", err: { type: "validation-error" } })
     }
 
     post({ type: "try-to-login" })
@@ -25,11 +24,10 @@ export const authenticatePassword: Authenticate = (infra) => async (fields, post
         post({ type: "take-longtime-to-login" }),
     )
     if (!response.success) {
-        post({ type: "failed-to-login", err: response.err })
-        return
+        return post({ type: "failed-to-login", err: response.err })
     }
 
-    post({ type: "succeed-to-login", auth: response.value })
+    return post({ type: "succeed-to-login", auth: response.value })
 }
 
 export function authenticatePasswordEventHasDone(event: AuthenticatePasswordEvent): boolean {

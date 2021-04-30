@@ -4,12 +4,12 @@ import { ConvertBoardResult } from "../../../z_vendor/getto-application/board/ke
 import { AuthenticatePasswordFields } from "./data"
 
 export interface AuthenticatePasswordMethod {
-    (
+    <S>(
         fields: ConvertBoardResult<AuthenticatePasswordFields>,
-        post: Post<AuthenticatePasswordEvent>,
-    ): void
+        post: Post<AuthenticatePasswordEvent, S>,
+    ): Promise<S>
 }
 
-interface Post<E> {
-    (event: E): void
+interface Post<E, S> {
+    (event: E): S
 }
