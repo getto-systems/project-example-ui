@@ -1,13 +1,12 @@
 import { delayedChecker } from "../../../../z_vendor/getto-application/infra/timer/helper"
 
-import { StoreRepositoryResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { CheckAuthTicketInfra } from "../infra"
 
 import { RenewAuthTicketMethod, CheckAuthTicketMethod } from "../method"
 
 import { CheckAuthTicketEvent, RenewAuthTicketEvent } from "../event"
 
-import { Authn, hasExpired } from "../../kernel/data"
+import { hasExpired } from "../../kernel/data"
 import { authnRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
 import { authzRepositoryConverter } from "../../kernel/converter"
 
@@ -16,19 +15,25 @@ interface Check {
 }
 export const checkAuthTicket: Check = (infra) => async (post) => {
     const { clock, config } = infra
+    const authn = infra.authn(authnRepositoryConverter)
 
-    loadAuthn(infra, post, (authn) => {
-        const time = {
-            now: clock.now(),
-            expire_millisecond: config.instantLoadExpire.expire_millisecond,
-        }
-        if (hasExpired(authn.authAt, time)) {
-            renew(infra, authn, post)
-            return
-        }
+    const findResult = await authn.get()
+    if (!findResult.success) {
+        return post({ type: "repository-error", err: findResult.err })
+    }
+    if (!findResult.found) {
+        return post({ type: "required-to-login" })
+    }
 
-        post({ type: "try-to-instant-load" })
-    })
+    const time = {
+        now: clock.now(),
+        expire_millisecond: config.instantLoadExpire.expire_millisecond,
+    }
+    if (!hasExpired(findResult.value.authAt, time)) {
+        return post({ type: "try-to-instant-load" })
+    }
+
+    return renewTicket(infra, post)
 }
 
 export function checkAuthTicketEventHasDone(event: CheckAuthTicketEvent): boolean {
@@ -45,31 +50,13 @@ interface RenewAuthTicket {
     (infra: CheckAuthTicketInfra): RenewAuthTicketMethod
 }
 export const renewAuthTicket: RenewAuthTicket = (infra) => async (post) => {
-    loadAuthn(infra, post, (authn) => {
-        renew(infra, authn, post)
-    })
+    return renewTicket(infra, post)
 }
 
-async function loadAuthn(
+async function renewTicket<S>(
     infra: CheckAuthTicketInfra,
-    post: Post<RenewAuthTicketEvent>,
-    hook: { (authn: Authn): void },
-) {
-    const authn = infra.authn(authnRepositoryConverter)
-
-    const findResult = await authn.get()
-    if (!findResult.success) {
-        post({ type: "repository-error", err: findResult.err })
-        return
-    }
-    if (!findResult.found) {
-        post({ type: "required-to-login" })
-        return
-    }
-
-    hook(findResult.value)
-}
-async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewAuthTicketEvent>) {
+    post: Post<RenewAuthTicketEvent, S>,
+): Promise<S> {
     const { clock, config } = infra
     const authn = infra.authn(authnRepositoryConverter)
     const authz = infra.authz(authzRepositoryConverter)
@@ -87,31 +74,24 @@ async function renew(infra: CheckAuthTicketInfra, info: Authn, post: Post<RenewA
         if (response.err.type === "unauthorized") {
             const removeResult = await authn.remove()
             if (!removeResult.success) {
-                post({ type: "repository-error", err: removeResult.err })
-                return
+                return post({ type: "repository-error", err: removeResult.err })
             }
-            post({ type: "required-to-login" })
-            return
+            return post({ type: "required-to-login" })
         }
-        post({ type: "failed-to-renew", err: response.err })
-        return
+        return post({ type: "failed-to-renew", err: response.err })
     }
 
-    if (!checkRepositoryError(await authn.set(response.value.authn))) {
-        return
-    }
-    if (!checkRepositoryError(await authz.set(response.value.authz))) {
-        return
+    const authnResult = await authn.set(response.value.authn)
+    if (!authnResult.success) {
+        return post({ type: "repository-error", err: authnResult.err })
     }
 
-    post({ type: "succeed-to-renew", auth: response.value })
-
-    function checkRepositoryError(result: StoreRepositoryResult): boolean {
-        if (!result.success) {
-            post({ type: "repository-error", err: result.err })
-        }
-        return result.success
+    const authzResult = await authz.set(response.value.authz)
+    if (!authzResult.success) {
+        return post({ type: "repository-error", err: authzResult.err })
     }
+
+    return post({ type: "succeed-to-renew", auth: response.value })
 }
 
 export function renewAuthTicketEventHasDone(event: RenewAuthTicketEvent): boolean {
@@ -128,6 +108,6 @@ export function renewAuthTicketEventHasDone(event: RenewAuthTicketEvent): boolea
     }
 }
 
-interface Post<T> {
-    (event: T): void
+interface Post<E, S> {
+    (event: E): S
 }

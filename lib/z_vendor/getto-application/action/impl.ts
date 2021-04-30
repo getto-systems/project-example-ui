@@ -51,5 +51,5 @@ export abstract class ApplicationAbstractStateAction<S> implements ApplicationSt
 }
 
 interface Post<S> {
-    (state: S): void
+    (state: S): S
 }

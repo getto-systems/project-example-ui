@@ -1,5 +1,5 @@
 export interface ApplicationActionStatePublisher<S> {
-    post(state: S): void
+    post(state: S): S
     terminate(): void
 }
 

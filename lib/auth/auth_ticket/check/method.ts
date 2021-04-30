@@ -1,13 +1,13 @@
 import { RenewAuthTicketEvent, CheckAuthTicketEvent } from "./event"
 
 export interface CheckAuthTicketMethod {
-    (post: Post<CheckAuthTicketEvent>): void
+    <S>(post: Post<CheckAuthTicketEvent, S>): Promise<S>
 }
 
 export interface RenewAuthTicketMethod {
-    (post: Post<RenewAuthTicketEvent>): void
+    <S>(post: Post<RenewAuthTicketEvent, S>): Promise<S>
 }
 
-interface Post<E> {
-    (event: E): void
+interface Post<E, S> {
+    (event: E): S
 }
