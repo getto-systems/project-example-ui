@@ -13,8 +13,7 @@ interface RequestToken {
 }
 export const requestResetToken: RequestToken = (infra) => async (fields, post) => {
     if (!fields.valid) {
-        post({ type: "failed-to-request-token", err: { type: "validation-error" } })
-        return
+        return post({ type: "failed-to-request-token", err: { type: "validation-error" } })
     }
 
     post({ type: "try-to-request-token" })
@@ -23,15 +22,16 @@ export const requestResetToken: RequestToken = (infra) => async (fields, post) =
     const requestToken = infra.requestToken(resetSessionIDRemoteConverter)
 
     // ネットワークの状態が悪い可能性があるので、一定時間後に take longtime イベントを発行
-    const response = await delayedChecker(requestToken(fields.value), config.takeLongtimeThreshold, () =>
-        post({ type: "take-longtime-to-request-token" }),
+    const response = await delayedChecker(
+        requestToken(fields.value),
+        config.takeLongtimeThreshold,
+        () => post({ type: "take-longtime-to-request-token" }),
     )
     if (!response.success) {
-        post({ type: "failed-to-request-token", err: response.err })
-        return
+        return post({ type: "failed-to-request-token", err: response.err })
     }
 
-    post({ type: "succeed-to-request-token", sessionID: response.value })
+    return post({ type: "succeed-to-request-token", sessionID: response.value })
 }
 
 export function requestResetTokenEventHasDone(event: RequestResetTokenEvent): boolean {
