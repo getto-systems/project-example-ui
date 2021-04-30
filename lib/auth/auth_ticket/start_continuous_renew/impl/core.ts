@@ -18,22 +18,20 @@ export const saveAuthTicket: Save = (infra) => async (info, post) => {
 
     const authnResult = await authn.set(info.authn)
     if (!authnResult.success) {
-        post({ type: "failed-to-save", err: authnResult.err })
-        return
+        return post({ type: "failed-to-save", err: authnResult.err })
     }
     const authzResult = await authz.set(info.authz)
     if (!authzResult.success) {
-        post({ type: "failed-to-save", err: authzResult.err })
-        return
+        return post({ type: "failed-to-save", err: authzResult.err })
     }
 
-    post({ type: "succeed-to-save" })
+    return post({ type: "succeed-to-save" })
 }
 
 interface Start {
     (infra: StartContinuousRenewInfra): StartContinuousRenewMethod
 }
-export const startContinuousRenew: Start = (infra) => (post) => {
+export const startContinuousRenew: Start = (infra) => async (post) => {
     const { config } = infra
 
     const timer = setInterval(async () => {
@@ -44,7 +42,7 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         }
     }, config.interval.interval_millisecond)
 
-    post({ type: "succeed-to-start-continuous-renew" })
+    return post({ type: "succeed-to-start-continuous-renew" })
 
     async function continuousRenew(): Promise<{ next: boolean }> {
         const { clock, config } = infra

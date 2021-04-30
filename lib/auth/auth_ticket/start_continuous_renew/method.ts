@@ -3,13 +3,13 @@ import { SaveAuthTicketEvent, StartContinuousRenewEvent } from "./event"
 import { AuthTicket } from "../kernel/data"
 
 export interface SaveAuthTicketMethod {
-    (auth: AuthTicket, post: Post<SaveAuthTicketEvent>): void
+    <S>(auth: AuthTicket, post: Post<SaveAuthTicketEvent, S>): Promise<S>
 }
 
 export interface StartContinuousRenewMethod {
-    (post: Post<StartContinuousRenewEvent>): void
+    <S>(post: Post<StartContinuousRenewEvent, S>): Promise<S>
 }
 
-interface Post<E> {
-    (event: E): void
+interface Post<E, S> {
+    (event: E): S
 }
