@@ -1,4 +1,4 @@
-import { setupAsyncActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { mockClock, mockClockPubSub } from "../../../z_vendor/getto-application/infra/clock/mock"
 import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"
@@ -13,45 +13,27 @@ import { seasonRepositoryConverter } from "../load_season/impl/converter"
 import { SeasonRepositoryPod, SeasonRepositoryValue } from "../load_season/infra"
 
 import { LoadSeasonResource } from "./resource"
-import { LoadSeasonCoreState } from "./core/action"
-import { loadSeasonEventHasDone } from "../load_season/impl/core"
 
 describe("LoadSeason", () => {
-    test("load from repository", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
+    test("load from repository", async () => {
+        const { resource } = standard()
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.season.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ type: "succeed-to-load", value: { year: 2020 } }])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(resource.season.subscriber)
 
-            resource.season.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => resource.season.ignite()).then((stack) => {
+            expect(stack).toEqual([{ type: "succeed-to-load", value: { year: 2020 } }])
+        })
+    })
 
-    test("not found; use default", () =>
-        new Promise<void>((done) => {
-            const { resource } = empty()
+    test("not found; use default", async () => {
+        const { resource } = empty()
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.season.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ type: "succeed-to-load", value: { year: 2021 } }])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(resource.season.subscriber)
 
-            resource.season.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => resource.season.ignite()).then((stack) => {
+            expect(stack).toEqual([{ type: "succeed-to-load", value: { year: 2021 } }])
+        })
+    })
 
     test("save season", () => {
         const season = standard_season()
@@ -90,14 +72,4 @@ function standard_season(): SeasonRepositoryPod {
 }
 function empty_season(): SeasonRepositoryPod {
     return convertRepository(mockRepository<SeasonRepositoryValue>())
-}
-
-function actionHasDone(state: LoadSeasonCoreState): boolean {
-    switch (state.type) {
-        case "initial-season":
-            return false
-
-        default:
-            return loadSeasonEventHasDone(state)
-    }
 }
