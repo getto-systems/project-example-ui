@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version : 0.12.0
+
+- refactor: method : See merge request getto-systems-base/projects/example/ui!1098
+- refactor: application : See merge request getto-systems-base/projects/example/ui!1097
+- fix: vscode default formatter : See merge request getto-systems-base/projects/example/ui!1096
+- fix: for mac : See merge request getto-systems-base/projects/example/ui!1095
+- fix: env : See merge request getto-systems-base/projects/example/ui!1094
+
+
 ## Version : 0.11.0
 
 - fix: menu : See merge request getto-systems-base/projects/example/ui!1092
