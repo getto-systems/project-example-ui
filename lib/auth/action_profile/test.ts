@@ -1,34 +1,37 @@
-import { setupSyncActionTestRunner } from "../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockAuthProfileResource } from "./mock"
 
 import { initProfileView } from "./impl"
 
 describe("Profile", () => {
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
+    test("terminate: menu", async () => {
+        const { view } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        view.terminate()
-                        view.resource.menu.ignite()
-                        view.resource.logout.submit()
+        const runner = setupActionTestRunner(view.resource.menu.subscriber)
 
-                        setTimeout(check, 256) // wait for events.
-                    },
-                    examine: (stack) => {
-                        // no event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
+        await runner(() => {
+            view.terminate()
+            return view.resource.menu.ignite()
+        }).then((stack) => {
+            // no event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 
-            const handler = runner(done)
-            view.resource.menu.subscriber.subscribe(handler)
-            view.resource.logout.subscriber.subscribe(handler)
-        }))
+    test("terminate: logout", async () => {
+        const { view } = standard()
+
+        const runner = setupActionTestRunner(view.resource.logout.subscriber)
+
+        await runner(() => {
+            view.terminate()
+            return view.resource.logout.submit()
+        }).then((stack) => {
+            // no event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {

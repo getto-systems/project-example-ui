@@ -188,15 +188,9 @@ describe("CheckAuthTicket", () => {
 
         const runner = setupActionTestRunner(view.resource.core.subscriber)
 
-        await runner(async () => {
+        await runner(() => {
             view.terminate()
-            view.resource.core.ignite()
-
-            await new Promise((resolve) => {
-                setTimeout(resolve, 256) // wait for event...
-            })
-
-            return view.resource.core.initialState
+            return view.resource.core.ignite()
         }).then((stack) => {
             // no input/validate event after terminate
             expect(stack).toEqual([])

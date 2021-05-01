@@ -29,15 +29,9 @@ describe("Logout", () => {
 
         const runner = setupActionTestRunner(resource.logout.subscriber)
 
-        await runner(async () => {
+        await runner(() => {
             resource.logout.terminate()
-            resource.logout.submit()
-
-            await new Promise((resolve) => {
-                setTimeout(resolve, 256) // wait for events...
-            })
-
-            return resource.logout.initialState
+            return resource.logout.submit()
         }).then((stack) => {
             // no input/validate event after terminate
             expect(stack).toEqual([])
