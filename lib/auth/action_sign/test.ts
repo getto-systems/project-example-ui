@@ -1,7 +1,7 @@
 import {
     setupAsyncActionTestRunner,
     setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper"
+} from "../../z_vendor/getto-application/action/test_helper_legacy"
 
 import { mockAuthenticatePasswordView } from "../password/action_authenticate/mock"
 import { mockRequestResetTokenView } from "../password/reset/action_request_token/mock"

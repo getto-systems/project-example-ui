@@ -1,4 +1,4 @@
-import { setupSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper_legacy"
 
 import { initValidateBoardFieldAction } from "./core/impl"
 

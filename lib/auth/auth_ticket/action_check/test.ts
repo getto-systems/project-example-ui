@@ -1,7 +1,8 @@
 import {
     setupAsyncActionTestRunner,
     setupSyncActionTestRunner,
-} from "../../../z_vendor/getto-application/action/test_helper"
+} from "../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper"
 
 import {
     ClockPubSub,
@@ -47,47 +48,33 @@ const CONTINUOUS_RENEW_AT = [
 ]
 
 describe("CheckAuthTicket", () => {
-    test("instant load", () =>
-        new Promise<void>((done) => {
-            const { clock, view } = instantLoadable()
-            const resource = view.resource
+    test("instant load", async () => {
+        const { clock, view } = instantLoadable()
+        const resource = view.resource
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+        const runner = setupActionTestRunner(resource.core.subscriber)
+
+        await runner(() => resource.core.ignite()).then((stack) => {
+            expect(stack).toEqual([
                 {
-                    statement: () => {
-                        resource.core.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "try-to-instant-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
-                            },
-                        ])
-                    },
-                },
-                {
-                    statement: () => {
-                        clock.update(CONTINUOUS_RENEW_START_AT)
-                        resource.core.succeedToInstantLoad()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "succeed-to-start-continuous-renew", continue: true },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "required-to-login", continue: false },
-                        ])
-                    },
+                    type: "try-to-instant-load",
+                    scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                 },
             ])
+        })
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+        clock.update(CONTINUOUS_RENEW_START_AT)
+
+        await runner(() => resource.core.succeedToInstantLoad()).then((stack) => {
+            expect(stack).toEqual([
+                { type: "succeed-to-start-continuous-renew", continue: true },
+                { type: "succeed-to-renew", continue: true },
+                { type: "succeed-to-renew", continue: true },
+                { type: "succeed-to-renew", continue: true },
+                { type: "required-to-login", continue: false },
+            ])
+        })
+    })
 
     test("instant load failed", () =>
         new Promise<void>((done) => {

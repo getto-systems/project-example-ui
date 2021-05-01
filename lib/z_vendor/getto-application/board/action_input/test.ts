@@ -1,4 +1,4 @@
-import { setupSyncActionTestRunner } from "../../action/test_helper"
+import { setupSyncActionTestRunner } from "../../action/test_helper_legacy"
 
 import { mockBoardValueStore } from "./mock"
 import { markBoardValue } from "../kernel/mock"
