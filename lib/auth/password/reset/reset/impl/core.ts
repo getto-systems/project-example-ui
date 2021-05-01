@@ -7,7 +7,6 @@ import { ResetPasswordInfra } from "../infra"
 
 import { ResetPasswordLocationDetectMethod, ResetPasswordPod } from "../method"
 
-import { ResetPasswordEvent } from "../event"
 import { SignNav, signNavKey } from "../../../../common/nav/data"
 
 export const detectResetToken: ResetPasswordLocationDetectMethod = (currentURL) =>
@@ -42,16 +41,4 @@ export const resetPassword: Reset = (infra) => (detecter) => async (fields, post
     }
 
     return post({ type: "succeed-to-reset", auth: response.value })
-}
-
-export function resetPasswordEventHasDone(event: ResetPasswordEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-reset":
-        case "failed-to-reset":
-            return true
-
-        case "try-to-reset":
-        case "take-longtime-to-reset":
-            return false
-    }
 }

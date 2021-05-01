@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
@@ -22,9 +19,6 @@ import { initResetPasswordView } from "./impl"
 import { initResetPasswordCoreAction, initResetPasswordCoreMaterial } from "./core/impl"
 import { initResetPasswordFormAction } from "./form/impl"
 
-import { resetPasswordEventHasDone } from "../reset/impl/core"
-import { startContinuousRenewEventHasDone } from "../../../auth_ticket/start_continuous_renew/impl/core"
-
 import { Clock } from "../../../../z_vendor/getto-application/infra/clock/infra"
 import { ResetPasswordRemotePod, ResetPasswordResult } from "../reset/infra"
 import {
@@ -35,8 +29,6 @@ import {
 import { AuthnRepositoryPod, RenewAuthTicketRemotePod } from "../../../auth_ticket/kernel/infra"
 
 import { ResetPasswordView } from "./resource"
-
-import { ResetPasswordCoreState } from "./core/action"
 
 // テスト開始時刻
 const START_AT = new Date("2020-01-01 10:00:00")
@@ -50,138 +42,97 @@ const CONTINUOUS_RENEW_AT = [new Date("2020-01-01 10:01:00"), new Date("2020-01-
 const VALID_LOGIN = { loginID: "login-id", password: "password" } as const
 
 describe("RegisterPassword", () => {
-    test("submit valid login-id and password", () =>
-        new Promise<void>((done) => {
-            const { clock, view } = standard()
-            const resource = view.resource.reset
+    test("submit valid login-id and password", async () => {
+        const { clock, view } = standard()
+        const action = view.resource.reset
 
-            resource.core.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "try-to-load":
-                        clock.update(CONTINUOUS_RENEW_START_AT)
-                        break
-                }
-            })
+        action.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
+            }
+        })
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+        const runner = setupActionTestRunner(action.core.subscriber)
+
+        await runner(() => {
+            action.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            action.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+            return action.core.submit(action.form.validate.get())
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-reset" },
                 {
-                    statement: () => {
-                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-                        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
-
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-reset" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
-                            },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "required-to-login", continue: false },
-                        ])
-                    },
+                    type: "try-to-load",
+                    scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                 },
+                { type: "succeed-to-renew", continue: true },
+                { type: "succeed-to-renew", continue: true },
+                { type: "required-to-login", continue: false },
             ])
+        })
+    })
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+    test("submit valid login-id and password; with take longtime", async () => {
+        // wait for take longtime timeout
+        const { clock, view } = takeLongtime()
+        const action = view.resource.reset
 
-    test("submit valid login-id and password; with take longtime", () =>
-        new Promise<void>((done) => {
-            // wait for take longtime timeout
-            const { clock, view } = takeLongtime()
-            const resource = view.resource.reset
+        action.core.subscriber.subscribe((state) => {
+            switch (state.type) {
+                case "try-to-load":
+                    clock.update(CONTINUOUS_RENEW_START_AT)
+                    break
+            }
+        })
 
-            resource.core.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "try-to-load":
-                        clock.update(CONTINUOUS_RENEW_START_AT)
-                        break
-                }
-            })
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+        await runner(() => {
+            action.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            action.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+            return action.core.submit(action.form.validate.get())
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-reset" },
+                { type: "take-longtime-to-reset" },
                 {
-                    statement: () => {
-                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-                        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
-
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-reset" },
-                            { type: "take-longtime-to-reset" },
-                            {
-                                type: "try-to-load",
-                                scriptPath: {
-                                    valid: true,
-                                    value: "https://secure.example.com/index.js",
-                                },
-                            },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "succeed-to-renew", continue: true },
-                            { type: "required-to-login", continue: false },
-                        ])
-                    },
+                    type: "try-to-load",
+                    scriptPath: { valid: true, value: "https://secure.example.com/index.js" },
                 },
+                { type: "succeed-to-renew", continue: true },
+                { type: "succeed-to-renew", continue: true },
+                { type: "required-to-login", continue: false },
             ])
+        })
+    })
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+    test("submit without fields", async () => {
+        const { view } = standard()
+        const action = view.resource.reset
 
-    test("submit without fields", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.reset
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        // try to reset without fields
+        await runner(() => action.core.submit(action.form.validate.get())).then((stack) => {
+            expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "validation-error" } }])
+        })
+    })
 
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "failed-to-reset", err: { type: "validation-error" } },
-                        ])
-                    },
-                },
-            ])
+    test("submit without resetToken", async () => {
+        const { view } = emptyResetToken()
+        const action = view.resource.reset
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-    test("submit without resetToken", () =>
-        new Promise<void>((done) => {
-            const { view } = emptyResetToken()
-            const resource = view.resource.reset
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-                        resource.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
-
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "failed-to-reset", err: { type: "empty-reset-token" } },
-                        ])
-                    },
-                },
-            ])
-
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            action.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            action.form.password.board.input.set(markBoardValue(VALID_LOGIN.password))
+            return action.core.submit(action.form.validate.get())
+        }).then((stack) => {
+            expect(stack).toEqual([{ type: "failed-to-reset", err: { type: "empty-reset-token" } }])
+        })
+    })
 
     test("clear", () => {
         const { view } = standard()
@@ -195,59 +146,46 @@ describe("RegisterPassword", () => {
         expect(resource.form.password.board.input.get()).toEqual("")
     })
 
-    test("load error", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.reset
+    test("load error", async () => {
+        const { view } = standard()
+        const action = view.resource.reset
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.core.loadError({ type: "infra-error", err: "load error" })
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                type: "load-error",
-                                err: { type: "infra-error", err: "load error" },
-                            },
-                        ])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => action.core.loadError({ type: "infra-error", err: "load error" })).then(
+            (stack) => {
+                expect(stack).toEqual([
+                    { type: "load-error", err: { type: "infra-error", err: "load error" } },
+                ])
+            },
+        )
+    })
 
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.reset
+    test("terminate", async () => {
+        const { view } = standard()
+        const action = view.resource.reset
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        view.terminate()
-                        resource.form.loginID.board.input.set(markBoardValue("login-id"))
-                        resource.form.password.board.input.set(markBoardValue("password"))
+        const runner = setupActionTestRunner({
+            subscribe: (handler) => {
+                action.core.subscriber.subscribe(handler)
+                action.form.validate.subscriber.subscribe(handler)
+                action.form.loginID.validate.subscriber.subscribe(handler)
+                action.form.password.validate.subscriber.subscribe(handler)
+                action.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
+                action.form.password.board.input.subscribeInputEvent(() => handler("input"))
+            },
+            unsubscribe: () => null,
+        })
 
-                        setTimeout(check, 256) // wait for events...
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            const handler = runner(done)
-            resource.core.subscriber.subscribe(handler)
-            resource.form.validate.subscriber.subscribe(handler)
-            resource.form.loginID.validate.subscriber.subscribe(handler)
-            resource.form.password.validate.subscriber.subscribe(handler)
-            resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
-            resource.form.password.board.input.subscribeInputEvent(() => handler("input"))
-        }))
+        await runner(async () => {
+            view.terminate()
+            action.form.loginID.board.input.set(markBoardValue("login-id"))
+            action.form.password.board.input.set(markBoardValue("password"))
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
@@ -392,25 +330,4 @@ function standard_renew(clock: ClockPubSub): RenewAuthTicketRemotePod {
         },
         { wait_millisecond: 0 },
     )
-}
-
-function actionHasDone(state: ResetPasswordCoreState): boolean {
-    switch (state.type) {
-        case "initial-reset":
-        case "try-to-load":
-            return false
-
-        case "repository-error":
-        case "load-error":
-            return true
-
-        case "succeed-to-renew":
-        case "authn-not-expired":
-        case "required-to-login":
-        case "failed-to-renew":
-            return startContinuousRenewEventHasDone(state)
-
-        default:
-            return resetPasswordEventHasDone(state)
-    }
 }

@@ -69,48 +69,42 @@ class Action
         this.material = material
     }
 
-    submit(fields: ConvertBoardResult<ResetPasswordFields>): void {
-        this.material.reset(fields, (event) => {
+    async submit(fields: ConvertBoardResult<ResetPasswordFields>): Promise<ResetPasswordCoreState> {
+        return this.material.reset(fields, (event) => {
             switch (event.type) {
                 case "succeed-to-reset":
-                    this.startContinuousRenew(event.auth)
-                    return
+                    return this.startContinuousRenew(event.auth)
 
                 default:
-                    this.post(event)
-                    return
+                    return this.post(event)
             }
         })
     }
-    startContinuousRenew(info: AuthTicket): void {
-        this.material.save(info, (event) => {
+    async startContinuousRenew(info: AuthTicket): Promise<ResetPasswordCoreState> {
+        return this.material.save(info, (event) => {
             switch (event.type) {
                 case "failed-to-save":
-                    this.post({ type: "repository-error", continue: false, err: event.err })
-                    return
+                    return this.post({ type: "repository-error", continue: false, err: event.err })
 
                 case "succeed-to-save":
-                    this.material.startContinuousRenew((event) => {
+                    return this.material.startContinuousRenew((event) => {
                         switch (event.type) {
                             case "succeed-to-start-continuous-renew":
-                                this.post({
+                                return this.post({
                                     type: "try-to-load",
                                     scriptPath: this.secureScriptPath(),
                                 })
-                                return
 
                             default:
-                                this.post(event)
-                                return
+                                return this.post(event)
                         }
                     })
-                    return
             }
         })
     }
 
-    loadError(err: LoadScriptError): void {
-        this.post({ type: "load-error", err })
+    async loadError(err: LoadScriptError): Promise<ResetPasswordCoreState> {
+        return this.post({ type: "load-error", err })
     }
 
     secureScriptPath() {

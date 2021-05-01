@@ -15,10 +15,10 @@ class Action
     implements ResetPasswordCoreAction {
     readonly initialState = initialResetPasswordCoreState
 
-    submit(): void {
-        // mock では特に何もしない
+    async submit(): Promise<ResetPasswordCoreState> {
+        return this.initialState
     }
-    loadError(): void {
-        // mock では特に何もしない
+    async loadError(): Promise<ResetPasswordCoreState> {
+        return this.initialState
     }
 }

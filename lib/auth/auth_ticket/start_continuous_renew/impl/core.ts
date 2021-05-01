@@ -103,17 +103,3 @@ export const startContinuousRenew: Start = (infra) => (post) => {
         }
     }
 }
-
-export function startContinuousRenewEventHasDone(event: StartContinuousRenewEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-start-continuous-renew":
-        case "authn-not-expired":
-        case "succeed-to-renew":
-            return false
-
-        case "required-to-login":
-        case "failed-to-renew":
-        case "repository-error":
-            return true
-    }
-}
