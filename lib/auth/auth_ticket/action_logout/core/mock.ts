@@ -7,7 +7,7 @@ export function mockLogoutCoreAction(): LogoutCoreAction {
 
 class Action extends ApplicationMockStateAction<LogoutCoreState> implements LogoutCoreAction {
     readonly initialState = initialLogoutCoreState
-    submit() {
-        // mock では特に何もしない
+    async submit(): Promise<LogoutCoreState> {
+        return this.initialState
     }
 }

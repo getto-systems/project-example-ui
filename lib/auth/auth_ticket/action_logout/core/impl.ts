@@ -29,7 +29,7 @@ class Action extends ApplicationAbstractStateAction<LogoutCoreState> implements 
         this.material = material
     }
 
-    submit(): void {
-        this.material.clear(this.post)
+    submit(): Promise<LogoutCoreState> {
+        return this.material.clear(this.post)
     }
 }

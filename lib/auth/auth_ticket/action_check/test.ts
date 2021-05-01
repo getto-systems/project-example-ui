@@ -187,6 +187,7 @@ describe("CheckAuthTicket", () => {
         const { view } = standard()
 
         const runner = setupActionTestRunner(view.resource.core.subscriber)
+
         await runner(async () => {
             view.terminate()
             view.resource.core.ignite()

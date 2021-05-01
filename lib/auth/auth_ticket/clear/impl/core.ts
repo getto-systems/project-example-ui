@@ -5,7 +5,6 @@ import { authnRepositoryConverter } from "../../kernel/converter"
 import { ClearAuthTicketInfra } from "../infra"
 
 import { ClearAuthTicketMethod } from "../method"
-import { ClearAuthTicketEvent } from "../event"
 
 interface Clear {
     (infra: ClearAuthTicketInfra): ClearAuthTicketMethod
@@ -45,8 +44,4 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
     }
 
     return post({ type: "succeed-to-logout" })
-}
-
-export function clearAuthTicketEventHasDone(_event: ClearAuthTicketEvent): boolean {
-    return true
 }

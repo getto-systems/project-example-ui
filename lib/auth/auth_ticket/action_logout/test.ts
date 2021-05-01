@@ -1,9 +1,7 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { mockRepository } from "../../../z_vendor/getto-application/infra/repository/mock"
+import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
 
 import { convertRepository } from "../../../z_vendor/getto-application/infra/repository/helper"
 import { initLogoutCoreAction, initLogoutCoreMaterial } from "./core/impl"
@@ -11,53 +9,40 @@ import { initLogoutResource } from "./impl"
 
 import { AuthnRepositoryValue, AuthzRepositoryPod, AuthzRepositoryValue } from "../kernel/infra"
 import { AuthnRepositoryPod } from "../kernel/infra"
+import { ClearAuthTicketRemotePod } from "../clear/infra"
 
 import { LogoutResource } from "./resource"
-import { LogoutCoreState } from "./core/action"
-import { ClearAuthTicketRemotePod } from "../clear/infra"
-import { mockRemotePod } from "../../../z_vendor/getto-application/infra/remote/mock"
-import { clearAuthTicketEventHasDone } from "../clear/impl/core"
 
 describe("Logout", () => {
-    test("clear", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
+    test("clear", async () => {
+        const { resource } = standard()
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.logout.submit()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ type: "succeed-to-logout" }])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(resource.logout.subscriber)
 
-            resource.logout.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => resource.logout.submit()).then((stack) => {
+            expect(stack).toEqual([{ type: "succeed-to-logout" }])
+        })
+    })
 
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { resource } = standard()
+    test("terminate", async () => {
+        const { resource } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        resource.logout.terminate()
-                        resource.logout.submit()
+        const runner = setupActionTestRunner(resource.logout.subscriber)
 
-                        setTimeout(check, 256) // wait for events...
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
+        await runner(async () => {
+            resource.logout.terminate()
+            resource.logout.submit()
 
-            resource.logout.subscriber.subscribe(runner(done))
-        }))
+            await new Promise((resolve) => {
+                setTimeout(resolve, 256) // wait for events...
+            })
+
+            return resource.logout.initialState
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
@@ -95,14 +80,4 @@ function standard_authz(): AuthzRepositoryPod {
 
 function standard_clear(): ClearAuthTicketRemotePod {
     return mockRemotePod(() => ({ success: true, value: true }), { wait_millisecond: 0 })
-}
-
-function actionHasDone(state: LogoutCoreState): boolean {
-    switch (state.type) {
-        case "initial-logout":
-            return false
-
-        default:
-            return clearAuthTicketEventHasDone(state)
-    }
 }
