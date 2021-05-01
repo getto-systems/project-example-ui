@@ -4,7 +4,7 @@ import { CheckAuthTicketInfra } from "../infra"
 
 import { RenewAuthTicketMethod, CheckAuthTicketMethod } from "../method"
 
-import { CheckAuthTicketEvent, RenewAuthTicketEvent } from "../event"
+import { RenewAuthTicketEvent } from "../event"
 
 import { hasExpired } from "../../kernel/data"
 import { authnRepositoryConverter, authRemoteConverter } from "../../kernel/converter"
@@ -34,16 +34,6 @@ export const checkAuthTicket: Check = (infra) => async (post) => {
     }
 
     return renewTicket(infra, post)
-}
-
-export function checkAuthTicketEventHasDone(event: CheckAuthTicketEvent): boolean {
-    switch (event.type) {
-        case "try-to-instant-load":
-            return true
-
-        default:
-            return renewAuthTicketEventHasDone(event)
-    }
 }
 
 interface RenewAuthTicket {
@@ -92,20 +82,6 @@ async function renewTicket<S>(
     }
 
     return post({ type: "succeed-to-renew", auth: response.value })
-}
-
-export function renewAuthTicketEventHasDone(event: RenewAuthTicketEvent): boolean {
-    switch (event.type) {
-        case "required-to-login":
-        case "failed-to-renew":
-        case "repository-error":
-        case "succeed-to-renew":
-            return true
-
-        case "try-to-renew":
-        case "take-longtime-to-renew":
-            return false
-    }
 }
 
 interface Post<E, S> {
