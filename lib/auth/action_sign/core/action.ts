@@ -8,7 +8,7 @@ import { ResetPasswordView } from "../../password/reset/action_reset/resource"
 import { SignLinkResource } from "../../common/nav/action_nav/resource"
 
 export interface SignAction extends ApplicationStateAction<SignActionState> {
-    error(err: string): void
+    error(err: string): Promise<SignActionState>
 }
 
 export interface SignSubView {

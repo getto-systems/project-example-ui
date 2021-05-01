@@ -37,8 +37,8 @@ class Action extends ApplicationAbstractStateAction<SignActionState> implements 
         this.subView = subView
     }
 
-    error(err: string): void {
-        this.post({ type: "error", err })
+    async error(err: string): Promise<SignActionState> {
+        return this.post({ type: "error", err })
     }
 
     mapViewType(result: ConvertLocationResult<SignViewType>): SignActionState {
