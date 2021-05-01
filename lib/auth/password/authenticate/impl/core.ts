@@ -3,7 +3,6 @@ import { delayedChecker } from "../../../../z_vendor/getto-application/infra/tim
 import { AuthenticatePasswordInfra } from "../infra"
 
 import { AuthenticatePasswordMethod } from "../method"
-import { AuthenticatePasswordEvent } from "../event"
 import { authRemoteConverter } from "../../../auth_ticket/kernel/converter"
 
 interface Authenticate {
@@ -28,16 +27,4 @@ export const authenticatePassword: Authenticate = (infra) => async (fields, post
     }
 
     return post({ type: "succeed-to-login", auth: response.value })
-}
-
-export function authenticatePasswordEventHasDone(event: AuthenticatePasswordEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-login":
-        case "failed-to-login":
-            return true
-
-        case "try-to-login":
-        case "take-longtime-to-login":
-            return false
-    }
 }

@@ -126,25 +126,12 @@ describe("InputPassword", () => {
         expect(action.board.input.get()).toEqual("")
     })
 
-    test("terminate: validate", async () => {
-        const { action } = standard()
-
-        const runner = setupActionTestRunner(action.validate.subscriber)
-
-        await runner(async () => {
-            action.terminate()
-            action.board.input.set(markBoardValue("valid"))
-            return action.validate.initialState
-        }).then((stack) => {
-            // no input/validate event after terminate
-            expect(stack).toEqual([])
-        })
-    })
-    test("terminate: input", async () => {
+    test("terminate", async () => {
         const { action } = standard()
 
         const runner = setupActionTestRunner({
             subscribe: (handler) => {
+                action.validate.subscriber.subscribe(handler)
                 action.board.input.subscribeInputEvent(() => handler(action.board.input.get()))
             },
             unsubscribe: () => null,
