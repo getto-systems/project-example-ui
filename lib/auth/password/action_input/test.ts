@@ -1,4 +1,4 @@
-import { setupSyncActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../z_vendor/getto-application/board/action_input/mock"
@@ -6,150 +6,101 @@ import { mockBoardValueStore } from "../../../z_vendor/getto-application/board/a
 import { initInputPasswordAction } from "./core/impl"
 
 describe("InputPassword", () => {
-    test("validate; valid input", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+    test("validate; valid input", async () => {
+        const { action } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // valid input
-                        action.board.input.set(markBoardValue("valid"))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ valid: true }])
-                        expect(action.validate.get()).toEqual({ valid: true, value: "valid" })
-                    },
-                },
+        const runner = setupActionTestRunner(action.validate.subscriber)
+
+        await runner(async () => {
+            action.board.input.set(markBoardValue("valid"))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([{ valid: true }])
+            expect(action.validate.get()).toEqual({ valid: true, value: "valid" })
+        })
+    })
+
+    test("validate; invalid : empty", async () => {
+        const { action } = standard()
+
+        const runner = setupActionTestRunner(action.validate.subscriber)
+
+        await runner(async () => {
+            action.board.input.set(markBoardValue(""))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([{ valid: false, err: [{ type: "empty" }] }])
+            expect(action.validate.get()).toEqual({ valid: false, err: [{ type: "empty" }] })
+        })
+    })
+
+    test("validate; invalid : too-long", async () => {
+        const { action } = standard()
+
+        const runner = setupActionTestRunner(action.validate.subscriber)
+
+        await runner(async () => {
+            action.board.input.set(markBoardValue("a".repeat(72 + 1)))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { valid: false, err: [{ type: "too-long", maxBytes: 72, multiByte: false }] },
             ])
+            expect(action.validate.get()).toEqual({
+                valid: false,
+                err: [{ type: "too-long", maxBytes: 72, multiByte: false }],
+            })
+        })
+    })
 
-            action.validate.subscriber.subscribe(runner(done))
-        }))
+    test("validate; valid : just max-length", async () => {
+        const { action } = standard()
 
-    test("validate; invalid : empty", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+        const runner = setupActionTestRunner(action.validate.subscriber)
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // empty
-                        action.board.input.set(markBoardValue(""))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ valid: false, err: [{ type: "empty" }] }])
-                        expect(action.validate.get()).toEqual({
-                            valid: false,
-                            err: [{ type: "empty" }],
-                        })
-                    },
-                },
+        await runner(async () => {
+            action.board.input.set(markBoardValue("a".repeat(72)))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([{ valid: true }])
+            expect(action.validate.get()).toEqual({ valid: true, value: "a".repeat(72) })
+        })
+    })
+
+    test("validate; invalid : too-long : multi-byte", async () => {
+        const { action } = standard()
+
+        const runner = setupActionTestRunner(action.validate.subscriber)
+
+        await runner(async () => {
+            // too-long : "あ"(UTF8) is 3 bytes character
+            action.board.input.set(markBoardValue("あ".repeat(24) + "a"))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { valid: false, err: [{ type: "too-long", maxBytes: 72, multiByte: true }] },
             ])
+            expect(action.validate.get()).toEqual({
+                valid: false,
+                err: [{ type: "too-long", maxBytes: 72, multiByte: true }],
+            })
+        })
+    })
 
-            action.validate.subscriber.subscribe(runner(done))
-        }))
+    test("validate; valid : just max-length : multi-byte", async () => {
+        const { action } = standard()
 
-    test("validate; invalid : too-long", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+        const runner = setupActionTestRunner(action.validate.subscriber)
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // too-long
-                        action.board.input.set(markBoardValue("a".repeat(72 + 1)))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                valid: false,
-                                err: [{ type: "too-long", maxBytes: 72, multiByte: false }],
-                            },
-                        ])
-                        expect(action.validate.get()).toEqual({
-                            valid: false,
-                            err: [{ type: "too-long", maxBytes: 72, multiByte: false }],
-                        })
-                    },
-                },
-            ])
-
-            action.validate.subscriber.subscribe(runner(done))
-        }))
-
-    test("validate; valid : just max-length", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // just max-length
-                        action.board.input.set(markBoardValue("a".repeat(72)))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ valid: true }])
-                        expect(action.validate.get()).toEqual({
-                            valid: true,
-                            value: "a".repeat(72),
-                        })
-                    },
-                },
-            ])
-
-            action.validate.subscriber.subscribe(runner(done))
-        }))
-
-    test("validate; invalid : too-long : multi-byte", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // too-long : "あ"(UTF8) is 3 bytes character
-                        action.board.input.set(markBoardValue("あ".repeat(24) + "a"))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            {
-                                valid: false,
-                                err: [{ type: "too-long", maxBytes: 72, multiByte: true }],
-                            },
-                        ])
-                        expect(action.validate.get()).toEqual({
-                            valid: false,
-                            err: [{ type: "too-long", maxBytes: 72, multiByte: true }],
-                        })
-                    },
-                },
-            ])
-
-            action.validate.subscriber.subscribe(runner(done))
-        }))
-
-    test("validate; valid : just max-length : multi-byte", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        // just max-length : "あ"(UTF8) is 3 bytes character
-                        action.board.input.set(markBoardValue("あ".repeat(24)))
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ valid: true }])
-                        expect(action.validate.get()).toEqual({
-                            valid: true,
-                            value: "あ".repeat(24),
-                        })
-                    },
-                },
-            ])
-
-            action.validate.subscriber.subscribe(runner(done))
-        }))
+        await runner(async () => {
+            // too-long : "あ"(UTF8) is 3 bytes character
+            action.board.input.set(markBoardValue("あ".repeat(24)))
+            return action.validate.initialState
+        }).then((stack) => {
+            expect(stack).toEqual([{ valid: true }])
+            expect(action.validate.get()).toEqual({ valid: true, value: "あ".repeat(24) })
+        })
+    })
 
     test("password character state : single byte", () => {
         const { action } = standard()
@@ -175,27 +126,38 @@ describe("InputPassword", () => {
         expect(action.board.input.get()).toEqual("")
     })
 
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+    test("terminate: validate", async () => {
+        const { action } = standard()
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        action.terminate()
-                        action.board.input.set(markBoardValue("valid"))
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner(action.validate.subscriber)
 
-            const handler = runner(done)
-            action.board.input.subscribeInputEvent(() => handler(action.board.input.get()))
-            action.validate.subscriber.subscribe(handler)
-        }))
+        await runner(async () => {
+            action.terminate()
+            action.board.input.set(markBoardValue("valid"))
+            return action.validate.initialState
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
+    test("terminate: input", async () => {
+        const { action } = standard()
+
+        const runner = setupActionTestRunner({
+            subscribe: (handler) => {
+                action.board.input.subscribeInputEvent(() => handler(action.board.input.get()))
+            },
+            unsubscribe: () => null,
+        })
+
+        await runner(async () => {
+            action.terminate()
+            action.board.input.set(markBoardValue("valid"))
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
