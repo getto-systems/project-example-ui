@@ -49,16 +49,16 @@ class ProxyMethod<N, M, E> implements WorkerProxyMethod<N, M, E> {
             this.post({ method: this.method, id, params })
         })
     }
-    resolve({ id, done, event }: WorkerProxyCallResponse<N, E>): void {
-        const post = this.map.get(id)
+    resolve(response: WorkerProxyCallResponse<N, E>): void {
+        const post = this.map.get(response.id)
         if (!post) {
             throw new Error("handler is not set")
         }
 
-        post(event)
-
-        if (done) {
-            this.map.delete(id)
+        if (!response.done) {
+            post(response.event)
+        } else {
+            this.map.delete(response.id)
         }
     }
 }

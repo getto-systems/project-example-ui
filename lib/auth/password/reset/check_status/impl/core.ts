@@ -8,8 +8,6 @@ import {
     CheckResetTokenSendingStatusPod,
 } from "../method"
 
-import { CheckResetTokenSendingStatusEvent } from "../event"
-
 import { resetSessionIDLocationConverter } from "../../converter"
 
 import { CheckResetTokenSendingStatusError } from "../data"
@@ -87,18 +85,5 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
             return
         }
         sendTokenState = { type: "success" }
-    }
-}
-
-export function checkSessionStatusEventHasDone(event: CheckResetTokenSendingStatusEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-send-token":
-        case "failed-to-check-status":
-        case "failed-to-send-token":
-            return true
-
-        case "try-to-check-status":
-        case "retry-to-check-status":
-            return false
     }
 }

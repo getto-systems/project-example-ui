@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../../z_vendor/getto-application/action/test_helper"
 
 import { mockRemotePod } from "../../../../z_vendor/getto-application/infra/remote/mock"
 
@@ -13,8 +10,6 @@ import {
     initCheckResetTokenSendingStatusCoreMaterial,
 } from "./core/impl"
 
-import { checkSessionStatusEventHasDone } from "../check_status/impl/core"
-
 import {
     GetResetTokenSendingStatusRemotePod,
     GetResetTokenSendingStatusResult,
@@ -24,107 +19,73 @@ import {
 
 import { CheckResetTokenSendingStatusView } from "./resource"
 
-import { CheckResetTokenSendingStatusCoreState } from "./core/action"
-
 import { ResetTokenSendingResult } from "../check_status/data"
 
 describe("CheckPasswordResetSendingStatus", () => {
-    test("valid session-id", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.checkStatus
+    test("valid session-id", async () => {
+        const { view } = standard()
+        const action = view.resource.checkStatus
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
+        const runner = setupActionTestRunner(action.subscriber)
+
+        await runner(() => action.ignite()).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-check-status" },
+                { type: "succeed-to-send-token" },
+            ])
+        })
+    })
+
+    test("submit valid login-id; with long sending", async () => {
+        // wait for send token check limit
+        const { view } = takeLongtime()
+        const action = view.resource.checkStatus
+
+        const runner = setupActionTestRunner(action.subscriber)
+
+        await runner(() => action.ignite()).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-check-status" },
+                { type: "retry-to-check-status", status: { sending: true } },
+                { type: "retry-to-check-status", status: { sending: true } },
+                { type: "retry-to-check-status", status: { sending: true } },
+                { type: "retry-to-check-status", status: { sending: true } },
+                { type: "retry-to-check-status", status: { sending: true } },
                 {
-                    statement: () => {
-                        resource.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-check-status" },
-                            { type: "succeed-to-send-token" },
-                        ])
-                    },
+                    type: "failed-to-check-status",
+                    err: { type: "infra-error", err: "overflow check limit" },
                 },
             ])
+        })
+    })
 
-            resource.subscriber.subscribe(runner(done))
-        }))
+    test("check without session id", async () => {
+        const { view } = noSessionID()
+        const action = view.resource.checkStatus
 
-    test("submit valid login-id; with long sending", () =>
-        new Promise<void>((done) => {
-            // wait for send token check limit
-            const { view } = takeLongtime()
-            const resource = view.resource.checkStatus
+        const runner = setupActionTestRunner(action.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-check-status" },
-                            { type: "retry-to-check-status", status: { sending: true } },
-                            { type: "retry-to-check-status", status: { sending: true } },
-                            { type: "retry-to-check-status", status: { sending: true } },
-                            { type: "retry-to-check-status", status: { sending: true } },
-                            { type: "retry-to-check-status", status: { sending: true } },
-                            {
-                                type: "failed-to-check-status",
-                                err: { type: "infra-error", err: "overflow check limit" },
-                            },
-                        ])
-                    },
-                },
+        await runner(() => action.ignite()).then((stack) => {
+            expect(stack).toEqual([
+                { type: "failed-to-check-status", err: { type: "empty-session-id" } },
             ])
+        })
+    })
 
-            resource.subscriber.subscribe(runner(done))
-        }))
+    test("terminate", async () => {
+        const { view } = standard()
+        const action = view.resource.checkStatus
 
-    test("check without session id", () =>
-        new Promise<void>((done) => {
-            const { view } = noSessionID()
-            const resource = view.resource.checkStatus
+        const runner = setupActionTestRunner(action.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "failed-to-check-status", err: { type: "empty-session-id" } },
-                        ])
-                    },
-                },
-            ])
-
-            resource.subscriber.subscribe(runner(done))
-        }))
-
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.checkStatus
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: (check) => {
-                        view.terminate()
-                        resource.ignite()
-
-                        setTimeout(check, 256) // wait for events...
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            resource.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            view.terminate()
+            return action.ignite()
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
@@ -222,19 +183,5 @@ function getStatusRemoteAccess(
             return responseCollection[position]
         }
         return responseCollection[responseCollection.length - 1]
-    }
-}
-
-function actionHasDone(state: CheckResetTokenSendingStatusCoreState): boolean {
-    switch (state.type) {
-        case "initial-check-status":
-            return false
-
-        case "try-to-check-status":
-        case "retry-to-check-status":
-        case "failed-to-check-status":
-        case "failed-to-send-token":
-        case "succeed-to-send-token":
-            return checkSessionStatusEventHasDone(state)
     }
 }

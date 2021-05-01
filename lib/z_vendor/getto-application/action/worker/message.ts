@@ -13,12 +13,9 @@ export type WorkerProxyCallMessage<N, P> = Readonly<{
     id: WorkerProxyCallID
     params: P
 }>
-export type WorkerProxyCallResponse<N, E> = Readonly<{
-    method: N
-    id: WorkerProxyCallID
-    done: boolean
-    event: E
-}>
+export type WorkerProxyCallResponse<N, E> =
+    | Readonly<{ method: N; id: WorkerProxyCallID; done: false; event: E }>
+    | Readonly<{ method: N; id: WorkerProxyCallID; done: true }>
 
 export type WorkerProxyCallID = number
 

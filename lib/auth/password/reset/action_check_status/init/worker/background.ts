@@ -1,5 +1,3 @@
-import { checkSessionStatusEventHasDone } from "../../../check_status/impl/core"
-
 import { WorkerHandler } from "../../../../../../z_vendor/getto-application/action/worker/background"
 
 import {
@@ -16,16 +14,17 @@ export function newCheckPasswordResetSendingStatusWorkerHandler(
     post: Post<CheckPasswordResetSendingStatusProxyResponse>,
 ): WorkerHandler<CheckPasswordResetSendingStatusProxyMessage> {
     const pod = newCheckSendingStatusMaterialPod(feature)
-    return (message) => {
+    return async (message) => {
         switch (message.method) {
             case "checkStatus":
-                pod.initCheckStatus(backgroundLocationDetecter(message.params))((event) => {
+                await pod.initCheckStatus(backgroundLocationDetecter(message.params))((event) => {
                     post({
                         ...message,
-                        done: checkSessionStatusEventHasDone(event),
+                        done: false,
                         event,
                     })
                 })
+                post({ ...message, done: true })
                 return
         }
     }
