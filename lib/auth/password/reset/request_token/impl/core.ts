@@ -4,8 +4,6 @@ import { RequestResetTokenInfra } from "../infra"
 
 import { RequestResetTokenMethod } from "../method"
 
-import { RequestResetTokenEvent } from "../event"
-
 import { resetSessionIDRemoteConverter } from "../../converter"
 
 interface RequestToken {
@@ -32,16 +30,4 @@ export const requestResetToken: RequestToken = (infra) => async (fields, post) =
     }
 
     return post({ type: "succeed-to-request-token", sessionID: response.value })
-}
-
-export function requestResetTokenEventHasDone(event: RequestResetTokenEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-request-token":
-        case "failed-to-request-token":
-            return true
-
-        case "try-to-request-token":
-        case "take-longtime-to-request-token":
-            return false
-    }
 }

@@ -15,7 +15,7 @@ export class Action
     implements RequestResetTokenCoreAction {
     readonly initialState = initialRequestResetTokenCoreState
 
-    submit(): void {
-        // mock では特に何もしない
+    async submit(): Promise<RequestResetTokenCoreState> {
+        return this.initialState
     }
 }

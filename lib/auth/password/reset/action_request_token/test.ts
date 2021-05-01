@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../../../z_vendor/getto-application/action/test_helper_legacy"
+import { setupActionTestRunner } from "../../../../z_vendor/getto-application/action/test_helper"
 
 import { markBoardValue } from "../../../../z_vendor/getto-application/board/kernel/mock"
 import { mockBoardValueStore } from "../../../../z_vendor/getto-application/board/action_input/mock"
@@ -11,88 +8,63 @@ import { initRequestResetTokenView } from "./impl"
 import { initRequestResetTokenCoreMaterial, initRequestResetTokenCoreAction } from "./core/impl"
 import { initRequestResetTokenFormAction } from "./form/impl"
 
-import { requestResetTokenEventHasDone } from "../request_token/impl/core"
 import { resetSessionIDRemoteConverter } from "../converter"
 
 import { RequestResetTokenRemotePod, RequestResetTokenResult } from "../request_token/infra"
 
 import { RequestResetTokenView } from "./resource"
-import { RequestResetTokenCoreState } from "./core/action"
 
 const VALID_LOGIN = { loginID: "login-id" } as const
 
 describe("RequestResetToken", () => {
-    test("submit valid login-id", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.requestToken
+    test("submit valid login-id", async () => {
+        const { view } = standard()
+        const action = view.resource.requestToken
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-request-token" },
-                            { type: "succeed-to-request-token", sessionID: "session-id" },
-                        ])
-                    },
-                },
+        await runner(() => {
+            action.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            return action.core.submit(action.form.validate.get())
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-request-token" },
+                { type: "succeed-to-request-token", sessionID: "session-id" },
             ])
+        })
+    })
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+    test("submit valid login-id; with take longtime", async () => {
+        // wait for take longtime timeout
+        const { view } = takeLongtime()
+        const action = view.resource.requestToken
 
-    test("submit valid login-id; with take longtime", () =>
-        new Promise<void>((done) => {
-            // wait for take longtime timeout
-            const { view } = takeLongtime()
-            const resource = view.resource.requestToken
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        resource.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
-
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "try-to-request-token" },
-                            { type: "take-longtime-to-request-token" },
-                            { type: "succeed-to-request-token", sessionID: "session-id" },
-                        ])
-                    },
-                },
+        await runner(() => {
+            action.form.loginID.board.input.set(markBoardValue(VALID_LOGIN.loginID))
+            return action.core.submit(action.form.validate.get())
+        }).then((stack) => {
+            expect(stack).toEqual([
+                { type: "try-to-request-token" },
+                { type: "take-longtime-to-request-token" },
+                { type: "succeed-to-request-token", sessionID: "session-id" },
             ])
+        })
+    })
 
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+    test("submit without fields", async () => {
+        const { view } = standard()
+        const action = view.resource.requestToken
 
-    test("submit without fields", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.requestToken
+        const runner = setupActionTestRunner(action.core.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        // try to request token without fields
-                        resource.core.submit(resource.form.validate.get())
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([
-                            { type: "failed-to-request-token", err: { type: "validation-error" } },
-                        ])
-                    },
-                },
+        await runner(() => action.core.submit(action.form.validate.get())).then((stack) => {
+            expect(stack).toEqual([
+                { type: "failed-to-request-token", err: { type: "validation-error" } },
             ])
-
-            resource.core.subscriber.subscribe(runner(done))
-        }))
+        })
+    })
 
     test("clear", () => {
         const { view } = standard()
@@ -104,30 +76,28 @@ describe("RequestResetToken", () => {
         expect(resource.form.loginID.board.input.get()).toEqual("")
     })
 
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { view } = standard()
-            const resource = view.resource.requestToken
+    test("terminate", async () => {
+        const { view } = standard()
+        const action = view.resource.requestToken
 
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        view.terminate()
-                        resource.form.loginID.board.input.set(markBoardValue("login-id"))
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
+        const runner = setupActionTestRunner({
+            subscribe: (handler) => {
+                action.core.subscriber.subscribe(handler)
+                action.form.validate.subscriber.subscribe(handler)
+                action.form.loginID.validate.subscriber.subscribe(handler)
+                action.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
+            },
+            unsubscribe: () => null,
+        })
 
-            const handler = runner(done)
-            resource.core.subscriber.subscribe(handler)
-            resource.form.validate.subscriber.subscribe(handler)
-            resource.form.loginID.validate.subscriber.subscribe(handler)
-            resource.form.loginID.board.input.subscribeInputEvent(() => handler("input"))
-        }))
+        await runner(async () => {
+            view.terminate()
+            action.form.loginID.board.input.set(markBoardValue("login-id"))
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
@@ -168,14 +138,4 @@ function takeLongtime_requestToken(): RequestResetTokenRemotePod {
 }
 function simulateRequestToken(): RequestResetTokenResult {
     return { success: true, value: resetSessionIDRemoteConverter("session-id") }
-}
-
-function actionHasDone(state: RequestResetTokenCoreState): boolean {
-    switch (state.type) {
-        case "initial-request-token":
-            return false
-
-        default:
-            return requestResetTokenEventHasDone(state)
-    }
 }

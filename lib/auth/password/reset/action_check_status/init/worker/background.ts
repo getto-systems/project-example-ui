@@ -18,11 +18,7 @@ export function newCheckPasswordResetSendingStatusWorkerHandler(
         switch (message.method) {
             case "checkStatus":
                 await pod.initCheckStatus(backgroundLocationDetecter(message.params))((event) => {
-                    post({
-                        ...message,
-                        done: false,
-                        event,
-                    })
+                    post({ ...message, done: false, event })
                 })
                 post({ ...message, done: true })
                 return
