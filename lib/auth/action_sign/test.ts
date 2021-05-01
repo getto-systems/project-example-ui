@@ -1,7 +1,4 @@
-import {
-    setupAsyncActionTestRunner,
-    setupSyncActionTestRunner,
-} from "../../z_vendor/getto-application/action/test_helper"
+import { setupActionTestRunner } from "../../z_vendor/getto-application/action/test_helper"
 
 import { mockAuthenticatePasswordView } from "../password/action_authenticate/mock"
 import { mockRequestResetTokenView } from "../password/reset/action_request_token/mock"
@@ -15,192 +12,130 @@ import { initSignLinkResource } from "../common/nav/action_nav/impl"
 import { initSignAction } from "./core/impl"
 import { initSignView } from "./impl"
 
-import { SignAction, SignActionState } from "./core/action"
+import { SignAction } from "./core/action"
 
 describe("SignView", () => {
-    test("redirect password authenticate", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+    test("redirect password authenticate", async () => {
+        const { action } = standard()
 
-            action.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "check-authTicket":
-                        state.view.resource.core.ignite()
-                        return
-                }
-            })
+        const runner = setupActionTestRunner(action.subscriber)
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack.map((state) => state.type)).toEqual([
-                            "check-authTicket",
-                            "password-authenticate",
-                        ])
-                    },
-                },
+        await runner(async () => {
+            const state = await action.ignite()
+            switch (state.type) {
+                case "check-authTicket":
+                    await state.view.resource.core.ignite()
+            }
+            return state
+        }).then((stack) => {
+            expect(stack.map((state) => state.type)).toEqual([
+                "check-authTicket",
+                "password-authenticate",
             ])
+        })
+    })
 
-            action.subscriber.subscribe(runner(done))
-        }))
+    test("static privacy policy", async () => {
+        const { action } = static_privacyPolicy()
 
-    test("static privacy policy", () =>
-        new Promise<void>((done) => {
-            const { action } = static_privacyPolicy()
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "check-authTicket":
-                        state.view.resource.core.ignite()
-                        return
-                }
-            })
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack.map((state) => state.type)).toEqual([
-                            "check-authTicket",
-                            "static-privacyPolicy",
-                        ])
-                    },
-                },
+        await runner(async () => {
+            const state = await action.ignite()
+            switch (state.type) {
+                case "check-authTicket":
+                    await state.view.resource.core.ignite()
+            }
+            return state
+        }).then((stack) => {
+            expect(stack.map((state) => state.type)).toEqual([
+                "check-authTicket",
+                "static-privacyPolicy",
             ])
+        })
+    })
 
-            action.subscriber.subscribe(runner(done))
-        }))
+    test("password reset request token", async () => {
+        const { action } = passwordReset_requestToken()
 
-    test("password reset request token", () =>
-        new Promise<void>((done) => {
-            const { action } = passwordReset_requestToken()
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "check-authTicket":
-                        state.view.resource.core.ignite()
-                        return
-                }
-            })
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack.map((state) => state.type)).toEqual([
-                            "check-authTicket",
-                            "password-reset-requestToken",
-                        ])
-                    },
-                },
+        await runner(async () => {
+            const state = await action.ignite()
+            switch (state.type) {
+                case "check-authTicket":
+                    await state.view.resource.core.ignite()
+            }
+            return state
+        }).then((stack) => {
+            expect(stack.map((state) => state.type)).toEqual([
+                "check-authTicket",
+                "password-reset-requestToken",
             ])
+        })
+    })
 
-            action.subscriber.subscribe(runner(done))
-        }))
+    test("password reset check status", async () => {
+        const { action } = passwordReset_checkStatus()
 
-    test("password reset check status", () =>
-        new Promise<void>((done) => {
-            const { action } = passwordReset_checkStatus()
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "check-authTicket":
-                        state.view.resource.core.ignite()
-                        return
-                }
-            })
-
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack.map((state) => state.type)).toEqual([
-                            "check-authTicket",
-                            "password-reset-checkStatus",
-                        ])
-                    },
-                },
+        await runner(async () => {
+            const state = await action.ignite()
+            switch (state.type) {
+                case "check-authTicket":
+                    await state.view.resource.core.ignite()
+            }
+            return state
+        }).then((stack) => {
+            expect(stack.map((state) => state.type)).toEqual([
+                "check-authTicket",
+                "password-reset-checkStatus",
             ])
+        })
+    })
 
-            action.subscriber.subscribe(runner(done))
-        }))
+    test("password reset", async () => {
+        const { action } = passwordReset_reset()
 
-    test("password reset", () =>
-        new Promise<void>((done) => {
-            const { action } = passwordReset_reset()
+        const runner = setupActionTestRunner(action.subscriber)
 
-            action.subscriber.subscribe((state) => {
-                switch (state.type) {
-                    case "check-authTicket":
-                        state.view.resource.core.ignite()
-                        return
-                }
-            })
+        await runner(async () => {
+            const state = await action.ignite()
+            switch (state.type) {
+                case "check-authTicket":
+                    await state.view.resource.core.ignite()
+            }
+            return state
+        }).then((stack) => {
+            expect(stack.map((state) => state.type)).toEqual(["check-authTicket", "password-reset"])
+        })
+    })
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.ignite()
-                    },
-                    examine: (stack) => {
-                        expect(stack.map((state) => state.type)).toEqual([
-                            "check-authTicket",
-                            "password-reset",
-                        ])
-                    },
-                },
-            ])
+    test("error", async () => {
+        const { action } = standard()
 
-            action.subscriber.subscribe(runner(done))
-        }))
+        const runner = setupActionTestRunner(action.subscriber)
 
-    test("error", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
+        await runner(() => action.error("view error")).then((stack) => {
+            expect(stack).toEqual([{ type: "error", err: "view error" }])
+        })
+    })
 
-            const runner = setupAsyncActionTestRunner(actionHasDone, [
-                {
-                    statement: () => {
-                        action.error("view error")
-                    },
-                    examine: (stack) => {
-                        expect(stack).toEqual([{ type: "error", err: "view error" }])
-                    },
-                },
-            ])
+    test("terminate", async () => {
+        const { action } = standard()
+        const view = initSignView(action)
 
-            action.subscriber.subscribe(runner(done))
-        }))
+        const runner = setupActionTestRunner(action.subscriber)
 
-    test("terminate", () =>
-        new Promise<void>((done) => {
-            const { action } = standard()
-            const view = initSignView(action)
-
-            const runner = setupSyncActionTestRunner([
-                {
-                    statement: () => {
-                        view.terminate()
-                        view.resource.sign.error("view error")
-                    },
-                    examine: (stack) => {
-                        // no input/validate event after terminate
-                        expect(stack).toEqual([])
-                    },
-                },
-            ])
-
-            view.resource.sign.subscriber.subscribe(runner(done))
-        }))
+        await runner(() => {
+            view.terminate()
+            return view.resource.sign.error("view error")
+        }).then((stack) => {
+            // no input/validate event after terminate
+            expect(stack).toEqual([])
+        })
+    })
 })
 
 function standard() {
@@ -261,15 +196,4 @@ function passwordReset_checkStatus_URL(): URL {
 }
 function passwordReset_reset_URL(): URL {
     return new URL("https://example.com/index.html?-password-reset=reset")
-}
-
-function actionHasDone(state: SignActionState): boolean {
-    switch (state.type) {
-        case "initial-view":
-        case "check-authTicket":
-            return false
-
-        default:
-            return true
-    }
 }

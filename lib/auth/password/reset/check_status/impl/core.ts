@@ -8,8 +8,6 @@ import {
     CheckResetTokenSendingStatusPod,
 } from "../method"
 
-import { CheckResetTokenSendingStatusEvent } from "../event"
-
 import { resetSessionIDLocationConverter } from "../../converter"
 
 import { CheckResetTokenSendingStatusError } from "../data"
@@ -30,8 +28,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
 
     const sessionID = detecter()
     if (!sessionID.valid) {
-        post({ type: "failed-to-check-status", err: { type: "empty-session-id" } })
-        return
+        return post({ type: "failed-to-check-status", err: { type: "empty-session-id" } })
     }
 
     type SendTokenState =
@@ -51,28 +48,24 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
     for (let i_ = 0; i_ < config.limit.limit; i_++) {
         const currentSendTokenState = getSendTokenState()
         if (currentSendTokenState.type === "failed") {
-            post({ type: "failed-to-check-status", err: currentSendTokenState.err })
-            return
+            return post({ type: "failed-to-check-status", err: currentSendTokenState.err })
         }
 
         const response = await getStatus(sessionID.value)
         if (!response.success) {
-            post({ type: "failed-to-check-status", err: response.err })
-            return
+            return post({ type: "failed-to-check-status", err: response.err })
         }
 
         const result = response.value
         if (result.done) {
             if (!result.send) {
-                post({
+                return post({
                     type: "failed-to-send-token",
                     err: { type: "infra-error", err: result.err },
                 })
-                return
             }
 
-            post({ type: "succeed-to-send-token" })
-            return
+            return post({ type: "succeed-to-send-token" })
         }
 
         post({ type: "retry-to-check-status", status: result.status })
@@ -80,7 +73,7 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
         await ticker(config.wait, () => true)
     }
 
-    post({
+    return post({
         type: "failed-to-check-status",
         err: { type: "infra-error", err: "overflow check limit" },
     })
@@ -92,18 +85,5 @@ export const checkSendingStatus: CheckStatus = (infra) => (detecter) => async (p
             return
         }
         sendTokenState = { type: "success" }
-    }
-}
-
-export function checkSessionStatusEventHasDone(event: CheckResetTokenSendingStatusEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-send-token":
-        case "failed-to-check-status":
-        case "failed-to-send-token":
-            return true
-
-        case "try-to-check-status":
-        case "retry-to-check-status":
-            return false
     }
 }

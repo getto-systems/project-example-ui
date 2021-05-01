@@ -18,8 +18,8 @@ import {
 import { ConvertBoardResult } from "../../../../../z_vendor/getto-application/board/kernel/data"
 
 export interface ResetPasswordCoreAction extends ApplicationStateAction<ResetPasswordCoreState> {
-    submit(fields: ConvertBoardResult<ResetPasswordFields>): void
-    loadError(err: LoadScriptError): void
+    submit(fields: ConvertBoardResult<ResetPasswordFields>): Promise<ResetPasswordCoreState>
+    loadError(err: LoadScriptError): Promise<ResetPasswordCoreState>
 }
 
 export type ResetPasswordCoreMaterial = Readonly<{

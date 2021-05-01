@@ -4,9 +4,12 @@ import { ConvertBoardResult } from "../../../../z_vendor/getto-application/board
 import { RequestResetTokenFields } from "./data"
 
 export interface RequestResetTokenMethod {
-    (fields: ConvertBoardResult<RequestResetTokenFields>, post: Post<RequestResetTokenEvent>): void
+    <S>(
+        fields: ConvertBoardResult<RequestResetTokenFields>,
+        post: Post<RequestResetTokenEvent, S>,
+    ): Promise<S>
 }
 
-interface Post<T> {
-    (state: T): void
+interface Post<E, S> {
+    (event: E): S
 }

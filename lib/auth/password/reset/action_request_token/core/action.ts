@@ -9,7 +9,7 @@ import { RequestResetTokenFields } from "../../request_token/data"
 
 export interface RequestResetTokenCoreAction
     extends ApplicationStateAction<RequestResetTokenCoreState> {
-    submit(fields: ConvertBoardResult<RequestResetTokenFields>): void
+    submit(fields: ConvertBoardResult<RequestResetTokenFields>): Promise<RequestResetTokenCoreState>
 }
 
 export type RequestResetTokenCoreMaterial = Readonly<{

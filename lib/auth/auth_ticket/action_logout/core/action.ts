@@ -5,7 +5,7 @@ import { ClearAuthTicketMethod } from "../../clear/method"
 import { ClearAuthTicketEvent } from "../../clear/event"
 
 export interface LogoutCoreAction extends ApplicationStateAction<LogoutCoreState> {
-    submit(): void
+    submit(): Promise<LogoutCoreState>
 }
 
 export type LogoutCoreMaterial = Readonly<{

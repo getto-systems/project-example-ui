@@ -40,7 +40,7 @@ class Action
         this.material = material
     }
 
-    submit(fields: ConvertBoardResult<RequestResetTokenFields>): void {
-        this.material.requestToken(fields, this.post)
+    submit(fields: ConvertBoardResult<RequestResetTokenFields>): Promise<RequestResetTokenCoreState> {
+        return this.material.requestToken(fields, this.post)
     }
 }

@@ -7,7 +7,7 @@ import { LoadBreadcrumbListResource } from "./resource"
 
 describe("LoadBreadcrumbList", () => {
     test("load breadcrumb", () => {
-        const { resource } = standard_elements()
+        const { resource } = standard()
 
         expect(resource.breadcrumbList.load()).toEqual([
             category("MAIN"),
@@ -16,7 +16,7 @@ describe("LoadBreadcrumbList", () => {
     })
 
     test("load empty breadcrumb; unknown menu target", () => {
-        const { resource } = unknownTarget_elements()
+        const { resource } = unknownTarget()
 
         expect(resource.breadcrumbList.load()).toEqual([])
     })
@@ -29,12 +29,12 @@ describe("LoadBreadcrumbList", () => {
     }
 })
 
-function standard_elements() {
+function standard() {
     const resource = newResource(standard_URL())
 
     return { resource }
 }
-function unknownTarget_elements() {
+function unknownTarget() {
     const resource = newResource(unknownTarget_URL())
 
     return { resource }

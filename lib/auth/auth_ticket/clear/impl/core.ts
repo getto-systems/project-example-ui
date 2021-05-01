@@ -2,11 +2,9 @@ import { passThroughRemoteValue } from "../../../../z_vendor/getto-application/i
 import { authzRepositoryConverter } from "../../kernel/converter"
 import { authnRepositoryConverter } from "../../kernel/converter"
 
-import { StoreRepositoryResult } from "../../../../z_vendor/getto-application/infra/repository/infra"
 import { ClearAuthTicketInfra } from "../infra"
 
 import { ClearAuthTicketMethod } from "../method"
-import { ClearAuthTicketEvent } from "../event"
 
 interface Clear {
     (infra: ClearAuthTicketInfra): ClearAuthTicketMethod
@@ -18,39 +16,32 @@ export const clearAuthTicket: Clear = (infra) => async (post) => {
 
     const authnResult = await authn.get()
     if (!authnResult.success) {
-        post({ type: "failed-to-logout", err: authnResult.err })
-        return
+        return post({ type: "failed-to-logout", err: authnResult.err })
     }
     if (!authnResult.found) {
         // authn が保存されていなければ authz のクリアだけ行う
-        if (!handleResult(await authz.remove())) {
-            return
+        const authzRemoveResult = await authz.remove()
+        if (!authzRemoveResult.success) {
+            return post({ type: "failed-to-logout", err: authzRemoveResult.err })
         }
 
-        post({ type: "succeed-to-logout" })
-        return
+        return post({ type: "succeed-to-logout" })
     }
 
     const clearResponse = await clear({ type: "always" })
     if (!clearResponse.success) {
-        post({ type: "failed-to-clear", err: clearResponse.err })
-        return
+        return post({ type: "failed-to-clear", err: clearResponse.err })
     }
 
-    if (!handleResult(await authn.remove()) || !handleResult(await authz.remove())) {
-        return
+    const authnRemoveResult = await authn.remove()
+    if (!authnRemoveResult.success) {
+        return post({ type: "failed-to-logout", err: authnRemoveResult.err })
     }
 
-    post({ type: "succeed-to-logout" })
-
-    function handleResult(result: StoreRepositoryResult): boolean {
-        if (!result.success) {
-            post({ type: "failed-to-logout", err: result.err })
-        }
-        return result.success
+    const authzRemoveResult = await authz.remove()
+    if (!authzRemoveResult.success) {
+        return post({ type: "failed-to-logout", err: authzRemoveResult.err })
     }
-}
 
-export function clearAuthTicketEventHasDone(_event: ClearAuthTicketEvent): boolean {
-    return true
+    return post({ type: "succeed-to-logout" })
 }

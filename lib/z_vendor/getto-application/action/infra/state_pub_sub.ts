@@ -15,6 +15,7 @@ class PubSub<S> {
     pub: ApplicationActionStatePublisher<S> = {
         post: (state) => {
             this.handlers.forEach((post) => post(state))
+            return state
         },
         terminate: () => {
             this.handlers = []

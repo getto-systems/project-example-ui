@@ -1,6 +1,10 @@
 import { ApplicationMockStateAction } from "../../../../z_vendor/getto-application/action/mock"
 
-import { CheckAuthTicketCoreAction, CheckAuthTicketCoreState, initialCheckAuthTicketCoreState } from "./action"
+import {
+    CheckAuthTicketCoreAction,
+    CheckAuthTicketCoreState,
+    initialCheckAuthTicketCoreState,
+} from "./action"
 
 export function mockCheckAuthTicketCoreAction(): CheckAuthTicketCoreAction {
     return new Action()
@@ -12,20 +16,16 @@ class Action
     readonly initialState = initialCheckAuthTicketCoreState
 
     constructor() {
-        super()
-        this.addMockIgniter(() => ({ type: "required-to-login" }))
+        super(async () => ({ type: "required-to-login" }))
     }
 
-    request(): void {
-        // mock では特に何もしない
+    async succeedToInstantLoad(): Promise<CheckAuthTicketCoreState> {
+        return this.initialState
     }
-    succeedToInstantLoad(): void {
-        // mock では特に何もしない
+    async failedToInstantLoad(): Promise<CheckAuthTicketCoreState> {
+        return this.initialState
     }
-    failedToInstantLoad(): void {
-        // mock では特に何もしない
-    }
-    loadError(): void {
-        // mock では特に何もしない
+    async loadError(): Promise<CheckAuthTicketCoreState> {
+        return this.initialState
     }
 }

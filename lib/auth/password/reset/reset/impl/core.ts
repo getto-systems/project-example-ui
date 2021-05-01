@@ -7,7 +7,6 @@ import { ResetPasswordInfra } from "../infra"
 
 import { ResetPasswordLocationDetectMethod, ResetPasswordPod } from "../method"
 
-import { ResetPasswordEvent } from "../event"
 import { SignNav, signNavKey } from "../../../../common/nav/data"
 
 export const detectResetToken: ResetPasswordLocationDetectMethod = (currentURL) =>
@@ -18,14 +17,12 @@ interface Reset {
 }
 export const resetPassword: Reset = (infra) => (detecter) => async (fields, post) => {
     if (!fields.valid) {
-        post({ type: "failed-to-reset", err: { type: "validation-error" } })
-        return
+        return post({ type: "failed-to-reset", err: { type: "validation-error" } })
     }
 
     const resetToken = detecter()
     if (!resetToken.valid) {
-        post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
-        return
+        return post({ type: "failed-to-reset", err: { type: "empty-reset-token" } })
     }
 
     post({ type: "try-to-reset" })
@@ -40,21 +37,8 @@ export const resetPassword: Reset = (infra) => (detecter) => async (fields, post
         () => post({ type: "take-longtime-to-reset" }),
     )
     if (!response.success) {
-        post({ type: "failed-to-reset", err: response.err })
-        return
+        return post({ type: "failed-to-reset", err: response.err })
     }
 
-    post({ type: "succeed-to-reset", auth: response.value })
-}
-
-export function resetPasswordEventHasDone(event: ResetPasswordEvent): boolean {
-    switch (event.type) {
-        case "succeed-to-reset":
-        case "failed-to-reset":
-            return true
-
-        case "try-to-reset":
-        case "take-longtime-to-reset":
-            return false
-    }
+    return post({ type: "succeed-to-reset", auth: response.value })
 }

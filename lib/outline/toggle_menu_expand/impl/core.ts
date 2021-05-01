@@ -8,7 +8,6 @@ import { ToggleMenuExpandInfra, ToggleMenuExpandStore } from "../infra"
 
 import { ToggleMenuExpandPod } from "../method"
 
-import { ToggleMenuExpandEvent } from "../event"
 import { MenuCategoryPath } from "../../kernel/data"
 
 interface Toggle {
@@ -28,13 +27,14 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
 
         const authzResult = await authz.get()
         if (!authzResult.success) {
-            post({ type: "repository-error", err: authzResult.err })
-            return
+            return post({ type: "repository-error", err: authzResult.err })
         }
         if (!authzResult.found) {
-            authz.remove()
-            post({ type: "required-to-login" })
-            return
+            const authzRemoveResult = await authz.remove()
+            if (!authzRemoveResult.success) {
+                return post({ type: "repository-error", err: authzRemoveResult.err })
+            }
+            return post({ type: "required-to-login" })
         }
 
         const fetchMenuExpandResult = store.menuExpand.get()
@@ -46,8 +46,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
         // 対応が必要になったらストレージに update を追加してトランザクション内でマージする必要がある
         const storeResult = await menuExpand.set(expand)
         if (!storeResult.success) {
-            post({ type: "repository-error", err: storeResult.err })
-            return
+            return post({ type: "repository-error", err: storeResult.err })
         }
 
         store.menuExpand.set(expand)
@@ -55,7 +54,7 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
         const fetchMenuBadgeResult = store.menuBadge.get()
         const badge = fetchMenuBadgeResult.found ? fetchMenuBadgeResult.value : EMPTY_BADGE
 
-        post({
+        return post({
             type: "succeed-to-toggle",
             menu: buildMenu({
                 version: infra.version,
@@ -67,10 +66,6 @@ function modifyMenuExpand(modify: ModifyExpand): Toggle {
             }),
         })
     }
-}
-
-export function toggleMenuExpandEventHasDone(_event: ToggleMenuExpandEvent): boolean {
-    return true
 }
 
 const EMPTY_BADGE: MenuBadge = new Map()

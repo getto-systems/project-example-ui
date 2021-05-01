@@ -16,9 +16,9 @@ import {
 } from "../../../common/secure/get_script_path/data"
 
 export interface CheckAuthTicketCoreAction extends ApplicationStateAction<CheckAuthTicketCoreState> {
-    succeedToInstantLoad(): void
-    failedToInstantLoad(): void
-    loadError(err: LoadScriptError): void
+    succeedToInstantLoad(): Promise<CheckAuthTicketCoreState>
+    failedToInstantLoad(): Promise<CheckAuthTicketCoreState>
+    loadError(err: LoadScriptError): Promise<CheckAuthTicketCoreState>
 }
 
 export type CheckAuthTicketCoreMaterial = Readonly<{

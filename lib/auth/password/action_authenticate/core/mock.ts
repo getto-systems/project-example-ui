@@ -14,10 +14,10 @@ class Action
     implements AuthenticatePasswordCoreAction {
     readonly initialState = initialAuthenticatePasswordCoreState
 
-    submit(): void {
-        // mock では特に何もしない
+    async submit(): Promise<AuthenticatePasswordCoreState> {
+        return this.initialState
     }
-    loadError(): void {
-        // mock では特に何もしない
+    async loadError(): Promise<AuthenticatePasswordCoreState> {
+        return this.initialState
     }
 }

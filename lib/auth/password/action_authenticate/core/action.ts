@@ -19,8 +19,10 @@ import { ConvertBoardResult } from "../../../../z_vendor/getto-application/board
 
 export interface AuthenticatePasswordCoreAction
     extends ApplicationStateAction<AuthenticatePasswordCoreState> {
-    submit(fields: ConvertBoardResult<AuthenticatePasswordFields>): void
-    loadError(err: LoadScriptError): void
+    submit(
+        fields: ConvertBoardResult<AuthenticatePasswordFields>,
+    ): Promise<AuthenticatePasswordCoreState>
+    loadError(err: LoadScriptError): Promise<AuthenticatePasswordCoreState>
 }
 
 export type AuthenticatePasswordCoreMaterial = Readonly<{

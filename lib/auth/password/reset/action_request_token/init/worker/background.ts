@@ -1,7 +1,5 @@
 import { newRequestResetTokenCoreMaterial } from "../common"
 
-import { requestResetTokenEventHasDone } from "../../../request_token/impl/core"
-
 import { WorkerHandler } from "../../../../../../z_vendor/getto-application/action/worker/background"
 
 import {
@@ -17,16 +15,13 @@ export function newRequestResetTokenHandler(
     post: Post<RequestPasswordResetTokenProxyResponse>,
 ): WorkerHandler<RequestPasswordResetTokenProxyMessage> {
     const material = newRequestResetTokenCoreMaterial(feature)
-    return (message) => {
+    return async (message) => {
         switch (message.method) {
             case "requestToken":
-                material.requestToken(message.params.fields, (event) => {
-                    post({
-                        ...message,
-                        done: requestResetTokenEventHasDone(event),
-                        event,
-                    })
+                await material.requestToken(message.params.fields, (event) => {
+                    post({ ...message, done: false, event })
                 })
+                post({ ...message, done: true })
                 return
         }
     }

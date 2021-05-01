@@ -9,7 +9,7 @@ export function mockSignAction(): SignAction {
 class Action extends ApplicationMockStateAction<SignActionState> implements SignAction {
     readonly initialState = initialSignViewState
 
-    error(): void {
-        // mock では特に何もしない
+    async error(): Promise<SignActionState> {
+        return this.initialState
     }
 }
